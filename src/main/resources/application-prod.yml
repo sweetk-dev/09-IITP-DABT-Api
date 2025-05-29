@@ -1,0 +1,202 @@
+# IITP API 프로덕션 환경 설정 파일
+# 프로덕션 환경에서 사용되는 특정 설정을 포함합니다.
+# 이 설정은 application.yml의 기본 설정을 오버라이드합니다.
+
+server:
+  port: 8080  # 프로덕션 서버 포트
+  servlet:
+    context-path: /
+  tomcat:
+    max-threads: 200
+    min-spare-threads: 10
+    max-connections: 10000
+    accept-count: 100
+
+spring:
+  # 애플리케이션 이름 설정
+  application:
+    name: iitp-api
+  profiles:
+    active: prod
+  
+  # 데이터베이스 연결 설정
+  datasource:
+    url: jdbc:postgresql://prod-db:5432/iitp
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    # HikariCP 커넥션 풀 설정
+    hikari:
+      pool-name: IITPProdHikariPool
+      maximum-pool-size: 50
+      minimum-idle: 20
+      idle-timeout: 600000
+      connection-timeout: 60000
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
+  
+  # JPA 설정
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        default_batch_fetch_size: 1000
+        jdbc:
+          batch_size: 1000
+        order_inserts: true
+        order_updates: true
+  
+  # Redis 캐시 설정
+  cache:
+    type: redis
+    redis:
+      host: prod-redis
+      port: 6379
+  
+  # 메일 서버 설정
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# 로깅 설정
+logging:
+  # 운영 환경에서는 최소 로깅 활성화
+  level:
+    root: WARN
+    com.iitp: INFO
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql: WARN
+    com.iitp.monitoring: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/application-prod.log
+    max-size: 1GB
+    max-history: 30
+  logback:
+    rollingpolicy:
+      file-name-pattern: logs/archived/application-prod-%d{yyyy-MM-dd}.%i.log
+      max-file-size: 1GB
+      total-size-cap: 30GB
+      max-history: 30
+  # 구조화된 로깅 설정
+  json:
+    enabled: true
+    include:
+      - timestamp
+      - level
+      - thread
+      - logger
+      - message
+      - exception
+      - traceId
+      - spanId
+  # 성능 모니터링 설정
+  monitoring:
+    enabled: true
+    # 성능 모니터링 로그 레벨 (3단계)
+    # 1. BASIC: 기본적인 API 요청/응답 시간만 기록 (최소 영향)
+    # 2. STANDARD: BASIC + 쿼리 실행 시간, 메모리 사용량 등 추가 메트릭 (중간 영향)
+    # 3. DETAILED: STANDARD + 상세한 성능 메트릭, SQL 쿼리, 파라미터 등 모든 정보 (높은 영향)
+    level: BASIC  # 운영 환경에서는 기본 모니터링
+    slow-query-threshold: 5000  # 5초
+    request-logging:
+      enabled: true
+      include-request-body: false
+      include-response-body: false
+      include-headers: false
+      log-level: BASIC
+    metrics:
+      enabled: true
+      export-interval: 600  # 10분
+      include:
+        - response-time
+        - active-connections
+        - request-count
+        - error-count
+    sampling:
+      rate: 0.1  # 10% 샘플링
+      enabled: true
+
+# Actuator 모니터링 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: none
+  endpoint:
+    health:
+      show-details: when_authorized
+    metrics:
+      enabled: false
+  metrics:
+    export:
+      simple:
+        enabled: false
+
+# API 문서화 설정
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: false
+    operationsSorter: method
+    tagsSorter: alpha
+    tryItOutEnabled: false
+    filter: true
+  packages-to-scan: com.sweetk.iitp.controller
+  paths-to-match: /api/**
+
+# 애플리케이션 커스텀 설정
+app:
+  # JWT 설정
+  jwt:
+    secret: ENC(encrypted_jwt_secret_here)  # Jasypt로 암호화된 JWT 시크릿
+    expiration: 86400000  # 토큰 만료 시간 (24시간)
+  
+  # 버전 정보
+  version: ${app.version:1.0.0}
+  build-date: ${app.build.date:2024-03-19}
+  
+  # 모니터링 설정
+  monitoring:
+    enabled: false
+  
+  # 캐시 설정
+  cache:
+    ttl: 900  # 캐시 유효 시간 (15분)
+  
+  # Rate Limiting 설정
+  rate-limit:
+    enabled: true
+    capacity: 1000
+    time-window: 60
+  
+  # 외부 API 설정
+  external-api:
+    timeout: 2000  # 타임아웃 (2초)
+    retry:
+      max-attempts: 1  # 최대 재시도 횟수
+      delay: 0        # 재시도 간격 (즉시)
+
+# Jasypt 암호화 설정
+jasypt:
+  encryptor:
+    password: ${jasypt.encryptor.password}  # 암호화 키
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator 

@@ -1,0 +1,61 @@
+Configuration:
+  status: DEBUG
+  packages: com.sweetk.iitp
+
+  Properties:
+    property:
+      LOG_PATH: logs
+      LOG_PATTERN: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+      LOG_FILE_PATTERN: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+  Appenders:
+    Console:
+      name: Console
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: ${LOG_PATTERN}
+
+    RollingFile:
+      name: RollingFile
+      fileName: ${LOG_PATH}/iitp-api-local.log
+      filePattern: ${LOG_PATH}/archived/iitp-api-local-%d{yyyy-MM-dd}-%i.log.gz
+      PatternLayout:
+        pattern: ${LOG_FILE_PATTERN}
+      Policies:
+        TimeBasedTriggeringPolicy:
+          interval: 1
+        SizeBasedTriggeringPolicy:
+          size: 10MB
+      DefaultRolloverStrategy:
+        max: 30
+
+  Loggers:
+    Root:
+      level: debug
+      AppenderRef:
+        - ref: Console
+        - ref: RollingFile
+
+    Logger:
+      - name: com.sweetk.iitp
+        level: debug
+        additivity: false
+        AppenderRef:
+          - ref: Console
+          - ref: RollingFile
+
+    Logger:
+      - name: org.hibernate.SQL
+        level: debug
+        additivity: false
+        AppenderRef:
+          - ref: Console
+          - ref: RollingFile
+
+    Logger:
+      - name: org.hibernate.type.descriptor.sql.BasicBinder
+        level: trace
+        additivity: false
+        AppenderRef:
+          - ref: Console
+          - ref: RollingFile 
