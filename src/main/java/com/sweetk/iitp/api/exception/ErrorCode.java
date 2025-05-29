@@ -1,0 +1,41 @@
+package com.sweetk.iitp.api.exception;
+
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
+@Getter
+public enum ErrorCode {
+    // Common Errors
+    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C001", "입력값이 올바르지 않습니다."),
+    METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "C002", "지원하지 않는 HTTP 메소드입니다."),
+    ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND, "C003", "요청한 리소스를 찾을 수 없습니다."),
+    REQUIRED_FIELD_MISSING(HttpStatus.BAD_REQUEST, "C004", "필수 입력값이 누락되었습니다."),
+    INVALID_FORMAT(HttpStatus.BAD_REQUEST, "C005", "입력 형식이 올바르지 않습니다."),
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C006", "서버 내부 오류가 발생했습니다."),
+    INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "C007", "잘못된 타입의 값이 입력되었습니다."),
+    ACCESS_DENIED(HttpStatus.FORBIDDEN, "C008", "접근이 거부되었습니다."),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "C009", "인증이 필요합니다."),
+
+
+    // Business Errors
+    BUSINESS_EXCEPTION(HttpStatus.BAD_REQUEST, "B001", "비즈니스 로직 처리 중 오류가 발생했습니다."),
+    DUPLICATE_ENTITY(HttpStatus.CONFLICT, "B002", "이미 존재하는 데이터입니다."),
+    INVALID_STATE(HttpStatus.BAD_REQUEST, "B003", "잘못된 상태입니다."),
+    INVALID_VERSION(HttpStatus.BAD_REQUEST, "B004", "잘못된 API 버전입니다."),
+
+    // POI Errors
+    POI_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "POI를 찾을 수 없습니다."),
+    POI_CREATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "P002", "POI 생성에 실패했습니다."),
+    POI_UPDATE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "P003", "POI 수정에 실패했습니다."),
+    POI_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "P004", "POI 삭제에 실패했습니다.");
+
+    private final HttpStatus status;
+    private final String code;
+    private final String message;
+
+    ErrorCode(HttpStatus status, String code, String message) {
+        this.status = status;
+        this.code = code;
+        this.message = message;
+    }
+} 

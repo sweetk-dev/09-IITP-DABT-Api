@@ -1,0 +1,250 @@
+# IITP API 개발 환경 설정 파일
+# 개발 환경에서 사용되는 특정 설정을 포함합니다.
+# 이 설정은 application.yml의 기본 설정을 오버라이드합니다.
+
+server:
+  port: 8080  # 개발 서버 포트
+  servlet:
+    context-path: /
+  tomcat:
+    max-threads: 200
+    min-spare-threads: 10
+    max-connections: 10000
+    accept-count: 100
+
+spring:
+  # 애플리케이션 이름 설정
+  application:
+    name: iitp-api
+  profiles:
+    active: dev
+  
+  # 데이터베이스 연결 설정
+  datasource:
+    url: jdbc:postgresql://dev-db:5432/iitp
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    # HikariCP 커넥션 풀 설정
+    hikari:
+      pool-name: IITPDevHikariPool
+      maximum-pool-size: 20
+      minimum-idle: 10
+      idle-timeout: 600000
+      connection-timeout: 60000
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
+  
+  # JPA 설정
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 1000
+        jdbc:
+          batch_size: 1000
+        order_inserts: true
+        order_updates: true
+  
+  # 캐시 설정
+  cache:
+    type: simple  # 개발 환경에서는 로컬 캐시 사용
+  
+  # 메일 서버 설정
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# 로깅 설정
+logging:
+  # 개발 환경에서는 상세 로깅 활성화
+  level:
+    root: DEBUG
+    com.iitp: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+    com.iitp.monitoring: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/application-dev.log
+    max-size: 100MB
+    max-history: 7
+  logback:
+    rollingpolicy:
+      file-name-pattern: logs/archived/application-dev-%d{yyyy-MM-dd}.%i.log
+      max-file-size: 100MB
+      total-size-cap: 1GB
+      max-history: 7
+  # 구조화된 로깅 설정
+  json:
+    enabled: true
+    include:
+      - timestamp
+      - level
+      - thread
+      - logger
+      - message
+      - exception
+      - traceId
+      - spanId
+  # 성능 모니터링 설정
+  monitoring:
+    enabled: true
+    # 성능 모니터링 로그 레벨 (3단계)
+    # 1. BASIC: 기본적인 API 요청/응답 시간만 기록 (최소 영향)
+    # 2. STANDARD: BASIC + 쿼리 실행 시간, 메모리 사용량 등 추가 메트릭 (중간 영향)
+    # 3. DETAILED: STANDARD + 상세한 성능 메트릭, SQL 쿼리, 파라미터 등 모든 정보 (높은 영향)
+    level: STANDARD  # 개발 환경에서도 표준 모니터링으로 변경
+    slow-query-threshold: 1000  # 1초
+    request-logging:
+      enabled: true
+      include-request-body: false  # 요청 본문 로깅 비활성화
+      include-response-body: false  # 응답 본문 로깅 비활성화
+      include-headers: true
+      log-level: STANDARD
+    metrics:
+      enabled: true
+      export-interval: 300  # 5분으로 변경 (60초에서 300초로)
+      include:
+        - query-time
+        - response-time
+        - memory-usage
+        - active-connections
+        - request-count
+        - error-count
+    sampling:
+      rate: 0.5  # 50% 샘플링으로 변경 (100%에서 50%로)
+      enabled: true
+    # 선택적 상세 로깅 설정
+    selective-logging:
+      enabled: true
+      # 특정 API나 엔드포인트에 대한 상세 로깅 설정
+      endpoints:
+        - path: /api/v1/poi/search  # POI 검색 API
+          level: DETAILED
+          include-request-body: true
+          include-response-body: true
+          sampling-rate: 1.0
+        - path: /api/v1/poi/statistics  # 통계 API
+          level: DETAILED
+          include-request-body: true
+          include-response-body: true
+          sampling-rate: 1.0
+        - path: /api/v1/poi/analysis  # 분석 API
+          level: DETAILED
+          include-request-body: true
+          include-response-body: true
+          sampling-rate: 1.0
+      # 특정 사용자나 IP에 대한 상세 로깅 설정
+      users:
+        - userId: "test-user-1"
+          level: DETAILED
+          sampling-rate: 1.0
+        - ip: "192.168.1.100"
+          level: DETAILED
+          sampling-rate: 1.0
+      # 특정 에러 발생 시 상세 로깅 설정
+      error-logging:
+        enabled: true
+        level: DETAILED
+        include-stack-trace: true
+        include-context: true
+        sampling-rate: 1.0
+      # 성능 이슈 발생 시 상세 로깅 설정
+      performance-logging:
+        enabled: true
+        threshold: 2000  # 2초 이상 걸리는 요청
+        level: DETAILED
+        include-metrics: true
+        sampling-rate: 1.0
+
+# Actuator 모니터링 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when_authorized
+    metrics:
+      enabled: true
+  metrics:
+    export:
+      simple:
+        enabled: true
+        step: 30s
+
+# API 문서화 설정
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operationsSorter: method
+    tagsSorter: alpha
+    tryItOutEnabled: true
+    filter: true
+  packages-to-scan: com.sweetk.iitp.controller
+  paths-to-match: /api/**
+
+# 애플리케이션 커스텀 설정
+app:
+  # JWT 설정
+  jwt:
+    secret: ENC(encrypted_jwt_secret_here)  # Jasypt로 암호화된 JWT 시크릿
+    expiration: 86400000  # 토큰 만료 시간 (24시간)
+  
+  # 버전 정보
+  version: ${app.version:1.0.0}
+  build-date: ${app.build.date:2024-03-19}
+  
+  # 모니터링 설정
+  monitoring:
+    enabled: true
+    prometheus:
+      enabled: true
+  
+  # 캐시 설정
+  cache:
+    ttl: 3600  # 캐시 유효 시간 (1시간)
+  
+  # Rate Limiting 설정
+  rate-limit:
+    enabled: true
+    capacity: 200
+    time-window: 60
+  
+  # 외부 API 설정
+  external-api:
+    timeout: 5000  # 타임아웃 (5초)
+    retry:
+      max-attempts: 3  # 최대 재시도 횟수
+      delay: 1000     # 재시도 간격 (1초)
+
+# Jasypt 암호화 설정
+jasypt:
+  encryptor:
+    password: ${jasypt.encryptor.password}  # 암호화 키
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator 
+
+# Log4j2 설정 파일 로딩
+logging:
+  config: classpath:log4j2-dev.yml 

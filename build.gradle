@@ -1,0 +1,176 @@
+/**
+ * IITP API 프로젝트 빌드 설정
+ * 
+ * 주요 기능:
+ * 1. 환경별 빌드 설정 (dev, stage, prod)
+ * 2. 의존성 관리
+ * 3. Jasypt 암호화 설정
+ * 4. 빌드 메타데이터 관리
+ */
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.3'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'com.github.node-gradle.node' version '7.0.1'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.22'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.9.22'
+    id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.22'
+}
+
+// 프로젝트 기본 정보
+group = 'com.sweetk.iitp'
+version = '1.0.0'
+sourceCompatibility = '17'
+
+// 빌드 시간 설정
+def buildTime = new Date().format("yyyyMMdd")
+def env = project.hasProperty('env') ? project.env : 'local'
+
+// 컴파일 설정
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+}
+
+// 저장소 설정
+repositories {
+    mavenCentral()
+}
+
+// 프로젝트 의존성
+dependencies {
+    // Spring Boot Starters
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    
+    // Database
+    implementation 'org.postgresql:postgresql'
+    
+    // Security
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    
+    // API Documentation
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    
+    // Utilities
+    implementation 'org.projectlombok:lombok'
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+    implementation 'com.bucket4j:bucket4j-core:8.7.0'
+    
+    // Logging
+    implementation 'org.apache.logging.log4j:log4j-api:2.22.1'
+    implementation 'org.apache.logging.log4j:log4j-core:2.22.1'
+    implementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.22.1'
+    
+    // Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.testcontainers:postgresql:1.19.3'
+    testImplementation 'org.testcontainers:junit-jupiter:1.19.3'
+}
+
+// 테스트 설정
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+/**
+ * JAR 파일 빌드 설정
+ * - 기본 JAR 파일 생성
+ * - 매니페스트 정보 포함
+ */
+bootJar {
+    enabled = true
+    archiveClassifier = ''
+    archiveVersion = "${version}-${env}-${buildTime}"
+    archiveBaseName = 'iitp-api'
+}
+
+jar {
+    enabled = false
+}
+
+/**
+ * 애플리케이션 실행 설정
+ * - 프로필 설정
+ * - 버전 정보
+ * - Jasypt 암호화 키
+ */
+bootRun {
+    systemProperty "spring.profiles.active", System.getProperty("spring.profiles.active", "dev")
+    systemProperty "app.version", project.version
+    systemProperty "app.build.date", buildTime
+    systemProperty "jasypt.encryptor.password", System.getProperty("jasypt.encryptor.password", "dev-password")
+}
+
+/**
+ * 개발 환경 빌드 태스크
+ * - 개발용 JAR 파일 생성
+ * - 개발 환경 설정 파일 포함
+ * - 디버그 정보 포함
+ */
+task buildLocal(type: org.springframework.boot.gradle.tasks.bundling.BootJar) {
+    group = 'build'
+    description = 'Builds the application for local environment'
+    doFirst {
+        project.ext.set('env', 'local')
+    }
+    finalizedBy bootJar
+}
+
+task buildDev(type: org.springframework.boot.gradle.tasks.bundling.BootJar) {
+    group = 'build'
+    description = 'Builds the application for development environment'
+    doFirst {
+        project.ext.set('env', 'dev')
+    }
+    finalizedBy bootJar
+}
+
+task buildStage(type: org.springframework.boot.gradle.tasks.bundling.BootJar) {
+    group = 'build'
+    description = 'Builds the application for staging environment'
+    doFirst {
+        project.ext.set('env', 'stage')
+    }
+    finalizedBy bootJar
+}
+
+task buildProd(type: org.springframework.boot.gradle.tasks.bundling.BootJar) {
+    group = 'build'
+    description = 'Builds the application for production environment'
+    doFirst {
+        project.ext.set('env', 'prod')
+    }
+    finalizedBy bootJar
+}
+
+// 빌드 시 프로파일 설정
+bootJar {
+    doFirst {
+        manifest {
+            attributes(
+                'Build-Time': buildTime,
+                'Spring-Profiles-Active': env
+            )
+        }
+    }
+}
+
+// 빌드 시 리소스 필터링
+processResources {
+    filesMatching('application*.yml') {
+        filter {
+            it.replace('@build.time@', buildTime)
+               .replace('@version@', version)
+        }
+    }
+} 
