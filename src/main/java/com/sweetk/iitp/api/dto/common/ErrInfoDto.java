@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @Schema(description = "Response 에러 정보")
-public class ErrorInfo {
+public class ErrInfoDto {
     @Schema(description = "에러 코드", example = "C001")
     private final String code;
 

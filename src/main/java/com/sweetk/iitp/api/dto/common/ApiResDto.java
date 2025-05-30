@@ -21,8 +21,8 @@ public class ApiResDto<T> {
     @Schema(description = "응답 코드", example = "200")
     private final HttpStatus status;
 
-    @Schema(description = "에러 정보", implementation = ErrorInfo.class)
-    private final ErrorInfo error;
+    @Schema(description = "에러 정보", implementation = ErrInfoDto.class)
+    private final ErrInfoDto error;
 
 
 
@@ -46,7 +46,7 @@ public class ApiResDto<T> {
     public static <T> ApiResDto<T> error(String code, String message) {
         return ApiResDto.<T>builder()
                 .success(false)
-                .error(ErrorInfo.builder()
+                .error(ErrInfoDto.builder()
                         .code(code)
                         .message(message)
                         .build())
@@ -57,7 +57,7 @@ public class ApiResDto<T> {
     public static <T> ApiResDto<T> error(String code, String message, String details) {
         return ApiResDto.<T>builder()
                 .success(false)
-                .error(ErrorInfo.builder()
+                .error(ErrInfoDto.builder()
                         .code(code)
                         .message(message)
                         .details(details)
@@ -69,7 +69,7 @@ public class ApiResDto<T> {
     public static <T> ApiResDto<T> error(HttpStatus status, String code, String message) {
         return ApiResDto.<T>builder()
                 .success(false)
-                .error(ErrorInfo.builder()
+                .error(ErrInfoDto.builder()
                         .code(code)
                         .message(message)
                         .build())
@@ -81,7 +81,7 @@ public class ApiResDto<T> {
     public static <T> ApiResDto<T> error(ErrorCode errorCode) {
         return ApiResDto.<T>builder()
                 .success(false)
-                .error(ErrorInfo.builder()
+                .error(ErrInfoDto.builder()
                         .code(errorCode.getCode())
                         .message(errorCode.getMessage())
                         .build())
@@ -93,7 +93,7 @@ public class ApiResDto<T> {
     public static <T> ApiResDto<T> error(ErrorCode errorCode, String detailMessage) {
         return ApiResDto.<T>builder()
                 .success(false)
-                .error(ErrorInfo.builder()
+                .error(ErrInfoDto.builder()
                         .code(errorCode.getCode())
                         .message(errorCode.getMessage())
                         .details(detailMessage)

@@ -3,9 +3,11 @@
 # 이 설정은 application.yml의 기본 설정을 오버라이드합니다.
 
 server:
-  port: 8080  # 스테이징 서버 포트
+  port: 28080  # 스테이징 서버 포트
   servlet:
     context-path: /
+    encoding:
+      force-response: true
   tomcat:
     max-threads: 200
     min-spare-threads: 10
@@ -71,69 +73,6 @@ spring:
           starttls:
             enable: true
 
-# 로깅 설정
-logging:
-  # 스테이징 환경에서는 기본 로깅 활성화
-  level:
-    root: INFO
-    com.iitp: INFO
-    org.hibernate.SQL: INFO
-    org.hibernate.type.descriptor.sql: INFO
-    com.iitp.monitoring: INFO
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
-  file:
-    name: logs/application-stage.log
-    max-size: 500MB
-    max-history: 14
-  logback:
-    rollingpolicy:
-      file-name-pattern: logs/archived/application-stage-%d{yyyy-MM-dd}.%i.log
-      max-file-size: 500MB
-      total-size-cap: 5GB
-      max-history: 14
-  # 구조화된 로깅 설정
-  json:
-    enabled: true
-    include:
-      - timestamp
-      - level
-      - thread
-      - logger
-      - message
-      - exception
-      - traceId
-      - spanId
-  # 성능 모니터링 설정
-  monitoring:
-    enabled: true
-    # 성능 모니터링 로그 레벨 (3단계)
-    # 1. BASIC: 기본적인 API 요청/응답 시간만 기록 (최소 영향)
-    # 2. STANDARD: BASIC + 쿼리 실행 시간, 메모리 사용량 등 추가 메트릭 (중간 영향)
-    # 3. DETAILED: STANDARD + 상세한 성능 메트릭, SQL 쿼리, 파라미터 등 모든 정보 (높은 영향)
-    level: STANDARD  # 스테이징 환경에서는 표준 모니터링
-    slow-query-threshold: 3000  # 3초
-    request-logging:
-      enabled: true
-      include-request-body: false
-      include-response-body: false
-      include-headers: true
-      log-level: STANDARD
-    metrics:
-      enabled: true
-      export-interval: 300  # 5분
-      include:
-        - query-time
-        - response-time
-        - memory-usage
-        - active-connections
-        - request-count
-        - error-count
-    sampling:
-      rate: 0.5  # 50% 샘플링
-      enabled: true
-
 # Actuator 모니터링 설정
 management:
   endpoints:
@@ -150,6 +89,7 @@ management:
 
 # API 문서화 설정
 springdoc:
+  version: @springdoc.version@
   api-docs:
     path: /api-docs
   swagger-ui:
@@ -201,4 +141,29 @@ jasypt:
   encryptor:
     password: ${jasypt.encryptor.password}  # 암호화 키
     algorithm: PBEWithMD5AndDES
-    iv-generator-classname: org.jasypt.iv.NoIvGenerator 
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+
+# Log4j2 설정 파일 로딩
+logging:
+  config: classpath:log4j2-stage.yml
+
+  api:
+    version:
+      current: v1
+      supported:
+        - v1
+        - v2
+    security:
+      api-key:
+        header: X-API-Key
+        required: true
+    rate-limit:
+      enabled: true
+      capacity: 100
+      time-window: 60
+
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: false

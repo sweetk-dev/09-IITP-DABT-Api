@@ -36,7 +36,7 @@ Configuration:
         - ref: Console
         - ref: RollingFile
 
-    Logger:
+    LoggerApp:
       - name: com.sweetk.iitp
         level: debug
         additivity: false
@@ -44,7 +44,7 @@ Configuration:
           - ref: Console
           - ref: RollingFile
 
-    Logger:
+    LoggerSql:
       - name: org.hibernate.SQL
         level: debug
         additivity: false
@@ -52,7 +52,7 @@ Configuration:
           - ref: Console
           - ref: RollingFile
 
-    Logger:
+    LoggerSqlType:
       - name: org.hibernate.type.descriptor.sql.BasicBinder
         level: trace
         additivity: false

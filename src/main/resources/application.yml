@@ -51,6 +51,7 @@ logging:
   config: classpath:log4j2-${spring.profiles.active}.yml
 
 springdoc:
+  version: @springdoc.version@
   api-docs:
     path: /api-docs
   swagger-ui:
