@@ -16,16 +16,40 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.9.22'
     id 'org.jetbrains.kotlin.plugin.spring' version '1.9.22'
     id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.22'
+    id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
 }
+
+
 
 // 프로젝트 기본 정보
 group = 'com.sweetk.iitp'
-version = '1.0.0'
+jarVersion = '1.0.0'
 sourceCompatibility = '17'
 
-// 빌드 시간 설정
-def buildTime = new Date().format("yyyyMMdd")
-def env = project.hasProperty('env') ? project.env : 'local'
+//전역 변수 선언
+ext {
+    apiDocVersion = 'v0.0.1'
+    apiDocversionTag = apiDocVersion
+    env = findProperty("env") ?: "local"              // local/dev/stage/prod
+    buildTime = new Date().format("yyyyMMddHHmmss")   // 예: 20250529124512
+
+    openApiOutputDir = file("$rootDir/docs-dist")
+    springBootStaticDir = file("src/main/resources/static/docs")
+    apiDocFileName = "openapi-${versionTag}.yaml"
+    apiDocLatestFile = "openapi-latest.yaml"
+
+    // API 문서 URL 설정 , project domain 환경에 맞게 설정 필요
+    apiDocUrlBase = [
+            local : "http://localhost:28080",
+            dev   : "https://dev.api.yourdomain.com",
+            stage : "https://stage.api.yourdomain.com",
+            prod  : "https://api.yourdomain.com"
+    ][env]
+}
+
+// 빌드 시간 설정 -- backup for ext
+//def buildTime = new Date().format("yyyyMMdd")
+//def env = project.hasProperty('env') ? project.env : 'local'
 
 // 컴파일 설정
 configurations {
@@ -77,6 +101,59 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter:1.19.3'
 }
 
+
+// OpenAPI Generator 설정
+openApi {
+    outputDir.set(openApiOutputDir)
+    outputFileName.set(apiDocFileName)
+    formats.set(["yaml"])
+    apiDocsUrl.set("${apiDocUrlBase}/v3/api-docs")
+}
+
+
+// 1) 버전 명시된 파일 복사
+tasks.register("copyVersionedDoc", Copy) {
+    dependsOn("openApiGenerate")
+    from(openApiOutputDir) {
+        include(apiDocFileName)
+    }
+    into(springBootStaticDir)
+}
+
+// 2) latest.yaml 이름으로 복사
+tasks.register("copyLatestDoc", Copy) {
+    dependsOn("copyVersionedDoc")  // 버전 파일 먼저 복사됨
+    from(openApiOutputDir) {
+        include(apiDocFileName)
+        rename { apiDocFileName -> "latest.yaml" }
+    }
+    into(springBootStaticDir)
+}
+
+// 3) 통합 Task: 두 개 복사 Task 실행
+tasks.register("copyDocsToResources") {
+    dependsOn("copyVersionedDoc", "copyLatestDoc")
+}
+
+
+// 각 환경 빌드 시 OpenAPI 문서 자동 복사 연결
+tasks.named("buildLocal") {
+    dependsOn("copyDocsToResources")
+}
+
+tasks.named("buildDev") {
+    dependsOn("copyDocsToResources")
+}
+
+tasks.named("buildStage") {
+    dependsOn("copyDocsToResources")
+}
+
+tasks.named("buildProd") {
+    dependsOn("copyDocsToResources")
+}
+
+
 // 테스트 설정
 tasks.named('test') {
     useJUnitPlatform()
@@ -90,7 +167,7 @@ tasks.named('test') {
 bootJar {
     enabled = true
     archiveClassifier = ''
-    archiveVersion = "${version}-${env}-${buildTime}"
+    archiveVersion = "${jarVersion}-${env}-${buildTime}"
     archiveBaseName = 'iitp-api'
 }
 
@@ -105,10 +182,11 @@ jar {
  * - Jasypt 암호화 키
  */
 bootRun {
-    systemProperty "spring.profiles.active", System.getProperty("spring.profiles.active", "dev")
-    systemProperty "app.version", project.version
+    systemProperty "spring.profiles.active", env
+    systemProperty "app.version", jarVersion
     systemProperty "app.build.date", buildTime
     systemProperty "jasypt.encryptor.password", System.getProperty("jasypt.encryptor.password", "dev-password")
+    systemProperty "API_DOC_URL", "${apiDocUrlBase}/docs/latest.yaml"
 }
 
 /**
@@ -117,7 +195,7 @@ bootRun {
  * - 개발 환경 설정 파일 포함
  * - 디버그 정보 포함
  */
-task buildLocal(type: org.springframework.boot.gradle.tasks.bundling.BootJar) {
+tasks.register('buildLocal', org.springframework.boot.gradle.tasks.bundling.BootJar) {
     group = 'build'
     description = 'Builds the application for local environment'
     doFirst {
@@ -126,7 +204,7 @@ task buildLocal(type: org.springframework.boot.gradle.tasks.bundling.BootJar) {
     finalizedBy bootJar
 }
 
-task buildDev(type: org.springframework.boot.gradle.tasks.bundling.BootJar) {
+tasks.register('buildDev', org.springframework.boot.gradle.tasks.bundling.BootJar) {
     group = 'build'
     description = 'Builds the application for development environment'
     doFirst {
@@ -135,7 +213,7 @@ task buildDev(type: org.springframework.boot.gradle.tasks.bundling.BootJar) {
     finalizedBy bootJar
 }
 
-task buildStage(type: org.springframework.boot.gradle.tasks.bundling.BootJar) {
+tasks.register('buildStage', org.springframework.boot.gradle.tasks.bundling.BootJar) {
     group = 'build'
     description = 'Builds the application for staging environment'
     doFirst {
@@ -144,7 +222,7 @@ task buildStage(type: org.springframework.boot.gradle.tasks.bundling.BootJar) {
     finalizedBy bootJar
 }
 
-task buildProd(type: org.springframework.boot.gradle.tasks.bundling.BootJar) {
+tasks.register('buildProd', org.springframework.boot.gradle.tasks.bundling.BootJar) {
     group = 'build'
     description = 'Builds the application for production environment'
     doFirst {
@@ -169,8 +247,12 @@ bootJar {
 processResources {
     filesMatching('application*.yml') {
         filter {
-            it.replace('@build.time@', buildTime)
-               .replace('@version@', version)
+            it
+                    .replace('@build.time@', buildTime)
+                    .replace('@version@', jarVersion)           // JAR 패키지 버전
+                    .replace('@springdoc.version@', apiDocVersion) // OpenAPI 문서 버전
         }
     }
-} 
+}
+
+
