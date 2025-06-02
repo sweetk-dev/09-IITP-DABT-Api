@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 기초-진로 교육 현황 API Controller
+ * 기초-편의 시설 제공 현황 API Controller
  */
 @Slf4j
 @RestController
-@RequestMapping(ApiConstants.ApiPath.API_V1_BASIC_EDU)
+@RequestMapping(ApiConstants.ApiPath.API_V1_BASIC_FACILITY)
 @RequiredArgsConstructor
-@Tag(name = "기초-진로 교육 현황 API V1", description = "기초-진로 교육 현황 OpenApi V1")
-public class EduController extends BasicBaseController {
+@Tag(name = "기초-편의 시설 제공 현황 API V1", description = "기초-편의 시설 제공 현황 OpenApi V1")
+public class FacilityController extends BasicBaseController {
 }

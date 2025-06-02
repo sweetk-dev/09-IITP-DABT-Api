@@ -35,9 +35,14 @@ public final class ApiConstants {
         public static final String API_V1_POI = API_V1 + "/poi";
 
         public static final String API_V1_BASIC = API_V1 + "/basic";
+        public static final String API_V1_BASIC_HOUSING = API_V1_BASIC + "/housing";
+        public static final String API_V1_BASIC_health  = API_V1_BASIC + "/health";
+        public static final String API_V1_BASIC_AID = API_V1_BASIC + "/aid";
         public static final String API_V1_BASIC_EDU = API_V1_BASIC + "/edu";
         public static final String API_V1_BASIC_EMP  = API_V1_BASIC + "/emp";
-        public static final String API_V1_BASIC_health  = API_V1_BASIC + "/health";
+        public static final String API_V1_BASIC_SOCIAL = API_V1_BASIC + "/social";
+        public static final String API_V1_BASIC_FACILITY = API_V1_BASIC + "/facility";
+
 
         public static final String API_V1_PUBLIC = API_V1 + "/public";
         public static final String API_V1_ADMIN = API_V1 + "/admin";
