@@ -1,4 +1,4 @@
-package com.sweetk.iitp.api.entity.basic.adu;
+package com.sweetk.iitp.api.entity.basic.edu;
 
 import com.sweetk.iitp.api.entity.basic.BaseStatsEntity;
 import jakarta.persistence.Entity;
