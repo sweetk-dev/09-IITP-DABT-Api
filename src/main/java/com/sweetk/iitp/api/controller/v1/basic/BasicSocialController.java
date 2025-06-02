@@ -9,13 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 기초-주거 자립 현황 API Controller
+ * 기초-사회망 현황 API Controller
  */
 @Slf4j
 @RestController
-@RequestMapping(ApiConstants.ApiPath.API_V1_BASIC_HOUSING)
+@RequestMapping(ApiConstants.ApiPath.API_V1_BASIC_SOCIAL)
 @RequiredArgsConstructor
-@Tag(name = "기초-주거 자립 현황 API V1", description = "기초-주거 자립 현황 OpenApi V1")
-public class HousingController extends BasicBaseController {
-
+@Tag(name = "기초-사회망 현황 API V1", description = "기초-사회망 현황 OpenApi V1")
+public class BasicSocialController extends BasicBaseController {
 }

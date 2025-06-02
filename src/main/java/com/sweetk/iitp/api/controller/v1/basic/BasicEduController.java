@@ -16,5 +16,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(ApiConstants.ApiPath.API_V1_BASIC_EDU)
 @RequiredArgsConstructor
 @Tag(name = "기초-진로 교육 현황 API V1", description = "기초-진로 교육 현황 OpenApi V1")
-public class EduController extends BasicBaseController {
+public class BasicEduController extends BasicBaseController {
 }
