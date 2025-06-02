@@ -10,7 +10,7 @@
 
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.2.3'
+    id 'org.springframework.boot' version '3.2.5'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'com.github.node-gradle.node' version '7.0.1'
     id 'org.jetbrains.kotlin.jvm' version '1.9.22'
@@ -23,11 +23,11 @@ plugins {
 
 // 프로젝트 기본 정보
 group = 'com.sweetk.iitp'
-jarVersion = '1.0.0'
 sourceCompatibility = '17'
 
 //전역 변수 선언
 ext {
+    jarVersion = '0.0.1'
     apiDocVersion = 'v0.0.1'
     apiDocversionTag = apiDocVersion
     env = findProperty("env") ?: "local"              // local/dev/stage/prod
@@ -35,7 +35,7 @@ ext {
 
     openApiOutputDir = file("$rootDir/docs-dist")
     springBootStaticDir = file("src/main/resources/static/docs")
-    apiDocFileName = "openapi-${versionTag}.yaml"
+    apiDocFileName = "openapi-${apiDocversionTag}.yaml"
     apiDocLatestFile = "openapi-latest.yaml"
 
     // API 문서 URL 설정 , project domain 환경에 맞게 설정 필요
@@ -90,15 +90,15 @@ dependencies {
     implementation 'com.bucket4j:bucket4j-core:8.7.0'
     
     // Logging
-    implementation 'org.apache.logging.log4j:log4j-api:2.22.1'
-    implementation 'org.apache.logging.log4j:log4j-core:2.22.1'
-    implementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.22.1'
+    implementation 'org.apache.logging.log4j:log4j-api:2.23.1'
+    implementation 'org.apache.logging.log4j:log4j-core:2.23.1'
+    implementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1'
     
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
-    testImplementation 'org.testcontainers:postgresql:1.19.3'
-    testImplementation 'org.testcontainers:junit-jupiter:1.19.3'
+    testImplementation 'org.testcontainers:postgresql:1.19.8'
+    testImplementation 'org.testcontainers:junit-jupiter:1.19.8'
 }
 
 
@@ -106,7 +106,6 @@ dependencies {
 openApi {
     outputDir.set(openApiOutputDir)
     outputFileName.set(apiDocFileName)
-    formats.set(["yaml"])
     apiDocsUrl.set("${apiDocUrlBase}/v3/api-docs")
 }
 
@@ -136,22 +135,6 @@ tasks.register("copyDocsToResources") {
 }
 
 
-// 각 환경 빌드 시 OpenAPI 문서 자동 복사 연결
-tasks.named("buildLocal") {
-    dependsOn("copyDocsToResources")
-}
-
-tasks.named("buildDev") {
-    dependsOn("copyDocsToResources")
-}
-
-tasks.named("buildStage") {
-    dependsOn("copyDocsToResources")
-}
-
-tasks.named("buildProd") {
-    dependsOn("copyDocsToResources")
-}
 
 
 // 테스트 설정
@@ -201,6 +184,7 @@ tasks.register('buildLocal', org.springframework.boot.gradle.tasks.bundling.Boot
     doFirst {
         project.ext.set('env', 'local')
     }
+    dependsOn("copyDocsToResources")    // OpenAPI 문서 생성
     finalizedBy bootJar
 }
 
@@ -210,6 +194,7 @@ tasks.register('buildDev', org.springframework.boot.gradle.tasks.bundling.BootJa
     doFirst {
         project.ext.set('env', 'dev')
     }
+    dependsOn("copyDocsToResources")    // OpenAPI 문서 생성
     finalizedBy bootJar
 }
 
@@ -219,6 +204,7 @@ tasks.register('buildStage', org.springframework.boot.gradle.tasks.bundling.Boot
     doFirst {
         project.ext.set('env', 'stage')
     }
+    dependsOn("copyDocsToResources")    // OpenAPI 문서 생성
     finalizedBy bootJar
 }
 
@@ -228,6 +214,7 @@ tasks.register('buildProd', org.springframework.boot.gradle.tasks.bundling.BootJ
     doFirst {
         project.ext.set('env', 'prod')
     }
+    dependsOn("copyDocsToResources")    // OpenAPI 문서 생성
     finalizedBy bootJar
 }
 
