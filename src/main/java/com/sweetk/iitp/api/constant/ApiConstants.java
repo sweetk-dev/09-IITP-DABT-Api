@@ -2,12 +2,12 @@ package com.sweetk.iitp.api.constant;
 
 public final class ApiConstants {
     private ApiConstants() {
-        throw new IllegalStateException("Constants class");
+        throw new IllegalStateException("API Constants class");
     }
 
     public static final class Auth {
         private Auth() {
-            throw new IllegalStateException("Auth constants class");
+            throw new IllegalStateException("Auth constants Error");
         }
 
         public static final String AUTH_HEADER = "X-API-KEY";
@@ -17,7 +17,7 @@ public final class ApiConstants {
 
     public static final class Role {
         private Role() {
-            throw new IllegalStateException("Role constants class");
+            throw new IllegalStateException("Role constants Error");
         }
 
         public static final String ROLE_ADMIN = "ROLE_ADMIN";
@@ -27,7 +27,7 @@ public final class ApiConstants {
 
     public static final class ApiPath {
         private ApiPath() {
-            throw new IllegalStateException("ApiPath constants class");
+            throw new IllegalStateException("ApiPath constants Error");
         }
 
         public static final String API_V1 = "/api/v1";
@@ -50,4 +50,26 @@ public final class ApiConstants {
         public static final String API_V1_AUTH = API_V1 + "/auth";
     }
 
+
+    public static final class Param {
+        private Param() {
+            throw new IllegalStateException("Param constants Error");
+        }
+
+        public static final Integer DEFAULT_PAGE = 1;
+        public static final Integer DEFAULT_SIZE = 30;
+
+        public static final Integer MAX_PAGE = 1000;
+        public static final Integer MAX_SIZE = 100;
+
+        public static final Integer DEFAULT_STAT_YEAR_PERIOD = 1;
+        public static final Integer MAX_STAT_YEAR_PERIOD = 10;
+
+        public static final String FORMAT_STAT_COLLECT_DATE = "%s~%s";
+        public static final String FORMAT_STAT_LATEST_CHN_DATE = "yyyy-MM-dd";
+
+
+        public static final String START_STAT_YEAR_ERR_MSG = "통계 연도는 {value}년 이후만 가능합니다.";
+        public static final Integer START_STAT_YEAR_HOUSING_REG = 2019;
+    }
 } 
