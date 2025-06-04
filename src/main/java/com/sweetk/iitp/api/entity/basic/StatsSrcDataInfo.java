@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 통계성 데이터 수집 소스 데이터 정보
@@ -66,6 +67,10 @@ public class StatsSrcDataInfo {
     @Column(name = "stat_data_ref_dt", length = 12)
     private String statDataRefDt;
 
+    @Column(name = "avail_cat_cols", length = 40)
+    private String availCatCols;
+
+
     @Column(name = "del_yn", length = 1, nullable = false)
     private String delYn;
 
@@ -80,4 +85,19 @@ public class StatsSrcDataInfo {
 
     @Column(name = "deleted_by", length = 40)
     private String deletedBy;
+
+    @Transient
+    //@JsonIgnore
+    private String statOrgName;
+
+
+    public List<String> getCategoryList(String categories ) {
+
+        if (categories == null) {
+            return null;
+        }
+
+        String[] categoryArr = categories.split(",");
+        return List.of(categoryArr);
+    }
 }
