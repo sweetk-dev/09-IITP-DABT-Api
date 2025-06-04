@@ -1,4 +1,4 @@
-package com.sweetk.iitp.api.service.basic.impl;
+package com.sweetk.iitp.api.service.basic;
 
 import com.sweetk.iitp.api.repository.basic.emp.StatsDisEmpNatlDisTypeIndustRepository;
 import com.sweetk.iitp.api.repository.basic.emp.StatsDisEmpNatlDisTypeSevRepository;
@@ -6,13 +6,15 @@ import com.sweetk.iitp.api.repository.basic.emp.StatsDisEmpNatlGovOrgRepository;
 import com.sweetk.iitp.api.repository.basic.emp.StatsDisEmpNatlPrivateRepository;
 import com.sweetk.iitp.api.repository.basic.emp.StatsDisEmpNatlPublicRepository;
 import com.sweetk.iitp.api.repository.basic.emp.StatsDisEmpNatlRepository;
-import com.sweetk.iitp.api.service.basic.BasicBaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * 기초-고용 현황 API Service
+ */
 @Service
 @RequiredArgsConstructor
-public class BasicEmpServiceImpl extends BasicBaseService {
+public class BasicEmpService extends BasicBaseService {
 
     private final StatsDisEmpNatlDisTypeIndustRepository natlDisTypeIndustRepos;
     private final StatsDisEmpNatlDisTypeSevRepository natlDisTypeSevRepos;
