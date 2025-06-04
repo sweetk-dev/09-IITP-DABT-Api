@@ -5,8 +5,13 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum ErrorCode {
+
+    // Success
+    SUCCESS(HttpStatus.OK, "S000", "SUCCESS"),
+
     // Common Errors
-    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C001", "입력값이 올바르지 않습니다."),
+    INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "C000", "요청한 parameter이 올바르지 않습니다."),     //필수 파라메터 누락, null 등
+    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C001", "입력값이 올바르지 않습니다."),             //사용자 입력 값이 비즈니스 규칙 또는 범위를 위반한 경우
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "C002", "지원하지 않는 HTTP 메소드입니다."),
     ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND, "C003", "요청한 리소스를 찾을 수 없습니다."),
     REQUIRED_FIELD_MISSING(HttpStatus.BAD_REQUEST, "C004", "필수 입력값이 누락되었습니다."),
