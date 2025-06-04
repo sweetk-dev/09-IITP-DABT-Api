@@ -6,7 +6,6 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -16,7 +15,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @Setter
-public abstract class BaseStatsEntity {
+public abstract class BaseStatsDtStringEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,8 +52,8 @@ public abstract class BaseStatsEntity {
     @Column(name = "unit_nm", length = 20)
     private String unitNm;
 
-    @Column(name = "dt", precision = 15, scale = 3, nullable = false)
-    private BigDecimal dt;
+    @Column(name = "dt",  nullable = false)
+    private String dt;
 
     @Column(name = "lst_chn_de")
     private LocalDate lstChnDe;
@@ -75,7 +74,4 @@ public abstract class BaseStatsEntity {
     @Column(name = "updated_by", length = 40)
     private String updatedBy;
 
-    @Transient
-    //@JsonIgnore
-    private String itmNm;
 }
