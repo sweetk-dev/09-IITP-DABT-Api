@@ -6,10 +6,10 @@ import jakarta.persistence.Table;
 import lombok.NoArgsConstructor;
 
 /**
- * 기초-사회망 현황-가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도
+ * 기초-사회망 현황-장애인의 사회 참여
  */
 @Entity
-@Table(name = "stats_dis_soc_contact_cntfreq")
+@Table(name = "stats_dis_soc_partic_freq")
 @NoArgsConstructor
-public class StatsDisSocContactCntfreq extends BaseStatsEntity {
+public class StatsDisSocParticFreqEntity extends BaseStatsEntity {
 }

@@ -5,7 +5,7 @@ import com.sweetk.iitp.api.dto.basic.StatDataItem;
 import com.sweetk.iitp.api.dto.basic.StatDataRes;
 import com.sweetk.iitp.api.dto.basic.StatInfo;
 import com.sweetk.iitp.api.entity.basic.BaseStatsEntity;
-import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfo;
+import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +14,7 @@ import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StatsDataConverter {
-    public static StatDataRes toResponse( StatsSrcDataInfo infoEntity, List<BaseStatsEntity> dataList) {
+    public static StatDataRes toResponse(StatsSrcDataInfoEntity infoEntity, List<BaseStatsEntity> dataList) {
 
         if (infoEntity == null) {
             return null;

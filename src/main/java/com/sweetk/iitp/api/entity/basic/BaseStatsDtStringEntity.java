@@ -23,7 +23,7 @@ public abstract class BaseStatsDtStringEntity {
 
     @ManyToOne
     @JoinColumn(name = "src_data_id", nullable = false)
-    private StatsSrcDataInfo srcDataInfo;
+    private StatsSrcDataInfoEntity srcDataInfo;
 
     @Column(name = "prd_de", nullable = false)
     private Short prdDe;

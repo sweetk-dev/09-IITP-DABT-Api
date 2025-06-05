@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-public class StatsKosisOriginData {
+public class StatsKosisOriginDataEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,7 @@ public class StatsKosisOriginData {
 
     @ManyToOne
     @JoinColumn(name = "src_data_id", nullable = false)
-    private StatsSrcDataInfo srcDataInfo;
+    private StatsSrcDataInfoEntity srcDataInfo;
 
     @Column(name = "org_id", nullable = false)
     private Short orgId;

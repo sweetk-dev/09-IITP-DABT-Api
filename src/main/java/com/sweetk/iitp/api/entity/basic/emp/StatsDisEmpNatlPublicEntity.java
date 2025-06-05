@@ -6,10 +6,10 @@ import jakarta.persistence.Table;
 import lombok.NoArgsConstructor;
 
 /**
- * 기초-고용 현황-장애인 근로자 고용현황
+ * 기초-고용 현황-공공기관 장애인고용 현황
  */
 @Entity
-@Table(name = "stats_dis_emp_natl")
+@Table(name = "stats_dis_emp_natl_public")
 @NoArgsConstructor
-public class StatsDisEmpNatl extends BaseStatsEntity {
+public class StatsDisEmpNatlPublicEntity extends BaseStatsEntity {
 }

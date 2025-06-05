@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "stats_dis_emp_natl_private")
 @NoArgsConstructor
-public class StatsDisEmpNatlPrivate extends BaseStatsEntity {
+public class StatsDisEmpNatlPrivateEntity extends BaseStatsEntity {
 }

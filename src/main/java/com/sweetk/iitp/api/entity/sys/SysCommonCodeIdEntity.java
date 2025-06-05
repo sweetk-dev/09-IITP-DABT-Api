@@ -9,7 +9,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class SysCommonCodeId implements Serializable {
+public class SysCommonCodeIdEntity implements Serializable {
     private String grpId;
     private String codeId;
 }

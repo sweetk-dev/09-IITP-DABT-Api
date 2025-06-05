@@ -1,6 +1,6 @@
 package com.sweetk.iitp.api.entity.basic;
 
-import com.sweetk.iitp.api.entity.sys.SysExtApiInfo;
+import com.sweetk.iitp.api.entity.sys.SysExtApiInfoEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class StatsSrcDataInfo {
+public class StatsSrcDataInfoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class StatsSrcDataInfo {
 
     @ManyToOne
     @JoinColumn(name = "ext_api_id", nullable = false)
-    private SysExtApiInfo extApiInfo;
+    private SysExtApiInfoEntity extApiInfo;
 
     @Column(name = "ext_sys", length = 10)
     private String extSys;

@@ -1,9 +1,9 @@
 package com.sweetk.iitp.api.repository.basic.health;
 
-import com.sweetk.iitp.api.entity.basic.health.StatsDisHlthExrcBestAid;
+import com.sweetk.iitp.api.entity.basic.health.StatsDisHlthExrcBestAidEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StatsDisHlthExrcBestAidRepository extends JpaRepository<StatsDisHlthExrcBestAid, Integer> {
+public interface StatsDisHlthExrcBestAidRepository extends JpaRepository<StatsDisHlthExrcBestAidEntity, Integer> {
 }
