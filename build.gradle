@@ -16,13 +16,13 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.9.22'
     id 'org.jetbrains.kotlin.plugin.spring' version '1.9.22'
     id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.22'
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
     id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
 }
 
-
-
 // 프로젝트 기본 정보
-group = 'com.sweetk.iitp'
+group = 'com.sweetk'
+version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
 //전역 변수 선언
@@ -57,6 +57,7 @@ configurations {
         extendsFrom annotationProcessor
     }
     all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    querydsl.extendsFrom compileClasspath
 }
 
 // 저장소 설정
@@ -69,38 +70,34 @@ dependencies {
     // Spring Boot Starters
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     
-    // Database
-    implementation 'org.postgresql:postgresql'
+    // QueryDSL
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
     
-    // Security
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-    
-    // API Documentation
+    // Swagger/OpenAPI
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
     
-    // Utilities
-    implementation 'org.projectlombok:lombok'
-    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
-    implementation 'com.bucket4j:bucket4j-core:8.7.0'
+    // Monitoring
+    implementation 'io.micrometer:micrometer-core'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
     
-    // Logging
-    implementation 'org.apache.logging.log4j:log4j-api:2.23.1'
-    implementation 'org.apache.logging.log4j:log4j-core:2.23.1'
-    implementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1'
+    // Database
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
     
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
-    testImplementation 'org.testcontainers:postgresql:1.19.8'
-    testImplementation 'org.testcontainers:junit-jupiter:1.19.8'
+    
+    // Jakarta
+    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
 }
-
 
 // OpenAPI Generator 설정
 openApi {
@@ -108,7 +105,6 @@ openApi {
     outputFileName.set(apiDocFileName)
     apiDocsUrl.set("${apiDocUrlBase}/v3/api-docs")
 }
-
 
 // 1) 버전 명시된 파일 복사
 tasks.register("copyVersionedDoc", Copy) {
@@ -133,9 +129,6 @@ tasks.register("copyLatestDoc", Copy) {
 tasks.register("copyDocsToResources") {
     dependsOn("copyVersionedDoc", "copyLatestDoc")
 }
-
-
-
 
 // 테스트 설정
 tasks.named('test') {
@@ -240,6 +233,27 @@ processResources {
                     .replace('@springdoc.version@', apiDocVersion) // OpenAPI 문서 버전
         }
     }
+}
+
+// QueryDSL 설정
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+// QueryDSL 생성된 소스 디렉토리 정리
+clean {
+    delete file(querydslDir)
 }
 
 
