@@ -1,123 +1,87 @@
-/**
- * IITP API 프로젝트 빌드 설정
- * 
- * 주요 기능:
- * 1. 환경별 빌드 설정 (dev, stage, prod)
- * 2. 의존성 관리
- * 3. Jasypt 암호화 설정
- * 4. 빌드 메타데이터 관리
- */
-
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.5'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'com.github.node-gradle.node' version '7.0.1'
-    id 'org.jetbrains.kotlin.jvm' version '1.9.22'
-    id 'org.jetbrains.kotlin.plugin.spring' version '1.9.22'
-    id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.22'
     id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
     id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
 }
 
-// 프로젝트 기본 정보
 group = 'com.sweetk'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
-//전역 변수 선언
 ext {
     jarVersion = '0.0.1'
     apiDocVersion = 'v0.0.1'
     apiDocversionTag = apiDocVersion
-    env = findProperty("env") ?: "local"              // local/dev/stage/prod
-    buildTime = new Date().format("yyyyMMddHHmmss")   // 예: 20250529124512
+    env = findProperty("env") ?: "local"
+    buildTime = new Date().format("yyyyMMddHHmmss")
 
     openApiOutputDir = file("$rootDir/docs-dist")
     springBootStaticDir = file("src/main/resources/static/docs")
     apiDocFileName = "openapi-${apiDocversionTag}.yaml"
     apiDocLatestFile = "openapi-latest.yaml"
 
-    // API 문서 URL 설정 , project domain 환경에 맞게 설정 필요
     apiDocUrlBase = [
             local : "http://localhost:28080",
             dev   : "https://dev.api.yourdomain.com",
             stage : "https://stage.api.yourdomain.com",
             prod  : "https://api.yourdomain.com"
     ][env]
+
+    environments = ['local', 'dev', 'stage', 'prod']
+    defaultEnv = 'dev'
 }
 
-// 빌드 시간 설정 -- backup for ext
-//def buildTime = new Date().format("yyyyMMdd")
-//def env = project.hasProperty('env') ? project.env : 'local'
-
-// 컴파일 설정
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-    all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-    querydsl.extendsFrom compileClasspath
-}
-
-// 저장소 설정
 repositories {
     mavenCentral()
 }
 
-// 프로젝트 의존성
 dependencies {
-    // Spring Boot Starters
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    
-    // QueryDSL
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    implementation 'com.querydsl:querydsl-apt:5.0.0:jakarta'
     annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
-    
-    // Swagger/OpenAPI
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
-    
-    // Monitoring
-    implementation 'io.micrometer:micrometer-core'
-    implementation 'io.micrometer:micrometer-registry-prometheus'
-    
-    // Database
-    implementation 'org.postgresql:postgresql'
-    
-    // Lombok
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    
-    // Test
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    
-    // Jakarta
     annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
     annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    implementation 'com.bucket4j:bucket4j-core:8.7.0'
+    implementation 'io.micrometer:micrometer-core'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'org.postgresql:postgresql'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
-// OpenAPI Generator 설정
 openApi {
     outputDir.set(openApiOutputDir)
     outputFileName.set(apiDocFileName)
     apiDocsUrl.set("${apiDocUrlBase}/v3/api-docs")
 }
 
-// 1) 버전 명시된 파일 복사
 tasks.register("copyVersionedDoc", Copy) {
-    dependsOn("openApiGenerate")
+    if (tasks.findByName('openApi')) {
+        dependsOn("openApi")
+    }
     from(openApiOutputDir) {
         include(apiDocFileName)
     }
     into(springBootStaticDir)
 }
 
-// 2) latest.yaml 이름으로 복사
 tasks.register("copyLatestDoc", Copy) {
-    dependsOn("copyVersionedDoc")  // 버전 파일 먼저 복사됨
+    dependsOn("copyVersionedDoc")
     from(openApiOutputDir) {
         include(apiDocFileName)
         rename { apiDocFileName -> "latest.yaml" }
@@ -125,38 +89,35 @@ tasks.register("copyLatestDoc", Copy) {
     into(springBootStaticDir)
 }
 
-// 3) 통합 Task: 두 개 복사 Task 실행
 tasks.register("copyDocsToResources") {
-    dependsOn("copyVersionedDoc", "copyLatestDoc")
+    if (tasks.findByName('openApi')) {
+        dependsOn("copyVersionedDoc", "copyLatestDoc")
+    }
 }
 
-// 테스트 설정
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-/**
- * JAR 파일 빌드 설정
- * - 기본 JAR 파일 생성
- * - 매니페스트 정보 포함
- */
+// ✅ bootJar 전역 설정
 bootJar {
     enabled = true
     archiveClassifier = ''
-    archiveVersion = "${jarVersion}-${env}-${buildTime}"
     archiveBaseName = 'iitp-api'
+    mainClass.set('com.sweetk.iitp.IitpApiApplication') // ✅ mainClass 명시
+
+    manifest {
+        attributes(
+                'Build-Time': buildTime,
+                'Version': jarVersion
+        )
+    }
 }
 
 jar {
     enabled = false
 }
 
-/**
- * 애플리케이션 실행 설정
- * - 프로필 설정
- * - 버전 정보
- * - Jasypt 암호화 키
- */
 bootRun {
     systemProperty "spring.profiles.active", env
     systemProperty "app.version", jarVersion
@@ -165,78 +126,63 @@ bootRun {
     systemProperty "API_DOC_URL", "${apiDocUrlBase}/docs/latest.yaml"
 }
 
-/**
- * 개발 환경 빌드 태스크
- * - 개발용 JAR 파일 생성
- * - 개발 환경 설정 파일 포함
- * - 디버그 정보 포함
- */
-tasks.register('buildLocal', org.springframework.boot.gradle.tasks.bundling.BootJar) {
+// ✅ 환경별 빌드 시 bootJar 설정만 수정 (별도 task로 재정의 X)
+tasks.register('buildLocal') {
     group = 'build'
     description = 'Builds the application for local environment'
     doFirst {
         project.ext.set('env', 'local')
+        bootJar.archiveVersion.set("${jarVersion}-local-${buildTime}")
     }
-    dependsOn("copyDocsToResources")    // OpenAPI 문서 생성
-    finalizedBy bootJar
+    dependsOn("copyDocsToResources", "bootJar")
 }
 
-tasks.register('buildDev', org.springframework.boot.gradle.tasks.bundling.BootJar) {
+tasks.register('buildDev') {
     group = 'build'
     description = 'Builds the application for development environment'
     doFirst {
         project.ext.set('env', 'dev')
+        bootJar.archiveVersion.set("${jarVersion}-dev-${buildTime}")
     }
-    dependsOn("copyDocsToResources")    // OpenAPI 문서 생성
-    finalizedBy bootJar
+    dependsOn("copyDocsToResources", "bootJar")
 }
 
-tasks.register('buildStage', org.springframework.boot.gradle.tasks.bundling.BootJar) {
+tasks.register('buildStage') {
     group = 'build'
     description = 'Builds the application for staging environment'
     doFirst {
         project.ext.set('env', 'stage')
+        bootJar.archiveVersion.set("${jarVersion}-stage-${buildTime}")
     }
-    dependsOn("copyDocsToResources")    // OpenAPI 문서 생성
-    finalizedBy bootJar
+    dependsOn("copyDocsToResources", "bootJar")
 }
 
-tasks.register('buildProd', org.springframework.boot.gradle.tasks.bundling.BootJar) {
+tasks.register('buildProd') {
     group = 'build'
     description = 'Builds the application for production environment'
     doFirst {
         project.ext.set('env', 'prod')
+        bootJar.archiveVersion.set("${jarVersion}-prod-${buildTime}")
     }
-    dependsOn("copyDocsToResources")    // OpenAPI 문서 생성
-    finalizedBy bootJar
+    dependsOn("copyDocsToResources", "bootJar")
 }
 
-// 빌드 시 프로파일 설정
-bootJar {
-    doFirst {
-        manifest {
-            attributes(
-                'Build-Time': buildTime,
-                'Spring-Profiles-Active': env
-            )
-        }
-    }
+tasks.named('build') {
+    dependsOn "build${defaultEnv.capitalize()}"
 }
 
-// 빌드 시 리소스 필터링
 processResources {
     filesMatching('application*.yml') {
         filter {
-            it
-                    .replace('@build.time@', buildTime)
-                    .replace('@version@', jarVersion)           // JAR 패키지 버전
-                    .replace('@springdoc.version@', apiDocVersion) // OpenAPI 문서 버전
+            it.replace('@build.time@', buildTime)
+                    .replace('@version@', jarVersion)
+                    .replace('@springdoc.version@', apiDocVersion)
         }
     }
 }
 
 // QueryDSL 설정
-def querydslDir = layout.buildDirectory.dir('generated/querydsl').get().asFile
+def querydslDir = "$buildDir/generated/querydsl"
 
 querydsl {
     jpa = true
@@ -248,12 +194,26 @@ sourceSets {
 }
 
 compileQuerydsl {
-    options.annotationProcessorPath = configurations.querydsl
+    options.annotationProcessorPath = configurations.annotationProcessor
 }
 
-// QueryDSL 생성된 소스 디렉토리 정리
+/*
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs += [querydslDir]
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.generatedSourceOutputDirectory = file(querydslDir)
+}
+*/
 clean {
     delete file(querydslDir)
 }
-
-
