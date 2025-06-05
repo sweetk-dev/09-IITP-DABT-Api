@@ -1,16 +1,13 @@
 package com.sweetk.iitp.api.dto.poi.converter;
 
-import com.sweetk.iitp.api.dto.poi.BasicInfo;
-import com.sweetk.iitp.api.dto.poi.Location;
-import com.sweetk.iitp.api.dto.poi.PoiRequest;
-import com.sweetk.iitp.api.dto.poi.PoiResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PoiConverter {
-    
-    public static PoiResponse toResponse(Poi poi) {
+
+    /*
+    public static <PoiEntity> PoiResponse toResponse(PoiEntity poi) {
         BasicInfo basicInfo = BasicInfo.builder()
                 .name(poi.getName())
                 .description(poi.getDescription())
@@ -49,4 +46,6 @@ public class PoiConverter {
         poi.setWebsite(request.getWebsite());
         return poi;
     }
+
+     */
 } 
