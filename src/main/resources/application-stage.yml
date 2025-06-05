@@ -86,6 +86,8 @@ management:
     export:
       prometheus:
         enabled: true
+    timers:
+      enabled: true  # 스테이징 환경에서는 타이밍 활성화
 
 # API 문서화 설정
 springdoc:

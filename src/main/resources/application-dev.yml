@@ -83,9 +83,9 @@ management:
       enabled: true
   metrics:
     export:
-      simple:
-        enabled: true
-        step: 30s
+      enabled: false
+    timers:
+      enabled: false  # 개발 환경에서는 타이밍 비활성화
 
 # API 문서화 설정
 springdoc:

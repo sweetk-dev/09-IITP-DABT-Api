@@ -82,12 +82,11 @@ management:
   endpoint:
     health:
       show-details: when_authorized
-    metrics:
-      enabled: false
   metrics:
     export:
-      simple:
-        enabled: false
+      enabled: true
+    timers:
+      enabled: true  # 운영 환경에서는 타이밍 활성화
 
 # API 문서화 설정
 springdoc:
