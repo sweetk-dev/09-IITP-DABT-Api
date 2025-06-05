@@ -1,8 +1,6 @@
 spring:
   application:
     name: iitp-api
-  profiles:
-    active: local
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/iitp
@@ -79,4 +77,11 @@ api:
   rate-limit:
     enabled: true
     capacity: 100
-    time-window: 60 
+    time-window: 60
+
+management:
+  metrics:
+    export:
+      enabled: true
+    timers:
+      enabled: true  # @Timed 어노테이션 활성화/비활성화 
