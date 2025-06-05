@@ -85,7 +85,7 @@ dependencies {
     implementation 'io.micrometer:micrometer-registry-prometheus'
     
     // Database
-    runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'org.postgresql:postgresql'
     
     // Lombok
     compileOnly 'org.projectlombok:lombok'
@@ -236,7 +236,7 @@ processResources {
 }
 
 // QueryDSL 설정
-def querydslDir = "$buildDir/generated/querydsl"
+def querydslDir = layout.buildDirectory.dir('generated/querydsl').get().asFile
 
 querydsl {
     jpa = true

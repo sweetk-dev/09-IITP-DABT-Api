@@ -1,5 +1,5 @@
 Configuration:
-  status: WARN
+  status: INFO
   packages: com.sweetk.iitp
 
   Properties:
@@ -31,14 +31,14 @@ Configuration:
 
   Loggers:
     Root:
-      level: info
+      level: INFO
       AppenderRef:
         - ref: Console
         - ref: RollingFile
 
     LoggerApp:
       - name: com.sweetk.iitp
-        level: info
+        level: INFO
         additivity: false
         AppenderRef:
           - ref: Console
@@ -46,7 +46,7 @@ Configuration:
 
     LoggerSql:
       - name: org.hibernate.SQL
-        level: error
+        level: WARN
         additivity: false
         AppenderRef:
           - ref: Console
@@ -54,7 +54,36 @@ Configuration:
 
     LoggerSqlType:
       - name: org.hibernate.type.descriptor.sql.BasicBinder
-        level: error
+        level: WARN
+        additivity: false
+        AppenderRef:
+          - ref: Console
+          - ref: RollingFile
+
+    # QueryDSL 로깅 설정
+    - name: com.querydsl
+      level: WARN
+      additivity: false
+      AppenderRef:
+        - ref: Console
+        - ref: RollingFile
+
+    Logger:
+      - name: com.sweetk.iitp
+        level: INFO
+        additivity: false
+        AppenderRef:
+          - ref: Console
+          - ref: RollingFile
+      # Hibernate SQL 로깅
+      - name: org.hibernate.SQL
+        level: WARN
+        additivity: false
+        AppenderRef:
+          - ref: Console
+          - ref: RollingFile
+      - name: org.hibernate.type.descriptor.sql.BasicBinder
+        level: WARN
         additivity: false
         AppenderRef:
           - ref: Console
