@@ -16,15 +16,14 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @Setter
-public abstract class BaseStatsEntity {
+public class BaseStatsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "src_data_id", nullable = false)
-    private StatsSrcDataInfoEntity srcDataInfo;
+    @Column(name = "src_data_id", nullable = false)
+    private Integer srcDataId;
 
     @Column(name = "prd_de", nullable = false)
     private Short prdDe;

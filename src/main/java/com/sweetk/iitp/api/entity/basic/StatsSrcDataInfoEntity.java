@@ -1,10 +1,12 @@
 package com.sweetk.iitp.api.entity.basic;
 
+import com.sweetk.iitp.api.entity.sys.SysCommonCodeEntity;
 import com.sweetk.iitp.api.entity.sys.SysExtApiInfoEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -70,34 +72,52 @@ public class StatsSrcDataInfoEntity {
     @Column(name = "avail_cat_cols", length = 40)
     private String availCatCols;
 
-
     @Column(name = "del_yn", length = 1, nullable = false)
     private String delYn;
 
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 
     @Column(name = "created_by", length = 40, nullable = false)
     private String createdBy;
 
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     @Column(name = "updated_by", length = 40)
     private String updatedBy;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     @Column(name = "deleted_by", length = 40)
     private String deletedBy;
 
     @Transient
-    //@JsonIgnore
     private String statOrgName;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stat_org_id", referencedColumnName = "code_id", insertable = false, updatable = false)
+    @Where(clause = "grp_id = 'stats_src_orgId'")
+    private SysCommonCodeEntity statOrg;
 
-    public List<String> getCategoryList(String categories ) {
+    @PostLoad
+    public void postLoad() {
+        if (statOrg != null) {
+            this.statOrgName = statOrg.getCodeNm();
+        }
+    }
 
-        if (categories == null) {
+    public List<String> getStingToList(String data ) {
+        if (data == null) {
             return null;
         }
-
-        String[] categoryArr = categories.split(",");
-        return List.of(categoryArr);
+        String[] StringArr = data.split(",");
+        return List.of(StringArr);
     }
+
+    public List<String> getAvailCatColsList() {
+        return getStingToList(availCatCols);
+    }
+
 }

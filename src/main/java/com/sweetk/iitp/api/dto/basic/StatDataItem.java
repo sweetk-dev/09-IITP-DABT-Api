@@ -53,7 +53,6 @@ public class StatDataItem {
     @Schema(description = "데이터의 최종수정일", example = "2023-01-02")
     private LocalDate lstChnDe;
 
-
     public static StatDataItem fromEntity(BaseStatsEntity entity) {
         if (entity == null) return null;
 
@@ -65,7 +64,7 @@ public class StatDataItem {
                 .c1ObjNm(entity.getC1ObjNm())
                 .c2ObjNm(entity.getC2ObjNm())
                 .c3ObjNm(entity.getC3ObjNm())
-                .itmNm(entity.getItmNm()) // itmId → itmNm 사용 중이면 실제 이름 매핑 필요
+                .itmNm(entity.getItmNm())
                 .unitNm(entity.getUnitNm())
                 .data(entity.getDt() != null ? entity.getDt().toPlainString() : null)
                 .lstChnDe(entity.getLstChnDe())

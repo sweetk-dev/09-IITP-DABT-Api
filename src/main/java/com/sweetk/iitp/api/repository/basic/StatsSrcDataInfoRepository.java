@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StatsSrcDataInfoRepository extends JpaRepository<StatsSrcDataInfoEntity, Integer> {
+    StatsSrcDataInfoEntity findBySrcDataId(Integer srcDataId);
 }

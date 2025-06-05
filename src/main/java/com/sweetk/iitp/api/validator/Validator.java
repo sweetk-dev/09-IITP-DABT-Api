@@ -4,7 +4,7 @@ import com.sweetk.iitp.api.exception.BusinessException;
 import com.sweetk.iitp.api.exception.ErrorCode;
 import org.springframework.util.StringUtils;
 
-public abstract class Validator {
+public class Validator {
     
     protected void validateRequired(String value, String fieldName) {
         if (!StringUtils.hasText(value)) {

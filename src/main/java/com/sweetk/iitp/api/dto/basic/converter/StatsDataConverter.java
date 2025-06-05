@@ -15,7 +15,6 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StatsDataConverter {
     public static StatDataRes toResponse(StatsSrcDataInfoEntity infoEntity, List<BaseStatsEntity> dataList) {
-
         if (infoEntity == null) {
             return null;
         }
@@ -24,7 +23,7 @@ public class StatsDataConverter {
                 .tblName(infoEntity.getStatTblName())
                 .period(infoEntity.getPeriodicity())
                 .collectDate(String.format(ApiConstants.Param.FORMAT_STAT_COLLECT_DATE, infoEntity.getCollectStartDt(), infoEntity.getCollectEndDt()))
-                .orgName( infoEntity.getStatOrgName())
+                .orgName(infoEntity.getStatOrgName())
                 .surveyName(infoEntity.getStatSurveyName())
                 .latestChnDate(infoEntity.getStatLatestChnDt())
                 .build();
@@ -41,4 +40,25 @@ public class StatsDataConverter {
                 .build();
     }
 
+    public static StatDataRes toResponseFromItems(StatsSrcDataInfoEntity infoEntity, List<StatDataItem> dataList) {
+        if (infoEntity == null) {
+            return null;
+        }
+
+        StatInfo statInfo = StatInfo.builder()
+                .tblName(infoEntity.getStatTblName())
+                .period(infoEntity.getPeriodicity())
+                .collectDate(String.format(ApiConstants.Param.FORMAT_STAT_COLLECT_DATE, infoEntity.getCollectStartDt(), infoEntity.getCollectEndDt()))
+                .orgName(infoEntity.getStatOrgName())
+                .surveyName(infoEntity.getStatSurveyName())
+                .latestChnDate(infoEntity.getStatLatestChnDt())
+                .build();
+
+        List<StatDataItem> items = (dataList != null) ? dataList : Collections.emptyList();
+
+        return StatDataRes.builder()
+                .statInfo(statInfo)
+                .items(items)
+                .build();
+    }
 }
