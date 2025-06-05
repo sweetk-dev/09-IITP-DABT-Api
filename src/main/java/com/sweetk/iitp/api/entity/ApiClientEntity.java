@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ApiClient {
+public class ApiClientEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,4 +33,4 @@ public class ApiClient {
 
     @Column(nullable = false)
     private String role;
-} 
+}

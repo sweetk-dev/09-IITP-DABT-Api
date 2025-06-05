@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-public class StatsKosisMetadataCode {
+public class StatsKosisMetadataCodeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class StatsKosisMetadataCode {
 
     @ManyToOne
     @JoinColumn(name = "src_data_id", nullable = false)
-    private StatsSrcDataInfo srcDataInfo;
+    private StatsSrcDataInfoEntity srcDataInfo;
 
     @Column(name = "tbl_id", length = 40, nullable = false)
     private String tblId;

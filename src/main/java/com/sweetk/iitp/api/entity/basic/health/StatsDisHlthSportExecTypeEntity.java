@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "stats_dis_hlth_sport_exec_type")
 @NoArgsConstructor
-public class StatsDisHlthSportExecType extends BaseStatsEntity {
+public class StatsDisHlthSportExecTypeEntity extends BaseStatsEntity {
 }

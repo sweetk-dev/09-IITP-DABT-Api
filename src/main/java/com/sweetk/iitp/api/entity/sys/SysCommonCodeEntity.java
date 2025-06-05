@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "sys_common_code")
-@IdClass(SysCommonCodeId.class)
+@IdClass(SysCommonCodeIdEntity.class)
 @Getter
 @Setter
 @NoArgsConstructor
-public class SysCommonCode {
+public class SysCommonCodeEntity {
 
     @Id
     @Column(name = "grp_id", length = 40, nullable = false)

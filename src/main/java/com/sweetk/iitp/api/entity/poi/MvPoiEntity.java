@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MvPoi {
+public class MvPoiEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

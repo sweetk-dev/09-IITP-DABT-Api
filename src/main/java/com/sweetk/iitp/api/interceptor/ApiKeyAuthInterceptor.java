@@ -1,6 +1,6 @@
 package com.sweetk.iitp.api.interceptor;
 
-import com.sweetk.iitp.api.entity.ApiKey;
+import com.sweetk.iitp.api.entity.ApiKeyEntity;
 import com.sweetk.iitp.api.exception.ApiException;
 import com.sweetk.iitp.api.exception.ErrorCode;
 import com.sweetk.iitp.api.repository.ApiKeyRepository;
@@ -22,14 +22,14 @@ public class ApiKeyAuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String apiKey = request.getHeader(API_KEY_HEADER);
-        
+
         if (apiKey == null || apiKey.isBlank()) {
-            throw new ApiException(ErrorCode.UNAUTHORIZED.getCode(), "API Key is required");
+            throw new ApiException(ErrorCode.UNAUTHORIZED, "API Key is required");
         }
 
         // Get all active API keys
         return apiKeyRepository.findAll().stream()
-                .filter(ApiKey::isActive)
+                .filter(ApiKeyEntity::isActive)
                 .anyMatch(key -> encryptionUtil.verifyApiKey(apiKey, key.getEncryptedKey()));
     }
 } 

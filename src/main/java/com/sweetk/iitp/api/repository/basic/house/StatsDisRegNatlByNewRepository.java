@@ -1,9 +1,9 @@
 package com.sweetk.iitp.api.repository.basic.house;
 
-import com.sweetk.iitp.api.entity.basic.housing.StatsDisRegNatlByNew;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StatsDisRegNatlByNewRepository extends JpaRepository<StatsDisRegNatlByNew, Integer> {
+public interface StatsDisRegNatlByNewRepository extends JpaRepository<StatsDisRegNatlByNewEntity, Integer> {
+
 }

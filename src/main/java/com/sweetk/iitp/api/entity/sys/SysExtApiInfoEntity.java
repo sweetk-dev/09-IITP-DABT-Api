@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SysExtApiInfo {
+public class SysExtApiInfoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

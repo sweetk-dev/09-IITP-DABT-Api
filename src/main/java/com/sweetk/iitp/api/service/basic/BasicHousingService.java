@@ -46,7 +46,7 @@ public class BasicHousingService extends BasicBaseService {
     @Timed(value = "housing.reg.new.latest", description = "신규등록 장애인현황 조회 시간")
     public StatDataRes getHousingRegNewLatest(Integer fromYear) {
 
-        QBaseStatsEntity stats = QBaseStatsEntity.baseStatsEntity;
+        QStatsDisRegNatlByNewEntity dbRegNatlByNew = QStatsDisRegNatlByNewEntity.statsDisRegNatlByNewEntity;
         QMetaCodeEntity metaC1 = new QMetaCodeEntity("metaC1");
         QMetaCodeEntity metaC2 = new QMetaCodeEntity("metaC2");
         QMetaCodeEntity metaC3 = new QMetaCodeEntity("metaC3");
