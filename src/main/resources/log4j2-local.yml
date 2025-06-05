@@ -1,5 +1,5 @@
 Configuration:
-  status: DEBUG
+  status: INFO
   packages: com.sweetk.iitp
 
   Properties:
@@ -14,48 +14,54 @@ Configuration:
       target: SYSTEM_OUT
       PatternLayout:
         pattern: ${LOG_PATTERN}
-
-    RollingFile:
-      name: RollingFile
-      fileName: ${LOG_PATH}/iitp-api-local.log
-      filePattern: ${LOG_PATH}/archived/iitp-api-local-%d{yyyy-MM-dd}-%i.log.gz
-      PatternLayout:
-        pattern: ${LOG_FILE_PATTERN}
-      Policies:
-        TimeBasedTriggeringPolicy:
-          interval: 1
-        SizeBasedTriggeringPolicy:
-          size: 10MB
-      DefaultRolloverStrategy:
-        max: 30
+    File:
+      - name: Console
+        PatternLayout:
+          pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+      - name: File
+        fileName: ${LOG_PATH}/iitp-api.log
+        filePattern: ${LOG_PATH}/iitp-api-%d{yyyy-MM-dd}-%i.log
+        PatternLayout:
+          pattern: ${LOG_FILE_PATTERN}
+        Policies:
+          TimeBasedTriggeringPolicy:
+            interval: 1
+            modulate: true
+          SizeBasedTriggeringPolicy:
+            size: 10MB
+        DefaultRolloverStrategy:
+          max: 10
 
   Loggers:
     Root:
-      level: debug
+      level: INFO
       AppenderRef:
         - ref: Console
-        - ref: RollingFile
-
-    LoggerApp:
+        - ref: File
+    Logger:
       - name: com.sweetk.iitp
-        level: debug
+        level: DEBUG
         additivity: false
         AppenderRef:
           - ref: Console
-          - ref: RollingFile
-
-    LoggerSql:
+          - ref: File
+      # QueryDSL 로깅 설정
+      - name: com.querydsl
+        level: DEBUG
+        additivity: false
+        AppenderRef:
+          - ref: Console
+          - ref: File
+      # Hibernate SQL 로깅
       - name: org.hibernate.SQL
-        level: debug
+        level: DEBUG
         additivity: false
         AppenderRef:
           - ref: Console
-          - ref: RollingFile
-
-    LoggerSqlType:
+          - ref: File
       - name: org.hibernate.type.descriptor.sql.BasicBinder
-        level: trace
+        level: TRACE
         additivity: false
         AppenderRef:
           - ref: Console
-          - ref: RollingFile 
+          - ref: File 

@@ -30,6 +30,7 @@ spring:
           batch_size: 1000
         order_inserts: true
         order_updates: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   jackson:
     serialization:
       FAIL_ON_EMPTY_BEANS: false
@@ -39,7 +40,7 @@ spring:
 server:
   port: 8080
   servlet:
-    context-path: /
+    context-path: /api
   tomcat:
     max-threads: 200
     min-spare-threads: 10
@@ -49,11 +50,16 @@ server:
 # Log4j2 설정 파일 로딩
 logging:
   config: classpath:log4j2-${spring.profiles.active}.yml
+  level:
+    root: INFO
+    com.sweetk.iitp: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 springdoc:
   version: @springdoc.version@
   api-docs:
-    path: /api-docs
+    path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
     enabled: true
@@ -61,19 +67,15 @@ springdoc:
     tagsSorter: alpha
     tryItOutEnabled: true
     filter: true
-  packages-to-scan: com.sweetk.iitp.controller
+  packages-to-scan: com.sweetk.iitp.api.controller
   paths-to-match: /api/**
 
+# API 버전 설정
 api:
   version:
     current: v1
     supported:
       - v1
-      - v2
-  security:
-    api-key:
-      header: X-API-Key
-      required: true
   rate-limit:
     enabled: true
     capacity: 100
