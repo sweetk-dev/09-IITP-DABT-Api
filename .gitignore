@@ -61,3 +61,6 @@ target/
 ### OpenAPI ###
 #/docs-dist/
 #/src/main/resources/static/docs/
+
+### Docs ###
+/docs

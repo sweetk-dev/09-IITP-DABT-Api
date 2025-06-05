@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Collectors;
@@ -28,13 +27,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(ApiConstants.ApiPath.API_V1_POI)
 @RequiredArgsConstructor
-@Tag(name = "POI Management V1", description = "APIs for managing Points of Interest")
+@Tag(name = "POI API V1", description = "POI OpenApi V1")
 public class PoiController {
 
     private final PoiService poiService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(
         summary = "Get all POIs",
         description = "Retrieves a paginated list of all active POIs"
@@ -84,40 +82,13 @@ public class PoiController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER', 'CLIENT')")
-    @Operation(
-        summary = "Get POI by ID",
-        description = "Retrieves a specific POI by its ID"
-    )
-    @ApiResponses(value = {
-        @ApiResDto(responseCode = "200", description = "Successfully retrieved POI"),
-        @ApiResDto(responseCode = "404", description = "POI not found"),
-        @ApiResDto(responseCode = "401", description = "Unauthorized"),
-        @ApiResDto(responseCode = "403", description = "Forbidden")
-    })
-    public ResponseEntity<ApiResDto<PoiResponse>> getPoiById(
-            @Parameter(description = "ID of the POI to retrieve", required = true)
-            @PathVariable Long id) {
-        log.info("POI 상세 조회 요청 - ID: {}", id);
-        
-        try {
-            return poiService.findById(id)
-                    .map(poi -> {
-                        log.debug("POI 상세 조회 성공 - ID: {}, 이름: {}", id, poi.getName());
-                        return ResponseEntity.ok(ApiResDto.success(PoiConverter.toResponse(poi)));
-                    })
-                    .orElseGet(() -> {
-                        log.warn("POI 상세 조회 실패 - ID: {} (존재하지 않음)", id);
-                        return ResponseEntity.ok(ApiResDto.error("POI not found", "POI_NOT_FOUND"));
-                    });
-        } catch (Exception e) {
-            log.error("POI 상세 조회 중 오류 발생 - ID: {}, 에러: {}", id, e.getMessage(), e);
-            return ResponseEntity.internalServerError().build();
-        }
+    @Operation(summary = "POI 상세 정보 조회", description = "POI ID로 상세 정보를 조회합니다.")
+    public ResponseEntity<ApiResDto> getPoi(@PathVariable Long id) {
+        PoiResponse poi = poiService.getPoi(id);
+        return ResponseEntity.ok(ApiResDto.success(poi));
     }
 
     @GetMapping("/type/{type}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER', 'CLIENT')")
     @Operation(
         summary = "Get POIs by type",
         description = "Retrieves a paginated list of POIs filtered by type"
@@ -164,7 +135,6 @@ public class PoiController {
     }
 
     @GetMapping("/search")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER', 'CLIENT')")
     @Operation(
         summary = "Search POIs by name",
         description = "Retrieves a paginated list of POIs filtered by name"
@@ -211,7 +181,6 @@ public class PoiController {
     }
 
     @PostMapping("/nearby")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER', 'CLIENT')")
     @Operation(
         summary = "Find POIs within radius",
         description = "Retrieves a paginated list of POIs within a specified radius from a location"
@@ -264,92 +233,27 @@ public class PoiController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(
-        summary = "Create a new POI",
-        description = "Creates a new Point of Interest"
-    )
-    @ApiResponses(value = {
-        @ApiResDto(responseCode = "200", description = "Successfully created POI"),
-        @ApiResDto(responseCode = "400", description = "Invalid input"),
-        @ApiResDto(responseCode = "401", description = "Unauthorized"),
-        @ApiResDto(responseCode = "403", description = "Forbidden")
-    })
-    public ResponseEntity<ApiResDto<PoiResponse>> createPoi(
-            @Valid @RequestBody PoiRequest request) {
-        log.info("POI 생성 요청 - 이름: {}, 타입: {}", request.getName(), request.getType());
-        
-        try {
-            Poi poi = PoiConverter.toEntity(request);
-            Poi savedPoi = poiService.save(poi);
-            log.info("POI 생성 성공 - ID: {}, 이름: {}", savedPoi.getId(), savedPoi.getName());
-            return ResponseEntity.ok(ApiResDto.success(PoiConverter.toResponse(savedPoi), "POI created successfully"));
-        } catch (Exception e) {
-            log.error("POI 생성 실패 - 이름: {}, 에러: {}", request.getName(), e.getMessage(), e);
-            return ResponseEntity.internalServerError().build();
-        }
+    @Operation(summary = "POI 등록", description = "새로운 POI를 등록합니다.")
+    public ResponseEntity<ApiResDto> createPoi(@Valid @RequestBody PoiRequest request) {
+        PoiResponse poi = poiService.createPoi(request);
+        return ResponseEntity.ok(ApiResDto.success(poi));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(
-        summary = "Update an existing POI",
-        description = "Updates an existing Point of Interest by ID"
-    )
-    @ApiResponses(value = {
-        @ApiResDto(responseCode = "200", description = "Successfully updated POI"),
-        @ApiResDto(responseCode = "400", description = "Invalid input"),
-        @ApiResDto(responseCode = "404", description = "POI not found"),
-        @ApiResDto(responseCode = "401", description = "Unauthorized"),
-        @ApiResDto(responseCode = "403", description = "Forbidden")
-    })
-    public ResponseEntity<ApiResDto<PoiResponse>> updatePoi(
-            @Parameter(description = "ID of the POI to update", required = true)
-            @PathVariable Long id,
-            @Valid @RequestBody PoiRequest request) {
-        log.info("POI 수정 요청 - ID: {}, 이름: {}, 타입: {}", 
-                id, request.getName(), request.getType());
-        
-        try {
-            Poi poi = PoiConverter.toEntity(request);
-            Poi updatedPoi = poiService.update(id, poi);
-            log.info("POI 수정 성공 - ID: {}, 이름: {}", id, updatedPoi.getName());
-            return ResponseEntity.ok(ApiResDto.success(PoiConverter.toResponse(updatedPoi), "POI updated successfully"));
-        } catch (Exception e) {
-            log.error("POI 수정 실패 - ID: {}, 에러: {}", id, e.getMessage(), e);
-            return ResponseEntity.internalServerError().build();
-        }
+    @Operation(summary = "POI 수정", description = "기존 POI 정보를 수정합니다.")
+    public ResponseEntity<ApiResDto> updatePoi(@PathVariable Long id, @Valid @RequestBody PoiRequest request) {
+        PoiResponse poi = poiService.updatePoi(id, request);
+        return ResponseEntity.ok(ApiResDto.success(poi));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(
-        summary = "Delete a POI",
-        description = "Permanently deletes a Point of Interest by ID"
-    )
-    @ApiResponses(value = {
-        @ApiResDto(responseCode = "200", description = "Successfully deleted POI"),
-        @ApiResDto(responseCode = "404", description = "POI not found"),
-        @ApiResDto(responseCode = "401", description = "Unauthorized"),
-        @ApiResDto(responseCode = "403", description = "Forbidden")
-    })
-    public ResponseEntity<ApiResDto<Void>> deletePoi(
-            @Parameter(description = "ID of the POI to delete", required = true)
-            @PathVariable Long id) {
-        log.info("POI 삭제 요청 - ID: {}", id);
-        
-        try {
-            poiService.delete(id);
-            log.info("POI 삭제 성공 - ID: {}", id);
-            return ResponseEntity.ok(ApiResDto.success(null, "POI deleted successfully"));
-        } catch (Exception e) {
-            log.error("POI 삭제 실패 - ID: {}, 에러: {}", id, e.getMessage(), e);
-            return ResponseEntity.internalServerError().build();
-        }
+    @Operation(summary = "POI 삭제", description = "POI를 삭제합니다.")
+    public ResponseEntity<ApiResDto> deletePoi(@PathVariable Long id) {
+        poiService.deletePoi(id);
+        return ResponseEntity.ok(ApiResDto.success());
     }
 
     @DeleteMapping("/{id}/soft")
-    @PreAuthorize("hasRole('ADMIN')")
     @Operation(
         summary = "Soft delete a POI",
         description = "Marks a Point of Interest as inactive by ID"
