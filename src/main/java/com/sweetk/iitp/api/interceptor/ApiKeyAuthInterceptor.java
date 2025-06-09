@@ -1,9 +1,7 @@
 package com.sweetk.iitp.api.interceptor;
 
-import com.sweetk.iitp.api.entity.ApiKeyEntity;
 import com.sweetk.iitp.api.exception.ApiException;
 import com.sweetk.iitp.api.exception.ErrorCode;
-import com.sweetk.iitp.api.repository.ApiKeyRepository;
 import com.sweetk.iitp.api.util.EncryptionUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
