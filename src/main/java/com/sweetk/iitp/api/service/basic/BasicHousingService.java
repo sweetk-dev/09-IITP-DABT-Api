@@ -44,8 +44,11 @@ public class BasicHousingService extends BasicBaseService {
      */
     @ConditionalTimed(value = "basic.housing.reg.new.latest", description = "주택 등록 신규 최신 데이터 조회")
     public StatDataRes getHousingRegNewLatest(Integer fromYear) {
+        //get Src data Info
+        StatsSrcDataInfoEntity srcDataInfo = getSrcInoHousingRegNatlByNew();
+
         // 1. 기본 데이터 조회
-        List<StatDataItemDB> dataList = statsDisRegNatlByNewRepos.findLatestRegNewData(fromYear);
+        List<StatDataItemDB> dataList = statsDisRegNatlByNewRepos.findLatestRegNewData(srcDataInfo, fromYear);
         
         // 2. 메타 코드 정보 조회
         Map<String, String> metaCodes = statMetaCodeRepos.findByClassIdIn(List.of("C1", "C2", "C3", "ITM"))
@@ -76,7 +79,6 @@ public class BasicHousingService extends BasicBaseService {
                 .build())
             .collect(Collectors.toList());
 
-        StatsSrcDataInfoEntity srcDataInfo = statsSrcDataInfoRepos.findById(dataList.get(0).getSrcDataId()).orElse(null);
         return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
     }
 
