@@ -103,4 +103,5 @@ public class BasicHousingService extends BasicBaseService {
     /*******************************
      * 도움받는 분야
      *******************************/
+
 }

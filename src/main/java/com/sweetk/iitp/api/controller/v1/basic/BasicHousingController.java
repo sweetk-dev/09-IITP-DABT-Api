@@ -177,8 +177,4 @@ public class BasicHousingController extends BasicBaseController {
      * 도움받는 분야
      *******************************/
 
-
-
-
-
 }
