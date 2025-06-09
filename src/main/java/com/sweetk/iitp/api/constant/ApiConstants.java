@@ -5,25 +5,7 @@ public final class ApiConstants {
         throw new IllegalStateException("API Constants class");
     }
 
-    public static final class Auth {
-        private Auth() {
-            throw new IllegalStateException("Auth constants Error");
-        }
-
-        public static final String AUTH_HEADER = "X-API-KEY";
-        public static final String BEARER_PREFIX = "Bearer ";
-        public static final String AUTHORIZATION_HEADER = "Authorization";
-    }
-
-    public static final class Role {
-        private Role() {
-            throw new IllegalStateException("Role constants Error");
-        }
-
-        public static final String ROLE_ADMIN = "ROLE_ADMIN";
-        public static final String ROLE_USER = "ROLE_USER";
-        public static final String ROLE_CLIENT = "ROLE_CLIENT";
-    }
+    public static final String API_KEY_HEADER = "X-API-KEY";
 
     public static final class ApiPath {
         private ApiPath() {
@@ -42,12 +24,6 @@ public final class ApiConstants {
         public static final String API_V1_BASIC_EMP  = API_V1_BASIC + "/emp";
         public static final String API_V1_BASIC_SOCIAL = API_V1_BASIC + "/social";
         public static final String API_V1_BASIC_FACILITY = API_V1_BASIC + "/facility";
-
-
-        public static final String API_V1_PUBLIC = API_V1 + "/public";
-        public static final String API_V1_ADMIN = API_V1 + "/admin";
-        public static final String API_V1_USER = API_V1 + "/users";
-        public static final String API_V1_AUTH = API_V1 + "/auth";
     }
 
 
@@ -72,4 +48,6 @@ public final class ApiConstants {
         public static final String START_STAT_YEAR_ERR_MSG = "통계 연도는 {value}년 이후만 가능합니다.";
         public static final Integer START_STAT_YEAR_HOUSING_REG = 2019;
     }
+
+
 } 
