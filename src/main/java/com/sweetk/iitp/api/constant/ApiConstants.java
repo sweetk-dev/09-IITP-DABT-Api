@@ -44,9 +44,6 @@ public final class ApiConstants {
         public static final String FORMAT_STAT_COLLECT_DATE = "%s~%s";
         public static final String FORMAT_STAT_LATEST_CHN_DATE = "yyyy-MM-dd";
 
-
-        public static final String START_STAT_YEAR_ERR_MSG = "통계 연도는 {value}년 이후만 가능합니다.";
-        public static final Integer START_STAT_YEAR_HOUSING_REG = 2019;
     }
 
 

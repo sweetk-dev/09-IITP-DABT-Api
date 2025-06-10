@@ -17,8 +17,19 @@ public class MvPoiController {
 
     private final MvPoiReadService mvPoiReadService;
 
+    /*
+    @GetMapping
+    @Operation (
+            summary = "이동형 POI 조회",
+            description = "이동형 POI 조회 (paging)"
+    )
+    public ResponseEntity<ApiResDto><PageResponse<PoiResponse>>> getAllPois (@RequestParam String lang,  @Valid PageRequest pageRequest) {
 
-
+        log.debug("POI 전체 목록 조회 요청 - 페이지: {}, 크기: {}, 정렬: {}",
+                pageRequest.getPage(), pageRequest.getSize(), pageRequest.getSortBy());
+        return ResponseEntity.ok(ApiResDto.success(response));
+    }
+*/
     /*
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")

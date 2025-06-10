@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -44,12 +43,9 @@ public class BasicHousingController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getHousingRegNewLatest(
             @Parameter(name = "from", description = "(옵션) 검색 시작 연도 (2019 이후 부터 가능, 최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            @Min(value = 2019,
-                    message = ApiConstants.Param.START_STAT_YEAR_ERR_MSG)
             Integer from,
             HttpServletRequest request) {
 
-        CheckFromYear(request.getRequestURI(), from);
 
         StatDataRes statDataRes = null;
         try {
@@ -71,8 +67,6 @@ public class BasicHousingController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getHousingRegNewYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
-            @Min(value = 2019,
-                    message = ApiConstants.Param.START_STAT_YEAR_ERR_MSG)
             Integer statYear,
             HttpServletRequest request) {
 
@@ -101,16 +95,12 @@ public class BasicHousingController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getHousingRegAgeSevGenLatest(
             @Parameter(name = "from", description = "(옵션) 검색 시작 연도 (2019 이후 부터 가능, 최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            @Min(value = 2019,
-                    message = ApiConstants.Param.START_STAT_YEAR_ERR_MSG)
             Integer from,
             HttpServletRequest request) {
 
-        CheckFromYear(request.getRequestURI(), from);
-
         StatDataRes statDataRes = null;
         try {
-            statDataRes = housingService.getHousingRegNewLatest(from);
+            statDataRes = housingService.getHousingRegAgeSevGenLatest(from);
         }
         catch (Exception e) {
             log.error("최근 신규등록 장애인현황 조회 실패, 에러: {}", e.getMessage(), e);
@@ -120,7 +110,7 @@ public class BasicHousingController extends BasicBaseController {
         return ResponseEntity.ok(ApiResDto.success(statDataRes));
     }
 
-    @GetMapping("/latest/reg/nat/{statYear}")
+    @GetMapping("/reg/ageSevGen/{statYear}")
     @Operation(
             summary = "해당 연도 신규등록 장애인현황 조회",
             description = "해당 연도의 신규등록 장애인현황 조회"
@@ -128,14 +118,12 @@ public class BasicHousingController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getHousingRegAgeSevGenYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
-            @Min(value = 2019,
-                    message = ApiConstants.Param.START_STAT_YEAR_ERR_MSG)
             Integer statYear,
             HttpServletRequest request) {
 
         StatDataRes statDataRes = null;
         try {
-            statDataRes = housingService.getHousingRegNewYear(statYear);
+            statDataRes = housingService.getHousingRegAgeSevGenYear(statYear);
         }
         catch (Exception e) {
             log.error("최근 신규등록 장애인현황 조회 실패, 에러: {}", e.getMessage(), e);

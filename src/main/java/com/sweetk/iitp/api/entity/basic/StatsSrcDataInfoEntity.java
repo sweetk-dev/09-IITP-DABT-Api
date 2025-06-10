@@ -120,4 +120,12 @@ public class StatsSrcDataInfoEntity {
         return getStingToList(availCatCols);
     }
 
+    public Integer toIntCollectStartDt () {
+        return Integer.parseInt(this.collectStartDt);
+    }
+
+    public Integer toIntCollectEndDt () {
+        return Integer.parseInt(this.collectEndDt);
+    }
+
 }
