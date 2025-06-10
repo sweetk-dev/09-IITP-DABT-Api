@@ -1,0 +1,69 @@
+package com.sweetk.iitp.api.repository.basic;
+
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sweetk.iitp.api.constant.SysConstants;
+import com.sweetk.iitp.api.dto.internal.StatMetaCodeDB;
+import com.sweetk.iitp.api.entity.basic.QStatsKosisMetadataCodeEntity;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
+
+@Repository
+@RequiredArgsConstructor
+public class StatsKosisMetadataCodeRepositoryImpl implements StatsKosisMetadataCodeRepositoryCustom {
+    private final JPAQueryFactory queryFactory;
+    private final QStatsKosisMetadataCodeEntity qMetaCode = QStatsKosisMetadataCodeEntity.statsKosisMetadataCodeEntity;
+
+    @Override
+    public List<StatMetaCodeDB> findItemInfoByCObjId(Integer srcDataId, LocalDate statLatestChnDt) {
+        return queryFactory
+                .select(Projections.constructor(StatMetaCodeDB.class,
+                        qMetaCode.itmId,
+                        qMetaCode.itmNm,
+                        qMetaCode.objNm))
+                .from(qMetaCode)
+                .where(
+                        qMetaCode.srcDataId.eq(srcDataId),
+                        Expressions.booleanTemplate("src_latest_chn_dt = {0}", statLatestChnDt),
+                        qMetaCode.objNm.ne(SysConstants.Stats.KOSIS_META_ITEM_OBJ_NAME)
+                )
+                .fetch();
+    }
+
+    @Override
+    public List<StatMetaCodeDB> findItemInfoByIObjId(Integer srcDataId, LocalDate statLatestChnDt) {
+        return queryFactory
+                .select(Projections.constructor(StatMetaCodeDB.class,
+                        qMetaCode.itmId,
+                        qMetaCode.itmNm,
+                        qMetaCode.objNm))
+                .from(qMetaCode)
+                .where(
+                        qMetaCode.srcDataId.eq(srcDataId),
+                        Expressions.booleanTemplate("src_latest_chn_dt = {0}", statLatestChnDt),
+                        qMetaCode.objNm.eq(SysConstants.Stats.KOSIS_META_ITEM_OBJ_NAME)
+                )
+                .fetch();
+    }
+
+    @Override
+    public List<StatMetaCodeDB> findMetaCodesByIds(Integer srcDataId, LocalDate statLatestChnDt, Set<String> itemIds) {
+        return queryFactory
+                .select(Projections.constructor(StatMetaCodeDB.class,
+                        qMetaCode.itmId,
+                        qMetaCode.itmNm,
+                        qMetaCode.objNm))
+                .from(qMetaCode)
+                .where(
+                        qMetaCode.srcDataId.eq(srcDataId),
+                        Expressions.booleanTemplate("src_latest_chn_dt = {0}", statLatestChnDt),
+                        qMetaCode.itmId.in(itemIds)
+                )
+                .fetch();
+    }
+}
