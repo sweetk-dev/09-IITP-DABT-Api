@@ -5,10 +5,10 @@ import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
 
 import java.util.List;
 
-public interface StatsDisRegNatlByNewRepositoryCustom {
+public interface StatsDisRegNatlByAgeTypeSevGenRepositoryCustom {
     List<StatDataItemDB> findDataLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear);
 
     List<StatDataItemDB> findDataByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear);
 
-    //List<StatDataItemDB> findLatestRegNewData(com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity srcDataInfo, Integer fromYear);
+    //List<StatDataItemDB> findDataLatest(com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity srcDataInfo, Integer fromYear);
 } 

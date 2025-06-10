@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StatsDisRegNatlByAgeTypeSevGenRepository
-        extends JpaRepository<StatsDisRegNatlByAgeTypeSevGenEntity, Integer> {
+        extends JpaRepository<StatsDisRegNatlByAgeTypeSevGenEntity, Integer>, StatsDisRegNatlByAgeTypeSevGenRepositoryCustom {
 }
