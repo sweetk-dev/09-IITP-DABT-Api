@@ -10,16 +10,17 @@ public enum ErrorCode {
     SUCCESS(HttpStatus.OK, "S000", "SUCCESS"),
 
     // Common Errors
-    INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "C000", "요청한 parameter이 올바르지 않습니다."),     //필수 파라메터 누락, null 등
-    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C001", "입력값이 올바르지 않습니다."),             //사용자 입력 값이 비즈니스 규칙 또는 범위를 위반한 경우
-    METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "C002", "지원하지 않는 HTTP 메소드입니다."),
-    ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND, "C003", "요청한 리소스를 찾을 수 없습니다."),
-    REQUIRED_FIELD_MISSING(HttpStatus.BAD_REQUEST, "C004", "필수 입력값이 누락되었습니다."),
-    INVALID_FORMAT(HttpStatus.BAD_REQUEST, "C005", "입력 형식이 올바르지 않습니다."),
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C006", "서버 내부 오류가 발생했습니다."),
-    INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "C007", "잘못된 타입의 값이 입력되었습니다."),
-    ACCESS_DENIED(HttpStatus.FORBIDDEN, "C008", "접근이 거부되었습니다."),
-    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "C009", "인증이 필요합니다."),
+    INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "C000", "요청한 parameter이 올바르지 않습니다."),
+    NO_MATCHING_DATA (HttpStatus.NO_CONTENT, "C001", "요청한 조건에 맞는 데이터가 없습니다."),//필수 파라메터 누락, null 등
+    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C002", "입력값이 올바르지 않습니다."),             //사용자 입력 값이 비즈니스 규칙 또는 범위를 위반한 경우
+    METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "C003", "지원하지 않는 HTTP 메소드입니다."),
+    ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND, "C004", "요청한 리소스를 찾을 수 없습니다."),
+    REQUIRED_FIELD_MISSING(HttpStatus.BAD_REQUEST, "C005", "필수 입력값이 누락되었습니다."),
+    INVALID_FORMAT(HttpStatus.BAD_REQUEST, "C006", "입력 형식이 올바르지 않습니다."),
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C007", "서버 내부 오류가 발생했습니다."),
+    INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "C008", "잘못된 타입의 값이 입력되었습니다."),
+    ACCESS_DENIED(HttpStatus.FORBIDDEN, "C009", "접근이 거부되었습니다."),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "C010", "인증이 필요합니다."),
 
     // Rate Limiting
     TOO_MANY_REQUESTS(HttpStatus.TOO_MANY_REQUESTS, "C010", "요청이 너무 많습니다. 잠시 후 다시 시도해주세요."),
