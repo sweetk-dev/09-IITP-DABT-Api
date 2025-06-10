@@ -21,6 +21,8 @@ public enum ErrorCode {
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "C008", "접근이 거부되었습니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "C009", "인증이 필요합니다."),
 
+    // Rate Limiting
+    TOO_MANY_REQUESTS(HttpStatus.TOO_MANY_REQUESTS, "C010", "요청이 너무 많습니다. 잠시 후 다시 시도해주세요."),
 
     // Business Errors
     BUSINESS_EXCEPTION(HttpStatus.BAD_REQUEST, "B001", "비즈니스 로직 처리 중 오류가 발생했습니다."),
