@@ -4,5 +4,5 @@ import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
 import java.util.List;
 
 public interface StatsDisRegNatlByNewRepositoryCustom {
-    List<StatDataItemDB> findLatestRegNewData(Integer fromYear);
+    List<StatDataItemDB> findLatestRegNewData(com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity srcDataInfo, Integer fromYear);
 } 

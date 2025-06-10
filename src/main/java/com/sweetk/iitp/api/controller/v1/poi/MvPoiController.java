@@ -1,28 +1,12 @@
 package com.sweetk.iitp.api.controller.v1.poi;
 
 import com.sweetk.iitp.api.constant.ApiConstants;
-import com.sweetk.iitp.api.dto.common.ApiResDto;
-import com.sweetk.iitp.api.dto.common.PageRequest;
-import com.sweetk.iitp.api.dto.common.PageResponse;
-import com.sweetk.iitp.api.dto.poi.PoiRequest;
-import com.sweetk.iitp.api.dto.poi.PoiResponse;
-import com.sweetk.iitp.api.dto.poi.PoiSearchRequest;
-import com.sweetk.iitp.api.dto.poi.converter.PoiConverter;
-import com.sweetk.iitp.api.service.poi.PoiService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import com.sweetk.iitp.api.service.poi.MvPoiReadService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -31,8 +15,11 @@ import java.util.stream.Collectors;
 @Tag(name = "이동형 POI API V1", description = "이동형 API ")
 public class MvPoiController {
 
-    private final PoiService poiService;
+    private final MvPoiReadService mvPoiReadService;
 
+
+
+    /*
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(
@@ -374,4 +361,6 @@ public class MvPoiController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+     */
 } 

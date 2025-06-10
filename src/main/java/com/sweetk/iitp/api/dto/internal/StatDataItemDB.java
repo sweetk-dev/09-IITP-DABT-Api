@@ -15,10 +15,17 @@ public class StatDataItemDB {
     private String c1;        // 코드값
     private String c2;        // 코드값
     private String c3;        // 코드값
+    private String c1Nm;
+    private String c2Nm;
+    private String c3Nm;
+
     private String c1ObjNm;
     private String c2ObjNm;
     private String c3ObjNm;
+
     private String itmId;     // 코드값
+    private String itmNm;
+
     private String unitNm;
     private String data;
     private LocalDate lstChnDe;
@@ -27,13 +34,13 @@ public class StatDataItemDB {
     public StatDataItem toStatDataItem() {
         return StatDataItem.builder()
                 .prdDe(this.prdDe)
-                .c1(this.c1)
-                .c2(this.c2)
-                .c3(this.c3)
+                .c1Nm(this.c1Nm)
+                .c2Nm(this.c2Nm)
+                .c3Nm(this.c3Nm)
                 .c1ObjNm(this.c1ObjNm)
                 .c2ObjNm(this.c2ObjNm)
                 .c3ObjNm(this.c3ObjNm)
-                .itmId(this.itmId)
+                .itmNm(this.itmNm)
                 .unitNm(this.unitNm)
                 .data(this.data)
                 .lstChnDe(this.lstChnDe)

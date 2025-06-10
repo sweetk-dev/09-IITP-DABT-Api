@@ -36,7 +36,7 @@ public class BasicHousingController extends BasicBaseController {
      * 신규등록 장애인현황
      *******************************/
 
-    @GetMapping("/latest/reg/new")
+    @GetMapping("/reg/new/latest")
     @Operation(
             summary = "최근 신규등록 장애인현황 조회",
             description = "최근 신규등록 장애인현황 조회(최대 10년) 예) from(옵션)~(가장 최신연도), default는 가장 최신연도"
@@ -44,8 +44,8 @@ public class BasicHousingController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getHousingRegNewLatest(
             @Parameter(name = "from", description = "(옵션) 검색 시작 연도 (2019 이후 부터 가능, 최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            @Min(value = ApiConstants.Param.START_STAT_YEAR_HOUSING_REG,
-                            message = ApiConstants.Param.START_STAT_YEAR_ERR_MSG)
+            @Min(value = 2019,
+                    message = ApiConstants.Param.START_STAT_YEAR_ERR_MSG)
             Integer from,
             HttpServletRequest request) {
 
@@ -63,7 +63,7 @@ public class BasicHousingController extends BasicBaseController {
         return ResponseEntity.ok(ApiResDto.success(statDataRes));
     }
 
-    @GetMapping("/latest/reg/new/{statYear}")
+    @GetMapping("/reg/new/{statYear}")
     @Operation(
             summary = "해당 연도 신규등록 장애인현황 조회",
             description = "해당 연도의 신규등록 장애인현황 조회"
@@ -71,14 +71,14 @@ public class BasicHousingController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getHousingRegNewYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
-            @Min(value = ApiConstants.Param.START_STAT_YEAR_HOUSING_REG,
-                        message = ApiConstants.Param.START_STAT_YEAR_ERR_MSG)
+            @Min(value = 2019,
+                    message = ApiConstants.Param.START_STAT_YEAR_ERR_MSG)
             Integer statYear,
             HttpServletRequest request) {
 
         StatDataRes statDataRes = null;
         try {
-            statDataRes = housingService.getHousingLatestRegNew(statYear);
+            statDataRes = housingService.getHousingRegNewYear(statYear);
         }
         catch (Exception e) {
             log.error("최근 신규등록 장애인현황 조회 실패, 에러: {}", e.getMessage(), e);
@@ -93,15 +93,15 @@ public class BasicHousingController extends BasicBaseController {
     /*******************************
      * 전국 연령별,장애등급별,성별 등록장애인수
      *******************************/
-    @GetMapping("/latest/reg/nation")
+    @GetMapping("/reg/ageSevGen/latest")
     @Operation(
-            summary = "최근 신규등록 장애인현황 조회",
-            description = "최근 신규등록 장애인현황 조회(최대 10년) 예) from(옵션)~(가장 최신연도), default는 가장 최신연도"
+            summary = "최근 전국 연령별,장애등급별,성별 등록장애인수 조회",
+            description = "최근 전국 연령별,장애등급별,성별 등록장애인수 (최대 10년) 예) from(옵션)~(가장 최신연도), default는 가장 최신연도"
     )
-    public ResponseEntity<ApiResDto> getHousingRegNewLatest(
+    public ResponseEntity<ApiResDto> getHousingRegAgeSevGenLatest(
             @Parameter(name = "from", description = "(옵션) 검색 시작 연도 (2019 이후 부터 가능, 최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            @Min(value = ApiConstants.Param.START_STAT_YEAR_HOUSING_REG,
+            @Min(value = 2019,
                     message = ApiConstants.Param.START_STAT_YEAR_ERR_MSG)
             Integer from,
             HttpServletRequest request) {
@@ -110,7 +110,7 @@ public class BasicHousingController extends BasicBaseController {
 
         StatDataRes statDataRes = null;
         try {
-            statDataRes = housingService.getHousingLatestRegNation(from);
+            statDataRes = housingService.getHousingRegNewLatest(from);
         }
         catch (Exception e) {
             log.error("최근 신규등록 장애인현황 조회 실패, 에러: {}", e.getMessage(), e);
@@ -125,17 +125,17 @@ public class BasicHousingController extends BasicBaseController {
             summary = "해당 연도 신규등록 장애인현황 조회",
             description = "해당 연도의 신규등록 장애인현황 조회"
     )
-    public ResponseEntity<ApiResDto> getHousingRegNewYear(
+    public ResponseEntity<ApiResDto> getHousingRegAgeSevGenYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
-            @Min(value = ApiConstants.Param.START_STAT_YEAR_HOUSING_REG,
+            @Min(value = 2019,
                     message = ApiConstants.Param.START_STAT_YEAR_ERR_MSG)
             Integer statYear,
             HttpServletRequest request) {
 
         StatDataRes statDataRes = null;
         try {
-            statDataRes = housingService.getHousingLatestRegNew(statYear);
+            statDataRes = housingService.getHousingRegNewYear(statYear);
         }
         catch (Exception e) {
             log.error("최근 신규등록 장애인현황 조회 실패, 에러: {}", e.getMessage(), e);
