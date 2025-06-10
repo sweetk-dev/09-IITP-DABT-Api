@@ -1,52 +1,152 @@
-# IITP API
+# IITP API Service
 
-IITP API는 POI(Point of Interest) 데이터를 제공하는 RESTful API 서비스입니다.
+## 프로젝트 개요
+IITP API 서비스는 OpenAPI 형태로 데이터를 제공하는 RESTful API 서버입니다. 이 서비스는 API Key 기반의 인증을 사용하며, Rate Limiting을 통해 API 사용량을 제어합니다.
 
 ## 기술 스택
-
-- Java 17
-- Spring Boot 3.2.3
+- Java 21
+- Spring Boot 3.2.5
 - Spring Security
 - Spring Data JPA
+- QueryDSL 5.0.0
 - PostgreSQL
-- OpenAPI 3.0 (Stoplight Elements)
-- Log4j2
-- Jasypt (설정 파일 암호화)
-- Bucket4j (Rate Limiting)
+- Bucket4j 8.7.0 (Rate Limiting)
+- SpringDoc OpenAPI 2.3.0
+- Micrometer (Prometheus)
+- Gradle 8+
+- Lombok
 
 ## 주요 기능
 
-- POI 데이터 CRUD
+### API 데이터 처리
+- RESTful API 엔드포인트 제공
+- 데이터 CRUD 작업 지원
+- 페이징 및 정렬 기능
+- 동적 쿼리 처리 (QueryDSL)
+- 데이터 검증 및 변환
+- 에러 처리 및 응답 표준화
+- API 버전 관리 (URL 패턴 방식)
+
+### 보안 및 제어
 - API Key 기반 인증
 - Rate Limiting
-- 버전 관리 (URL 패턴 방식)
-- OpenAPI 문서화 (Stoplight Elements)
+- IP 기반 접근 제어
+- 요청 로깅 및 모니터링
 
-## 시작하기
+### 문서화 및 모니터링
+- OpenAPI 3.0 문서화
+- Prometheus 메트릭 수집
+- Actuator 모니터링
+- API 사용량 통계
 
-### 필수 조건
+## API 엔드포인트
 
-- JDK 17
-- PostgreSQL 12+
+### 기본 API
+- GET /api/v1/{resource} - 리소스 목록 조회
+- GET /api/v1/{resource}/{id} - 단일 리소스 조회
+- POST /api/v1/{resource} - 리소스 생성
+- PUT /api/v1/{resource}/{id} - 리소스 수정
+- DELETE /api/v1/{resource}/{id} - 리소스 삭제
+
+### 고급 기능
+- GET /api/v1/{resource}/search - 고급 검색
+- GET /api/v1/{resource}/export - 데이터 내보내기
+- POST /api/v1/{resource}/batch - 일괄 처리
+
+### 공통 기능
+- 페이징: `page`, `size` 파라미터
+- 정렬: `sort` 파라미터
+- 필터링: `filter` 파라미터
+- 검색: `q` 파라미터
+
+## 응답 형식
+```json
+{
+    "status": "SUCCESS",
+    "data": {
+        // 응답 데이터
+    },
+    "metadata": {
+        "page": 0,
+        "size": 10,
+        "totalElements": 100,
+        "totalPages": 10
+    }
+}
+```
+
+## 에러 응답
+```json
+{
+    "status": "ERROR",
+    "error": {
+        "code": "ERROR_CODE",
+        "message": "에러 메시지",
+        "details": []
+    }
+}
+```
+
+## 프로젝트 구조
+```
+src/main/java/com/sweetk/iitp/api/
+├── config/                 # 설정 클래스
+├── constant/              # 상수 정의
+├── controller/            # API 컨트롤러
+├── dto/                   # Data Transfer Objects
+├── entity/                # JPA 엔티티
+├── exception/             # 예외 처리
+├── repository/            # 데이터 접근 계층
+├── security/              # 보안 관련 클래스
+├── service/               # 비즈니스 로직
+└── util/                  # 유틸리티 클래스
+```
+
+## 보안
+- API Key 인증: 모든 API 요청은 유효한 API Key가 필요합니다.
+- Rate Limiting: IP 기반으로 API 요청 횟수를 제한합니다.
+- HTTPS: 모든 통신은 HTTPS를 통해 암호화됩니다.
+
+## API 문서
+- OpenAPI 문서: `/v3/api-docs`
+- API 문서 파일: `/docs/latest.yaml`
+
+## 개발 환경 설정
+
+### 필수 요구사항
+- Java 21
 - Gradle 8+
+- PostgreSQL
 
-### 설치 및 실행
-
-1. 저장소 클론
+### 로컬 개발 환경 설정
+1. 프로젝트 클론
 ```bash
-git clone https://github.com/your-org/iitp-api.git
+git clone [repository-url]
 cd iitp-api
 ```
 
-2. 환경 설정
+2. 환경 변수 설정
 ```bash
-# application-dev.yml 파일에서 데이터베이스 설정 확인
-# 필요한 경우 Jasypt 암호화 키 설정
+# Jasypt 암호화 키 설정 (선택사항)
 export JASYPT_ENCRYPTOR_PASSWORD=your-password
 ```
 
-3. 빌드
+3. 애플리케이션 실행
 ```bash
+# 로컬 환경
+./gradlew bootRun
+
+# 또는 특정 환경 지정
+./gradlew bootRun -Dspring.profiles.active=dev
+```
+
+## 빌드 및 배포
+
+### 빌드
+```bash
+# 로컬 환경
+./gradlew buildLocal
+
 # 개발 환경
 ./gradlew buildDev
 
@@ -57,102 +157,29 @@ export JASYPT_ENCRYPTOR_PASSWORD=your-password
 ./gradlew buildProd
 ```
 
-4. 실행
+### 빌드된 JAR 실행
 ```bash
+# 로컬 환경
+java -jar build/libs/iitp-api-0.0.1-local-{timestamp}.jar
+
 # 개발 환경
-java -jar build/libs/iitp-api-0.0.1-SNAPSHOT-dev.jar
+java -jar build/libs/iitp-api-0.0.1-dev-{timestamp}.jar
 
 # 스테이징 환경
-java -jar build/libs/iitp-api-0.0.1-SNAPSHOT-stage.jar
+java -jar build/libs/iitp-api-0.0.1-stage-{timestamp}.jar
 
 # 프로덕션 환경
-java -jar build/libs/iitp-api-0.0.1-SNAPSHOT-prod.jar
+java -jar build/libs/iitp-api-0.0.1-prod-{timestamp}.jar
 ```
 
-## API 문서
-
-API 문서는 Stoplight Elements를 통해 제공됩니다:
-- OpenAPI 스펙: `/api-docs`
-- API 문서 UI: Stoplight Elements에서 확인
-
-## API 인증
-
-모든 API 요청에는 유효한 API Key가 필요합니다:
-- 헤더: `X-API-Key`
-- 예시: `curl -H "X-API-Key: your-api-key" http://localhost:8080/api/v1/poi`
-
-## Rate Limiting
-
-- 기본 제한: 분당 100회 요청
-- 초과 시: 429 Too Many Requests 응답
-
-## 로깅
-
-- 로그 파일: `logs/iitp-api.log`
-- 로그 레벨: INFO (기본값)
-- 로그 포맷: `%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n`
+## 모니터링
+- Actuator 엔드포인트: `/actuator`
+- Prometheus 메트릭: `/actuator/prometheus`
+- 주요 메트릭:
+  - API 요청 수
+  - 응답 시간
+  - 에러율
+  - Rate Limiting 상태
 
 ## 라이선스
-
-Proprietary - All rights reserved
-
-## 프로젝트 구조
-
-```
-src/main/java/com/iitp/
-├── IitpApiApplication.java
-├── config/
-│   ├── OpenApiConfig.java
-│   └── SecurityConfig.java
-├── constant/
-│   └── ApiConstants.java
-├── controller/
-│   ├── V1/
-│   │   └── PoiController.java
-│   └── V2/
-│       └── PoiController.java
-├── dto/
-│   ├── common/
-│   │   └── ApiResponse.java
-│   └── PoiDto.java
-├── entity/
-│   ├── ApiClient.java
-│   └── Poi.java
-├── exception/
-│   ├── ApiException.java
-│   ├── ErrorCode.java
-│   └── GlobalExceptionHandler.java
-├── repository/
-│   ├── ApiClientRepository.java
-│   └── PoiRepository.java
-├── security/
-│   └── ApiKeyAuthenticationFilter.java
-└── service/
-    └── PoiService.java
-```
-
-## 주요 기능
-
-- RESTful API 엔드포인트
-- API Key 기반 인증
-- URL 패턴 기반 버전 관리
-- OpenAPI 3.0 문서화 (Stoplight Elements)
-- Rate Limiting
-- 로깅 (Log4j2)
-- 설정 파일 암호화 (Jasypt)
-
-## API 엔드포인트
-
-### V1 API
-- GET /api/v1/poi/search - POI 검색
-- GET /api/v1/poi/{id} - POI 상세 조회
-- POST /api/v1/poi - POI 생성
-- PUT /api/v1/poi/{id} - POI 수정
-- DELETE /api/v1/poi/{id} - POI 삭제
-
-### V2 API
-- GET /api/v2/poi/search - POI 검색 (페이지네이션 지원)
-- GET /api/v2/poi/{id} - POI 상세 조회
-- POST /api/v2/poi - POI 생성
-- PUT /api/v2/poi/{id} - POI 수정
-- DELETE /api/v2/poi/{id} - POI 삭제 
+이 프로젝트는 [라이선스 이름] 라이선스 하에 배포됩니다. 
