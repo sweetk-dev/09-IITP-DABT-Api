@@ -80,6 +80,23 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 }
 
+// QueryDSL 설정
+tasks.withType(JavaCompile) {
+    options.annotationProcessorGeneratedSourcesDirectory = file("$buildDir/generated/sources/annotationProcessor/java/main")
+}
+
+// QueryDSL 태스크
+tasks.register('cleanQuerydsl', Delete) {
+    delete file("$buildDir/generated/sources/annotationProcessor/java/main")
+}
+
+tasks.register('compileQuerydsl', JavaCompile) {
+    source = sourceSets.main.java
+    classpath = configurations.compileClasspath + configurations.annotationProcessor
+    destinationDirectory = file("$buildDir/classes/java/main")
+    options.annotationProcessorGeneratedSourcesDirectory = file("$buildDir/generated/sources/annotationProcessor/java/main")
+}
+
 openApi {
     outputDir.set(openApiOutputDir)
     outputFileName.set(apiDocFileName)
