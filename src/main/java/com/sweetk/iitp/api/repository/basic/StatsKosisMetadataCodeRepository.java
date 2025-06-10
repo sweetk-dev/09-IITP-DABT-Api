@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StatsKosisMetadataCodeRepository extends JpaRepository<StatsKosisMetadataCodeEntity, Integer> {
+public interface StatsKosisMetadataCodeRepository extends JpaRepository<StatsKosisMetadataCodeEntity, Integer>,
+        StatsKosisMetadataCodeRepositoryCustom {
 
 }

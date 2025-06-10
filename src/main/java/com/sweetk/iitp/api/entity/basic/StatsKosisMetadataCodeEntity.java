@@ -21,9 +21,8 @@ public class StatsKosisMetadataCodeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "src_data_id", nullable = false)
-    private StatsSrcDataInfoEntity srcDataInfo;
+    @Column(name = "src_data_id", nullable = false)
+    private Integer srcDataId;
 
     @Column(name = "tbl_id", length = 40, nullable = false)
     private String tblId;
