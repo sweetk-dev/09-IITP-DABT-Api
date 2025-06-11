@@ -8,23 +8,23 @@ import com.sweetk.iitp.api.dto.basic.converter.StatsDataConverter;
 import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
 import com.sweetk.iitp.api.dto.internal.StatMetaCodeDB;
 import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
-import com.sweetk.iitp.api.repository.basic.StatsKosisMetadataCodeRepository;
-import com.sweetk.iitp.api.repository.basic.StatsSrcDataInfoRepository;
 import com.sweetk.iitp.api.repository.basic.house.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import java.time.LocalDate;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.stream.Collectors;
+
 
 /**
  * 기초-주거 자립 현황 API Service
  */
 @Service
-public class BasicHousingService extends BasicBaseService {
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class BasicHousingReadService extends BasicCommLogic {
     private final StatsDisLifeMaincarerRepository LifeMaincarerRepos;
     private final StatsDisLifePrimcarerRepository LifePrimcarerRepos;
     private final StatsDisLifeSuppFieldRepository LifeSuppFieldRepos;
@@ -32,30 +32,9 @@ public class BasicHousingService extends BasicBaseService {
     private final StatsDisRegNatlByAgeTypeSevGenRepository RegNatlByAgeTypeSevGenRepos;
     private final StatsDisRegNatlByNewRepository statsDisRegNatlByNewRepos;
     private final StatsDisRegSidoByAgeTypeSevGenRepository RegSidoByAgeTypeSevGenRepos;
-    private final StatsSrcDataInfoRepository statsSrcDataInfoRepos;
-    private final StatsKosisMetadataCodeRepository statMetaCodeRepos;
 
-    public BasicHousingService(
-            StatsSrcDataInfoRepository srcDataInfoRepos,
-            StatsKosisMetadataCodeRepository statMetaCodeRepos,
-            StatsDisLifeMaincarerRepository lifeMaincarerRepos,
-            StatsDisLifePrimcarerRepository lifePrimcarerRepos,
-            StatsDisLifeSuppFieldRepository lifeSuppFieldRepos,
-            StatsDisLifeSuppNeedLvlRepository lifeSuppNeedLvlRepos,
-            StatsDisRegNatlByAgeTypeSevGenRepository regNatlByAgeTypeSevGenRepos,
-            StatsDisRegNatlByNewRepository statsDisRegNatlByNewRepos,
-            StatsDisRegSidoByAgeTypeSevGenRepository regSidoByAgeTypeSevGenRepos) {
-        super(srcDataInfoRepos, statMetaCodeRepos);
-        this.LifeMaincarerRepos = lifeMaincarerRepos;
-        this.LifePrimcarerRepos = lifePrimcarerRepos;
-        this.LifeSuppFieldRepos = lifeSuppFieldRepos;
-        this.LifeSuppNeedLvlRepos = lifeSuppNeedLvlRepos;
-        this.RegNatlByAgeTypeSevGenRepos = regNatlByAgeTypeSevGenRepos;
-        this.statsDisRegNatlByNewRepos = statsDisRegNatlByNewRepos;
-        this.RegSidoByAgeTypeSevGenRepos = regSidoByAgeTypeSevGenRepos;
-        this.statsSrcDataInfoRepos = srcDataInfoRepos;
-        this.statMetaCodeRepos = statMetaCodeRepos;
-    }
+    private final BasicBaseReadService basicBaseReadService;
+
 
     /*******************************
      * 신규등록 장애인현황
@@ -70,7 +49,7 @@ public class BasicHousingService extends BasicBaseService {
     @ConditionalTimed(value = "basic.housing.reg.new.latest", description = "주택 등록 신규 최신 데이터 조회")
     public StatDataRes getHousingRegNewLatest(Integer fromYear) {
         //get Src data Info
-        StatsSrcDataInfoEntity srcDataInfo = getSrcInoHousingRegNatlByNew();
+        StatsSrcDataInfoEntity srcDataInfo = basicBaseReadService.getSrcInoHousingRegNatlByNew();
 
         Integer fromStatYear = getReqFromYear("HousingRegNewLatest", fromYear, srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
@@ -80,43 +59,15 @@ public class BasicHousingService extends BasicBaseService {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
 
-        LocalDate srcLatestChnDate = LocalDate.parse(srcDataInfo.getStatLatestChnDt());
-
         // 2. 메타 코드 정보 조회
+        LocalDate srcLatestChnDate = LocalDate.parse(srcDataInfo.getStatLatestChnDt());
         //2.1 C1~C3
-        List<StatMetaCodeDB> cMetaCodes = statMetaCodeRepos.findItemInfoByCObjId(srcDataInfo.getSrcDataId(), srcLatestChnDate);
+        List<StatMetaCodeDB> cMetaCodes = basicBaseReadService.getCatMetaCodes(srcDataInfo.getSrcDataId(), srcLatestChnDate);
         //2.2 Item
-        List<StatMetaCodeDB> iMetaCodes = statMetaCodeRepos.findItemInfoByIObjId(srcDataInfo.getSrcDataId(), srcLatestChnDate);
+        List<StatMetaCodeDB> iMetaCodes = basicBaseReadService.getCatMetaCodes(srcDataInfo.getSrcDataId(), srcLatestChnDate);
 
-        // 3. 메타 코드를 Map으로 변환 (초기 용량 지정)
-        Map<String, StatMetaCodeDB> cMetaCodeMap = new HashMap<>(cMetaCodes.size());
-        cMetaCodes.forEach(code -> cMetaCodeMap.put(code.getItemId(), code));
-        Map<String, StatMetaCodeDB> iMetaCodeMap = new HashMap<>(iMetaCodes.size());
-        iMetaCodes.forEach(code -> iMetaCodeMap.put(code.getItemId(), code));
 
-        // 4. 데이터 변환 및 메타 코드 매핑 (병렬 처리)
-        List<StatDataItem> items = dataList.parallelStream()
-                .map(item -> {
-                    StatMetaCodeDB c1Meta = cMetaCodeMap.get(item.getC1());
-                    StatMetaCodeDB c2Meta = cMetaCodeMap.get(item.getC2());
-                    StatMetaCodeDB c3Meta = cMetaCodeMap.get(item.getC3());
-                    StatMetaCodeDB iMeta = iMetaCodeMap.get(item.getItmId());
-
-                    return StatDataItem.builder()
-                            .prdDe(item.getPrdDe())
-                            .c1Nm(c1Meta != null ? c1Meta.getItemNm() : null)
-                            .c2Nm(c2Meta != null ? c2Meta.getItemNm() : null)
-                            .c3Nm(c3Meta != null ? c3Meta.getItemNm() : null)
-                            .c1ObjNm(c1Meta != null ? c1Meta.getObjNm() : null)
-                            .c2ObjNm(c2Meta != null ? c2Meta.getObjNm() : null)
-                            .c3ObjNm(c3Meta != null ? c3Meta.getObjNm() : null)
-                            .itmNm(iMeta != null ? iMeta.getItemNm() : null)
-                            .unitNm(item.getUnitNm())
-                            .data(item.getData())
-                            .lstChnDe(item.getLstChnDe())
-                            .build();
-                })
-                .collect(Collectors.toList());
+        List<StatDataItem> items = makeStatDataItemList( srcDataInfo, dataList, cMetaCodes, iMetaCodes);
 
         return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
     }
@@ -129,7 +80,7 @@ public class BasicHousingService extends BasicBaseService {
      */
     public StatDataRes getHousingRegNewYear(Integer targetYear) {
         //get Src data Info
-        StatsSrcDataInfoEntity srcDataInfo = getSrcInoHousingRegNatlByNew();
+        StatsSrcDataInfoEntity srcDataInfo = basicBaseReadService.getSrcInoHousingRegNatlByNew();
 
         Integer statYear = getReqFromYear("HousingRegNewYear", targetYear, srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt() );
 
@@ -140,7 +91,15 @@ public class BasicHousingService extends BasicBaseService {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
 
-        List<StatDataItem> items = makeStatDataItemList( srcDataInfo, dataList);
+        // 2. 메타 코드 정보 조회
+        LocalDate srcLatestChnDate = LocalDate.parse(srcDataInfo.getStatLatestChnDt());
+        //2.1 C1~C3
+        List<StatMetaCodeDB> cMetaCodes = basicBaseReadService.getCatMetaCodes(srcDataInfo.getSrcDataId(), srcLatestChnDate);
+        //2.2 Item
+        List<StatMetaCodeDB> iMetaCodes = basicBaseReadService.getCatMetaCodes(srcDataInfo.getSrcDataId(), srcLatestChnDate);
+
+
+        List<StatDataItem> items = makeStatDataItemList( srcDataInfo, dataList, cMetaCodes, iMetaCodes);
 
         return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
     }
@@ -159,7 +118,7 @@ public class BasicHousingService extends BasicBaseService {
     @ConditionalTimed(value = "basic.housing.reg.ageSevGen.latest", description = "전국 연령별,장애등급별,성별 등록장애인수 최신 데이터 조회")
     public StatDataRes getHousingRegAgeSevGenLatest(Integer fromYear) {
         //get Src data Info
-        StatsSrcDataInfoEntity srcDataInfo = getSrcInoHousingRegNatlByNew();
+        StatsSrcDataInfoEntity srcDataInfo = basicBaseReadService.getSrcInoHousingRegNatlByNew();
 
         Integer fromStatYear = getReqFromYear("HousingRegNewLatest", fromYear, srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt() );
 
@@ -169,7 +128,15 @@ public class BasicHousingService extends BasicBaseService {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
 
-        List<StatDataItem> items = makeStatDataItemList( srcDataInfo, dataList);
+        // 2. 메타 코드 정보 조회
+        LocalDate srcLatestChnDate = LocalDate.parse(srcDataInfo.getStatLatestChnDt());
+        //2.1 C1~C3
+        List<StatMetaCodeDB> cMetaCodes = basicBaseReadService.getCatMetaCodes(srcDataInfo.getSrcDataId(), srcLatestChnDate);
+        //2.2 Item
+        List<StatMetaCodeDB> iMetaCodes = basicBaseReadService.getCatMetaCodes(srcDataInfo.getSrcDataId(), srcLatestChnDate);
+
+
+        List<StatDataItem> items = makeStatDataItemList( srcDataInfo, dataList, cMetaCodes, iMetaCodes);
 
         return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
     }
@@ -182,7 +149,7 @@ public class BasicHousingService extends BasicBaseService {
      */
     public StatDataRes getHousingRegAgeSevGenYear(Integer targetYear) {
         //get Src data Info
-        StatsSrcDataInfoEntity srcDataInfo = getSrcInoHousingRegNatlByNew();
+        StatsSrcDataInfoEntity srcDataInfo = basicBaseReadService.getSrcInoHousingRegNatlByNew();
 
 
         // 1. 기본 데이터 조회
@@ -191,7 +158,15 @@ public class BasicHousingService extends BasicBaseService {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
 
-        List<StatDataItem> items = makeStatDataItemList( srcDataInfo, dataList);
+        // 2. 메타 코드 정보 조회
+        LocalDate srcLatestChnDate = LocalDate.parse(srcDataInfo.getStatLatestChnDt());
+        //2.1 C1~C3
+        List<StatMetaCodeDB> cMetaCodes = basicBaseReadService.getCatMetaCodes(srcDataInfo.getSrcDataId(), srcLatestChnDate);
+        //2.2 Item
+        List<StatMetaCodeDB> iMetaCodes = basicBaseReadService.getCatMetaCodes(srcDataInfo.getSrcDataId(), srcLatestChnDate);
+
+
+        List<StatDataItem> items = makeStatDataItemList( srcDataInfo, dataList, cMetaCodes, iMetaCodes);
 
         return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
     }

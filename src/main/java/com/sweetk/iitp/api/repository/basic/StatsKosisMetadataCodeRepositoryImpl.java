@@ -20,7 +20,7 @@ public class StatsKosisMetadataCodeRepositoryImpl implements StatsKosisMetadataC
     private final QStatsKosisMetadataCodeEntity qMetaCode = QStatsKosisMetadataCodeEntity.statsKosisMetadataCodeEntity;
 
     @Override
-    public List<StatMetaCodeDB> findItemInfoByCObjId(Integer srcDataId, LocalDate statLatestChnDt) {
+    public List<StatMetaCodeDB> findItemInfoByCatObj(Integer srcDataId, LocalDate statLatestChnDt) {
         return queryFactory
                 .select(Projections.constructor(StatMetaCodeDB.class,
                         qMetaCode.itmId,
@@ -36,7 +36,7 @@ public class StatsKosisMetadataCodeRepositoryImpl implements StatsKosisMetadataC
     }
 
     @Override
-    public List<StatMetaCodeDB> findItemInfoByIObjId(Integer srcDataId, LocalDate statLatestChnDt) {
+    public List<StatMetaCodeDB> findItemInfoByItemObj(Integer srcDataId, LocalDate statLatestChnDt) {
         return queryFactory
                 .select(Projections.constructor(StatMetaCodeDB.class,
                         qMetaCode.itmId,

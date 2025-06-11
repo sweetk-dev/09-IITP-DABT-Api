@@ -6,7 +6,7 @@ import com.sweetk.iitp.api.dto.basic.StatDataRes;
 import com.sweetk.iitp.api.dto.common.ApiResDto;
 import com.sweetk.iitp.api.exception.BusinessException;
 import com.sweetk.iitp.api.exception.ErrorCode;
-import com.sweetk.iitp.api.service.basic.BasicHousingService;
+import com.sweetk.iitp.api.service.basic.BasicHousingReadService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @Tag(name = "기초-주거 자립 현황 API V1", description = "기초-주거 자립 현황 OpenApi V1")
 public class BasicHousingController extends BasicBaseController {
-    private final BasicHousingService housingService;
+    private final BasicHousingReadService housingService;
 
 
     /*******************************
