@@ -14,6 +14,22 @@ import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StatsDataConverter {
+
+    public static StatInfo toStatInfoResponse(StatsSrcDataInfoEntity infoEntity) {
+        if (infoEntity == null) {
+            return null;
+        }
+        return  StatInfo.builder()
+                .tblName(infoEntity.getStatTblName())
+                .period(infoEntity.getPeriodicity())
+                .collectDate(String.format(ApiConstants.Param.FORMAT_STAT_COLLECT_DATE, infoEntity.getCollectStartDt(), infoEntity.getCollectEndDt()))
+                .orgName(infoEntity.getStatOrgName())
+                .surveyName(infoEntity.getStatSurveyName())
+                .latestChnDate(infoEntity.getStatLatestChnDt())
+                .build();
+    }
+
+
     public static StatDataRes toResponse(StatsSrcDataInfoEntity infoEntity, List<BaseStatsEntity> dataList) {
         if (infoEntity == null) {
             return null;
@@ -61,4 +77,5 @@ public class StatsDataConverter {
                 .items(items)
                 .build();
     }
+
 }
