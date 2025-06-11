@@ -1,4 +1,4 @@
-package com.sweetk.iitp.api.repository.basic.house;
+package com.sweetk.iitp.api.repository.basic.housing.custom;
 
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -19,13 +19,13 @@ public class StatsDisRegNatlByAgeTypeSevGenRepositoryImpl extends BasicRepositor
     
     @Override
     public List<StatDataItemDB> findDataLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        QStatsDisRegNatlByAgeTypeSevGenEntity stats = QStatsDisRegNatlByAgeTypeSevGenEntity.statsDisRegNatlByAgeTypeSevGenEntity;
-        return buildLatestStatDataItemQuery(stats, srcDataInfo, fromYear).fetch();
+        QStatsDisRegNatlByAgeTypeSevGenEntity qEntity = QStatsDisRegNatlByAgeTypeSevGenEntity.statsDisRegNatlByAgeTypeSevGenEntity;
+        return buildLatestStatDataItemQuery(qEntity, srcDataInfo, fromYear).fetch();
     }
 
     @Override
     public List<StatDataItemDB> findDataByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
-        QStatsDisRegNatlByAgeTypeSevGenEntity stats = QStatsDisRegNatlByAgeTypeSevGenEntity.statsDisRegNatlByAgeTypeSevGenEntity;
-        return buildTargetStatDataItemQuery(stats, srcDataInfo, targetYear).fetch();
+        QStatsDisRegNatlByAgeTypeSevGenEntity qEntity = QStatsDisRegNatlByAgeTypeSevGenEntity.statsDisRegNatlByAgeTypeSevGenEntity;
+        return buildTargetStatDataItemQuery(qEntity, srcDataInfo, targetYear).fetch();
     }
 } 

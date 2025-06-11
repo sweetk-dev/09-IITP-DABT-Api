@@ -1,4 +1,4 @@
-package com.sweetk.iitp.api.repository.basic.house;
+package com.sweetk.iitp.api.repository.basic.housing;
 
 import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
 import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
@@ -17,8 +17,8 @@ public interface HousingRepository {
     List<StatDataItemDB> findRegNatlByAgeTypeSevGenByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear);
 
     // 시도별,장애유형별,장애정도별,성별 등록장애인수
-    List<StatDataItemDB> findRegSidoByAgeTypeSevGenLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromStatYear);
-    List<StatDataItemDB> findRegSidoByAgeTypeSevGenByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear);
+    List<StatDataItemDB> findRegSidoByTypeSevGenLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromStatYear);
+    List<StatDataItemDB> findRegSidoByTypeSevGenByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear);
 
     // 일상생활 필요 지원 정도
     List<StatDataItemDB> findLifeSuppNeedLvlLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromStatYear);
