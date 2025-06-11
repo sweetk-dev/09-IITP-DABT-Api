@@ -1,87 +1,42 @@
 package com.sweetk.iitp.api.service.basic;
 
 
-import com.sweetk.iitp.api.constant.ApiConstants;
 import com.sweetk.iitp.api.constant.SysConstants;
-import com.sweetk.iitp.api.dto.basic.StatDataItem;
-import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
 import com.sweetk.iitp.api.dto.internal.StatMetaCodeDB;
 import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
-import com.sweetk.iitp.api.exception.BusinessException;
-import com.sweetk.iitp.api.exception.ErrorCode;
 import com.sweetk.iitp.api.repository.basic.StatsKosisMetadataCodeRepository;
 import com.sweetk.iitp.api.repository.basic.StatsSrcDataInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class BasicBaseService {
+@Transactional(readOnly = true)
+public class BasicBaseReadService {
 
     private final StatsSrcDataInfoRepository srcDataInfoRepos;
     private final StatsKosisMetadataCodeRepository statMetaCodeRepos;
 
 
-
-    //Make StatDataItem
-    public List<StatDataItem> makeStatDataItemList(StatsSrcDataInfoEntity srcDataInfo, List<StatDataItemDB> dataList ) {
-        LocalDate srcLatestChnDate = LocalDate.parse(srcDataInfo.getStatLatestChnDt());
-
-        // 2. 메타 코드 정보 조회
-        //2.1 C1~C3
-        List<StatMetaCodeDB> cMetaCodes = statMetaCodeRepos.findItemInfoByCObjId(srcDataInfo.getSrcDataId(), srcLatestChnDate);
-        //2.2 Item
-        List<StatMetaCodeDB> iMetaCodes = statMetaCodeRepos.findItemInfoByIObjId(srcDataInfo.getSrcDataId(), srcLatestChnDate);
-
-        // 3. 메타 코드를 Map으로 변환 (초기 용량 지정)
-        Map<String, StatMetaCodeDB> cMetaCodeMap = new HashMap<>(cMetaCodes.size());
-        cMetaCodes.forEach(code -> cMetaCodeMap.put(code.getItemId(), code));
-        Map<String, StatMetaCodeDB> iMetaCodeMap = new HashMap<>(iMetaCodes.size());
-        iMetaCodes.forEach(code -> iMetaCodeMap.put(code.getItemId(), code));
-
-        // 4. 데이터 변환 및 메타 코드 매핑 (병렬 처리)
-        List<StatDataItem> items = dataList.parallelStream()
-                .map(item -> {
-                    StatMetaCodeDB c1Meta = cMetaCodeMap.get(item.getC1());
-                    StatMetaCodeDB c2Meta = cMetaCodeMap.get(item.getC2());
-                    StatMetaCodeDB c3Meta = cMetaCodeMap.get(item.getC3());
-                    StatMetaCodeDB iMeta = iMetaCodeMap.get(item.getItmId());
-
-                    return StatDataItem.builder()
-                            .prdDe(item.getPrdDe())
-                            .c1Nm(c1Meta != null ? c1Meta.getItemNm() : null)
-                            .c2Nm(c2Meta != null ? c2Meta.getItemNm() : null)
-                            .c3Nm(c3Meta != null ? c3Meta.getItemNm() : null)
-                            .c1ObjNm(c1Meta != null ? c1Meta.getObjNm() : null)
-                            .c2ObjNm(c2Meta != null ? c2Meta.getObjNm() : null)
-                            .c3ObjNm(c3Meta != null ? c3Meta.getObjNm() : null)
-                            .itmNm(iMeta != null ? iMeta.getItemNm() : null)
-                            .unitNm(item.getUnitNm())
-                            .data(item.getData())
-                            .lstChnDe(item.getLstChnDe())
-                            .build();
-                })
-                .collect(Collectors.toList());
-
-        return items;
-    }
-
-
-    @Cacheable(value = "metaCodes", key = "#srcDataId + '_' + #statLatestChnDt")
-    public List<StatMetaCodeDB> findMetaCodes(Integer srcDataId, LocalDate statLatestChnDt, Set<String> requiredCodes) {
+    @Cacheable(value = "cMetaCodes", key = "#srcDataId + '_' + #statLatestChnDt")
+    public List<StatMetaCodeDB> getCatMetaCodes(Integer srcDataId, LocalDate statLatestChnDt) {
         // Repository에 새로운 메서드 추가 필요
-        return statMetaCodeRepos.findMetaCodesByIds(srcDataId, statLatestChnDt, requiredCodes);
+        return statMetaCodeRepos.findItemInfoByCatObj(srcDataId, statLatestChnDt);
     }
+
+    @Cacheable(value = "iMetaCodes", key = "#srcDataId + '_' + #statLatestChnDt")
+    public List<StatMetaCodeDB> getItemMetaCodes(Integer srcDataId, LocalDate statLatestChnDt) {
+        // Repository에 새로운 메서드 추가 필요
+        return statMetaCodeRepos.findItemInfoByItemObj(srcDataId, statLatestChnDt);
+    }
+
 
     //01.Housing
     public StatsSrcDataInfoEntity getSrcInoHousingRegNatlByNew (){
@@ -188,31 +143,6 @@ public class BasicBaseService {
     //07.Facilities
     public StatsSrcDataInfoEntity getSrcInoFcltyWelfareUsage (){
         return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_FCLTY_WELFARE_USAGE);
-    }
-
-    //fromYear checking (Req Param)
-
-    /**
-     * fromYear checking and Default Set collectionEntDate
-     * @param reqFnc
-     * @param fromYear
-     * @param startDate
-     * @param entDate
-     * @return
-     */
-    public Integer getReqFromYear(String reqFnc, Integer fromYear, Integer startDate, Integer entDate  ) {
-        if (fromYear == null ) {
-            log.debug("[{}] :: fromYear is null, DEF_SET_fromYear = {}", reqFnc, entDate);
-            return entDate;
-        }
-
-        if( fromYear > entDate || (entDate- fromYear) > ApiConstants.Param.MAX_STAT_YEAR_PERIOD )
-        {
-            String detailMsg = String.format("from(%s) is invalid (MAx %s Year)", fromYear, ApiConstants.Param.MAX_STAT_YEAR_PERIOD);
-            log.error("[{}] :: {}", reqFnc, detailMsg);
-            throw new BusinessException(ErrorCode.INVALID_PARAMETER, detailMsg);
-        }
-        return fromYear;
     }
 
 }

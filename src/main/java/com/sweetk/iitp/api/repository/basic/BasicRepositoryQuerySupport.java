@@ -1,7 +1,6 @@
 package com.sweetk.iitp.api.repository.basic;
 
 
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.EntityPathBase;

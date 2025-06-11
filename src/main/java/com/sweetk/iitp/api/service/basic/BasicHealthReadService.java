@@ -6,13 +6,15 @@ import com.sweetk.iitp.api.repository.basic.health.StatsDisHlthMedicalUsageRepos
 import com.sweetk.iitp.api.repository.basic.health.StatsDisHlthSportExecTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 기초-건강 관리 현황 API Service
  */
 @Service
 @RequiredArgsConstructor
-public class BasicHealthService extends BasicBaseService {
+@Transactional(readOnly = true)
+public class BasicHealthReadService extends BasicCommLogic {
 
     private final StatsDisHlthDiseaseCostSubRepository diseaseCostSubRepos;
     private final StatsDisHlthExrcBestAidRepository dxrcBestAidRepos;

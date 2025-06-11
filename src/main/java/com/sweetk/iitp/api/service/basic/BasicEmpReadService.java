@@ -8,13 +8,15 @@ import com.sweetk.iitp.api.repository.basic.emp.StatsDisEmpNatlPublicRepository;
 import com.sweetk.iitp.api.repository.basic.emp.StatsDisEmpNatlRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 기초-고용 현황 API Service
  */
 @Service
 @RequiredArgsConstructor
-public class BasicEmpService extends BasicBaseService {
+@Transactional(readOnly = true)
+public class BasicEmpReadService extends BasicCommLogic {
 
     private final StatsDisEmpNatlDisTypeIndustRepository natlDisTypeIndustRepos;
     private final StatsDisEmpNatlDisTypeSevRepository natlDisTypeSevRepos;
