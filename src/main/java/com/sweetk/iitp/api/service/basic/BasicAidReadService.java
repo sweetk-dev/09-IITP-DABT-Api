@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BasicAidReadService extends BasicCommLogic {
+public class BasicAidReadService extends AbstractBasicService {
 
     private final StatsDisAidDeviceNeedRepository deviceNeedRepos;
     private final StatsDisAidDeviceUsageRepository deviceUsageRepos;

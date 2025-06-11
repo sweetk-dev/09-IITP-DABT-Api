@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BasicFacilityReadService extends BasicCommLogic {
+public class BasicFacilityReadService extends AbstractBasicService {
 
     private final StatsDisFcltyWelfareUsageRepository welfareUsageRepos;
 }

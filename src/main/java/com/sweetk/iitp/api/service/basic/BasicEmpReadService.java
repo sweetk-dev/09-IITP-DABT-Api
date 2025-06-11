@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BasicEmpReadService extends BasicCommLogic {
+public class BasicEmpReadService extends AbstractBasicService {
 
     private final StatsDisEmpNatlDisTypeIndustRepository natlDisTypeIndustRepos;
     private final StatsDisEmpNatlDisTypeSevRepository natlDisTypeSevRepos;

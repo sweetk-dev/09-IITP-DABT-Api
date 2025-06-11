@@ -15,15 +15,9 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public abstract class AbstractBasicService {
-    
-    protected final BasicBaseReadService basicBaseReadService;
-    
-    protected AbstractBasicService(BasicBaseReadService basicBaseReadService) {
-        this.basicBaseReadService = basicBaseReadService;
-    }
 
     // 공통 데이터 변환 로직
-    protected List<StatDataItem> makeStatDataItemList( List<StatDataItemDB> dataList,
+    protected List<StatDataItem> makeStatDataItemList(List<StatDataItemDB> dataList,
                                                      List<StatMetaCodeDB> cMetaCodes, 
                                                      List<StatMetaCodeDB> iMetaCodes) {
         Map<String, StatMetaCodeDB> cMetaMap = new HashMap<>(cMetaCodes.size());

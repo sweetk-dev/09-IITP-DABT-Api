@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BasicEduReadService extends BasicCommLogic {
+public class BasicEduReadService extends AbstractBasicService {
 
     private final StatsDisEduVocaExecRepository vocaExecRepos;
     private final StatsDisEduVocaExecWayRepository vocaExecWayRepos;
