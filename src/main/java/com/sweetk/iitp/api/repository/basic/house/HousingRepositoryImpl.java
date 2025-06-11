@@ -2,7 +2,6 @@ package com.sweetk.iitp.api.repository.basic.house;
 
 import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
 import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
-import com.sweetk.iitp.api.repository.basic.house.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +17,7 @@ public class HousingRepositoryImpl implements HousingRepository {
     private final StatsDisLifeSuppNeedLvlRepository lifeSuppNeedLvlRepos;
     private final StatsDisRegNatlByAgeTypeSevGenRepository regNatlByAgeTypeSevGenRepos;
     private final StatsDisRegNatlByNewRepository regNatlByNewRepos;
-    private final StatsDisRegSidoByAgeTypeSevGenRepository regSidoByAgeTypeSevGenRepos;
+    private final StatsDisRegSidoByTypeSevGenRepository regSidoByAgeTypeSevGenRepos;
 
     @Override
     public List<StatDataItemDB> findRegNatlByNewLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromStatYear) {
