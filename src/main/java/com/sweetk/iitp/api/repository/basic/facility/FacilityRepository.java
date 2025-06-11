@@ -10,4 +10,6 @@ import java.util.List;
 public interface FacilityRepository {
     // StatsDisFcltyWelfareUsage
     List<StatDataItemDB> findFcltyWelfareUsageLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear);
+
     List<StatDataItemDB> findFcltyWelfareUsageByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear);
+}
