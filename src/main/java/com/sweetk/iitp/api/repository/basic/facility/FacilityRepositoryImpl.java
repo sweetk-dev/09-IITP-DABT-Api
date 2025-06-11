@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class FacilityRepositoryImpl {
+public class FacilityRepositoryImpl implements FacilityRepository {
     private final StatsDisFcltyWelfareUsageRepository fcltyWelfareUsageRepos;
 
     public List<StatDataItemDB> findFacilitySuppNeedLvlLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
