@@ -18,7 +18,7 @@ public final class SysConstants {
         //01.Housing
         public static final String TBL_REG_NATL_BY_NEW = "stats_dis_reg_natl_by_new";
         public static final String TBL_REG_NATL_BY_AGE_TYPE_SEV_GEN = "stats_dis_reg_natl_by_age_type_sev_gen";
-        public static final String TBL_REG_SIDO_BY_AGE_TYPE_SEV_GEN = "stats_dis_reg_sido_by_age_type_sev_gen";
+        public static final String TBL_REG_SIDO_BY_TYPE_SEV_GEN = "stats_dis_reg_sido_by_type_sev_gen";
         public static final String TBL_LIFE_SUPP_NEED_LVL = "stats_dis_life_supp_need_lvl";
         public static final String TBL_LIFE_MAINCARER = "stats_dis_life_maincarer";
         public static final String TBL_LIFE_PRIMCARER = "stats_dis_life_primcarer";

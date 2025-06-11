@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "stats_dis_reg_sido_by_age_type_sev_gen")
 @NoArgsConstructor
-public class StatsDisRegSidoByAgeTypeSevGenEntity extends BaseStatsEntity {
+public class StatsDisRegSidoByTypeSevGenEntity extends BaseStatsEntity {
 }
