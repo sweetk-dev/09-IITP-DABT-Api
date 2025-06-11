@@ -37,11 +37,11 @@ public class DataSourceService {
 
     @Cacheable(
         value = "housingDataSources", 
-        key = "'regSidoByAgeTypeSevGen_' + #result.statLatestChnDt", 
+        key = "'regSidoByTypeSevGen_' + #result.statLatestChnDt",
         unless = "#result == null"
     )
-    public StatsSrcDataInfoEntity getHousingRegSidoByAgeTypeSevGen() {
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_REG_SIDO_BY_AGE_TYPE_SEV_GEN);
+    public StatsSrcDataInfoEntity getHousingRegSidoByTypeSevGen() {
+        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_REG_SIDO_BY_TYPE_SEV_GEN);
     }
 
     @Cacheable(

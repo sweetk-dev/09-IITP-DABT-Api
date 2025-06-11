@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BasicHealthReadService extends BasicCommLogic {
+public class BasicHealthReadService extends AbstractBasicService {
 
     private final StatsDisHlthDiseaseCostSubRepository diseaseCostSubRepos;
     private final StatsDisHlthExrcBestAidRepository dxrcBestAidRepos;

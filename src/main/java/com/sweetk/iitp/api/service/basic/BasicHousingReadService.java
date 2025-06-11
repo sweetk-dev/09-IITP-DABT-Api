@@ -7,7 +7,7 @@ import com.sweetk.iitp.api.dto.basic.converter.StatsDataConverter;
 import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
 import com.sweetk.iitp.api.dto.internal.StatMetaCodeDB;
 import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
-import com.sweetk.iitp.api.repository.basic.house.HousingRepository;
+import com.sweetk.iitp.api.repository.basic.housing.HousingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -118,13 +118,13 @@ public class BasicHousingReadService extends AbstractBasicService {
     /*******************************
      * 시도별,장애유형별,장애정도별,성별 등록장애인수
      *******************************/
-    @ConditionalTimed(value = "basic.housing.reg.sidoAgeSevGen.latest", description = "시도별,장애유형별,장애정도별,성별 등록장애인수 최신 데이터 조회")
-    public StatDataRes getHousingRegSidoAgeSevGenLatest(Integer fromYear) {
-        StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegSidoByAgeTypeSevGen();
+    @ConditionalTimed(value = "basic.housing.reg.sidoSevGen.latest", description = "시도별,장애유형별,장애정도별,성별 등록장애인수 최신 데이터 조회")
+    public StatDataRes getHousingRegSidoSevGenLatest(Integer fromYear) {
+        StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegSidoByTypeSevGen();
         Integer fromStatYear = getReqFromYear("HousingRegSidoAgeSevGenLatest", fromYear, 
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
-        List<StatDataItemDB> dataList = housingRepository.findRegSidoByAgeTypeSevGenLatest(srcDataInfo, fromStatYear);
+        List<StatDataItemDB> dataList = housingRepository.findRegSidoByTypeSevGenLatest(srcDataInfo, fromStatYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -137,12 +137,12 @@ public class BasicHousingReadService extends AbstractBasicService {
         return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
     }
 
-    public StatDataRes getHousingRegSidoAgeSevGenYear(Integer targetYear) {
-        StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegSidoByAgeTypeSevGen();
+    public StatDataRes getHousingRegSidoSevGenYear(Integer targetYear) {
+        StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegSidoByTypeSevGen();
         Integer statYear = getReqFromYear("HousingRegSidoAgeSevGenYear", targetYear, 
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
-        List<StatDataItemDB> dataList = housingRepository.findRegSidoByAgeTypeSevGenByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = housingRepository.findRegSidoByTypeSevGenByYear(srcDataInfo, statYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
