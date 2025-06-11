@@ -1,10 +1,8 @@
 package com.sweetk.iitp.api.repository.basic.housing;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
 import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sweetk.iitp.api.entity.basic.house.QStatsRegSidoByAgeTypeSevGenEntity;
-import com.sweetk.iitp.api.entity.basic.house.StatsRegSidoByAgeTypeSevGenEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -91,19 +89,5 @@ public class HousingRepositoryImpl implements HousingRepository {
     @Override
     public List<StatDataItemDB> findLifeSuppFieldByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
         return lifeSuppFieldRepos.findDataByYear(srcDataInfo, targetYear);
-    }
-
-    @Override
-    public List<StatsRegSidoByAgeTypeSevGenEntity> findRegSidoByTypeSevGenByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
-        QStatsRegSidoByAgeTypeSevGenEntity qEntity = QStatsRegSidoByAgeTypeSevGenEntity.statsRegSidoByAgeTypeSevGenEntity;
-
-        return queryFactory
-            .selectFrom(qEntity)
-            .where(
-                qEntity.statYear.eq(targetYear),
-                qEntity.statLatestChnDt.eq(srcDataInfo.getStatLatestChnDt())
-            )
-            .orderBy(qEntity.sidoCd.asc())
-            .fetch();
     }
 } 
