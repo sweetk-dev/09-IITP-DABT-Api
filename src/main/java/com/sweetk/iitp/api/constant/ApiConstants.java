@@ -38,8 +38,8 @@ public final class ApiConstants {
         public static final Integer MAX_PAGE = 1000;
         public static final Integer MAX_SIZE = 100;
 
-        public static final Integer DEFAULT_STAT_YEAR_PERIOD = 1;
-        public static final Integer MAX_STAT_YEAR_PERIOD = 10;
+        public static final Integer DEFAULT_STAT_REG_YEAR_PERIOD = 3;   //Default 요청 통계 기간
+        public static final Integer MAX_STAT_REQ_YEAR_PERIOD = 10;      // 최대 조회할 수 있는 요청 통계 기간
 
         public static final String FORMAT_STAT_COLLECT_DATE = "%s~%s";
         public static final String FORMAT_STAT_LATEST_CHN_DATE = "yyyy-MM-dd";
