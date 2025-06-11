@@ -1,0 +1,35 @@
+package com.sweetk.iitp.api.repository.basic.aid;
+
+import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
+import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+@RequiredArgsConstructor
+public class AidRepositoryImpl implements AidRepository {
+    private final StatsDisAidDeviceNeedRepository aidDeviceNeedRepos;
+    private final StatsDisAidDeviceUsageRepository aidDeviceUsageRepos;
+
+    @Override
+    public List<StatDataItemDB> findAidDeviceNeedLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
+        return aidDeviceNeedRepos.findDataLatest(srcDataInfo, fromYear);
+    }
+
+    @Override
+    public List<StatDataItemDB> findAidDeviceNeedByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
+        return aidDeviceNeedRepos.findDataByYear(srcDataInfo, targetYear);
+    }
+
+    @Override
+    public List<StatDataItemDB> findAidDeviceUsageLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
+        return aidDeviceUsageRepos.findDataLatest(srcDataInfo, fromYear);
+    }
+
+    @Override
+    public List<StatDataItemDB> findAidDeviceUsageByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
+        return aidDeviceUsageRepos.findDataByYear(srcDataInfo, targetYear);
+    }
+} 
