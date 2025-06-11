@@ -1,7 +1,10 @@
-package com.sweetk.iitp.api.repository.basic.house;
+package com.sweetk.iitp.api.repository.basic.housing;
 
 import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
 import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sweetk.iitp.api.entity.basic.house.QStatsRegSidoByAgeTypeSevGenEntity;
+import com.sweetk.iitp.api.entity.basic.house.StatsRegSidoByAgeTypeSevGenEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +21,7 @@ public class HousingRepositoryImpl implements HousingRepository {
     private final StatsDisRegNatlByAgeTypeSevGenRepository regNatlByAgeTypeSevGenRepos;
     private final StatsDisRegNatlByNewRepository regNatlByNewRepos;
     private final StatsDisRegSidoByTypeSevGenRepository regSidoByAgeTypeSevGenRepos;
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public List<StatDataItemDB> findRegNatlByNewLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromStatYear) {
@@ -40,12 +44,12 @@ public class HousingRepositoryImpl implements HousingRepository {
     }
 
     @Override
-    public List<StatDataItemDB> findRegSidoByAgeTypeSevGenLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromStatYear) {
+    public List<StatDataItemDB> findRegSidoByTypeSevGenLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromStatYear) {
         return regSidoByAgeTypeSevGenRepos.findDataLatest(srcDataInfo, fromStatYear);
     }
 
     @Override
-    public List<StatDataItemDB> findRegSidoByAgeTypeSevGenByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
+    public List<StatDataItemDB> findRegSidoByTypeSevGenByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
         return regSidoByAgeTypeSevGenRepos.findDataByYear(srcDataInfo, targetYear);
     }
 
@@ -87,5 +91,19 @@ public class HousingRepositoryImpl implements HousingRepository {
     @Override
     public List<StatDataItemDB> findLifeSuppFieldByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
         return lifeSuppFieldRepos.findDataByYear(srcDataInfo, targetYear);
+    }
+
+    @Override
+    public List<StatsRegSidoByAgeTypeSevGenEntity> findRegSidoByTypeSevGenByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
+        QStatsRegSidoByAgeTypeSevGenEntity qEntity = QStatsRegSidoByAgeTypeSevGenEntity.statsRegSidoByAgeTypeSevGenEntity;
+
+        return queryFactory
+            .selectFrom(qEntity)
+            .where(
+                qEntity.statYear.eq(targetYear),
+                qEntity.statLatestChnDt.eq(srcDataInfo.getStatLatestChnDt())
+            )
+            .orderBy(qEntity.sidoCd.asc())
+            .fetch();
     }
 } 
