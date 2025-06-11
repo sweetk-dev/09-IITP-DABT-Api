@@ -1,6 +1,5 @@
 package com.sweetk.iitp.api.repository.basic.housing;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
 import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,6 @@ public class HousingRepositoryImpl implements HousingRepository {
     private final StatsDisRegNatlByAgeTypeSevGenRepository regNatlByAgeTypeSevGenRepos;
     private final StatsDisRegNatlByNewRepository regNatlByNewRepos;
     private final StatsDisRegSidoByTypeSevGenRepository regSidoByAgeTypeSevGenRepos;
-    private final JPAQueryFactory queryFactory;
 
     @Override
     public List<StatDataItemDB> findRegNatlByNewLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromStatYear) {
