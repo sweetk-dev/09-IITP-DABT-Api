@@ -3,6 +3,7 @@ package com.sweetk.iitp.api.service.basic;
 import com.sweetk.iitp.api.annotation.ConditionalTimed;
 import com.sweetk.iitp.api.dto.basic.StatDataItem;
 import com.sweetk.iitp.api.dto.basic.StatDataRes;
+import com.sweetk.iitp.api.dto.basic.StatInfo;
 import com.sweetk.iitp.api.dto.basic.converter.StatsDataConverter;
 import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
 import com.sweetk.iitp.api.dto.internal.StatMetaCodeDB;
@@ -30,6 +31,13 @@ public class BasicHousingReadService extends AbstractBasicService {
     /*******************************
      * 신규등록 장애인현황
      *******************************/
+    public StatInfo getHousingRegNewInfo() {
+        // 1. 데이터 소스 정보 조회
+        StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegNatlByNew();
+        return StatsDataConverter.toStatInfoResponse(srcDataInfo);
+    }
+
+
     @ConditionalTimed(value = "basic.housing.reg.new.latest", description = "주택 등록 신규 최신 데이터 조회")
     public StatDataRes getHousingRegNewLatest(Integer fromYear) {
         // 1. 데이터 소스 정보 조회
@@ -78,6 +86,13 @@ public class BasicHousingReadService extends AbstractBasicService {
     /*******************************
      * 전국 연령별,장애등급별,성별 등록장애인수
      *******************************/
+    public StatInfo getHousingRegAgeSevGenInfo() {
+        // 1. 데이터 소스 정보 조회
+        StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegNatlByAgeTypeSevGen();
+        return StatsDataConverter.toStatInfoResponse(srcDataInfo);
+    }
+
+
     @ConditionalTimed(value = "basic.housing.reg.ageSevGen.latest", description = "전국 연령별,장애등급별,성별 등록장애인수 최신 데이터 조회")
     public StatDataRes getHousingRegAgeSevGenLatest(Integer fromYear) {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegNatlByAgeTypeSevGen();
@@ -118,6 +133,13 @@ public class BasicHousingReadService extends AbstractBasicService {
     /*******************************
      * 시도별,장애유형별,장애정도별,성별 등록장애인수
      *******************************/
+    public StatInfo getHousingRegSidoSevGenInfo() {
+        // 1. 데이터 소스 정보 조회
+        StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegSidoByTypeSevGen();
+        return StatsDataConverter.toStatInfoResponse(srcDataInfo);
+    }
+
+
     @ConditionalTimed(value = "basic.housing.reg.sidoSevGen.latest", description = "시도별,장애유형별,장애정도별,성별 등록장애인수 최신 데이터 조회")
     public StatDataRes getHousingRegSidoSevGenLatest(Integer fromYear) {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegSidoByTypeSevGen();
@@ -158,6 +180,13 @@ public class BasicHousingReadService extends AbstractBasicService {
     /*******************************
      * 일상생활 필요 지원 정도
      *******************************/
+    public StatInfo getHousingLifeSuppNeedLvlInfo() {
+        // 1. 데이터 소스 정보 조회
+        StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifeSuppNeedLvl();
+        return StatsDataConverter.toStatInfoResponse(srcDataInfo);
+    }
+
+
     @ConditionalTimed(value = "basic.housing.life.suppNeedLvl.latest", description = "일상생활 필요 지원 정도 최신 데이터 조회")
     public StatDataRes getHousingLifeSuppNeedLvlLatest(Integer fromYear) {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifeSuppNeedLvl();
@@ -198,6 +227,13 @@ public class BasicHousingReadService extends AbstractBasicService {
     /*******************************
      * 주로 지원해주는 사람의 유형
      *******************************/
+    public StatInfo getHousingLifeMaincarerInfo() {
+        // 1. 데이터 소스 정보 조회
+        StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifeMaincarer();
+        return StatsDataConverter.toStatInfoResponse(srcDataInfo);
+    }
+
+
     @ConditionalTimed(value = "basic.housing.life.maincarer.latest", description = "주로 지원해주는 사람의 유형 최신 데이터 조회")
     public StatDataRes getHousingLifeMaincarerLatest(Integer fromYear) {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifeMaincarer();
@@ -238,6 +274,13 @@ public class BasicHousingReadService extends AbstractBasicService {
     /*******************************
      * 일상생활 도와주는 사람(1순위)
      *******************************/
+    public StatInfo getHousingLifePrimcarerInfo() {
+        // 1. 데이터 소스 정보 조회
+        StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifePrimcarer();
+        return StatsDataConverter.toStatInfoResponse(srcDataInfo);
+    }
+
+
     @ConditionalTimed(value = "basic.housing.life.primcarer.latest", description = "일상생활 도와주는 사람(1순위) 최신 데이터 조회")
     public StatDataRes getHousingLifePrimcarerLatest(Integer fromYear) {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifePrimcarer();
@@ -278,6 +321,13 @@ public class BasicHousingReadService extends AbstractBasicService {
     /*******************************
      * 도움받는 분야
      *******************************/
+    public StatInfo getHousingLifeSuppFieldInfo() {
+        // 1. 데이터 소스 정보 조회
+        StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifeSuppField();
+        return StatsDataConverter.toStatInfoResponse(srcDataInfo);
+    }
+
+
     @ConditionalTimed(value = "basic.housing.life.suppField.latest", description = "도움받는 분야 최신 데이터 조회")
     public StatDataRes getHousingLifeSuppFieldLatest(Integer fromYear) {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifeSuppField();

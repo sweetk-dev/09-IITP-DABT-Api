@@ -53,12 +53,13 @@ public abstract class AbstractBasicService {
     // 연도 검증 로직
     protected Integer getReqFromYear(String reqFnc, Integer fromYear, Integer startDate, Integer entDate) {
         if (fromYear == null) {
-            log.debug("[{}] :: fromYear is null, DEF_SET_fromYear = {}", reqFnc, entDate);
-            return entDate;
+            Integer defFromYear = entDate - ApiConstants.Param.DEFAULT_STAT_REG_YEAR_PERIOD-1;
+            log.debug("[{}] :: fromYear is null, DEF_SET_fromYear = {}", reqFnc, defFromYear);
+            return defFromYear;
         }
 
-        if (fromYear > entDate || (entDate - fromYear) > ApiConstants.Param.MAX_STAT_YEAR_PERIOD) {
-            String detailMsg = String.format("from(%s) is invalid (Max %s Year)", fromYear, ApiConstants.Param.MAX_STAT_YEAR_PERIOD);
+        if (fromYear > entDate || (entDate - fromYear) > ApiConstants.Param.MAX_STAT_REQ_YEAR_PERIOD) {
+            String detailMsg = String.format("from(%s) is invalid (Max %s Year)", fromYear, ApiConstants.Param.MAX_STAT_REQ_YEAR_PERIOD);
             log.error("[{}] :: {}", reqFnc, detailMsg);
             throw new BusinessException(ErrorCode.INVALID_PARAMETER, detailMsg);
         }
