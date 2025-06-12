@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Tag(name = "기초-사회망 현황 API V1", description = "기초-사회망 현황 OpenApi V1")
 public class BasicSocialController extends BasicBaseController {
+
     private final BasicSocialReadService socialReadService;
 
 

@@ -26,7 +26,10 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Tag(name = "기초-고용 현황 API V1", description = "기초-고용 현황 OpenApi V1")
 public class BasicEmpController extends BasicBaseController {
+
     private final BasicEmpReadService empReadService;
+
+
 
     /*******************************
      * 장애인 근로자 고용현황

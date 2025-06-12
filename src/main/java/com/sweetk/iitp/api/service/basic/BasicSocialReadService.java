@@ -42,7 +42,7 @@ public class BasicSocialReadService extends AbstractBasicService {
     }
 
 
-    @ConditionalTimed(value = "basic.cocial.particFreq.latest", description = "장애인의 사회 참여 데이터 조회")
+    @ConditionalTimed(value = "basic.social.particFreq.latest", description = "장애인의 사회 참여 데이터 조회")
     public StatDataRes getSocialParticFreqLatest(Integer fromYear) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getSocialParticFreq();
@@ -50,7 +50,7 @@ public class BasicSocialReadService extends AbstractBasicService {
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = socialRepository.findSocParticFreqELatest(srcDataInfo, fromStatYear);
+        List<StatDataItemDB> dataList = socialRepository.findSocParticFreqLatest(srcDataInfo, fromStatYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -72,7 +72,7 @@ public class BasicSocialReadService extends AbstractBasicService {
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = socialRepository.findSoParticFreqEByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = socialRepository.findSocParticFreqByYear(srcDataInfo, statYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }

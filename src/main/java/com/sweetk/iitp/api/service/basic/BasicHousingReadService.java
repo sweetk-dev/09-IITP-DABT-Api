@@ -24,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class BasicHousingReadService extends AbstractBasicService {
+
     private final HousingRepository housingRepository;
     private final MetadataService metadataService;
     private final DataSourceService dataSourceService;
