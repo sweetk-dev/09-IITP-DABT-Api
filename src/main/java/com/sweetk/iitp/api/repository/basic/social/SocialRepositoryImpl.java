@@ -10,8 +10,19 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class SocialRepositoryImpl implements SocialRepository {
+    private final StatsDisSocParticFreqRepository   socParticFreqRepos;
     private final StatsDisSocContactCntfreqRepository socContactCntfreqRepos;
 
+
+    @Override
+    public List<StatDataItemDB> findSocParticFreqLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
+        return socParticFreqRepos.findDataLatest(srcDataInfo, fromYear);
+    }
+
+    @Override
+    public List<StatDataItemDB> findSocParticFreqByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
+        return socParticFreqRepos.findDataByYear(srcDataInfo, targetYear);
+    }
 
     @Override
     public List<StatDataItemDB> findSocContactCntfreqLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
@@ -22,4 +33,7 @@ public class SocialRepositoryImpl implements SocialRepository {
     public List<StatDataItemDB> findSocContactCntfreqByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
         return socContactCntfreqRepos.findDataByYear(srcDataInfo, targetYear);
     }
+
+
+
 } 
