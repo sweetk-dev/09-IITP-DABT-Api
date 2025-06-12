@@ -1,7 +1,7 @@
 package com.sweetk.iitp.api.repository.basic.social;
 
 import com.sweetk.iitp.api.entity.basic.social.StatsDisSocParticFreqEntity;
-import com.sweetk.iitp.api.repository.basic.social.custom.StatsDisSocContactCntfreqRepositoryCustom;
+import com.sweetk.iitp.api.repository.basic.social.custom.StatsDisSocParticFreqRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

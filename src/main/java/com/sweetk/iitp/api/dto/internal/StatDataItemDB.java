@@ -15,21 +15,26 @@ public class StatDataItemDB {
     private String c1;        // 코드값
     private String c2;        // 코드값
     private String c3;        // 코드값
-    private String c1Nm;
-    private String c2Nm;
-    private String c3Nm;
 
     private String c1ObjNm;
     private String c2ObjNm;
     private String c3ObjNm;
 
     private String itmId;     // 코드값
-    private String itmNm;
 
     private String unitNm;
     private String data;
     private LocalDate lstChnDe;
     private Integer srcDataId;
+
+
+    private String c1Nm;
+    private String c2Nm;
+    private String c3Nm;
+
+    private String itmNm;
+
+
 
     public StatDataItem toStatDataItem() {
         return StatDataItem.builder()

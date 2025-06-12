@@ -5,7 +5,7 @@ import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
 
 import java.util.List;
 
-public interface StatsDisSocParticFreqEntityRepositoryCustom {
+public interface StatsDisSocParticFreqRepositoryCustom {
     List<StatDataItemDB> findDataLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear);
     List<StatDataItemDB> findDataByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear);
 } 

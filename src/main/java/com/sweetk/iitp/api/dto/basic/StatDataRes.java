@@ -12,9 +12,6 @@ import java.util.List;
 @Builder
 @Schema(description = "통계 데이터")
 public class StatDataRes {
-    @Schema(description = "통계 정보" , requiredMode = Schema.RequiredMode.REQUIRED)
-    private StatInfo statInfo;
-
     @Schema(description = "통계 데이터 리스트")
     private List<StatDataItem> items;
 }
