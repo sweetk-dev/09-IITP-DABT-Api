@@ -51,7 +51,7 @@ public class StatsDataConverter {
                 : Collections.emptyList();
 
         return StatDataRes.builder()
-                .statInfo(statInfo)
+                //.statInfo(statInfo)
                 .items(items)
                 .build();
     }
@@ -73,7 +73,7 @@ public class StatsDataConverter {
         List<StatDataItem> items = (dataList != null) ? dataList : Collections.emptyList();
 
         return StatDataRes.builder()
-                .statInfo(statInfo)
+                //.statInfo(statInfo)
                 .items(items)
                 .build();
     }

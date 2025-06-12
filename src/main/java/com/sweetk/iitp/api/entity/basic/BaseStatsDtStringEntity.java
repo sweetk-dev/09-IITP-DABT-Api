@@ -15,15 +15,14 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @Setter
-public class BaseStatsDtStringEntity {
+public abstract class BaseStatsDtStringEntity implements StatsDtStringCommon {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "src_data_id", nullable = false)
-    private StatsSrcDataInfoEntity srcDataInfo;
+    @Column(name = "src_data_id", nullable = false)
+    private Integer srcDataId;
 
     @Column(name = "prd_de", nullable = false)
     private Short prdDe;
@@ -73,5 +72,25 @@ public class BaseStatsDtStringEntity {
 
     @Column(name = "updated_by", length = 40)
     private String updatedBy;
+
+    //Getter
+    @Override public Integer getId() { return id; }
+    @Override public Integer getSrcDataId() { return srcDataId; }
+    @Override public Short getPrdDe() { return prdDe; }
+    @Override public String getC1() { return c1; }
+    @Override public String getC2() { return c2; }
+    @Override public String getC3() { return c3; }
+    @Override public String getC1ObjNm() { return c1ObjNm; };
+    @Override public String getC2ObjNm() { return c2ObjNm; };
+    @Override public String getC3ObjNm() { return c3ObjNm; };
+    @Override public String getItmId() { return itmId; }
+    @Override public String getUnitNm() { return unitNm; }
+    @Override public String getDt() { return dt; }
+    @Override public LocalDate getLstChnDe() { return lstChnDe; }
+    @Override public LocalDate getSrcLatestChnDt() { return srcLatestChnDt; }
+    @Override public LocalDateTime getCreatedAt() { return createdAt; }
+    @Override public LocalDateTime getUpdatedAt() { return updatedAt; }
+    @Override public String getCreatedBy() { return createdBy; }
+    @Override public String getUpdatedBy() { return updatedBy; }
 
 }

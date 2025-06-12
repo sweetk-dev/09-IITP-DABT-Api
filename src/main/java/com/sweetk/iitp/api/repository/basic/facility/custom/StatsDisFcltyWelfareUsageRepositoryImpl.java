@@ -4,7 +4,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
 import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
 import com.sweetk.iitp.api.entity.basic.facility.QStatsDisFcltyWelfareUsageEntity;
-import com.sweetk.iitp.api.repository.basic.BasicRepositoryQuerySupport;
+import com.sweetk.iitp.api.repository.basic.BasicQuerySupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class StatsDisFcltyWelfareUsageRepositoryImpl extends BasicRepositoryQuerySupport implements StatsDisFcltyWelfareUsageRepositoryCustom {
+public class StatsDisFcltyWelfareUsageRepositoryImpl extends BasicQuerySupport implements StatsDisFcltyWelfareUsageRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
