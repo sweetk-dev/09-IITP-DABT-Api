@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Tag(name = "기초-건강 관리 현황 API V1", description = "기초-건강 관리 현황 OpenApi V1")
 public class BasicHealthController extends BasicBaseController {
+
     private final BasicHealthReadService healthReadService;
 
 
@@ -270,7 +271,7 @@ public class BasicHealthController extends BasicBaseController {
     @GetMapping("/exrcBestAid/{statYear}")
     @Operation(
             summary = "해당 연도의 운동 시 가장 도움이 되는 지원 사항 조회",
-            description = "해당 연도의 운동 시 가장 도움이 되는 지원 사항형 조회"
+            description = "해당 연도의 운동 시 가장 도움이 되는 지원 사항 조회"
     )
     public ResponseEntity<ApiResDto> getHealthExrcBestAidYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")

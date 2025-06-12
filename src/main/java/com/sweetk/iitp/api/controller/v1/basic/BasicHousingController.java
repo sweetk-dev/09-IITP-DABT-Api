@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @Tag(name = "기초-주거 자립 현황 API V1", description = "기초-주거 자립 현황 OpenApi V1")
 public class BasicHousingController extends BasicBaseController {
+
     private final BasicHousingReadService housingReadService;
 
 

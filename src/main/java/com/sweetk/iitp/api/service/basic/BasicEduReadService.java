@@ -38,7 +38,6 @@ public class BasicEduReadService extends AbstractBasicService {
         return StatsDataConverter.toStatInfoResponse(srcDataInfo);
     }
 
-
     @ConditionalTimed(value = "basic.edu.vocaExec.latest", description = "장애인 진로 및 직업교육 실시 여부 데이터 조회")
     public StatDataRes getEduVocaExecLatest(Integer fromYear) {
         // 1. 데이터 소스 정보 조회
@@ -85,7 +84,6 @@ public class BasicEduReadService extends AbstractBasicService {
     }
 
 
-
     /*******************************
      * 장애인 진로 및 직업교육 운영 방법
      *******************************/
@@ -94,7 +92,6 @@ public class BasicEduReadService extends AbstractBasicService {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEduVocaExecWay();
         return StatsDataConverter.toStatInfoResponse(srcDataInfo);
     }
-
 
     @ConditionalTimed(value = "basic.edu.vocaExecWay.latest", description = "장애인 진로 및 직업교육 운영 방법 데이터 조회")
     public StatDataRes getEduVocaExecWayLatest(Integer fromYear) {

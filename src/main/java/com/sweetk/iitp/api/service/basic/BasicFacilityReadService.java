@@ -43,7 +43,7 @@ public class BasicFacilityReadService extends AbstractBasicService {
     public StatDataRes getFcltyWelfareUsageLatest(Integer fromYear) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getFcltyWelfareUsage();
-        Integer fromStatYear = getReqFromYear("SocialParticFreqLatest", fromYear,
+        Integer fromStatYear = getReqFromYear("FcltyWelfareUsageLatest", fromYear,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
