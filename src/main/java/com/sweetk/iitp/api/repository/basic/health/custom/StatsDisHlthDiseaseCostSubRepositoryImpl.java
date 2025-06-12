@@ -18,12 +18,12 @@ public class StatsDisHlthDiseaseCostSubRepositoryImpl extends BasicRepositoryQue
     @Override
     public List<StatDataItemDB> findDataLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
         QStatsDisHlthDiseaseCostSubEntity qEntity = QStatsDisHlthDiseaseCostSubEntity.statsDisHlthDiseaseCostSubEntity;
-        return buildLatestStatDataItemQuery(qEntity, srcDataInfo, fromYear).fetch();
+        return buildLatestStatDataItemStringDtQuery(qEntity, srcDataInfo, fromYear).fetch();
     }
 
     @Override
     public List<StatDataItemDB> findDataByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
         QStatsDisHlthDiseaseCostSubEntity qEntity = QStatsDisHlthDiseaseCostSubEntity.statsDisHlthDiseaseCostSubEntity;
-        return buildTargetStatDataItemQuery(qEntity, srcDataInfo, targetYear).fetch();
+        return buildTargetStatDataItemStringDtQuery(qEntity, srcDataInfo, targetYear).fetch();
     }
 } 
