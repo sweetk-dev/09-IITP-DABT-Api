@@ -42,7 +42,7 @@ public class BasicSocialReadService extends AbstractBasicService {
     }
 
 
-    @ConditionalTimed(value = "basic.Social.ParticFreq.latest", description = "장애인의 사회 참여 데이터 조회")
+    @ConditionalTimed(value = "basic.cocial.particFreq.latest", description = "장애인의 사회 참여 데이터 조회")
     public StatDataRes getSocialParticFreqLatest(Integer fromYear) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getSocialParticFreq();
@@ -98,7 +98,7 @@ public class BasicSocialReadService extends AbstractBasicService {
     }
 
 
-    @ConditionalTimed(value = "basic.Social.ContactCntfreq.latest", description = "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도 데이터 조회")
+    @ConditionalTimed(value = "basic.social.contactCntfreq.latest", description = "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도 데이터 조회")
     public StatDataRes getSocialContactCntfreqLatest(Integer fromYear) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getSocialContactCntfreq();
