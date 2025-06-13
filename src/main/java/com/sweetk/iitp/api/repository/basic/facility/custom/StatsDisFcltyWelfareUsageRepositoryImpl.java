@@ -12,18 +12,20 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class StatsDisFcltyWelfareUsageRepositoryImpl extends BasicQuerySupport implements StatsDisFcltyWelfareUsageRepositoryCustom {
+public class StatsDisFcltyWelfareUsageRepositoryImpl
+        extends BasicQuerySupport <StatsDisFcltyWelfareUsageEntity>
+        implements StatsDisFcltyWelfareUsageRepositoryCustom {
+
     private final JPAQueryFactory queryFactory;
+    private final QStatsDisFcltyWelfareUsageEntity qEntity = QStatsDisFcltyWelfareUsageEntity.statsDisFcltyWelfareUsageEntity;
 
     @Override
     public List<StatDataItemDB> findDataLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        QStatsDisFcltyWelfareUsageEntity qEntity = QStatsDisFcltyWelfareUsageEntity.statsDisFcltyWelfareUsageEntity;
-        return buildLatestStatDataItemQuery(qEntity, srcDataInfo, fromYear).fetch();
+        return findLatestStats(qEntity, srcDataInfo, fromYear);
     }
 
     @Override
     public List<StatDataItemDB> findDataByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
-        QStatsDisFcltyWelfareUsageEntity qEntity = QStatsDisFcltyWelfareUsageEntity.statsDisFcltyWelfareUsageEntity;
-        return buildTargetStatDataItemQuery(qEntity, srcDataInfo, targetYear).fetch();
+        return findTargetStats(qEntity, srcDataInfo, targetYear);
     }
 } 
