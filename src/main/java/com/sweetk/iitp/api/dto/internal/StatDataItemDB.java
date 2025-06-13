@@ -1,15 +1,14 @@
 package com.sweetk.iitp.api.dto.internal;
 
 import com.sweetk.iitp.api.dto.basic.StatDataItem;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
+
 @Builder
+@Data
+@AllArgsConstructor
 public class StatDataItemDB {
     private Short prdDe;
     private String c1;        // 코드값
