@@ -64,7 +64,7 @@ public class StatDataItem {
                 .c1ObjNm(entity.getC1ObjNm())
                 .c2ObjNm(entity.getC2ObjNm())
                 .c3ObjNm(entity.getC3ObjNm())
-                .itmNm(entity.getItmNm())
+                .itmNm(entity.getItmId())
                 .unitNm(entity.getUnitNm())
                 .data(entity.getDt() != null ? entity.getDt().toPlainString() : null)
                 .lstChnDe(entity.getLstChnDe())
