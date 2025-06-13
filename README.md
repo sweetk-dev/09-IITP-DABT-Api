@@ -1,7 +1,7 @@
 # IITP API Service
 
 ## 프로젝트 개요
-IITP API 서비스는 OpenAPI 형태로 데이터를 제공하는 RESTful API 서버입니다. 이 서비스는 API Key 기반의 인증을 사용하며, Rate Limiting을 통해 API 사용량을 제어합니다.
+IITP API 서비스는 장애인 관련 통계 데이터와 POI(관심 지점) 정보를 제공하는 RESTful API 서버입니다. 이 서비스는 API Key 기반의 인증을 사용하며, Rate Limiting을 통해 API 사용량을 제어합니다.
 
 ## 기술 스택
 - Java 21
@@ -18,59 +18,53 @@ IITP API 서비스는 OpenAPI 형태로 데이터를 제공하는 RESTful API �
 
 ## 주요 기능
 
-### API 데이터 처리
-- RESTful API 엔드포인트 제공
-- 데이터 CRUD 작업 지원
-- 페이징 및 정렬 기능
-- 동적 쿼리 처리 (QueryDSL)
-- 데이터 검증 및 변환
-- 에러 처리 및 응답 표준화
-- API 버전 관리 (URL 패턴 방식)
+### 통계 데이터 API
+- 장애인 등록 현황 통계
+- 연령별, 장애등급별, 성별 통계
+- 시도별 통계
+- 일상생활 지원 현황 통계
+- 연도별 데이터 조회
+- 통계 정보 메타데이터 제공
 
-### 보안 및 제어
+### POI(관심 지점) API
+- 카테고리 기반 POI 검색
+- 위치 기반 POI 검색
+- 반경 검색 지원
+- 페이징 및 정렬 기능
+- 상세 정보 조회
+
+### 공통 기능
 - API Key 기반 인증
 - Rate Limiting
-- IP 기반 접근 제어
-- 요청 로깅 및 모니터링
-
-### 문서화 및 모니터링
-- OpenAPI 3.0 문서화
-- Prometheus 메트릭 수집
-- Actuator 모니터링
-- API 사용량 통계
+- 요청 로깅
+- 에러 처리 및 응답 표준화
+- API 버전 관리
 
 ## API 엔드포인트
 
-### 기본 API
-- GET /api/v1/{resource} - 리소스 목록 조회
-- GET /api/v1/{resource}/{id} - 단일 리소스 조회
-- POST /api/v1/{resource} - 리소스 생성
-- PUT /api/v1/{resource}/{id} - 리소스 수정
-- DELETE /api/v1/{resource}/{id} - 리소스 삭제
+### 통계 데이터 API
+- GET /api/v1/basic/housing/reg/new/* - 신규등록 장애인현황
+- GET /api/v1/basic/housing/reg/ageSevGen/* - 연령별,장애등급별,성별 통계
+- GET /api/v1/basic/housing/reg/sidoSevGen/* - 시도별 통계
+- GET /api/v1/basic/housing/life/* - 일상생활 지원 현황
 
-### 고급 기능
-- GET /api/v1/{resource}/search - 고급 검색
-- GET /api/v1/{resource}/export - 데이터 내보내기
-- POST /api/v1/{resource}/batch - 일괄 처리
+### POI API
+- GET /api/v1/poi/search - POI 검색
+- GET /api/v1/poi/search/location - 위치 기반 POI 검색
 
 ### 공통 기능
 - 페이징: `page`, `size` 파라미터
 - 정렬: `sort` 파라미터
-- 필터링: `filter` 파라미터
-- 검색: `q` 파라미터
+- 연도 필터링: `fromYear` 파라미터
+- 검색: `name` 파라미터
 
 ## 응답 형식
 ```json
 {
-    "status": "SUCCESS",
+    "code": "200",
+    "message": "success",
     "data": {
         // 응답 데이터
-    },
-    "metadata": {
-        "page": 0,
-        "size": 10,
-        "totalElements": 100,
-        "totalPages": 10
     }
 }
 ```
@@ -78,28 +72,31 @@ IITP API 서비스는 OpenAPI 형태로 데이터를 제공하는 RESTful API �
 ## 에러 응답
 ```json
 {
-    "status": "ERROR",
-    "error": {
-        "code": "ERROR_CODE",
-        "message": "에러 메시지",
-        "details": []
-    }
+    "code": "500",
+    "message": "Internal Server Error",
+    "data": null
 }
 ```
 
 ## 프로젝트 구조
 ```
 src/main/java/com/sweetk/iitp/api/
-├── config/                 # 설정 클래스
-├── constant/              # 상수 정의
-├── controller/            # API 컨트롤러
-├── dto/                   # Data Transfer Objects
-├── entity/                # JPA 엔티티
-├── exception/             # 예외 처리
-├── repository/            # 데이터 접근 계층
-├── security/              # 보안 관련 클래스
-├── service/               # 비즈니스 로직
-└── util/                  # 유틸리티 클래스
+├── annotation/           # 커스텀 어노테이션
+├── config/              # 설정 클래스
+├── constant/            # 상수 정의
+├── controller/          # API 컨트롤러
+│   ├── v1/
+│   │   ├── basic/      # 통계 데이터 API
+│   │   └── poi/        # POI API
+├── dto/                 # Data Transfer Objects
+├── entity/              # JPA 엔티티
+├── exception/           # 예외 처리
+├── interceptor/         # 인터셉터
+├── repository/          # 데이터 접근 계층
+├── security/            # 보안 관련 클래스
+├── service/             # 비즈니스 로직
+├── util/                # 유틸리티 클래스
+└── validation/          # 검증 관련 클래스
 ```
 
 ## 보안
@@ -110,6 +107,9 @@ src/main/java/com/sweetk/iitp/api/
 ## API 문서
 - OpenAPI 문서: `/v3/api-docs`
 - API 문서 파일: `/docs/latest.yaml`
+- 상세 API 문서:
+  - `/docs/api/basic-api.md` - 통계 데이터 API 문서
+  - `/docs/api/poi-api.md` - POI API 문서
 
 ## 개발 환경 설정
 
