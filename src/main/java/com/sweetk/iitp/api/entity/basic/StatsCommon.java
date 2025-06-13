@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+
 public interface StatsCommon {
     Integer getId();
     Integer getSrcDataId();
@@ -22,7 +23,7 @@ public interface StatsCommon {
 
     String getUnitNm();
 
-    BigDecimal getDt();
+    Object getDt();
 
     LocalDate getLstChnDe();
 
@@ -33,4 +34,9 @@ public interface StatsCommon {
 
     String getCreatedBy();
     String getUpdatedBy();
+
+    default boolean isDtBigDecimal() {
+        return getDt() instanceof BigDecimal;
+    }
+
 }

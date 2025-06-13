@@ -13,9 +13,10 @@ import java.time.LocalDateTime;
 /**
  * 통계 테이블 기본 entity
  */
-@MappedSuperclass
+
 @Getter
 @Setter
+@MappedSuperclass
 public abstract  class BaseStatsEntity implements StatsCommon {
 
     @Id
