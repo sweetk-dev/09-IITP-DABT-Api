@@ -13,19 +13,20 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class StatsDisRegNatlByNewRepositoryImpl extends BasicQuerySupport implements StatsDisRegNatlByNewRepositoryCustom {
-    
+public class StatsDisRegNatlByNewRepositoryImpl
+        extends BasicQuerySupport <StatsDisRegNatlByNewEntity>
+        implements StatsDisRegNatlByNewRepositoryCustom {
+
     private final JPAQueryFactory queryFactory;
+    private final QStatsDisRegNatlByNewEntity qEntity = QStatsDisRegNatlByNewEntity.statsDisRegNatlByNewEntity;
     
     @Override
     public List<StatDataItemDB> findDataLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        QStatsDisRegNatlByNewEntity qEntity = QStatsDisRegNatlByNewEntity.statsDisRegNatlByNewEntity;
-        return buildLatestStatDataItemQuery(qEntity, srcDataInfo, fromYear).fetch();
+        return findLatestStats(qEntity, srcDataInfo, fromYear);
     }
 
     @Override
     public List<StatDataItemDB> findDataByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
-        QStatsDisRegNatlByNewEntity qEntity = QStatsDisRegNatlByNewEntity.statsDisRegNatlByNewEntity;
-        return buildTargetStatDataItemQuery(qEntity, srcDataInfo, targetYear).fetch();
+        return findTargetStats(qEntity, srcDataInfo, targetYear);
     }
 } 

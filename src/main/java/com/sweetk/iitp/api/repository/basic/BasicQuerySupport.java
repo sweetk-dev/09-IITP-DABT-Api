@@ -1,41 +1,42 @@
 package com.sweetk.iitp.api.repository.basic;
 
-
 import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
-import com.sweetk.iitp.api.entity.basic.BaseStatsEntity;
+import com.sweetk.iitp.api.entity.basic.BaseStatsDtStringEntity;
 import com.sweetk.iitp.api.entity.basic.StatsCommon;
 import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
-import com.sweetk.iitp.api.util.DateUtils;
+import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 import static com.querydsl.core.types.Projections.constructor;
 
-
-public abstract class BasicQuerySupport<T extends BaseStatsEntity & StatsCommon> {
+@RequiredArgsConstructor
+public abstract class BasicQuerySupport<T extends StatsCommon> {
 
     protected final JPAQueryFactory queryFactory;
 
-    protected BasicQuerySupport(JPAQueryFactory queryFactory) {
-        this.queryFactory = queryFactory;
-    }
 
     // 공통 쿼리 메서드
-    public List<StatDataItemDB> getLatestStats(
+    public List<StatDataItemDB> findLatestStats(
             EntityPath<T> stats,
             StatsSrcDataInfoEntity srcDataInfo,
             Integer fromYear
     ) {
         PathBuilder<T> path = new PathBuilder<>(stats.getType(), stats.getMetadata());
 
+        Expression<String> prdDeExpr = path.getNumber("prdDe", Short.class).stringValue();
+        Expression<String> dtExpr = path.getType().isAssignableFrom(BaseStatsDtStringEntity.class)
+                ? path.getString("dt")
+                : path.getNumber("dt", BigDecimal.class).stringValue();
+
         return queryFactory
                 .select(constructor(StatDataItemDB.class,
-                        path.getNumber("prdDe", Short.class),
+                        prdDeExpr,
                         path.getString("c1"),
                         path.getString("c2"),
                         path.getString("c3"),
@@ -44,7 +45,7 @@ public abstract class BasicQuerySupport<T extends BaseStatsEntity & StatsCommon>
                         path.getString("c3ObjNm"),
                         path.getString("itmId"),
                         path.getString("unitNm"),
-                        path.getNumber("dt", BigDecimal.class).stringValue(), // BigDecimal → String 변환
+                        dtExpr,
                         path.getString("lstChnDe"),
                         path.getString("srcDataId")
                 ))
@@ -61,16 +62,21 @@ public abstract class BasicQuerySupport<T extends BaseStatsEntity & StatsCommon>
 
 
 
-    public List<StatDataItemDB> getTargetStats(
+    public List<StatDataItemDB> findTargetStats(
             EntityPath<T> stats,
             StatsSrcDataInfoEntity srcDataInfo,
             Integer fromYear
     ) {
         PathBuilder<T> path = new PathBuilder<>(stats.getType(), stats.getMetadata());
 
+        Expression<String> prdDeExpr = path.getNumber("prdDe", Short.class).stringValue();
+        Expression<String> dtExpr = path.getType().isAssignableFrom(BaseStatsDtStringEntity.class)
+                ? path.getString("dt")
+                : path.getNumber("dt", BigDecimal.class).stringValue();
+
         return queryFactory
                 .select(constructor(StatDataItemDB.class,
-                        path.getNumber("prdDe", Short.class),
+                        prdDeExpr,
                         path.getString("c1"),
                         path.getString("c2"),
                         path.getString("c3"),
@@ -79,18 +85,17 @@ public abstract class BasicQuerySupport<T extends BaseStatsEntity & StatsCommon>
                         path.getString("c3ObjNm"),
                         path.getString("itmId"),
                         path.getString("unitNm"),
-                        path.getNumber("dt", BigDecimal.class).stringValue(),
+                        dtExpr,
                         path.getString("lstChnDe"),
                         path.getString("srcDataId")
                 ))
                 .from(stats)
                 .where(
                         path.getString("prdDe").eq(String.valueOf(fromYear)),
-                        path.getDate("statLatestChnDt", java.util.Date.class).toString()
-                                .equals(srcDataInfo.getStatLatestChnDt())
+                        path.getDate("statLatestChnDt", java.util.Date.class)
+                                .eq(java.sql.Date.valueOf(srcDataInfo.getStatLatestChnDt()))
                 )
                 .orderBy(path.getString("prdDe").asc())
                 .fetch();
     }
-
 }
