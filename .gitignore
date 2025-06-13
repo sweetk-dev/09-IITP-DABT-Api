@@ -71,7 +71,7 @@ target/
 #/src/main/resources/static/docs/
 
 ### Docs ###
-/docs
+#/docs
 
 ### QueryDSL ###
 /generated/
