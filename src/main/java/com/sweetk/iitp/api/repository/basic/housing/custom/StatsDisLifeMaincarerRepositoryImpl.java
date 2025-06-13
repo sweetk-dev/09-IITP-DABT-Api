@@ -4,20 +4,22 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
 import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
 import com.sweetk.iitp.api.entity.basic.housing.QStatsDisLifeMaincarerEntity;
+import com.sweetk.iitp.api.entity.basic.housing.StatsDisLifeMaincarerEntity;
 import com.sweetk.iitp.api.repository.basic.BasicQuerySupport;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
 public class StatsDisLifeMaincarerRepositoryImpl
-        extends BasicQuerySupport <StatsDisLifeMaincarerEntity>
+        extends BasicQuerySupport<StatsDisLifeMaincarerEntity>
         implements StatsDisLifeMaincarerRepositoryCustom {
 
-    private final JPAQueryFactory queryFactory;
     private final QStatsDisLifeMaincarerEntity qEntity = QStatsDisLifeMaincarerEntity.statsDisLifeMaincarerEntity;
+
+    public StatsDisLifeMaincarerRepositoryImpl(JPAQueryFactory queryFactory) {
+        super(queryFactory);
+    }
 
     @Override
     public List<StatDataItemDB> findDataLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
