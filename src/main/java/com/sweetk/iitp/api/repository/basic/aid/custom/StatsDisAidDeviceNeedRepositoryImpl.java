@@ -12,13 +12,15 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
 public class StatsDisAidDeviceNeedRepositoryImpl
         extends BasicQuerySupport<StatsDisAidDeviceNeedEntity>
         implements StatsDisAidDeviceNeedRepositoryCustom {
 
-    private final JPAQueryFactory queryFactory;
     private final QStatsDisAidDeviceNeedEntity qEntity = QStatsDisAidDeviceNeedEntity.statsDisAidDeviceNeedEntity;
+
+    public StatsDisAidDeviceNeedRepositoryImpl(JPAQueryFactory queryFactory) {
+        super(queryFactory);
+    }
 
     @Override
     public List<StatDataItemDB> findDataLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {

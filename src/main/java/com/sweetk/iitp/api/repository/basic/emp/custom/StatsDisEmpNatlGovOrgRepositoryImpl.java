@@ -4,20 +4,22 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
 import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
 import com.sweetk.iitp.api.entity.basic.emp.QStatsDisEmpNatlGovOrgEntity;
+import com.sweetk.iitp.api.entity.basic.emp.StatsDisEmpNatlGovOrgEntity;
 import com.sweetk.iitp.api.repository.basic.BasicQuerySupport;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
 public class StatsDisEmpNatlGovOrgRepositoryImpl
-        extends BasicQuerySupport <StatsDisEmpNatlGovOrgEntity>
+        extends BasicQuerySupport<StatsDisEmpNatlGovOrgEntity>
         implements StatsDisEmpNatlGovOrgRepositoryCustom {
 
-    private final JPAQueryFactory queryFactory;
     private final QStatsDisEmpNatlGovOrgEntity qEntity = QStatsDisEmpNatlGovOrgEntity.statsDisEmpNatlGovOrgEntity;
+
+    public StatsDisEmpNatlGovOrgRepositoryImpl(JPAQueryFactory queryFactory) {
+        super(queryFactory);
+    }
 
     @Override
     public List<StatDataItemDB> findDataLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {

@@ -6,19 +6,20 @@ import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
 import com.sweetk.iitp.api.entity.basic.health.QStatsDisHlthDiseaseCostSubEntity;
 import com.sweetk.iitp.api.entity.basic.health.StatsDisHlthDiseaseCostSubEntity;
 import com.sweetk.iitp.api.repository.basic.BasicQuerySupport;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
 public class StatsDisHlthDiseaseCostSubRepositoryImpl
-        extends BasicQuerySupport <StatsDisHlthDiseaseCostSubEntity>
+        extends BasicQuerySupport<StatsDisHlthDiseaseCostSubEntity>
         implements StatsDisHlthDiseaseCostSubRepositoryCustom {
 
-    private final JPAQueryFactory queryFactory;
     private final QStatsDisHlthDiseaseCostSubEntity qEntity = QStatsDisHlthDiseaseCostSubEntity.statsDisHlthDiseaseCostSubEntity;
+
+    public StatsDisHlthDiseaseCostSubRepositoryImpl(JPAQueryFactory queryFactory) {
+        super(queryFactory);
+    }
 
     @Override
     public List<StatDataItemDB> findDataLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {

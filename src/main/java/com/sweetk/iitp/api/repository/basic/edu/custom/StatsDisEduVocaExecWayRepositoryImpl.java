@@ -6,19 +6,20 @@ import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
 import com.sweetk.iitp.api.entity.basic.edu.QStatsDisEduVocaExecWayEntity;
 import com.sweetk.iitp.api.entity.basic.edu.StatsDisEduVocaExecWayEntity;
 import com.sweetk.iitp.api.repository.basic.BasicQuerySupport;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
 public class StatsDisEduVocaExecWayRepositoryImpl
-        extends BasicQuerySupport <StatsDisEduVocaExecWayEntity>
+        extends BasicQuerySupport<StatsDisEduVocaExecWayEntity>
         implements StatsDisEduVocaExecWayRepositoryCustom {
 
-    private final JPAQueryFactory queryFactory;
     private final QStatsDisEduVocaExecWayEntity qEntity = QStatsDisEduVocaExecWayEntity.statsDisEduVocaExecWayEntity;
+
+    public StatsDisEduVocaExecWayRepositoryImpl(JPAQueryFactory queryFactory) {
+        super(queryFactory);
+    }
 
     @Override
     public List<StatDataItemDB> findDataLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
