@@ -43,7 +43,6 @@ public final class ApiConstants {
 
         public static final String FORMAT_STAT_COLLECT_DATE = "%s~%s";
         public static final String FORMAT_STAT_LATEST_CHN_DATE = "yyyy-MM-dd";
-
     }
 
 
