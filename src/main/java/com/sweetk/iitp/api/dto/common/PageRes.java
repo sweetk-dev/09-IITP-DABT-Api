@@ -23,13 +23,4 @@ public class PageRes<T> {
 
     @Schema(description = "전체 항목 수", example = "100")
     private long totalElements;
-
-    @Schema(description = "전체 페이지 수", example = "10")
-    private int totalPages;
-
-    @Schema(description = "다음 페이지 존재 여부", example = "true")
-    private boolean hasNext;
-
-    @Schema(description = "이전 페이지 존재 여부", example = "false")
-    private boolean hasPrevious;
 }
