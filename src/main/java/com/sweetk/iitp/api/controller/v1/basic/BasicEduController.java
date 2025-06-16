@@ -58,7 +58,7 @@ public class BasicEduController extends BasicBaseController {
             description = "장애인 진로 및 직업교육 실시 여부. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getEduVocaExecLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 검색 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer fromYear,
             HttpServletRequest request) {
@@ -125,7 +125,7 @@ public class BasicEduController extends BasicBaseController {
             description = "장애인 진로 및 직업교육 운영 방법. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getEduVocaExecWayLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 검색 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer fromYear,
             HttpServletRequest request) {
