@@ -1,7 +1,14 @@
 package com.sweetk.iitp.api.service.poi;
 
+import com.sweetk.iitp.api.constant.SysConstants;
+import com.sweetk.iitp.api.dto.common.PageReq;
+import com.sweetk.iitp.api.dto.common.PageRes;
+import com.sweetk.iitp.api.dto.poi.MvPoi;
+import com.sweetk.iitp.api.dto.poi.MvPoiSearchCatReq;
+import com.sweetk.iitp.api.dto.poi.MvPoiSearchLocReq;
 import com.sweetk.iitp.api.repository.poi.MvPoiRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,6 +17,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MvPoiReadService {
     private MvPoiRepository mvPoiRepos;
+
+    public PageRes<MvPoi> getAllPoi( PageReq pageReq  ) {
+        return mvPoiRepos.findPoiList((Pageable) pageReq);
+    }
+
+
+    public PageRes<MvPoi> getPoiByCategory (PageReq pageReq, MvPoiSearchCatReq searchReq ) {
+        return mvPoiRepos.findByCategory((Pageable)pageReq);
+    }
+
+
+    public PageRes<MvPoi> getPoiByLocation ( MvPoiSearchLocReq searchReq ) {
+        return mvPoiRepos.findByLocation(searchReq);
+    }
 
 
     /*
