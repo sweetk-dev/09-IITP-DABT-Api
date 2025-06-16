@@ -1,7 +1,7 @@
 package com.sweetk.iitp.api.repository.basic.emp;
 
 import com.sweetk.iitp.api.entity.basic.emp.StatsDisEmpNatlPrivateEntity;
-import com.sweetk.iitp.api.repository.basic.emp.custom.StatsDisEmpNatlPrivateRepositoryCustom;
+import com.sweetk.iitp.api.repository.basic.emp.impl.StatsDisEmpNatlPrivateRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

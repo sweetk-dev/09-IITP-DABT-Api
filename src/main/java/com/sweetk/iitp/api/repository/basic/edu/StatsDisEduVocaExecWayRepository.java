@@ -1,7 +1,7 @@
 package com.sweetk.iitp.api.repository.basic.edu;
 
 import com.sweetk.iitp.api.entity.basic.edu.StatsDisEduVocaExecWayEntity;
-import com.sweetk.iitp.api.repository.basic.edu.custom.StatsDisEduVocaExecWayRepositoryCustom;
+import com.sweetk.iitp.api.repository.basic.edu.impl.StatsDisEduVocaExecWayRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
