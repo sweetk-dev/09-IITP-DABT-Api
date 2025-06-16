@@ -62,7 +62,7 @@ public class BasicHousingController extends BasicBaseController {
             description = "신규등록 장애인현황 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHousingRegNewLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 검색 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer fromYear,
             HttpServletRequest request) {
@@ -128,7 +128,7 @@ public class BasicHousingController extends BasicBaseController {
             description = "전국 연령별,장애등급별,성별 등록장애인수 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHousingRegAgeSevGenLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 검색 시작 연도 (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer fromYear,
             HttpServletRequest request) {
@@ -174,7 +174,7 @@ public class BasicHousingController extends BasicBaseController {
             description = "시도별,장애등급별,성별 등록장애인수 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHousingRegSidoASevGenLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 검색 시작 연도 (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer fromYear,
             HttpServletRequest request) {
@@ -239,7 +239,7 @@ public class BasicHousingController extends BasicBaseController {
             description = "일상생활 필요 지원 정도 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHousingLifeSuppNeedLvlLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 검색 시작 연도 (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer fromYear,
             HttpServletRequest request) {
@@ -306,7 +306,7 @@ public class BasicHousingController extends BasicBaseController {
             description = "주로 지원해주는 사람의 유형 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHousingLifeMainCarerLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 검색 시작 연도 (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer fromYear,
             HttpServletRequest request) {
@@ -374,7 +374,7 @@ public class BasicHousingController extends BasicBaseController {
             description = "일상생활 도와주는 사람(1순위) 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHousingLifePrimCarerLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 검색 시작 연도 (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer fromYear,
             HttpServletRequest request) {
@@ -441,7 +441,7 @@ public class BasicHousingController extends BasicBaseController {
             description = "도움받는 분야 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHousingLifeSuppFieldLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 검색 시작 연도 (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer fromYear,
             HttpServletRequest request) {

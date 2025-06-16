@@ -59,7 +59,7 @@ public class BasicSocialController extends BasicBaseController {
             description = "장애인의 사회 참여 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getSocialParticFreqLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 검색 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer fromYear,
             HttpServletRequest request) {
@@ -125,7 +125,7 @@ public class BasicSocialController extends BasicBaseController {
             description = "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getSocialContactCntfreqLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 검색 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer fromYear,
             HttpServletRequest request) {

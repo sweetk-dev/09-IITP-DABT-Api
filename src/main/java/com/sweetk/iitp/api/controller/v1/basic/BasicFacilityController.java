@@ -57,7 +57,7 @@ public class BasicFacilityController extends BasicBaseController {
             description = "사회복지시설 이용 현황. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getFcltyWelfareUsageLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 검색 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer fromYear,
             HttpServletRequest request) {
