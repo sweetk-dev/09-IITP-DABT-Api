@@ -1,6 +1,5 @@
 package com.sweetk.iitp.api.service.poi;
 
-import com.sweetk.iitp.api.constant.SysConstants;
 import com.sweetk.iitp.api.dto.common.PageReq;
 import com.sweetk.iitp.api.dto.common.PageRes;
 import com.sweetk.iitp.api.dto.poi.MvPoi;
@@ -23,13 +22,13 @@ public class MvPoiReadService {
     }
 
 
-    public PageRes<MvPoi> getPoiByCategory (PageReq pageReq, MvPoiSearchCatReq searchReq ) {
-        return mvPoiRepos.findByCategory((Pageable)pageReq);
+    public PageRes<MvPoi> getPoiByCategory (MvPoiSearchCatReq searchReq, PageReq pageReq ) {
+        return mvPoiRepos.findByCategory(searchReq, (Pageable)pageReq);
     }
 
 
-    public PageRes<MvPoi> getPoiByLocation ( MvPoiSearchLocReq searchReq ) {
-        return mvPoiRepos.findByLocation(searchReq);
+    public PageRes<MvPoi> getPoiByLocation ( MvPoiSearchLocReq searchReq, PageReq pageReq) {
+        return mvPoiRepos.findByLocation(searchReq, (Pageable)pageReq);
     }
 
 
