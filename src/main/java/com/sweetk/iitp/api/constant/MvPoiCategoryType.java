@@ -30,7 +30,7 @@ public enum MvPoiCategoryType {
 
     @JsonCreator
     public static MvPoiCategoryType fromString(String value) {
-        if (value == null) {
+        if (value == null || value.trim().isEmpty()) {
             return null;
         }
         
