@@ -21,6 +21,16 @@ public class MvPoi {
     @JsonProperty("language_code")
     private String languageCode;
 
+    @Schema(description = "카테고리", example = "tourist_spot")
+    @JsonProperty("category")
+    private String category;
+
+
+    @Schema(description = "서브 카테고리", example = "역사 · 고궁 · 문화재,전시 · 공연 · 관람,체험 · 공예\n")
+    @JsonProperty("subCategory")
+    private String subCategory;
+
+
     @Schema(description = "POI 제목", example = "서대문형무소역사관")
     @JsonProperty("title")
     private String title;
