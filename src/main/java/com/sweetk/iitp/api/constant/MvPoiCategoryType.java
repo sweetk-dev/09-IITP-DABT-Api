@@ -2,21 +2,27 @@ package com.sweetk.iitp.api.constant;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public enum MvPoiCategoryType {
-    RESTAURANT("restaurant", "음식점"),
-    TOURIST_SPOT("tourist_spot", "관광지"),
-    SHOPPING("shopping", "쇼핑"),
-    ACCOMMODATION("accommodation", "숙박");
+    RESTAURANT("restaurant", "음식점", false, ""),
+    TOURIST_SPOT("tourist_spot", "관광지", true, ","),
+    SHOPPING("shopping", "쇼핑", false, ""),
+    ACCOMMODATION("accommodation", "숙박", false, "");
 
     private final String code;
     private final String displayName;
+    private final boolean isArray;
+    private final String delimiter;
 
-    MvPoiCategoryType(String code, String displayName) {
+
+    MvPoiCategoryType(String code, String displayName, boolean isArray, String delimiter) {
         this.code = code;
         this.displayName = displayName;
+        this.isArray = isArray;
+        this.delimiter = delimiter;
     }
 
     @JsonValue
@@ -26,6 +32,14 @@ public enum MvPoiCategoryType {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public boolean isArray() {
+        return isArray;
+    }
+
+    public String getDelimiter() {
+        return delimiter;
     }
 
     @JsonCreator

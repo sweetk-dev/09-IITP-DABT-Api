@@ -21,15 +21,15 @@ public class MvPoi {
     @JsonProperty("language_code")
     private String languageCode;
 
-    @Schema(description = "카테고리", example = "tourist_spot")
+    @Schema(description = "카테고리",
+            example = "tourist_spot",
+            allowableValues = {"tourist_spot", "restaurant", "shopping", "accommodation"})
     @JsonProperty("category")
     private String category;
 
-
-    @Schema(description = "서브 카테고리", example = "역사 · 고궁 · 문화재,전시 · 공연 · 관람,체험 · 공예\n")
-    @JsonProperty("subCategory")
+    @Schema(description = "서브 카테고리", example = "역사 · 고궁 · 문화재")
+    @JsonProperty("sub_category")
     private String subCategory;
-
 
     @Schema(description = "POI 제목", example = "서대문형무소역사관")
     @JsonProperty("title")
@@ -59,15 +59,15 @@ public class MvPoi {
     @JsonProperty("latitude")
     private BigDecimal latitude;
 
-    @Schema(description = "경도", example = "126.95561110")
+    @Schema(description = "경도", example = "126.9572029")
     @JsonProperty("longitude")
     private BigDecimal longitude;
 
-    @Schema(description = "상세 정보 JSON", example = "{\"phone\": \"02-360-8590\", \"website\": \"https://sphh.sscmc.or.kr\", ...}")
+    @Schema(description = "상세 정보 JSON", example = "{}")
     @JsonProperty("detail_json")
     private String detailJson;
 
-    @Schema(description = "검색 필터 JSON", example = "{\"search_filter\": {\"tourist_spot\": \"역사 · 고궁 · 문화재,전시 · 공연 · 관람,체험 · 공예\", \"tourist_type\": \"고령자,보행장애,시각장애,영유아 및 동반자,청각장애\", \"accessibility_facilities\": \"기저귀 교환대 있음,장애인 주차장 있음,....\"}}")
+    @Schema(description = "검색 필터 JSON", example = "{}")
     @JsonProperty("search_filter_json")
     private String searchFilterJson;
 }

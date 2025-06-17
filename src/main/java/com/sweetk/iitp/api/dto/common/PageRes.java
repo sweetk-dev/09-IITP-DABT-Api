@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -23,4 +24,11 @@ public class PageRes<T> {
 
     @Schema(description = "전체 항목 수", example = "100")
     private long totalElements;
+
+    public PageRes(List<T> content, Pageable pageable, Long total) {
+        this.content = content;
+        this.page = pageable.getPageNumber();
+        this.size = pageable.getPageSize();
+        this.totalElements = total;
+    }
 }
