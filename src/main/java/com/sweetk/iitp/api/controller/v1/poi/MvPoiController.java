@@ -29,7 +29,7 @@ public class MvPoiController {
 
     private final MvPoiReadService mvPoiReadService;
 
-    @PostMapping("/search")
+    @GetMapping("/search")
     @Operation(
             summary = "이동형 POI 카테고리 검색 조회",
             description = "이동형 POI 카테고리 검색 조회 (paging):"
@@ -48,7 +48,7 @@ public class MvPoiController {
             if (searchKeys == null) {
                 searchRet = mvPoiReadService.getAllPoi(page);
             } else {
-                searchRet = mvPoiReadService.getPoiByCategory(page, searchKeys);
+                searchRet = mvPoiReadService.getPoiByCategory(searchKeys, page);
             }
 
             log.debug("[{}] : {}", request.getRequestURI(), searchKeys.toString());
@@ -62,19 +62,21 @@ public class MvPoiController {
     }
 
 
-    @PostMapping("/search/location")
+    @GetMapping("/search/location")
     @Operation(
             summary = "이동형 POI 위치기반 검색 조회",
             description = "이동형 POI 위치기반 검색 조회 (paging):"
     )
     public ResponseEntity<ApiResDto<PageRes<MvPoi>>> searchByLocation(
+            @Parameter(name = "page", description = "페이징 정보", required = true)
+            @Valid @RequestParam PageReq page,
             @Parameter(name = "searchKeys", description = "(옵션) 검색 키 정보", required = true)
-            @Valid @RequestBody MvPoiSearchLocReq searchKeys,
+            @Valid @RequestParam MvPoiSearchLocReq searchKeys,
             HttpServletRequest request ) {
 
         log.debug("[{}] : {}", request.getRequestURI(), searchKeys.toString() );
 
-        PageRes<MvPoi> searchRet = mvPoiReadService.getPoiByLocation(searchKeys );
+        PageRes<MvPoi> searchRet = mvPoiReadService.getPoiByLocation( searchKeys, page );
 
         return ResponseEntity.ok(ApiResDto.success(searchRet));
     }
