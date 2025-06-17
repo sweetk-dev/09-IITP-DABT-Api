@@ -1,6 +1,10 @@
 spring:
+  profiles:
+    active: local
   application:
     name: iitp-api
+  config:
+    import: optional:file:./config/application-${spring.profiles.active}.yml
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/iitp
@@ -35,19 +39,9 @@ spring:
     deserialization:
       FAIL_ON_UNKNOWN_PROPERTIES: false
 
-server:
-  port: 8080
-  servlet:
-    context-path: /api
-  tomcat:
-    max-threads: 200
-    min-spare-threads: 10
-    max-connections: 10000
-    accept-count: 100
-
 # Log4j2 설정 파일 로딩
 logging:
-  config: classpath:log4j2-${spring.profiles.active}.yml
+  config: classpath:log4j2-${spring.profiles.active}.xml
   level:
     root: INFO
     com.sweetk.iitp: DEBUG
@@ -85,3 +79,14 @@ management:
       enabled: true
     timers:
       enabled: true  # @Timed 어노테이션 활성화/비활성화 
+
+# 공통 설정만 포함
+server:
+  port: 28080
+  servlet:
+    context-path: /api
+  tomcat:
+    max-threads: 200
+    min-spare-threads: 10
+    max-connections: 10000
+    accept-count: 100 

@@ -140,11 +140,10 @@ jasypt:
   encryptor:
     password: ${jasypt.encryptor.password}  # 암호화 키
     algorithm: PBEWithMD5AndDES
-    iv-generator-classname: org.jasypt.iv.NoIvGenerator
 
 # Log4j2 설정 파일 로딩
 logging:
-  config: classpath:log4j2-prod.yml
+  config: classpath:log4j2-spring-prod.xml
 
   api:
     version:

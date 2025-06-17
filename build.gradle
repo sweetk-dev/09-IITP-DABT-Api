@@ -90,6 +90,15 @@ dependencies {
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    // Log4j2
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+}
+
+configurations {
+    all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
 }
 
 // QueryDSL 설정
@@ -142,6 +151,15 @@ tasks.named('test') {
 bootJar {
     enabled = true
     archiveClassifier = ''
+    
+    // 기본 application.yml은 포함
+    // 환경별 설정 파일은 제외 (런타임에 외부에서 로드)
+    exclude 'application-*.yml'
+    exclude 'application-*.properties'
+    
+    // 로그 설정 파일은 제외 (런타임에 외부에서 로드)
+    exclude 'log4j2-*.xml'
+
     archiveBaseName = 'iitp-api'
     mainClass.set('com.sweetk.iitp.IitpApiApplication') // ✅ mainClass 명시
 
@@ -154,7 +172,16 @@ bootJar {
 }
 
 jar {
-    enabled = false
+    enabled = true
+    archiveClassifier = 'original'
+    
+    // 기본 application.yml은 포함
+    // 환경별 설정 파일은 제외 (런타임에 외부에서 로드)
+    exclude 'application-*.yml'
+    exclude 'application-*.properties'
+    
+    // 로그 설정 파일은 제외 (런타임에 외부에서 로드)
+    exclude 'log4j2-*.xml'
 }
 
 bootRun {
@@ -216,6 +243,55 @@ processResources {
             it.replace('@build.time@', buildTime)
                     .replace('@version@', jarVersion)
                     .replace('@springdoc.version@', apiDocVersion)
+        }
+    }
+}
+
+// 환경별 빌드 태스크
+tasks.register('buildLocal') {
+    dependsOn 'build'
+    doLast {
+        copy {
+            from 'src/main/resources'
+            into 'build/resources/main'
+            include 'application-local.yml'
+            include 'log4j2-local.xml'
+        }
+    }
+}
+
+tasks.register('buildDev') {
+    dependsOn 'build'
+    doLast {
+        copy {
+            from 'src/main/resources'
+            into 'build/resources/main'
+            include 'application-dev.yml'
+            include 'log4j2-dev.xml'
+        }
+    }
+}
+
+tasks.register('buildStage') {
+    dependsOn 'build'
+    doLast {
+        copy {
+            from 'src/main/resources'
+            into 'build/resources/main'
+            include 'application-stage.yml'
+            include 'log4j2-stage.xml'
+        }
+    }
+}
+
+tasks.register('buildProd') {
+    dependsOn 'build'
+    doLast {
+        copy {
+            from 'src/main/resources'
+            into 'build/resources/main'
+            include 'application-prod.yml'
+            include 'log4j2-prod.xml'
         }
     }
 }

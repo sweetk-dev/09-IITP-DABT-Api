@@ -140,36 +140,49 @@ export JASYPT_ENCRYPTOR_PASSWORD=your-password
 ./gradlew bootRun -Dspring.profiles.active=dev
 ```
 
-## 빌드 및 배포
+## 프로필 설정
+
+### 로컬 개발 환경
+```bash
+# 커맨드 라인으로 프로필 지정
+java -jar iitp-api.jar --spring.profiles.active=local
+```
+
+### 개발/스테이지/운영 환경
+서버에 환경 변수로 설정 후 실행
+
+```bash
+# Linux/Mac
+export SPRING_PROFILES_ACTIVE=dev  # 또는 stage, prod
+java -jar iitp-api.jar
+
+# Windows
+set SPRING_PROFILES_ACTIVE=dev  # 또는 stage, prod
+java -jar iitp-api.jar
+```
+
+## 빌드 및 실행
 
 ### 빌드
 ```bash
-# 로컬 환경
-./gradlew buildLocal
-
-# 개발 환경
-./gradlew buildDev
-
-# 스테이징 환경
-./gradlew buildStage
-
-# 프로덕션 환경
-./gradlew buildProd
+# 환경별 빌드 (각 환경에 맞는 설정 파일만 포함)
+./gradlew buildLocal  # 로컬 환경
+./gradlew buildDev    # 개발 환경
+./gradlew buildStage  # 스테이지 환경
+./gradlew buildProd   # 운영 환경
 ```
 
-### 빌드된 JAR 실행
+> **참고**: 각 환경별 빌드는 해당 환경의 설정 파일만 jar에 포함됩니다.
+> - `application-{env}.yml`
+> - `log4j2-{env}.xml`
+
+### 실행
 ```bash
-# 로컬 환경
-java -jar build/libs/iitp-api-0.0.1-local-{timestamp}.jar
+# Linux/Mac
+./run.sh
 
-# 개발 환경
-java -jar build/libs/iitp-api-0.0.1-dev-{timestamp}.jar
-
-# 스테이징 환경
-java -jar build/libs/iitp-api-0.0.1-stage-{timestamp}.jar
-
-# 프로덕션 환경
-java -jar build/libs/iitp-api-0.0.1-prod-{timestamp}.jar
+# Windows
+run.bat
 ```
 
 ## 모니터링
@@ -183,3 +196,60 @@ java -jar build/libs/iitp-api-0.0.1-prod-{timestamp}.jar
 
 ## 라이선스
 이 프로젝트는 [라이선스 이름] 라이선스 하에 배포됩니다. 
+
+## 프로젝트 구조
+```
+src/main/resources/
+├── application.yml              # 기본 설정
+├── application-local.yml        # 로컬 환경 설정
+├── application-dev.yml          # 개발 환경 설정
+├── application-stage.yml        # 스테이지 환경 설정
+├── application-prod.yml         # 운영 환경 설정
+├── log4j2-common.xml           # 로그 공통 설정
+├── log4j2-local.xml            # 로컬 환경 로그 설정
+├── log4j2-dev.xml              # 개발 환경 로그 설정
+├── log4j2-stage.xml            # 스테이지 환경 로그 설정
+└── log4j2-prod.xml             # 운영 환경 로그 설정
+```
+
+## 로그 설정
+- 공통 로그 설정은 `log4j2-common.xml`에 정의
+- 환경별 로그 설정은 각각의 `log4j2-{env}.xml`에 정의
+- 로그 파일은 `logs` 디렉토리에 생성됨
+  - 로컬: `iitp-api.log`
+  - 개발: `iitp-api-dev.log`
+  - 스테이지: `iitp-api-stage.log`
+  - 운영: `iitp-api-prod.log`
+
+## 개발 환경 설정
+1. Java 17 설치
+2. PostgreSQL 설치 및 데이터베이스 생성
+3. 환경별 설정 파일 확인
+   - `application-{env}.yml`
+   - `log4j2-{env}.xml`
+
+## 배포
+1. 빌드
+```bash
+./gradlew build
+```
+
+2. 배포 파일 구성
+```
+deploy/
+├── iitp-api.jar
+└── config/
+    ├── application-local.yml
+    ├── application-dev.yml
+    ├── application-stage.yml
+    └── application-prod.yml
+```
+
+3. 실행
+```bash
+# 로컬
+java -jar iitp-api.jar --spring.profiles.active=local
+
+# 다른 환경
+java -jar iitp-api.jar
+``` 
