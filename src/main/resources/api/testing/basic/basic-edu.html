@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>기초-진로 교육 현황 API 테스트</title>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .api-section { margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        .response { margin-top: 10px; padding: 10px; background-color: #f5f5f5; border-radius: 5px; }
+        pre { white-space: pre-wrap; word-wrap: break-word; }
+        button { padding: 5px 10px; margin: 5px; }
+        input { padding: 5px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>기초-진로 교육 현황 API 테스트</h1>
+        
+        <div class="api-section">
+            <h2>장애인 진로 및 직업교육 실시 여부 통계 정보 조회</h2>
+            <button onclick="getEduVocaExecInfo()">조회</button>
+            <div class="response">
+                <h3>Response:</h3>
+                <pre id="eduVocaExecInfoResponse"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function getEduVocaExecInfo() {
+            try {
+                const response = await fetch('/api/v1/basic/edu/vocaExec/info');
+                const data = await response.json();
+                document.getElementById('eduVocaExecInfoResponse').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('eduVocaExecInfoResponse').textContent = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html> 
