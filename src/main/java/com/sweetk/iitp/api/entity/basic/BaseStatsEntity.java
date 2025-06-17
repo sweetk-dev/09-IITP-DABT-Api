@@ -63,10 +63,11 @@ public abstract  class BaseStatsEntity implements StatsCommon {
     private LocalDate srcLatestChnDt;
 
     @CreatedDate
-    @Column(updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @Column(name = "created_by", length = 40, nullable = false)
