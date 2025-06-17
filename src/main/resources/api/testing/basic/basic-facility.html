@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>기초-편의 시설 제공 현황 API 테스트</title>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .api-section { margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        .response { margin-top: 10px; padding: 10px; background-color: #f5f5f5; border-radius: 5px; }
+        pre { white-space: pre-wrap; word-wrap: break-word; }
+        button { padding: 5px 10px; margin: 5px; }
+        input { padding: 5px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>기초-편의 시설 제공 현황 API 테스트</h1>
+        
+        <div class="api-section">
+            <h2>장애인 편의 시설 제공 현황 통계 정보 조회</h2>
+            <button onclick="getFacilityInfo()">조회</button>
+            <div class="response">
+                <h3>Response:</h3>
+                <pre id="facilityInfoResponse"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function getFacilityInfo() {
+            try {
+                const response = await fetch('/api/v1/basic/facility/info');
+                const data = await response.json();
+                document.getElementById('facilityInfoResponse').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('facilityInfoResponse').textContent = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html> 
