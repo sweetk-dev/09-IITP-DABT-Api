@@ -55,6 +55,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
         return new PageRes<>(content, pageable, total);
     }
 
+
     @Override
     public PageRes<MvPoi> findByCategory(MvPoiSearchCatReq catReq, Pageable pageable) {
         BooleanExpression baseCondition = getBaseCondition()
@@ -129,6 +130,12 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     private BooleanExpression eqCategory(String category) {
         return category != null ? qEntity.searchFilterJson.contains(category) : null;
     }
+
+    private BooleanExpression eqCategory(String category, String subCategory) {
+        return category != null ? qEntity.searchFilterJson.contains(category) : null;
+    }
+
+
 
     private BooleanExpression withinRadius(Double latitude, Double longitude, Double radius) {
         if (latitude == null || longitude == null || radius == null) {
