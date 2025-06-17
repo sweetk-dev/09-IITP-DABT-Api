@@ -16,8 +16,10 @@ public class MvPoiSearchCatReq {
 //    @Schema(description = "언어권 (선택사항)", example = "ko")
 //    private String lang = "ko";
 
-    @Schema(description = "카테고리 타입(옵션)", example = "restaurant")
-    private MvPoiCategoryType catType;
+    @Schema(description = "카테고리 타입(옵션)",
+            example = "restaurant",
+            allowableValues = {"tourist_spot", "restaurant", "shopping", "accommodation"})
+    private MvPoiCategoryType category;
 
     @Schema(description = "catType의 서브 카테고리 타입(옵션), 여러개 카테고리 설정 가능 (','로 구분) 최소 2글자 이상", example = "한식, 카페")
     @Size(min = 2)
@@ -37,7 +39,7 @@ public class MvPoiSearchCatReq {
             return;
         }
 
-        if( this.catType != null ) {
+        if( this.category != null ) {
             this.subCate = subCategory;
         }
     }
