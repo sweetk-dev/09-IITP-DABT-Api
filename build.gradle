@@ -192,13 +192,21 @@ bootRun {
     systemProperty "API_DOC_URL", "${apiDocUrlBase}/docs/latest.yaml"
 }
 
-// ✅ 환경별 빌드 시 bootJar 설정만 수정 (별도 task로 재정의 X)
+// ✅ 통합된 환경별 빌드 태스크
 tasks.register('buildLocal') {
     group = 'build'
     description = 'Builds the application for local environment'
     doFirst {
         project.ext.set('env', 'local')
         bootJar.archiveVersion.set("${jarVersion}-local-${buildTime}")
+    }
+    doLast {
+        copy {
+            from 'src/main/resources'
+            into 'build/resources/main'
+            include 'application-local.yml'
+            include 'log4j2-local.xml'
+        }
     }
     dependsOn("copyDocsToResources", "bootJar")
 }
@@ -210,6 +218,14 @@ tasks.register('buildDev') {
         project.ext.set('env', 'dev')
         bootJar.archiveVersion.set("${jarVersion}-dev-${buildTime}")
     }
+    doLast {
+        copy {
+            from 'src/main/resources'
+            into 'build/resources/main'
+            include 'application-dev.yml'
+            include 'log4j2-dev.xml'
+        }
+    }
     dependsOn("copyDocsToResources", "bootJar")
 }
 
@@ -220,6 +236,14 @@ tasks.register('buildStage') {
         project.ext.set('env', 'stage')
         bootJar.archiveVersion.set("${jarVersion}-stage-${buildTime}")
     }
+    doLast {
+        copy {
+            from 'src/main/resources'
+            into 'build/resources/main'
+            include 'application-stage.yml'
+            include 'log4j2-stage.xml'
+        }
+    }
     dependsOn("copyDocsToResources", "bootJar")
 }
 
@@ -229,6 +253,14 @@ tasks.register('buildProd') {
     doFirst {
         project.ext.set('env', 'prod')
         bootJar.archiveVersion.set("${jarVersion}-prod-${buildTime}")
+    }
+    doLast {
+        copy {
+            from 'src/main/resources'
+            into 'build/resources/main'
+            include 'application-prod.yml'
+            include 'log4j2-prod.xml'
+        }
     }
     dependsOn("copyDocsToResources", "bootJar")
 }
@@ -243,55 +275,6 @@ processResources {
             it.replace('@build.time@', buildTime)
                     .replace('@version@', jarVersion)
                     .replace('@springdoc.version@', apiDocVersion)
-        }
-    }
-}
-
-// 환경별 빌드 태스크
-tasks.register('buildLocal') {
-    dependsOn 'build'
-    doLast {
-        copy {
-            from 'src/main/resources'
-            into 'build/resources/main'
-            include 'application-local.yml'
-            include 'log4j2-local.xml'
-        }
-    }
-}
-
-tasks.register('buildDev') {
-    dependsOn 'build'
-    doLast {
-        copy {
-            from 'src/main/resources'
-            into 'build/resources/main'
-            include 'application-dev.yml'
-            include 'log4j2-dev.xml'
-        }
-    }
-}
-
-tasks.register('buildStage') {
-    dependsOn 'build'
-    doLast {
-        copy {
-            from 'src/main/resources'
-            into 'build/resources/main'
-            include 'application-stage.yml'
-            include 'log4j2-stage.xml'
-        }
-    }
-}
-
-tasks.register('buildProd') {
-    dependsOn 'build'
-    doLast {
-        copy {
-            from 'src/main/resources'
-            into 'build/resources/main'
-            include 'application-prod.yml'
-            include 'log4j2-prod.xml'
         }
     }
 }
