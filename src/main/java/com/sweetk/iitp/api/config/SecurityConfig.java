@@ -1,7 +1,7 @@
 package com.sweetk.iitp.api.config;
 
 import com.sweetk.iitp.api.constant.ApiConstants;
-import com.sweetk.iitp.api.repository.ApiClientRepository;
+import com.sweetk.iitp.api.repository.client.ClientRepository;
 import com.sweetk.iitp.api.security.ApiKeyAuthenticationFilter;
 import com.sweetk.iitp.api.security.RateLimitFilter;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final ApiClientRepository apiClientRepository;
+    private final ClientRepository clientRepository;
     private final RateLimitFilter rateLimitFilter;
 
     @Bean
@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .requestMatchers("/health", "/version").permitAll()
                 .anyRequest().denyAll()
             )
-            .addFilterBefore(new ApiKeyAuthenticationFilter(apiClientRepository), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new ApiKeyAuthenticationFilter(clientRepository), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
