@@ -143,7 +143,7 @@ jasypt:
 
 # Log4j2 설정 파일 로딩
 logging:
-  config: classpath:log4j2-spring-prod.xml
+  config: classpath:log4j2-prod.xml
 
   api:
     version:

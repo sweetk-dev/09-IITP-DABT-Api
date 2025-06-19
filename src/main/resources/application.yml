@@ -4,7 +4,7 @@ spring:
   application:
     name: iitp-api
   config:
-    import: optional:file:./config/application-${spring.profiles.active}.yml
+    import: optional:file:./application-${spring.profiles.active}.yml
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/iitp
