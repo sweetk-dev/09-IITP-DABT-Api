@@ -54,13 +54,7 @@ springdoc:
   version: @springdoc.version@
   api-docs:
     path: /v3/api-docs
-  swagger-ui:
-    path: /swagger-ui.html
     enabled: true
-    operationsSorter: method
-    tagsSorter: alpha
-    tryItOutEnabled: true
-    filter: true
   packages-to-scan: com.sweetk.iitp.api.controller
   paths-to-match: /api/**
 

@@ -29,6 +29,9 @@ ext {
     apiDocversionTag = apiDocVersion
     env = findProperty("env") ?: "local"
     buildTime = new Date().format("yyyyMMddHHmmss")
+    
+    // OpenAPI 문서 생성용 포트
+    openApiDocPort = 28080
 
     openApiOutputDir = file("$rootDir/docs-dist")
     springBootStaticDir = file("src/main/resources/static/docs")
@@ -36,10 +39,10 @@ ext {
     apiDocLatestFile = "openapi-latest.yaml"
 
     apiDocUrlBase = [
-            local : "http://localhost:28080",
-            dev   : "https://dev.api.yourdomain.com",
-            stage : "https://stage.api.yourdomain.com",
-            prod  : "https://api.yourdomain.com"
+            local : "http://localhost:28080/api",
+            dev   : "https://dev.api.yourdomain.com/api",
+            stage : "https://stage.api.yourdomain.com/api",
+            prod  : "https://api.yourdomain.com/api"
     ][env]
 
     environments = ['local', 'dev', 'stage', 'prod']
@@ -76,6 +79,7 @@ dependencies {
 
     // OpenAPI
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.3.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-common:2.3.0'
     
     // Rate Limiting
     implementation 'com.bucket4j:bucket4j-core:8.7.0'
@@ -113,9 +117,10 @@ tasks.register('cleanQuerydsl', Delete) {
 }
 
 openApi {
-    outputDir.set(openApiOutputDir)
-    outputFileName.set(apiDocFileName)
-    apiDocsUrl.set("${apiDocUrlBase}/v3/api-docs")
+    outputDir = openApiOutputDir
+    outputFileName = apiDocFileName
+    apiDocsUrl = "${apiDocUrlBase}/v3/api-docs"
+    // 필요시 waitTimeInSeconds 등 추가 설정
 }
 
 tasks.register("copyVersionedDoc", Copy) {
