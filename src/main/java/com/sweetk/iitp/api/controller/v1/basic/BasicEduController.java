@@ -119,7 +119,7 @@ public class BasicEduController extends BasicBaseController {
     }
 
 
-    @GetMapping("/vocaExec/latest")
+    @GetMapping("/vocaExecWay/latest")
     @Operation(
             summary = "장애인 진로 및 직업교육 운영 방법 조회",
             description = "장애인 진로 및 직업교육 운영 방법. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
@@ -140,7 +140,7 @@ public class BasicEduController extends BasicBaseController {
         }
     }
 
-    @GetMapping("/vocaExec/{statYear}")
+    @GetMapping("/vocaExecWay/{statYear}")
     @Operation(
             summary = "해당 연도의 장애인 진로 및 직업교육 운영 방법 조회",
             description = "해당 연도의 장애인 진로 및 직업교육 운영 방법 조회"
