@@ -93,6 +93,9 @@ dependencies {
 
     // Log4j2
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+
+    // Jasypt
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 }
 
 configurations {
@@ -280,4 +283,22 @@ processResources {
 }
 
 tasks.named('generateOpenApiDocs') {
+}
+
+task encrypt(type: JavaExec) {
+    group = 'encryption'
+    description = 'Jasypt로 평문을 암호화합니다. --plain-text, --password 인자 필요.'
+    mainClass = 'org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI'
+    classpath = configurations.runtimeClasspath
+    jvmArgs = ['-Dfile.encoding=UTF-8']
+    args = [
+        'input=' + (project.hasProperty('plain-text') ? project.property('plain-text') : ''),
+        'password=' + (project.hasProperty('password') ? project.property('password') : ''),
+        'algorithm=PBEWithMD5AndDES'
+    ]
+    doFirst {
+        if (!project.hasProperty('plain-text') || !project.hasProperty('password')) {
+            throw new GradleException('plain-text와 password 인자를 --plain-text, --password로 모두 지정해야 합니다.')
+        }
+    }
 }
