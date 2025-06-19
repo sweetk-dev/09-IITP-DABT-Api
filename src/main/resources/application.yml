@@ -1,3 +1,5 @@
+# IITP API 환경 설정 파일
+# 공통 설정만 포함
 spring:
   profiles:
     active: local
