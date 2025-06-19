@@ -23,7 +23,7 @@ public class DataSourceService {
         unless = "#result == null"
     )
     public StatsSrcDataInfoEntity getHousingRegNatlByNew() {
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_REG_NATL_BY_NEW);
+        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_REG_NATL_BY_NEW);
     }
 
     @Cacheable(
@@ -32,7 +32,7 @@ public class DataSourceService {
         unless = "#result == null"
     )
     public StatsSrcDataInfoEntity getHousingRegNatlByAgeTypeSevGen() {
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_REG_NATL_BY_AGE_TYPE_SEV_GEN);
+        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_REG_NATL_BY_AGE_TYPE_SEV_GEN);
     }
 
     @Cacheable(
@@ -41,7 +41,7 @@ public class DataSourceService {
         unless = "#result == null"
     )
     public StatsSrcDataInfoEntity getHousingRegSidoByTypeSevGen() {
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_REG_SIDO_BY_TYPE_SEV_GEN);
+        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_REG_SIDO_BY_TYPE_SEV_GEN);
     }
 
     @Cacheable(
@@ -50,7 +50,7 @@ public class DataSourceService {
         unless = "#result == null"
     )
     public StatsSrcDataInfoEntity getHousingLifeSuppNeedLvl() {
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_LIFE_SUPP_NEED_LVL);
+        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_LIFE_SUPP_NEED_LVL);
     }
 
     @Cacheable(
@@ -59,7 +59,7 @@ public class DataSourceService {
         unless = "#result == null"
     )
     public StatsSrcDataInfoEntity getHousingLifeMaincarer() {
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_LIFE_MAINCARER);
+        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_LIFE_MAINCARER);
     }
 
     @Cacheable(
@@ -68,7 +68,7 @@ public class DataSourceService {
         unless = "#result == null"
     )
     public StatsSrcDataInfoEntity getHousingLifePrimcarer() {
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_LIFE_PRIMCARER);
+        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_LIFE_PRIMCARER);
     }
 
     @Cacheable(
@@ -77,7 +77,7 @@ public class DataSourceService {
         unless = "#result == null"
     )
     public StatsSrcDataInfoEntity getHousingLifeSuppField() {
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_LIFE_SUPP_FIELD);
+        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_LIFE_SUPP_FIELD);
     }
 
     //02.Health
@@ -87,7 +87,7 @@ public class DataSourceService {
         unless = "#result == null"
     )
     public StatsSrcDataInfoEntity getHealthMedicalUsage() {
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_HLTH_MEDICAL_USAGE);
+        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_HLTH_MEDICAL_USAGE);
     }
 
     @Cacheable(
@@ -96,7 +96,7 @@ public class DataSourceService {
             unless = "#result == null"
     )
     public StatsSrcDataInfoEntity getHealthDiseaseCostSub (){
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_HLTH_DISEASE_COST_SUB);
+        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_HLTH_DISEASE_COST_SUB);
     }
 
     @Cacheable(
@@ -105,7 +105,7 @@ public class DataSourceService {
             unless = "#result == null"
     )
     public StatsSrcDataInfoEntity getHealthSportExecType (){
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_HLTH_SPORT_EXEC_TYPE);
+        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_HLTH_SPORT_EXEC_TYPE);
     }
 
     @Cacheable(
@@ -114,7 +114,7 @@ public class DataSourceService {
             unless = "#result == null"
     )
     public StatsSrcDataInfoEntity getHealthExrcBestAid (){
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_HLTH_EXRC_BEST_AID);
+        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_HLTH_EXRC_BEST_AID);
     }
 
     //03.Aid (Assistive devices)
@@ -124,7 +124,7 @@ public class DataSourceService {
             unless = "#result == null"
     )
     public StatsSrcDataInfoEntity getAidDeviceUsage (){
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_AID_DEVICE_USAGE);
+        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_AID_DEVICE_USAGE);
     }
 
     @Cacheable(
@@ -133,7 +133,7 @@ public class DataSourceService {
             unless = "#result == null"
     )
     public StatsSrcDataInfoEntity getAidDeviceNeed (){
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_AID_DEVICE_NEED);
+        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_AID_DEVICE_NEED);
     }
 
 
