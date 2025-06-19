@@ -138,5 +138,40 @@ run.bat
 
 ---
 
+## 보안: Jasypt를 이용한 민감정보 암호화
+
+운영 등 민감정보 보호가 필요한 환경에서는 Jasypt를 이용해 application.yml에 암호화된 값을 사용할 수 있습니다.
+
+### 1. 암호화 방법 (Gradle 태스크)
+```bash
+./gradlew encrypt --plain-text 내비밀번호 --password 암호화키 -Dfile.encoding=UTF-8
+```
+- 한글 등 다국어 암호화 시 반드시 `-Dfile.encoding=UTF-8` 옵션을 추가하세요.
+- 출력된 암호문을 `ENC(암호문)` 형태로 yml에 사용
+
+### 2. application.yml 예시
+```yml
+spring:
+  datasource:
+    password: ENC(암호화된패스워드)
+```
+
+### 3. 복호화 환경변수
+- 서버 실행 시 반드시 암호화키를 환경변수로 지정해야 합니다.
+  - 환경변수: `JASYPT_ENCRYPTOR_PASSWORD=암호화키`
+  - 또는 실행 옵션: `-Djasypt.encryptor.password=암호화키`
+
+### 4. 참고
+- Jasypt는 ENC()로 감싼 값만 복호화합니다. 평문은 그대로 사용됩니다.
+- 암호화 알고리즘은 기본적으로 `PBEWithMD5AndDES`를 사용합니다.
+- 암호화키는 외부에 노출되지 않도록 주의하세요.
+
+### 1-1. 암호화 스크립트 사용법
+- Mac/Linux: `./encrypt.sh 평문 암호화키`
+- Windows: `encrypt.bat 평문 암호화키`
+- 인코딩 옵션이 자동 적용되어 한글/다국어도 안전하게 암호화됩니다.
+
+---
+
 ## 기타
 - 문의/이슈는 [이슈 트래커/연락처]로 
