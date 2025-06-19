@@ -1,28 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO" packages="com.sweetk.iitp">
-    <Include resource="log4j2-common.xml"/>
-    
+    <Properties>
+        <Property name="LOG_PATH">logs</Property>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Property>
+        <Property name="LOG_FILE_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+        <RollingFile name="File"
+                     fileName="${LOG_PATH}/iitp-api.log"
+                     filePattern="${LOG_PATH}/iitp-api-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="${LOG_FILE_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+    </Appenders>
+
     <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Root>
         <!-- 애플리케이션 로그 -->
         <Logger name="com.sweetk.iitp" level="DEBUG" additivity="false">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="File"/>
         </Logger>
-        
         <!-- QueryDSL 로그 -->
         <Logger name="com.querydsl" level="DEBUG" additivity="false">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="File"/>
         </Logger>
-        
         <!-- Hibernate SQL 로그 -->
         <Logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="File"/>
         </Logger>
+
         <Logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" additivity="false">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="File"/>
         </Logger>
     </Loggers>
-</Configuration> 
+</Configuration>
