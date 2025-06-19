@@ -96,9 +96,7 @@ public class StatsSrcDataInfoEntity {
     @Transient
     private String statOrgName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stat_org_id", referencedColumnName = "code_id", insertable = false, updatable = false)
-    @Where(clause = "grp_id = 'stats_src_orgId'")
+    @Transient
     private SysCommonCodeEntity statOrg;
 
     @PostLoad
