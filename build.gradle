@@ -38,12 +38,8 @@ ext {
     apiDocFileName = "openapi-${apiDocversionTag}.yaml"
     apiDocLatestFile = "openapi-latest.yaml"
 
-    apiDocUrlBase = [
-            local : "http://localhost:28080/api",
-            dev   : "https://dev.api.yourdomain.com/api",
-            stage : "https://stage.api.yourdomain.com/api",
-            prod  : "https://api.yourdomain.com/api"
-    ][env]
+    // 문서 생성용 URL은 항상 로컬만 사용
+    apiDocUrlBase = "http://localhost:28080/api"
 
     environments = ['local', 'dev', 'stage', 'prod']
     defaultEnv = 'dev'
@@ -124,9 +120,7 @@ openApi {
 }
 
 tasks.register("copyVersionedDoc", Copy) {
-    if (tasks.findByName('openApi')) {
-        dependsOn("openApi")
-    }
+    dependsOn("generateOpenApiDocs")
     from(openApiOutputDir) {
         include(apiDocFileName)
     }
@@ -143,8 +137,9 @@ tasks.register("copyLatestDoc", Copy) {
 }
 
 tasks.register("copyDocsToResources") {
-    if (tasks.findByName('openApi')) {
-        dependsOn("copyVersionedDoc", "copyLatestDoc")
+    dependsOn("copyVersionedDoc", "copyLatestDoc")
+    doLast {
+        println("OpenAPI document copy completed.")
     }
 }
 
@@ -213,7 +208,7 @@ tasks.register('buildLocal') {
             include 'log4j2-local.xml'
         }
     }
-    dependsOn("copyDocsToResources", "bootJar")
+    dependsOn("bootJar")
 }
 
 tasks.register('buildDev') {
@@ -231,7 +226,7 @@ tasks.register('buildDev') {
             include 'log4j2-dev.xml'
         }
     }
-    dependsOn("copyDocsToResources", "bootJar")
+    dependsOn("bootJar")
 }
 
 tasks.register('buildStage') {
@@ -249,7 +244,7 @@ tasks.register('buildStage') {
             include 'log4j2-stage.xml'
         }
     }
-    dependsOn("copyDocsToResources", "bootJar")
+    dependsOn("bootJar")
 }
 
 tasks.register('buildProd') {
@@ -267,7 +262,7 @@ tasks.register('buildProd') {
             include 'log4j2-prod.xml'
         }
     }
-    dependsOn("copyDocsToResources", "bootJar")
+    dependsOn("bootJar")
 }
 
 tasks.named('build') {
@@ -282,4 +277,7 @@ processResources {
                     .replace('@springdoc.version@', apiDocVersion)
         }
     }
+}
+
+tasks.named('generateOpenApiDocs') {
 }
