@@ -36,7 +36,7 @@ public abstract class BaseStatsDtStringEntity implements StatsCommon {
     @Column(name = "c3", length = 24)
     private String c3;
 
-    @Column(name = "c1_obj_nm", length = 300, nullable = false)
+    @Column(name = "c1_obj_nm", length = 300)
     private String c1ObjNm;
 
     @Column(name = "c2_obj_nm", length = 300)
