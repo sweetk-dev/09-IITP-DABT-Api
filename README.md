@@ -114,38 +114,6 @@ build.bat [local|dev|stage|prod]
   ```
 - 다른 profile로 실행하려면 스크립트 내의 `export SPRING_PROFILES_ACTIVE=dev` 부분을 수정하세요.
 
-#### 표준 출력/에러 로그 관리 (logrotate)
-- 표준 출력/에러 로그는 `logs/iitp-api-console.log`에 저장됩니다.
-- 로그 파일이 커지지 않도록 logrotate 정책을 적용할 수 있습니다.
-- 프로젝트 루트의 `iitp-api-console.log.logrotate` 파일을 `/etc/logrotate.d/`에 복사해 사용하세요.
-- 정책: 월 1회 또는 50MB 초과 시 회전, 최대 6개 보관, 압축, 비어있으면 무시, 실행 중에도 안전하게 회전
-- 예시:
-  ```conf
-  {fullpath:실제 프로젝트 경로}/logs/iitp-api-console.log {
-      monthly
-      size 50M
-      rotate 6
-      compress
-      missingok
-      notifempty
-      copytruncate
-  }
-  ```
-- **logrotate 적용 방법 참고:**
-  1. 설정 파일 복사: (경로는 환경에 맞게 수정)
-     ```bash
-     sudo cp iitp-api-console.log.logrotate /etc/logrotate.d/iitp-api-console
-     ```
-  2. 설정 테스트:
-     ```bash
-     sudo logrotate -d /etc/logrotate.d/iitp-api-console
-     ```
-  3. 강제 회전 실행:
-     ```bash
-     sudo logrotate -f /etc/logrotate.d/iitp-api-console
-     ```
-  4. 시스템 전체 정책에 따라 자동으로 주기적 회전됨 (cron 등)
-
 ---
 
 ## API 문서
