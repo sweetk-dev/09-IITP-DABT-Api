@@ -1,0 +1,9 @@
+{fullpath:실제 프로젝트 경로}/logs/api-console.log {
+    monthly
+    size 50M
+    rotate 6
+    compress
+    missingok
+    notifempty
+    copytruncate
+} 
