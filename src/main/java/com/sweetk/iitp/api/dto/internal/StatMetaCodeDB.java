@@ -8,9 +8,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 public class StatMetaCodeDB {
     String itemId;
     String itemNm;
     String objNm;
+
+    public StatMetaCodeDB(String itemId, String itemNm, String objNm) {
+        this.itemId = itemId;
+        this.itemNm = itemNm;
+        this.objNm = objNm;
+    }
 }
