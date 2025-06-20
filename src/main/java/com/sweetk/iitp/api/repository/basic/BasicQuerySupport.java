@@ -96,7 +96,7 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
                 .from(stats)
                 .where(
                         prdDePath.eq(fromYear.shortValue()),
-                        path.getDate("srcLatestChnDt", java.util.Date.class)
+                        path.getDate("srcLatestChnDt",  LocalDate.class)
                                 .eq(statLatestChnDt)
                 )
                 .orderBy(prdDePath.asc())
