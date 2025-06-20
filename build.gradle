@@ -154,13 +154,10 @@ bootJar {
     enabled = true
     archiveClassifier = ''
     
-    // 기본 application.yml은 포함
-    // 환경별 설정 파일은 제외 (런타임에 외부에서 로드)
-    exclude 'application-*.yml'
-    exclude 'application-*.properties'
-    
-    // 로그 설정 파일은 제외 (런타임에 외부에서 로드)
-    exclude 'log4j2-*.xml'
+    // 환경별 설정 파일도 모두 포함
+    // exclude 'application-*.yml'
+    // exclude 'application-*.properties'
+    // exclude 'log4j2-*.xml'
 
     archiveBaseName = 'iitp-api'
     mainClass.set('com.sweetk.iitp.IitpApiApplication') // ✅ mainClass 명시
@@ -198,89 +195,64 @@ bootRun {
 tasks.register('buildLocal') {
     group = 'build'
     description = 'Builds the application for local environment'
+    project.ext.set('env', 'local')
     bootJar.archiveBaseName.set('iitp-api')
     bootJar.archiveVersion.set("${jarVersion}-local-${buildTime}")
-    doFirst {
-        project.ext.set('env', 'local')
-    }
-    doLast {
-        copy {
-            from 'src/main/resources'
-            into 'build/resources/main'
-            include 'application-local.yml'
-            include 'log4j2-local.xml'
-        }
-    }
-    dependsOn("bootJar")
+    dependsOn("processResources", "bootJar")
 }
 
 tasks.register('buildDev') {
     group = 'build'
     description = 'Builds the application for development environment'
+    project.ext.set('env', 'dev')
     bootJar.archiveBaseName.set('iitp-api')
     bootJar.archiveVersion.set("${jarVersion}-dev-${buildTime}")
-    doFirst {
-        project.ext.set('env', 'dev')
-    }
-    doLast {
-        copy {
-            from 'src/main/resources'
-            into 'build/resources/main'
-            include 'application-dev.yml'
-            include 'log4j2-dev.xml'
-        }
-    }
-    dependsOn("bootJar")
+    dependsOn("processResources", "bootJar")
 }
 
 tasks.register('buildStage') {
     group = 'build'
     description = 'Builds the application for staging environment'
+    project.ext.set('env', 'stage')
     bootJar.archiveBaseName.set('iitp-api')
     bootJar.archiveVersion.set("${jarVersion}-stage-${buildTime}")
-    doFirst {
-        project.ext.set('env', 'stage')
-    }
-    doLast {
-        copy {
-            from 'src/main/resources'
-            into 'build/resources/main'
-            include 'application-stage.yml'
-            include 'log4j2-stage.xml'
-        }
-    }
-    dependsOn("bootJar")
+    dependsOn("processResources", "bootJar")
 }
 
 tasks.register('buildProd') {
     group = 'build'
     description = 'Builds the application for production environment'
+    project.ext.set('env', 'prod')
     bootJar.archiveBaseName.set('iitp-api')
     bootJar.archiveVersion.set("${jarVersion}-prod-${buildTime}")
-    doFirst {
-        project.ext.set('env', 'prod')
-    }
-    doLast {
-        copy {
-            from 'src/main/resources'
-            into 'build/resources/main'
-            include 'application-prod.yml'
-            include 'log4j2-prod.xml'
-        }
-    }
-    dependsOn("bootJar")
+    dependsOn("processResources", "bootJar")
 }
 
 tasks.named('build') {
     dependsOn "build${defaultEnv.capitalize()}"
 }
 
-processResources {
+tasks.named('processResources') {
+    doFirst {
+        def env = project.hasProperty('env') ? project.env : 'dev'
+        // 환경별 파일만 포함
+        filesMatching('application-*.yml') {
+            if (!(name == 'application.yml' || name == "application-${env}.yml")) {
+                exclude()
+            }
+        }
+        filesMatching('log4j2-*.xml') {
+            if (!(name == "log4j2-${env}.xml")) {
+                exclude()
+            }
+        }
+    }
+    // filter(치환) 설정 추가!
     filesMatching('application*.yml') {
         filter {
             it.replace('@build.time@', buildTime)
-                    .replace('@version@', jarVersion)
-                    .replace('@springdoc.version@', apiDocVersion)
+              .replace('@version@', jarVersion)
+              .replace('@springdoc.version@', apiDocVersion)
         }
     }
 }
@@ -302,6 +274,54 @@ task encrypt(type: JavaExec) {
     doFirst {
         if (!project.hasProperty('plain-text') || !project.hasProperty('password')) {
             throw new GradleException('plain-text와 password 인자를 --plain-text, --password로 모두 지정해야 합니다.')
+        }
+    }
+}
+
+// 환경별 리소스 복사 및 정리
+processResources.doFirst {
+    def env = project.hasProperty('env') ? project.env : 'dev'
+    delete {
+        delete fileTree('build/resources/main') {
+            include 'application-*.yml'
+            include 'log4j2-*.xml'
+        }
+    }
+    if (env == 'local') {
+        copy {
+            from('src/main/resources') {
+                include 'application.yml'
+                include 'application-local.yml'
+                include 'log4j2-local.xml'
+            }
+            into('build/resources/main')
+        }
+    } else if (env == 'dev') {
+        copy {
+            from('src/main/resources') {
+                include 'application.yml'
+                include 'application-dev.yml'
+                include 'log4j2-dev.xml'
+            }
+            into('build/resources/main')
+        }
+    } else if (env == 'stage') {
+        copy {
+            from('src/main/resources') {
+                include 'application.yml'
+                include 'application-stage.yml'
+                include 'log4j2-stage.xml'
+            }
+            into('build/resources/main')
+        }
+    } else if (env == 'prod') {
+        copy {
+            from('src/main/resources') {
+                include 'application.yml'
+                include 'application-prod.yml'
+                include 'log4j2-prod.xml'
+            }
+            into('build/resources/main')
         }
     }
 }
