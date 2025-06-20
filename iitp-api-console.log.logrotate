@@ -1,4 +1,4 @@
-{fullpath:실제 프로젝트 경로}/logs/api-console.log {
+{fullpath:실제 프로젝트 경로}/logs/iitp-api-console.log {
     monthly
     size 50M
     rotate 6

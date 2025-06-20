@@ -3,7 +3,7 @@
 export SPRING_PROFILES_ACTIVE=dev
 
 JAR_FILE="iitp-api.jar"
-LOG_FILE="./logs/api-console.log"
+LOG_FILE="./logs/iitp-api-console.log"
 
 # SPRING_PROFILES_ACTIVE 환경변수 체크
 if [ -z "$SPRING_PROFILES_ACTIVE" ]; then
