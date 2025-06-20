@@ -13,7 +13,6 @@ plugins {
 }
 
 group = 'com.sweetk'
-version = '0.0.1-SNAPSHOT'
 
 java {
     toolchain {
@@ -199,9 +198,10 @@ bootRun {
 tasks.register('buildLocal') {
     group = 'build'
     description = 'Builds the application for local environment'
+    bootJar.archiveBaseName.set('iitp-api')
+    bootJar.archiveVersion.set("${jarVersion}-local-${buildTime}")
     doFirst {
         project.ext.set('env', 'local')
-        bootJar.archiveVersion.set("${jarVersion}-local-${buildTime}")
     }
     doLast {
         copy {
@@ -217,9 +217,10 @@ tasks.register('buildLocal') {
 tasks.register('buildDev') {
     group = 'build'
     description = 'Builds the application for development environment'
+    bootJar.archiveBaseName.set('iitp-api')
+    bootJar.archiveVersion.set("${jarVersion}-dev-${buildTime}")
     doFirst {
         project.ext.set('env', 'dev')
-        bootJar.archiveVersion.set("${jarVersion}-dev-${buildTime}")
     }
     doLast {
         copy {
@@ -235,9 +236,10 @@ tasks.register('buildDev') {
 tasks.register('buildStage') {
     group = 'build'
     description = 'Builds the application for staging environment'
+    bootJar.archiveBaseName.set('iitp-api')
+    bootJar.archiveVersion.set("${jarVersion}-stage-${buildTime}")
     doFirst {
         project.ext.set('env', 'stage')
-        bootJar.archiveVersion.set("${jarVersion}-stage-${buildTime}")
     }
     doLast {
         copy {
@@ -253,9 +255,10 @@ tasks.register('buildStage') {
 tasks.register('buildProd') {
     group = 'build'
     description = 'Builds the application for production environment'
+    bootJar.archiveBaseName.set('iitp-api')
+    bootJar.archiveVersion.set("${jarVersion}-prod-${buildTime}")
     doFirst {
         project.ext.set('env', 'prod')
-        bootJar.archiveVersion.set("${jarVersion}-prod-${buildTime}")
     }
     doLast {
         copy {
