@@ -11,6 +11,7 @@ import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.querydsl.core.types.Projections.constructor;
@@ -71,6 +72,8 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
         PathBuilder<T> path = new PathBuilder<>(stats.getType(), stats.getMetadata());
         com.querydsl.core.types.dsl.NumberPath<Short> prdDePath = path.getNumber("prdDe", Short.class);
 
+        LocalDate statLatestChnDt = LocalDate.parse(srcDataInfo.getStatLatestChnDt());
+
         Expression<String> dtExpr = path.getType().isAssignableFrom(BaseStatsDtStringEntity.class)
                 ? path.getString("dt")
                 : path.getNumber("dt", BigDecimal.class).stringValue();
@@ -94,7 +97,7 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
                 .where(
                         prdDePath.eq(fromYear.shortValue()),
                         path.getDate("srcLatestChnDt", java.util.Date.class)
-                                .eq(java.sql.Date.valueOf(srcDataInfo.getStatLatestChnDt()))
+                                .eq(statLatestChnDt)
                 )
                 .orderBy(prdDePath.asc())
                 .fetch();
