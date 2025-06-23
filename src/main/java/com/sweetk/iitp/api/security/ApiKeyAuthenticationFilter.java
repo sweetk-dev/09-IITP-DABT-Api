@@ -4,6 +4,8 @@ import com.sweetk.iitp.api.constant.ApiConstants;
 import com.sweetk.iitp.api.entity.client.OpenApiClientEntity;
 import com.sweetk.iitp.api.entity.client.OpenApiClientKeyEntity;
 import com.sweetk.iitp.api.repository.client.ClientRepository;
+import com.sweetk.iitp.api.exception.ApiException;
+import com.sweetk.iitp.api.exception.ErrorCode;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,8 +34,7 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
         String apiKey = request.getHeader(ApiConstants.API_KEY_HEADER);
         
         if (apiKey == null || apiKey.isEmpty()) {
-            filterChain.doFilter(request, response);
-            return;
+            throw new ApiException(ErrorCode.UNAUTHORIZED, "API Key가 헤더에 없습니다.");
         }
 
         try {
@@ -63,9 +64,13 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
                 log.debug("API Key authentication successful for client: {}", apiClient.getClientId());
             } else {
                 log.warn("Invalid or inactive API key provided: {}", apiKey);
+                throw new ApiException(ErrorCode.UNAUTHORIZED, "허가되지 않은 API Key입니다.");
             }
+        } catch (ApiException e) {
+            throw e;
         } catch (Exception e) {
             log.error("Error during API key authentication for key: {}", apiKey, e);
+            throw new ApiException(ErrorCode.UNAUTHORIZED, "API Key 인증 중 오류가 발생했습니다.");
         }
 
         filterChain.doFilter(request, response);

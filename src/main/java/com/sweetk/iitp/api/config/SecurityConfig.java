@@ -28,10 +28,8 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/v3/api-docs/**").permitAll()
-                .requestMatchers(ApiConstants.ApiPath.API_V1_BASIC + "/**").permitAll()
-                .requestMatchers(ApiConstants.ApiPath.API_V1_POI + "/**").permitAll()
                 .requestMatchers("/health", "/version").permitAll()
-                .anyRequest().denyAll()
+                .anyRequest().authenticated()
             )
             .addFilterBefore(new ApiKeyAuthenticationFilter(clientRepository), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class);
