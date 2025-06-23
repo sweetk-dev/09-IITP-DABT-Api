@@ -2,6 +2,8 @@ package com.sweetk.iitp.api.repository.basic.aid;
 
 import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
 import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
+import com.sweetk.iitp.api.repository.basic.aid.impl.StatsDisAidDeviceNeedRepository;
+import com.sweetk.iitp.api.repository.basic.aid.impl.StatsDisAidDeviceUsageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
