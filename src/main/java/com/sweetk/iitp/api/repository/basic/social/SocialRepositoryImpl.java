@@ -2,6 +2,8 @@ package com.sweetk.iitp.api.repository.basic.social;
 
 import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
 import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
+import com.sweetk.iitp.api.repository.basic.social.impl.StatsDisSocContactCntfreqRepository;
+import com.sweetk.iitp.api.repository.basic.social.impl.StatsDisSocParticFreqRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +12,7 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class SocialRepositoryImpl implements SocialRepository {
-    private final StatsDisSocParticFreqRepository   socParticFreqRepos;
+    private final StatsDisSocParticFreqRepository socParticFreqRepos;
     private final StatsDisSocContactCntfreqRepository socContactCntfreqRepos;
 
 

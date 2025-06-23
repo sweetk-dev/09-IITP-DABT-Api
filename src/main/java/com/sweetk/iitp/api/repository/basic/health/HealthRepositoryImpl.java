@@ -2,6 +2,10 @@ package com.sweetk.iitp.api.repository.basic.health;
 
 import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
 import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
+import com.sweetk.iitp.api.repository.basic.health.impl.StatsDisHlthDiseaseCostSubRepository;
+import com.sweetk.iitp.api.repository.basic.health.impl.StatsDisHlthExrcBestAidRepository;
+import com.sweetk.iitp.api.repository.basic.health.impl.StatsDisHlthMedicalUsageRepository;
+import com.sweetk.iitp.api.repository.basic.health.impl.StatsDisHlthSportExecTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
