@@ -29,7 +29,7 @@ public class StatsKosisMetadataCodeRepositoryImpl implements StatsKosisMetadataC
                 .from(qMetaCode)
                 .where(
                         qMetaCode.srcDataId.eq(srcDataId),
-                        Expressions.booleanTemplate("src_latest_chn_dt = {0}", statLatestChnDt),
+                        qMetaCode.statLatestChnDt.eq(statLatestChnDt),
                         qMetaCode.objNm.ne(SysConstants.Stats.KOSIS_META_ITEM_OBJ_NAME)
                 )
                 .fetch();
@@ -45,7 +45,7 @@ public class StatsKosisMetadataCodeRepositoryImpl implements StatsKosisMetadataC
                 .from(qMetaCode)
                 .where(
                         qMetaCode.srcDataId.eq(srcDataId),
-                        Expressions.booleanTemplate("src_latest_chn_dt = {0}", statLatestChnDt),
+                        qMetaCode.statLatestChnDt.eq(statLatestChnDt),
                         qMetaCode.objNm.eq(SysConstants.Stats.KOSIS_META_ITEM_OBJ_NAME)
                 )
                 .fetch();
@@ -61,7 +61,7 @@ public class StatsKosisMetadataCodeRepositoryImpl implements StatsKosisMetadataC
                 .from(qMetaCode)
                 .where(
                         qMetaCode.srcDataId.eq(srcDataId),
-                        Expressions.booleanTemplate("src_latest_chn_dt = {0}", statLatestChnDt),
+                        qMetaCode.statLatestChnDt.eq(statLatestChnDt),
                         qMetaCode.itmId.in(itemIds)
                 )
                 .fetch();
