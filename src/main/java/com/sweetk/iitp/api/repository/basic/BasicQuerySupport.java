@@ -1,25 +1,31 @@
 package com.sweetk.iitp.api.repository.basic;
 
 import com.querydsl.core.types.EntityPath;
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
-import com.sweetk.iitp.api.entity.basic.BaseStatsDtStringEntity;
 import com.sweetk.iitp.api.entity.basic.StatsCommon;
 import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Table;
 import lombok.RequiredArgsConstructor;
 
-import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
-
-import static com.querydsl.core.types.Projections.constructor;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public abstract class BasicQuerySupport<T extends StatsCommon> {
 
     protected final JPAQueryFactory queryFactory;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    // DB 컬럼명 상수
+    private static final String PRD_DE_COLUMN = "prd_de";
+    private static final String SRC_LATEST_CHN_DT_COLUMN = "src_latest_chn_dt";
 
 
     // 공통 쿼리 메서드
@@ -28,37 +34,39 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
             StatsSrcDataInfoEntity srcDataInfo,
             Integer fromYear
     ) {
-        PathBuilder<T> path = new PathBuilder<>(stats.getType(), stats.getMetadata());
-        com.querydsl.core.types.dsl.NumberPath<Short> prdDePath = path.getNumber("prdDe", Short.class);
 
-        Expression<String> dtExpr = path.getType().isAssignableFrom(BaseStatsDtStringEntity.class)
-                ? path.getString("dt")
-                : path.getNumber("dt", BigDecimal.class).stringValue();
+        String tableName = getTableName(stats.getType());
+        LocalDate statLatestChnDt = LocalDate.parse(srcDataInfo.getStatLatestChnDt());
 
+        String sql = String.format(
+                "SELECT prd_de, c1, c2, c3, c1_obj_nm, c2_obj_nm, c3_obj_nm, itm_id, unit_nm, dt, lst_chn_de, src_data_id " +
+                        "FROM %s " +
+                        "WHERE %s >= ? AND %s = ? " +
+                        "ORDER BY prd_de ASC",
+                tableName, PRD_DE_COLUMN, SRC_LATEST_CHN_DT_COLUMN
+        );
 
-        return queryFactory
-                .select(constructor(StatDataItemDB.class,
-                        path.get("prdDe", Short.class),
-                        path.get("c1", String.class),
-                        path.get("c2", String.class),
-                        path.get("c3", String.class),
-                        path.get("c1ObjNm", String.class),
-                        path.get("c2ObjNm", String.class),
-                        path.get("c3ObjNm", String.class),
-                        path.get("itmId", String.class),
-                        path.get("unitNm", String.class),
-                        dtExpr,
-                        path.get("lstChnDe", java.time.LocalDate.class),
-                        path.get("srcDataId", Integer.class)
+        List<Object[]> results = entityManager.createNativeQuery(sql)
+                .setParameter(1, fromYear.shortValue())
+                .setParameter(2, statLatestChnDt)
+                .getResultList();
+
+        return results.stream()
+                .map(row -> new StatDataItemDB(
+                        ((Number) row[0]).shortValue(),
+                        (String) row[1],
+                        (String) row[2],
+                        (String) row[3],
+                        (String) row[4],
+                        (String) row[5],
+                        (String) row[6],
+                        (String) row[7],
+                        (String) row[8],
+                        row[9] != null ? row[9].toString() : null,
+                        row[10] != null ? ((Date) row[10]).toLocalDate() : null,
+                        ((Number) row[11]).intValue()
                 ))
-                .from(stats)
-                .where(
-                        prdDePath.goe(fromYear.shortValue()),
-                        path.getDate("srcLatestChnDt", java.util.Date.class)
-                                .eq(java.sql.Date.valueOf(srcDataInfo.getStatLatestChnDt()))
-                )
-                .orderBy(prdDePath.asc())
-                .fetch();
+                .collect(Collectors.toList());
     }
 
 
@@ -67,39 +75,47 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
     public List<StatDataItemDB> findTargetStats(
             EntityPath<T> stats,
             StatsSrcDataInfoEntity srcDataInfo,
-            Integer fromYear
+            Integer targetYear
     ) {
-        PathBuilder<T> path = new PathBuilder<>(stats.getType(), stats.getMetadata());
-        com.querydsl.core.types.dsl.NumberPath<Short> prdDePath = path.getNumber("prdDe", Short.class);
-
+        String tableName = getTableName(stats.getType());
         LocalDate statLatestChnDt = LocalDate.parse(srcDataInfo.getStatLatestChnDt());
 
-        Expression<String> dtExpr = path.getType().isAssignableFrom(BaseStatsDtStringEntity.class)
-                ? path.getString("dt")
-                : path.getNumber("dt", BigDecimal.class).stringValue();
+        String sql = String.format(
+                "SELECT prd_de, c1, c2, c3, c1_obj_nm, c2_obj_nm, c3_obj_nm, itm_id, unit_nm, dt, lst_chn_de, src_data_id " +
+                        "FROM %s " +
+                        "WHERE %s = ? AND %s = ? " +
+                        "ORDER BY prd_de ASC",
+                tableName, PRD_DE_COLUMN, SRC_LATEST_CHN_DT_COLUMN
+        );
 
-        return queryFactory
-                .select(constructor(StatDataItemDB.class,
-                        path.get("prdDe", Short.class),
-                        path.get("c1", String.class),
-                        path.get("c2", String.class),
-                        path.get("c3", String.class),
-                        path.get("c1ObjNm", String.class),
-                        path.get("c2ObjNm", String.class),
-                        path.get("c3ObjNm", String.class),
-                        path.get("itmId", String.class),
-                        path.get("unitNm", String.class),
-                        dtExpr,
-                        path.get("lstChnDe", java.time.LocalDate.class),
-                        path.get("srcDataId", Integer.class)
+        List<Object[]> results = entityManager.createNativeQuery(sql)
+                .setParameter(1, targetYear.shortValue())
+                .setParameter(2, statLatestChnDt)
+                .getResultList();
+
+        return results.stream()
+                .map(row -> new StatDataItemDB(
+                        ((Number) row[0]).shortValue(),
+                        (String) row[1],
+                        (String) row[2],
+                        (String) row[3],
+                        (String) row[4],
+                        (String) row[5],
+                        (String) row[6],
+                        (String) row[7],
+                        (String) row[8],
+                        row[9] != null ? row[9].toString() : null,
+                        row[10] != null ? ((Date) row[10]).toLocalDate() : null,
+                        ((Number) row[11]).intValue()
                 ))
-                .from(stats)
-                .where(
-                        prdDePath.eq(fromYear.shortValue()),
-                        path.getDate("srcLatestChnDt",  LocalDate.class)
-                                .eq(statLatestChnDt)
-                )
-                .orderBy(prdDePath.asc())
-                .fetch();
+                .collect(Collectors.toList());
+    }
+
+    private String getTableName(Class<?> entityClass) {
+        Table tableAnnotation = entityClass.getAnnotation(Table.class);
+        if (tableAnnotation == null) {
+            throw new IllegalStateException("Entity " + entityClass.getSimpleName() + " must have a @Table annotation.");
+        }
+        return tableAnnotation.name();
     }
 }
