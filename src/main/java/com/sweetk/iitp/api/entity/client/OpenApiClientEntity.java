@@ -1,5 +1,7 @@
 package com.sweetk.iitp.api.entity.client;
 
+import com.sweetk.iitp.api.constant.DataStatusType;
+import com.sweetk.iitp.api.constant.DataStatusTypeConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +9,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "open_api_client")
@@ -28,16 +29,23 @@ public class OpenApiClientEntity {
     
     @Column(name = "client_name", length = 90, nullable = false)
     private String clientName;
-    
+
+
+    @Convert(converter = DataStatusTypeConverter.class)
+    @Column(name = "status", length = 1, nullable = false)
+    private DataStatusType status =  DataStatusType.ACTIVE;
+
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted = false;
+
+
     @Column(name = "description", length = 600)
     private String description;
     
     @Column(name = "note", length = 600)
     private String note;
-    
-    @Column(name = "is_deleted", nullable = false)
-    private Boolean isDeleted = false;
-    
+
+
     @Column(name = "latest_key_created_at")
     private OffsetDateTime latestKeyCreatedAt;
     
@@ -54,10 +62,7 @@ public class OpenApiClientEntity {
     
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
-    
-    @OneToMany(mappedBy = "openApiClient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<OpenApiClientKeyEntity> apiKeys;
-    
+
     public String getRole() {
         return "API_CLIENT";
     }
