@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 
 /**
  * 수집해 온 KOSIS 원천 통계 데이터의 분류/항목 코드 정보
@@ -54,9 +55,25 @@ public class StatsKosisMetadataCodeEntity {
     @Column(name = "stat_latest_chn_dt")
     private LocalDate statLatestChnDt;
 
+    @Column(name = "created_at", nullable = false)
+    private OffsetDateTime createdAt;
+
     @Column(name = "created_by", length = 50)
     private String createdBy;
 
+    @Column(name = "updated_at")
+    private OffsetDateTime updatedAt;
+
     @Column(name = "updated_by", length = 50)
     private String updatedBy;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = OffsetDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = OffsetDateTime.now();
+    }
 }

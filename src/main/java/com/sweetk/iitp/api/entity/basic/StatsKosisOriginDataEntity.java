@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 
 
 /**
@@ -99,8 +100,13 @@ public class StatsKosisOriginDataEntity {
     private LocalDate dataRefDt;
 
     @Column(name = "created_at", nullable = false)
-    private java.time.LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
     @Column(name = "created_by", length = 40, nullable = false)
     private String createdBy;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = OffsetDateTime.now();
+    }
 }

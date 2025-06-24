@@ -8,8 +8,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLRestriction;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
@@ -20,6 +21,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@SQLRestriction("deleted_at IS NULL")
 public class StatsSrcDataInfoEntity {
 
     @Id
@@ -85,19 +87,19 @@ public class StatsSrcDataInfoEntity {
     private String delYn;
 
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
     @Column(name = "created_by", length = 40, nullable = false)
     private String createdBy;
 
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private OffsetDateTime updatedAt;
 
     @Column(name = "updated_by", length = 40)
     private String updatedBy;
 
     @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
+    private OffsetDateTime deletedAt;
 
     @Column(name = "deleted_by", length = 40)
     private String deletedBy;
@@ -133,6 +135,26 @@ public class StatsSrcDataInfoEntity {
 
     public Integer toIntCollectEndDt () {
         return Integer.parseInt(this.collectEndDt);
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = OffsetDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = OffsetDateTime.now();
+    }
+
+    /**
+     * 데이터 논리적 삭제
+     * @param deletedBy 삭제자
+     */
+    public void softDelete(String deletedBy) {
+        this.status = DataStatusType.DELETED;
+        this.deletedAt = OffsetDateTime.now();
+        this.deletedBy = deletedBy;
     }
 
 }
