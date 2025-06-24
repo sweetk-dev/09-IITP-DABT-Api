@@ -41,7 +41,7 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
         String sql = String.format(
                 "SELECT prd_de, c1, c2, c3, c1_obj_nm, c2_obj_nm, c3_obj_nm, itm_id, unit_nm, dt, lst_chn_de, src_data_id " +
                         "FROM %s " +
-                        "WHERE %s >= ? AND %s = ? " +
+                        "WHERE %s >= ? AND %s = ? AND deleted_at IS NULL " +
                         "ORDER BY prd_de ASC",
                 tableName, PRD_DE_COLUMN, SRC_LATEST_CHN_DT_COLUMN
         );
@@ -83,7 +83,7 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
         String sql = String.format(
                 "SELECT prd_de, c1, c2, c3, c1_obj_nm, c2_obj_nm, c3_obj_nm, itm_id, unit_nm, dt, lst_chn_de, src_data_id " +
                         "FROM %s " +
-                        "WHERE %s = ? AND %s = ? " +
+                        "WHERE %s = ? AND %s = ? AND deleted_at IS NULL " +
                         "ORDER BY prd_de ASC",
                 tableName, PRD_DE_COLUMN, SRC_LATEST_CHN_DT_COLUMN
         );
