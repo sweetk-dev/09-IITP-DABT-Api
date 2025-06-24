@@ -1,9 +1,12 @@
 package com.sweetk.iitp.api.entity.client;
 
+import com.sweetk.iitp.api.constant.DataStatusType;
+import com.sweetk.iitp.api.constant.DataStatusTypeConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
@@ -12,6 +15,7 @@ import java.time.OffsetDateTime;
 @Table(name = "open_api_client_key")
 @Getter
 @Setter
+@SQLRestriction("deleted_at IS NULL")
 public class OpenApiClientKeyEntity {
     
     @Id
@@ -24,6 +28,10 @@ public class OpenApiClientKeyEntity {
     
     @Column(name = "api_key", length = 60, nullable = false, unique = true)
     private String apiKey;
+
+    @Convert(converter = DataStatusTypeConverter.class)
+    @Column(name = "status", length = 1, nullable = false)
+    private DataStatusType status = DataStatusType.ACTIVE;
     
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
@@ -47,8 +55,28 @@ public class OpenApiClientKeyEntity {
     
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
+
+    @Column(name = "deleted_by", length = 40)
+    private String deletedBy;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "api_cli_id", insertable = false, updatable = false)
     private OpenApiClientEntity openApiClient;
+
+    @PrePersist
+    protected void onCreate() {
+        if (status == null) {
+            status = DataStatusType.ACTIVE;
+        }
+        isDeleted = false;
+        isActive = true;
+    }
+
+    public void softDelete(String deletedBy) {
+        this.deletedAt = OffsetDateTime.now();
+        this.deletedBy = deletedBy;
+        this.status = DataStatusType.DELETED;
+        this.isDeleted = true;
+        this.isActive = false;
+    }
 } 

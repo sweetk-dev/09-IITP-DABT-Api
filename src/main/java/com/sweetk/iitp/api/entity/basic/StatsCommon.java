@@ -1,8 +1,10 @@
 package com.sweetk.iitp.api.entity.basic;
 
+import com.sweetk.iitp.api.constant.DataStatusType;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 
 public interface StatsCommon {
@@ -29,14 +31,22 @@ public interface StatsCommon {
 
     LocalDate getSrcLatestChnDt();
 
-    LocalDateTime getCreatedAt();
-    LocalDateTime getUpdatedAt();
+    OffsetDateTime getCreatedAt();
+    OffsetDateTime getUpdatedAt();
+    OffsetDateTime getDeletedAt();
 
     String getCreatedBy();
     String getUpdatedBy();
+    String getDeletedBy();
+
+    DataStatusType getStatus();
+    String getDelYn();
 
     default boolean isDtBigDecimal() {
         return getDt() instanceof BigDecimal;
     }
 
+    default boolean isDeleted() {
+        return getDeletedAt() != null || "Y".equals(getDelYn()) || DataStatusType.DELETED.equals(getStatus());
+    }
 }

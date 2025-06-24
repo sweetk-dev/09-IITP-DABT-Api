@@ -1,13 +1,16 @@
 package com.sweetk.iitp.api.entity.basic;
 
+import com.sweetk.iitp.api.constant.DataStatusType;
+import com.sweetk.iitp.api.constant.DataStatusTypeConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * 통계 테이블 기본 entity
@@ -15,6 +18,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @Setter
+@SQLRestriction("deleted_at IS NULL")
 public abstract class BaseStatsDtStringEntity implements StatsCommon {
 
     @Id
@@ -51,7 +55,7 @@ public abstract class BaseStatsDtStringEntity implements StatsCommon {
     @Column(name = "unit_nm", length = 20)
     private String unitNm;
 
-    @Column(name = "dt",  nullable = false)
+    @Column(name = "dt", nullable = false)
     private String dt;
 
     @Column(name = "lst_chn_de")
@@ -62,16 +66,29 @@ public abstract class BaseStatsDtStringEntity implements StatsCommon {
 
     @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
     @LastModifiedDate
-    private LocalDateTime updatedAt;
+    private OffsetDateTime updatedAt;
 
     @Column(name = "created_by", length = 40, nullable = false)
     private String createdBy;
 
     @Column(name = "updated_by", length = 40)
     private String updatedBy;
+
+    @Column(name = "deleted_at")
+    private OffsetDateTime deletedAt;
+
+    @Column(name = "deleted_by", length = 40)
+    private String deletedBy;
+
+    @Convert(converter = DataStatusTypeConverter.class)
+    @Column(name = "status", length = 1, nullable = false)
+    private DataStatusType status = DataStatusType.ACTIVE;
+
+    @Column(name = "del_yn", length = 1, nullable = false)
+    private String delYn = "N";
 
     //Getter
     @Override public Integer getId() { return id; }
@@ -88,9 +105,29 @@ public abstract class BaseStatsDtStringEntity implements StatsCommon {
     @Override public String getDt() { return dt; }
     @Override public LocalDate getLstChnDe() { return lstChnDe; }
     @Override public LocalDate getSrcLatestChnDt() { return srcLatestChnDt; }
-    @Override public LocalDateTime getCreatedAt() { return createdAt; }
-    @Override public LocalDateTime getUpdatedAt() { return updatedAt; }
+    @Override public OffsetDateTime getCreatedAt() { return createdAt; }
+    @Override public OffsetDateTime getUpdatedAt() { return updatedAt; }
     @Override public String getCreatedBy() { return createdBy; }
     @Override public String getUpdatedBy() { return updatedBy; }
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = OffsetDateTime.now();
+        delYn = "N";
+        if (status == null) {
+            status = DataStatusType.ACTIVE;
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = OffsetDateTime.now();
+    }
+
+    public void softDelete(String deletedBy) {
+        this.deletedAt = OffsetDateTime.now();
+        this.deletedBy = deletedBy;
+        this.status = DataStatusType.DELETED;
+        this.delYn = "Y";
+    }
 }
