@@ -2,6 +2,7 @@ package com.sweetk.iitp.api.repository.basic;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sweetk.iitp.api.constant.DataStatusType;
 import com.sweetk.iitp.api.entity.basic.QStatsSrcDataInfoEntity;
 import com.sweetk.iitp.api.entity.basic.StatsSrcDataInfoEntity;
 import com.sweetk.iitp.api.entity.sys.QSysCommonCodeEntity;
@@ -21,15 +22,17 @@ public class StatsSrcDataInfoRepositoryImpl implements StatsSrcDataInfoRepositor
     private final QSysCommonCodeEntity qCode = QSysCommonCodeEntity.sysCommonCodeEntity;
 
     @Override
-    public StatsSrcDataInfoEntity findWithStatOrgByIntgTblId(String intgTblId) {
-
+    public StatsSrcDataInfoEntity findActiveByIntgTblId(String intgTblId) {
         Tuple tuple = queryFactory
             .select(qSrc, qCode)
             .from(qSrc)
             .leftJoin(qCode)
                 .on(qSrc.statOrgId.eq(qCode.codeId)
                     .and(qCode.grpId.eq("stats_src_orgId")))
-            .where(qSrc.intgTblId.eq(intgTblId))
+            .where(
+                qSrc.intgTblId.eq(intgTblId),
+                qSrc.status.eq(DataStatusType.ACTIVE)
+            )
             .fetchFirst();
 
         if (tuple == null) {
@@ -42,32 +45,6 @@ public class StatsSrcDataInfoRepositoryImpl implements StatsSrcDataInfoRepositor
         if (statOrg != null) {
             entity.setStatOrgName(statOrg.getCodeNm());
         }
-        return entity;
-    }
-
-
-    @Override
-    public StatsSrcDataInfoEntity findWithStatOrgNameByIntgTblId(String intgTblId) {
-
-
-        // 조인하여 기관명(codeNm)까지 한 번에 조회
-        Tuple tuple = queryFactory
-                .select(qSrc, qCode.codeNm)
-                .from(qSrc)
-                .leftJoin(qCode)
-                .on(qSrc.statOrgId.eq(qCode.codeId)
-                        .and(qCode.grpId.eq("stats_src_orgId")))
-                .where(qSrc.intgTblId.eq(intgTblId))
-                .fetchFirst();
-
-        if (tuple == null) {
-            return null;
-        }
-
-        StatsSrcDataInfoEntity entity = tuple.get(qSrc);
-        String statOrgName = tuple.get(qCode.codeNm);
-        entity.setStatOrgName(statOrgName);
-
         return entity;
     }
 } 

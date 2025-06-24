@@ -1,12 +1,13 @@
 package com.sweetk.iitp.api.entity.basic;
 
+import com.sweetk.iitp.api.constant.DataStatusType;
+import com.sweetk.iitp.api.constant.DataStatusTypeConverter;
 import com.sweetk.iitp.api.entity.sys.SysCommonCodeEntity;
 import com.sweetk.iitp.api.entity.sys.SysExtApiInfoEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,6 +33,9 @@ public class StatsSrcDataInfoEntity {
 
     @Column(name = "ext_sys", length = 10)
     private String extSys;
+
+    @Column(name = "stat_api_id",  nullable = false)
+    private Integer statApiId;
 
     @Column(name = "intg_tbl_id", length = 50, nullable = false)
     private String intgTblId;
@@ -71,6 +75,11 @@ public class StatsSrcDataInfoEntity {
 
     @Column(name = "avail_cat_cols", length = 40)
     private String availCatCols;
+
+    @Convert(converter = DataStatusTypeConverter.class)
+    @Column(name = "status", length = 1, nullable = false)
+    private DataStatusType status =  DataStatusType.ACTIVE;
+
 
     @Column(name = "del_yn", length = 1, nullable = false)
     private String delYn;
