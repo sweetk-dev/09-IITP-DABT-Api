@@ -17,109 +17,109 @@ public class DataSourceService {
 
     //01.Housing
     public StatsSrcDataInfoEntity getHousingRegNatlByNew() {
-        //StatsSrcDataInfoEntity result = srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_REG_NATL_BY_NEW);
-        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_REG_NATL_BY_NEW);
+        //StatsSrcDataInfoEntity result = srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_REG_NATL_BY_NEW);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_REG_NATL_BY_NEW);
     }
 
     public StatsSrcDataInfoEntity getHousingRegNatlByAgeTypeSevGen() {
-        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_REG_NATL_BY_AGE_TYPE_SEV_GEN);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_REG_NATL_BY_AGE_TYPE_SEV_GEN);
     }
 
     public StatsSrcDataInfoEntity getHousingRegSidoByTypeSevGen() {
-        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_REG_SIDO_BY_TYPE_SEV_GEN);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_REG_SIDO_BY_TYPE_SEV_GEN);
     }
 
     public StatsSrcDataInfoEntity getHousingLifeSuppNeedLvl() {
-        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_LIFE_SUPP_NEED_LVL);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_LIFE_SUPP_NEED_LVL);
     }
 
     public StatsSrcDataInfoEntity getHousingLifeMaincarer() {
-        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_LIFE_MAINCARER);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_LIFE_MAINCARER);
     }
 
     public StatsSrcDataInfoEntity getHousingLifePrimcarer() {
-        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_LIFE_PRIMCARER);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_LIFE_PRIMCARER);
     }
 
     public StatsSrcDataInfoEntity getHousingLifeSuppField() {
-        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_LIFE_SUPP_FIELD);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_LIFE_SUPP_FIELD);
     }
 
     //02.Health
     public StatsSrcDataInfoEntity getHealthMedicalUsage() {
-        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_HLTH_MEDICAL_USAGE);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_HLTH_MEDICAL_USAGE);
     }
 
     public StatsSrcDataInfoEntity getHealthDiseaseCostSub (){
-        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_HLTH_DISEASE_COST_SUB);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_HLTH_DISEASE_COST_SUB);
     }
 
     public StatsSrcDataInfoEntity getHealthSportExecType (){
-        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_HLTH_SPORT_EXEC_TYPE);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_HLTH_SPORT_EXEC_TYPE);
     }
 
     public StatsSrcDataInfoEntity getHealthExrcBestAid (){
-        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_HLTH_EXRC_BEST_AID);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_HLTH_EXRC_BEST_AID);
     }
 
     //03.Aid (Assistive devices)
     public StatsSrcDataInfoEntity getAidDeviceUsage (){
-        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_AID_DEVICE_USAGE);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_AID_DEVICE_USAGE);
     }
 
     public StatsSrcDataInfoEntity getAidDeviceNeed (){
-        return srcDataInfoRepos.findWithStatOrgNameByIntgTblId(SysConstants.Stats.TBL_AID_DEVICE_NEED);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_AID_DEVICE_NEED);
     }
 
 
     //04.Education
     public StatsSrcDataInfoEntity getEduVocaExec (){
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_EDU_VOCA_EXEC);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_EDU_VOCA_EXEC);
     }
 
     public StatsSrcDataInfoEntity getEduVocaExecWay (){
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_EDU_VOCA_EXEC_WAY);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_EDU_VOCA_EXEC_WAY);
     }
 
 
     //05.Employment
     public StatsSrcDataInfoEntity getEmpNatl (){
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_EMP_NATL);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_EMP_NATL);
     }
 
     public StatsSrcDataInfoEntity getEmpNatlPublic (){
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_EMP_NATL_PUBLIC);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_EMP_NATL_PUBLIC);
     }
 
     public StatsSrcDataInfoEntity getEmpNatlPrivate (){
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_EMP_NATL_PRIVATE);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_EMP_NATL_PRIVATE);
     }
 
     public StatsSrcDataInfoEntity getEmpNatlGovOrg (){
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_EMP_NATL_GOV_ORG);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_EMP_NATL_GOV_ORG);
     }
 
     public StatsSrcDataInfoEntity getEmpNatlDisTypeSev (){
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_EMP_NATL_DIS_TYPE_SEV);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_EMP_NATL_DIS_TYPE_SEV);
     }
 
     public StatsSrcDataInfoEntity getEmpNatlDisTypeIndust (){
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_EMP_NATL_DIS_TYPE_INDUST);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_EMP_NATL_DIS_TYPE_INDUST);
     }
 
 
     //06.Social
     public StatsSrcDataInfoEntity getSocialParticFreq (){
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_SOC_PARTIC_FREQ);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_SOC_PARTIC_FREQ);
     }
 
     public StatsSrcDataInfoEntity getSocialContactCntfreq (){
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_SOC_CONTACT_CNTFREQ);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_SOC_CONTACT_CNTFREQ);
     }
 
 
     //07.Facilities
     public StatsSrcDataInfoEntity getFcltyWelfareUsage (){
-        return srcDataInfoRepos.findByIntgTblId(SysConstants.Stats.TBL_FCLTY_WELFARE_USAGE);
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_FCLTY_WELFARE_USAGE);
     }
 } 
