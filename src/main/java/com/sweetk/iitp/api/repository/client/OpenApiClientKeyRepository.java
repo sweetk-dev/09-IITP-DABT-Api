@@ -1,13 +1,11 @@
 package com.sweetk.iitp.api.repository.client;
 
+import com.sweetk.iitp.api.constant.DataStatusType;
 import com.sweetk.iitp.api.entity.client.OpenApiClientKeyEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,21 +14,18 @@ public interface OpenApiClientKeyRepository extends JpaRepository<OpenApiClientK
     
     Optional<OpenApiClientKeyEntity> findByApiKey(String apiKey);
     
-    Optional<OpenApiClientKeyEntity> findByApiKeyAndIsActiveTrueAndIsDeletedFalse(String apiKey);
+    Optional<OpenApiClientKeyEntity> findByApiKeyAndStatus(String apiKey, DataStatusType status);
     
-    List<OpenApiClientKeyEntity> findByApiCliIdAndIsDeletedFalse(Integer apiCliId);
+    List<OpenApiClientKeyEntity> findByApiCliId(Integer apiCliId);
     
-    List<OpenApiClientKeyEntity> findByApiCliIdAndIsActiveTrueAndIsDeletedFalse(Integer apiCliId);
-    
+    List<OpenApiClientKeyEntity> findByApiCliIdAndStatus(Integer apiCliId, DataStatusType status);
+
     boolean existsByApiKey(String apiKey);
-    
-    boolean existsByApiKeyAndIsActiveTrueAndIsDeletedFalse(String apiKey);
-    
-    @Modifying
-    @Query("UPDATE OpenApiClientKeyEntity k SET k.latestAccAt = :accessTime WHERE k.id = :keyId")
-    void updateLatestAccessTime(@Param("keyId") Integer keyId, @Param("accessTime") OffsetDateTime accessTime);
-    
-    @Modifying
-    @Query("UPDATE OpenApiClientKeyEntity k SET k.isActive = false WHERE k.apiCliId = :apiCliId")
-    void deactivateAllKeysByClientId(@Param("apiCliId") Integer apiCliId);
+
+    // Special queries that include deleted items
+    @Query("SELECT e FROM OpenApiClientKeyEntity e WHERE e.apiCliId = :apiCliId")
+    List<OpenApiClientKeyEntity> findByApiCliIdIncludingDeleted(Integer apiCliId);
+
+    @Query("SELECT e FROM OpenApiClientKeyEntity e")
+    List<OpenApiClientKeyEntity> findAllIncludingDeleted();
 } 
