@@ -7,6 +7,9 @@ public final class SysConstants {
         throw new IllegalStateException("Sys Constants class");
     }
 
+    public static final String YN_Y = "Y";
+    public static final String YN_N = "N";
+
     public static final class Stats {
         private Stats() {
             throw new IllegalStateException("Stats Constants class");
