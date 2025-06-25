@@ -1,7 +1,6 @@
 package com.sweetk.iitp.api.entity.client;
 
-import com.sweetk.iitp.api.constant.DataStatusType;
-import com.sweetk.iitp.api.constant.DataStatusTypeConverter;
+import com.sweetk.iitp.api.constant.SysConstants;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,15 +28,11 @@ public class OpenApiClientKeyEntity {
     @Column(name = "api_key", length = 60, nullable = false, unique = true)
     private String apiKey;
 
-    @Convert(converter = DataStatusTypeConverter.class)
-    @Column(name = "status", length = 1, nullable = false)
-    private DataStatusType status = DataStatusType.ACTIVE;
-    
-    @Column(name = "is_active", nullable = false)
-    private Boolean isActive = true;
-    
-    @Column(name = "is_deleted", nullable = false)
-    private Boolean isDeleted = false;
+    @Column(name = "active_yn", length = 1, nullable = false)
+    private String activeYn = SysConstants.YN_Y;
+
+    @Column(name = "del_yn", length = 1, nullable = false)
+    private String delYn = SysConstants.YN_N;
     
     @Column(name = "key_active_at")
     private OffsetDateTime keyActiveAt;
@@ -65,18 +60,14 @@ public class OpenApiClientKeyEntity {
 
     @PrePersist
     protected void onCreate() {
-        if (status == null) {
-            status = DataStatusType.ACTIVE;
-        }
-        isDeleted = false;
-        isActive = true;
+        delYn = SysConstants.YN_N;
+        activeYn = SysConstants.YN_Y;
     }
 
     public void softDelete(String deletedBy) {
         this.deletedAt = OffsetDateTime.now();
         this.deletedBy = deletedBy;
-        this.status = DataStatusType.DELETED;
-        this.isDeleted = true;
-        this.isActive = false;
+        this.delYn = SysConstants.YN_Y;
+        this.activeYn = SysConstants.YN_N;
     }
 } 

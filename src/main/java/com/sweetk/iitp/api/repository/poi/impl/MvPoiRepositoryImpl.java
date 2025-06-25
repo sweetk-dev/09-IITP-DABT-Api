@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sweetk.iitp.api.constant.MvPoiCategoryType;
+import com.sweetk.iitp.api.constant.SysConstants;
 import com.sweetk.iitp.api.dto.common.PageRes;
 import com.sweetk.iitp.api.dto.poi.MvPoi;
 import com.sweetk.iitp.api.dto.poi.MvPoiSearchCatReq;
@@ -211,8 +212,8 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     }
 
     private BooleanExpression getBaseCondition() {
-        return qEntity.isPublished.eq("Y")
-                .and(qEntity.isDeleted.eq("N"));
+        return qEntity.isPublished.eq(SysConstants.YN_Y)
+                .and(qEntity.isDeleted.eq(SysConstants.YN_N));
     }
 
     private BooleanExpression eqCategory(MvPoiCategoryType category) {

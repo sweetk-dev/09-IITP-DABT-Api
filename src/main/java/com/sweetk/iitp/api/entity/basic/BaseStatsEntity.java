@@ -1,7 +1,6 @@
 package com.sweetk.iitp.api.entity.basic;
 
-import com.sweetk.iitp.api.constant.DataStatusType;
-import com.sweetk.iitp.api.constant.DataStatusTypeConverter;
+import com.sweetk.iitp.api.constant.SysConstants;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -66,6 +65,9 @@ public abstract class BaseStatsEntity implements StatsCommon {
     @Column(name = "src_latest_chn_dt")
     private LocalDate srcLatestChnDt;
 
+    @Column(name = "del_yn", length = 1, nullable = false)
+    private String delYn = SysConstants.YN_N;
+
     @CreatedDate
     @Column(name = "created_at", updatable = false)
     private OffsetDateTime createdAt;
@@ -86,12 +88,8 @@ public abstract class BaseStatsEntity implements StatsCommon {
     @Column(name = "deleted_by", length = 40)
     private String deletedBy;
 
-    @Convert(converter = DataStatusTypeConverter.class)
-    @Column(name = "status", length = 1, nullable = false)
-    private DataStatusType status = DataStatusType.ACTIVE;
 
-    @Column(name = "del_yn", length = 1, nullable = false)
-    private String delYn = "N";
+
 
     //Getter
     @Override public Integer getId() { return id; }
@@ -116,10 +114,7 @@ public abstract class BaseStatsEntity implements StatsCommon {
     @PrePersist
     protected void onCreate() {
         createdAt = OffsetDateTime.now();
-        delYn = "N";
-        if (status == null) {
-            status = DataStatusType.ACTIVE;
-        }
+        delYn = SysConstants.YN_N;
     }
 
     @PreUpdate
@@ -130,7 +125,6 @@ public abstract class BaseStatsEntity implements StatsCommon {
     public void softDelete(String deletedBy) {
         this.deletedAt = OffsetDateTime.now();
         this.deletedBy = deletedBy;
-        this.status = DataStatusType.DELETED;
-        this.delYn = "Y";
+        this.delYn = SysConstants.YN_Y;
     }
 }
