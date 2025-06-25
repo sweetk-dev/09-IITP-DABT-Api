@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.OffsetDateTime;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -17,6 +15,10 @@ public class ClientWriteService {
     private final ClientRepository clientRepository;
 
     public void deleteClient(Integer clientId, String deletedBy) {
+
+
+        //@@@ TODO : client key 발급시 Client.latestKeyCreatedAt 업데이트 해야함.
+
 
         OpenApiClientEntity client = clientRepository.findClientByApiCliId(clientId).orElse(null);
         if (client == null) {
