@@ -1,5 +1,6 @@
 package com.sweetk.iitp.api.entity.poi;
 
+import com.sweetk.iitp.api.constant.SysConstants;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -63,10 +64,10 @@ public class MvPoiEntity {
     private LocalDateTime createDate;
 
     @Column(name = "is_deleted", nullable = false, length = 1)
-    private String isDeleted = "N";
+    private String isDeleted = SysConstants.YN_N;
 
     @Column(name = "is_published", nullable = false, length = 1)
-    private String isPublished = "N";
+    private String isPublished = SysConstants.YN_N;
 
     @Column(name = "source_organization", length = 100)
     private String sourceOrganization;
