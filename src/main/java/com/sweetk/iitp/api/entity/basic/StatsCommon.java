@@ -1,6 +1,6 @@
 package com.sweetk.iitp.api.entity.basic;
 
-import com.sweetk.iitp.api.constant.DataStatusType;
+import com.sweetk.iitp.api.constant.SysConstants;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -39,7 +39,6 @@ public interface StatsCommon {
     String getUpdatedBy();
     String getDeletedBy();
 
-    DataStatusType getStatus();
     String getDelYn();
 
     default boolean isDtBigDecimal() {
@@ -47,6 +46,6 @@ public interface StatsCommon {
     }
 
     default boolean isDeleted() {
-        return getDeletedAt() != null || "Y".equals(getDelYn()) || DataStatusType.DELETED.equals(getStatus());
+        return SysConstants.YN_Y.equals(getDelYn()) || getDeletedAt() != null;
     }
 }

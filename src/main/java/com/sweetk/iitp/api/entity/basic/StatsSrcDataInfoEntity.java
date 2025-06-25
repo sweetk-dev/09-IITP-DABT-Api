@@ -2,6 +2,7 @@ package com.sweetk.iitp.api.entity.basic;
 
 import com.sweetk.iitp.api.constant.DataStatusType;
 import com.sweetk.iitp.api.constant.DataStatusTypeConverter;
+import com.sweetk.iitp.api.constant.SysConstants;
 import com.sweetk.iitp.api.entity.sys.SysCommonCodeEntity;
 import com.sweetk.iitp.api.entity.sys.SysExtApiInfoEntity;
 import jakarta.persistence.*;
@@ -84,7 +85,7 @@ public class StatsSrcDataInfoEntity {
 
 
     @Column(name = "del_yn", length = 1, nullable = false)
-    private String delYn;
+    private String delYn = SysConstants.YN_N;
 
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;

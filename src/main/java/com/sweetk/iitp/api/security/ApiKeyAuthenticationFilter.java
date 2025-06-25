@@ -2,6 +2,7 @@ package com.sweetk.iitp.api.security;
 
 import com.sweetk.iitp.api.constant.ApiConstants;
 import com.sweetk.iitp.api.constant.DataStatusType;
+import com.sweetk.iitp.api.constant.SysConstants;
 import com.sweetk.iitp.api.entity.client.OpenApiClientEntity;
 import com.sweetk.iitp.api.entity.client.OpenApiClientKeyEntity;
 import com.sweetk.iitp.api.exception.ApiException;
@@ -83,8 +84,8 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
         if (keyEntity != null) {
             OpenApiClientEntity apiClientEntity = keyEntity.getOpenApiClient();
             if(apiClientEntity != null
-                    && !apiClientEntity.getIsDeleted()
-                    && apiClientEntity.getStatus().equals(DataStatusType.ACTIVE)) {
+                    && apiClientEntity.getStatus().equals(DataStatusType.ACTIVE)
+                    && apiClientEntity.getDelYn().equals(SysConstants.YN_N)) {
                 return apiClientEntity;
             }
         }
