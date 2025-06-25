@@ -8,33 +8,40 @@ import java.util.Optional;
 
 public interface ClientRepository {
 
+
+    //===============================================================
+    //Combined operations for authenti`cation (api client)
+    //===============================================================
+
+    // Update operations
+    void updateLatestLoginTime(OpenApiClientEntity client, OffsetDateTime loginTime);
+    void updateLatestAccessTime(OpenApiClientKeyEntity key, OffsetDateTime accessTime);
+
+
+
+
+    //===============================================================
     //Api Client operations
+    //===============================================================
+    //find api client
+    Optional<OpenApiClientEntity> findClientByApiCliId (Integer apiCliId);
+    Optional<OpenApiClientEntity> findClientByApiCliIdIncludingDeleted(Integer apiCliId);
+
+    //upate api client
+    void updateClientDeleteStatus(OpenApiClientEntity client, String deletedBy);
 
 
-
-
+    //===============================================================
     // API Key operations
+    //===============================================================
+    //find api key
     Optional<OpenApiClientKeyEntity> findActiveKeyByApiKey(String apiKey);
 
 
+    //update api key
 
 
-    //Combined operations for authentication (api client)
-    Optional<OpenApiClientEntity> findActiveClientByApiKey(String apiKey);
-
-
-
-
-    // Update operations
-    void updateLatestLoginTime(Integer clientId, OffsetDateTime loginTime);
-    void updateLatestAccessTime(Integer keyId, OffsetDateTime accessTime);
-
-
-    // Key management
-
-
-
-    /*
+    /*  =========================== temp
     // Client operations
     Optional<OpenApiClientEntity> findByClientId(String clientId);
     Optional<OpenApiClientEntity> findByClientIdAndIsDeletedFalse(String clientId);
