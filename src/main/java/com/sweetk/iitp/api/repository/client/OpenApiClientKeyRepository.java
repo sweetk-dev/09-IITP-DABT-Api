@@ -11,16 +11,10 @@ import java.util.Optional;
 
 @Repository
 public interface OpenApiClientKeyRepository extends JpaRepository<OpenApiClientKeyEntity, Integer> {
-    
-    Optional<OpenApiClientKeyEntity> findByApiKey(String apiKey);
-    
-    Optional<OpenApiClientKeyEntity> findByApiKeyAndStatus(String apiKey, DataStatusType status);
-    
-    List<OpenApiClientKeyEntity> findByApiCliId(Integer apiCliId);
-    
-    List<OpenApiClientKeyEntity> findByApiCliIdAndStatus(Integer apiCliId, DataStatusType status);
 
-    boolean existsByApiKey(String apiKey);
+
+    Optional<OpenApiClientKeyEntity> findByApiKeyAndStatus(String apiKey, DataStatusType status);
+
 
     // Special queries that include deleted items
     @Query("SELECT e FROM OpenApiClientKeyEntity e WHERE e.apiCliId = :apiCliId")
@@ -28,4 +22,17 @@ public interface OpenApiClientKeyRepository extends JpaRepository<OpenApiClientK
 
     @Query("SELECT e FROM OpenApiClientKeyEntity e")
     List<OpenApiClientKeyEntity> findAllIncludingDeleted();
+
+
+    /* ====
+    Optional<OpenApiClientKeyEntity> findByApiKey(String apiKey);
+
+    List<OpenApiClientKeyEntity> findByApiCliId(Integer apiCliId);
+    
+    List<OpenApiClientKeyEntity> findByApiCliIdAndStatus(Integer apiCliId, DataStatusType status);
+
+    boolean existsByApiKey(String apiKey);
+
+     */
+
 } 

@@ -1,5 +1,6 @@
 package com.sweetk.iitp.api.repository.client;
 
+import com.sweetk.iitp.api.constant.DataStatusType;
 import com.sweetk.iitp.api.entity.client.OpenApiClientEntity;
 import com.sweetk.iitp.api.entity.client.OpenApiClientKeyEntity;
 import lombok.RequiredArgsConstructor;
@@ -23,23 +24,42 @@ public class ClientRepositoryImpl implements ClientRepository {
      *****************************/
     // Combined operations for authentication
     @Override
-    public Optional<OpenApiClientEntity> findActiveClientByApiKey(String apiKey) {
-        return openApiClientKeyRepository.findByApiKeyAndIsActiveTrueAndIsDeletedFalse(apiKey).flatMap(this::getAtiveOpenApiByKeyInfo);
+    public Optional<OpenApiClientEntity> findClientByApiCliIdIncludingDeleted(Integer apiCliId) {
+        return openApiClientRepository.findByApiCliIdIncludingDeleted(apiCliId);
     }
 
 
+    @Override
+    @Transactional
+    public void updateLatestLoginTime(OpenApiClientEntity client, OffsetDateTime loginTime) {
+        client.setLatestLoginAt(OffsetDateTime.now());
+        openApiClientRepository.save(client);
+    }
+
+
+    @Override
+    @Transactional
+    public void updateLatestAccessTime(OpenApiClientKeyEntity key, OffsetDateTime accessTime) {
+        key.setLatestAccAt(accessTime);
+        openApiClientKeyRepository.save(key);
+    }
 
 
     /*****************************
      * API CLIENT
      *****************************/
 
-    // Client operations
+    // find api client
+    public Optional<OpenApiClientEntity> findClientByApiCliId(Integer apiCliId) {
+        return openApiClientRepository.findByApiCliId(apiCliId);
+    }
 
 
-
-    // Client Info Update operations
-
+    // upate api client
+    public void updateClientDeleteStatus(OpenApiClientEntity client, String deletedBy) {
+        client.softDelete(deletedBy);
+        openApiClientRepository.save(client);
+    }
 
 
 
@@ -47,33 +67,21 @@ public class ClientRepositoryImpl implements ClientRepository {
      * API CLIENT KEY
      *****************************/
 
-    // API Key operations
+    // find api key
     public Optional<OpenApiClientKeyEntity> findActiveKeyByApiKey(String apiKey) {
-        return openApiClientKeyRepository.findByApiKeyAndIsActiveTrueAndIsDeletedFalse(apiKey);
+        return openApiClientKeyRepository.findByApiKeyAndStatus(apiKey, DataStatusType.ACTIVE);
     }
 
 
 
 
-    // Key management
-
-
-
-    // Key Info Update operations
-    @Override
-    @Transactional
-    public void updateLatestAccessTime(Integer keyId, OffsetDateTime accessTime) {
-        openApiClientKeyRepository.updateLatestAccessTime(keyId, accessTime);
-    }
+    //update api key
 
 
 
 
 
-
-
-
-    /*
+    /* ================== temp
     // Client operations
     @Override
     public Optional<OpenApiClientEntity> findByClientId(String clientId) {
@@ -137,21 +145,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     
     // Update operations
-    @Override
-    @Transactional
-    public void updateLatestAccessTime(Integer keyId, OffsetDateTime accessTime) {
-        openApiClientKeyRepository.updateLatestAccessTime(keyId, accessTime);
-    }
-    
-    @Override
-    @Transactional
-    public void updateLatestLoginTime(Integer clientId, OffsetDateTime loginTime) {
-        openApiClientRepository.findById(clientId).ifPresent(client -> {
-            client.setLatestLoginAt(loginTime);
-            openApiClientRepository.save(client);
-        });
-    }
-    
+
     @Override
     @Transactional
     public void updateLatestKeyCreatedTime(Integer clientId, OffsetDateTime keyCreatedTime) {

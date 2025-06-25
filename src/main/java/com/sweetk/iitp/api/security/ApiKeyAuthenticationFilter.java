@@ -4,9 +4,9 @@ import com.sweetk.iitp.api.constant.ApiConstants;
 import com.sweetk.iitp.api.constant.DataStatusType;
 import com.sweetk.iitp.api.entity.client.OpenApiClientEntity;
 import com.sweetk.iitp.api.entity.client.OpenApiClientKeyEntity;
-import com.sweetk.iitp.api.repository.client.ClientRepository;
 import com.sweetk.iitp.api.exception.ApiException;
 import com.sweetk.iitp.api.exception.ErrorCode;
+import com.sweetk.iitp.api.repository.client.ClientRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +21,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.Collections;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -48,40 +47,26 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
                 OpenApiClientEntity apiClient = getAtiveOpenApiByKeyInfo(apiClientKey);
                 if (apiClient != null) {
                     // Update latest access time for the API key
-                    clientRepository.updateLatestAccessTime(apiClientKey.getId(), OffsetDateTime.now());
+                    clientRepository.updateLatestAccessTime(apiClientKey, OffsetDateTime.now());
 
-                    // Update latest login time for the client
-                    clientRepository.updateLatestLoginTime(apiClient.getApiCliId(), OffsetDateTime.now());
+                    // Update the latest login time for the client
+                    clientRepository.updateLatestLoginTime(apiClient, OffsetDateTime.now());
+
+                    // Create authentication token
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            apiClient,
+                            null,
+                            Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + apiClient.getRole()))
+                    );
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                    log.debug("API Key authentication successful for client: {}", apiClient.getClientId());
+
+                }else {
+                    log.warn("Invalid or inactive API key provided: {}", apiKey);
+                    throw new ApiException(ErrorCode.UNAUTHORIZED, "유효하지않은 인증 KEY 입니다.");
                 }
 
-            }
-
-            OpenApiClientEntity apiClient = clientRepository.findActiveClientByApiKey(apiKey)
-                    .orElse(null);
-
-            if (apiClient != null) {
-                // Update latest access time for the API key
-                OpenApiClientKeyEntity keyEntity = clientRepository.findAtiveByApiKey(apiKey)
-                        .orElse(null);
-                if (keyEntity != null) {
-                    clientRepository.updateLatestAccessTime(keyEntity.getId(), OffsetDateTime.now());
-                }
-                
-                // Update latest login time for the client
-                clientRepository.updateLatestLoginTime(apiClient.getApiCliId(), OffsetDateTime.now());
-                
-                // Create authentication token
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    apiClient,
-                    null,
-                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + apiClient.getRole()))
-                );
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                
-                log.debug("API Key authentication successful for client: {}", apiClient.getClientId());
-            } else {
-                log.warn("Invalid or inactive API key provided: {}", apiKey);
-                throw new ApiException(ErrorCode.UNAUTHORIZED, "유효하지않은 인증 KEY 입니다.");
             }
         } catch (ApiException e) {
             throw e;
