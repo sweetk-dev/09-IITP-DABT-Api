@@ -16,10 +16,6 @@ public class StatDataItemDB {
     private String c2;        // 코드값
     private String c3;        // 코드값
 
-    private String c1ObjNm;
-    private String c2ObjNm;
-    private String c3ObjNm;
-
     private String itmId;     // 코드값
 
     private String unitNm;
@@ -34,6 +30,16 @@ public class StatDataItemDB {
 
     private String itmNm;
 
+    private String c1ObjId;
+    private String c2ObjId;
+    private String c3ObjId;
+
+    private String c1ObjNm;
+    private String c2ObjNm;
+    private String c3ObjNm;
+
+    private String itmObjId;
+    private String itmObjNm;
 
 
     public StatDataItem toStatDataItem() {
@@ -42,9 +48,6 @@ public class StatDataItemDB {
                 .c1Nm(this.c1Nm)
                 .c2Nm(this.c2Nm)
                 .c3Nm(this.c3Nm)
-                .c1ObjNm(this.c1ObjNm)
-                .c2ObjNm(this.c2ObjNm)
-                .c3ObjNm(this.c3ObjNm)
                 .itmNm(this.itmNm)
                 .unitNm(this.unitNm)
                 .data(this.data)
@@ -57,9 +60,6 @@ public class StatDataItemDB {
             String c1,
             String c2,
             String c3,
-            String c1ObjNm,
-            String c2ObjNm,
-            String c3ObjNm,
             String itmId,
             String unitNm,
             String data,
@@ -70,9 +70,6 @@ public class StatDataItemDB {
         this.c1 = c1;
         this.c2 = c2;
         this.c3 = c3;
-        this.c1ObjNm = c1ObjNm;
-        this.c2ObjNm = c2ObjNm;
-        this.c3ObjNm = c3ObjNm;
         this.itmId = itmId;
         this.unitNm = unitNm;
         this.data = data;

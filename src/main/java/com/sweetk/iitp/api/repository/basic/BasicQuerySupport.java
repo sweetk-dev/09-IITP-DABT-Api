@@ -40,7 +40,7 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
         LocalDate statLatestChnDt = LocalDate.parse(srcDataInfo.getStatLatestChnDt());
 
         String sql = String.format(
-                "SELECT prd_de, c1, c2, c3, c1_obj_nm, c2_obj_nm, c3_obj_nm, itm_id, unit_nm, dt, lst_chn_de, src_data_id " +
+                "SELECT prd_de, c1, c2, c3, itm_id, unit_nm, dt, lst_chn_de, src_data_id " +
                         "FROM %s " +
                         "WHERE %s >= ? AND %s <= ? AND %s = ? AND deleted_at IS NULL " +
                         "ORDER BY prd_de ASC",
@@ -61,12 +61,9 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
                         (String) row[3],
                         (String) row[4],
                         (String) row[5],
-                        (String) row[6],
-                        (String) row[7],
-                        (String) row[8],
-                        row[9] != null ? row[9].toString() : null,
-                        row[10] != null ? ((Date) row[10]).toLocalDate() : null,
-                        ((Number) row[11]).intValue()
+                        row[6] != null ? row[6].toString() : null,
+                        row[7] != null ? ((Date) row[7]).toLocalDate() : null,
+                        ((Number) row[8]).intValue()
                 ))
                 .collect(Collectors.toList());
     }
@@ -83,7 +80,7 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
         LocalDate statLatestChnDt = LocalDate.parse(srcDataInfo.getStatLatestChnDt());
 
         String sql = String.format(
-                "SELECT prd_de, c1, c2, c3, c1_obj_nm, c2_obj_nm, c3_obj_nm, itm_id, unit_nm, dt, lst_chn_de, src_data_id " +
+                "SELECT prd_de, c1, c2, c3, itm_id, unit_nm, dt, lst_chn_de, src_data_id " +
                         "FROM %s " +
                         "WHERE %s = ? AND %s = ? AND deleted_at IS NULL " +
                         "ORDER BY prd_de ASC",
@@ -103,12 +100,9 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
                         (String) row[3],
                         (String) row[4],
                         (String) row[5],
-                        (String) row[6],
-                        (String) row[7],
-                        (String) row[8],
-                        row[9] != null ? row[9].toString() : null,
-                        row[10] != null ? ((Date) row[10]).toLocalDate() : null,
-                        ((Number) row[11]).intValue()
+                        row[6] != null ? row[6].toString() : null,
+                        row[7] != null ? ((Date) row[7]).toLocalDate() : null,
+                        ((Number) row[8]).intValue()
                 ))
                 .collect(Collectors.toList());
     }

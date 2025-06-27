@@ -17,9 +17,9 @@ public interface StatsCommon {
     String getC2();
     String getC3();
 
-    String getC1ObjNm();
-    String getC2ObjNm();
-    String getC3ObjNm();
+//    String getC1ObjNm();
+//    String getC2ObjNm();
+//    String getC3ObjNm();
 
     String getItmId();
 

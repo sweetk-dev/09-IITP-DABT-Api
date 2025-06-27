@@ -1,7 +1,6 @@
 package com.sweetk.iitp.api.repository.basic;
 
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sweetk.iitp.api.constant.SysConstants;
 import com.sweetk.iitp.api.dto.internal.StatMetaCodeDB;
@@ -25,6 +24,7 @@ public class StatsKosisMetadataCodeRepositoryImpl implements StatsKosisMetadataC
                 .select(Projections.constructor(StatMetaCodeDB.class,
                         qMetaCode.itmId,
                         qMetaCode.itmNm,
+                        qMetaCode.objId,
                         qMetaCode.objNm))
                 .from(qMetaCode)
                 .where(
@@ -41,6 +41,7 @@ public class StatsKosisMetadataCodeRepositoryImpl implements StatsKosisMetadataC
                 .select(Projections.constructor(StatMetaCodeDB.class,
                         qMetaCode.itmId,
                         qMetaCode.itmNm,
+                        qMetaCode.objId,
                         qMetaCode.objNm))
                 .from(qMetaCode)
                 .where(

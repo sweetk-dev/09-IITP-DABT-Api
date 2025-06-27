@@ -39,14 +39,14 @@ public abstract class BaseStatsDtStringEntity implements StatsCommon {
     @Column(name = "c3", length = 24)
     private String c3;
 
-    @Column(name = "c1_obj_nm", length = 300)
-    private String c1ObjNm;
-
-    @Column(name = "c2_obj_nm", length = 300)
-    private String c2ObjNm;
-
-    @Column(name = "c3_obj_nm", length = 300)
-    private String c3ObjNm;
+//    @Column(name = "c1_obj_nm", length = 300)
+//    private String c1ObjNm;
+//
+//    @Column(name = "c2_obj_nm", length = 300)
+//    private String c2ObjNm;
+//
+//    @Column(name = "c3_obj_nm", length = 300)
+//    private String c3ObjNm;
 
     @Column(name = "itm_id", length = 24, nullable = false)
     private String itmId;
@@ -93,9 +93,9 @@ public abstract class BaseStatsDtStringEntity implements StatsCommon {
     @Override public String getC1() { return c1; }
     @Override public String getC2() { return c2; }
     @Override public String getC3() { return c3; }
-    @Override public String getC1ObjNm() { return c1ObjNm; };
-    @Override public String getC2ObjNm() { return c2ObjNm; };
-    @Override public String getC3ObjNm() { return c3ObjNm; };
+//    @Override public String getC1ObjNm() { return c1ObjNm; };
+//    @Override public String getC2ObjNm() { return c2ObjNm; };
+//    @Override public String getC3ObjNm() { return c3ObjNm; };
     @Override public String getItmId() { return itmId; }
     @Override public String getUnitNm() { return unitNm; }
     @Override public String getDt() { return dt; }
