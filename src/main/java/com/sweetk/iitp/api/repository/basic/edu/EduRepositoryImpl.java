@@ -16,8 +16,8 @@ public class EduRepositoryImpl implements EduRepository {
     private final StatsDisEduVocaExecWayRepository eduVocaExecWayRepos;
 
     @Override
-    public List<StatDataItemDB> findEduVocaExecLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        return eduVocaExecRepos.findDataLatest(srcDataInfo, fromYear);
+    public List<StatDataItemDB> findEduVocaExecLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return eduVocaExecRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override
@@ -26,8 +26,8 @@ public class EduRepositoryImpl implements EduRepository {
     }
 
     @Override
-    public List<StatDataItemDB> findEduVocaExecWayLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        return eduVocaExecWayRepos.findDataLatest(srcDataInfo, fromYear);
+    public List<StatDataItemDB> findEduVocaExecWayLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return eduVocaExecWayRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override

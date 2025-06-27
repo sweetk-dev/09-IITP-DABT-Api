@@ -21,8 +21,8 @@ public class HousingRepositoryImpl implements HousingRepository {
     private final StatsDisRegSidoByTypeSevGenRepository regSidoByAgeTypeSevGenRepos;
 
     @Override
-    public List<StatDataItemDB> findRegNatlByNewLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromStatYear) {
-        return regNatlByNewRepos.findDataLatest(srcDataInfo, fromStatYear);
+    public List<StatDataItemDB> findRegNatlByNewLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return regNatlByNewRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override
@@ -31,8 +31,8 @@ public class HousingRepositoryImpl implements HousingRepository {
     }
 
     @Override
-    public List<StatDataItemDB> findRegNatlByAgeTypeSevGenLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromStatYear) {
-        return regNatlByAgeTypeSevGenRepos.findDataLatest(srcDataInfo, fromStatYear);
+    public List<StatDataItemDB> findRegNatlByAgeTypeSevGenLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return regNatlByAgeTypeSevGenRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override
@@ -41,8 +41,8 @@ public class HousingRepositoryImpl implements HousingRepository {
     }
 
     @Override
-    public List<StatDataItemDB> findRegSidoByTypeSevGenLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromStatYear) {
-        return regSidoByAgeTypeSevGenRepos.findDataLatest(srcDataInfo, fromStatYear);
+    public List<StatDataItemDB> findRegSidoByTypeSevGenLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return regSidoByAgeTypeSevGenRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override
@@ -51,8 +51,8 @@ public class HousingRepositoryImpl implements HousingRepository {
     }
 
     @Override
-    public List<StatDataItemDB> findLifeSuppNeedLvlLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromStatYear) {
-        return lifeSuppNeedLvlRepos.findDataLatest(srcDataInfo, fromStatYear);
+    public List<StatDataItemDB> findLifeSuppNeedLvlLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return lifeSuppNeedLvlRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override
@@ -61,8 +61,8 @@ public class HousingRepositoryImpl implements HousingRepository {
     }
 
     @Override
-    public List<StatDataItemDB> findLifeMaincarerLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromStatYear) {
-        return lifeMaincarerRepos.findDataLatest(srcDataInfo, fromStatYear);
+    public List<StatDataItemDB> findLifeMaincarerLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return lifeMaincarerRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override
@@ -71,8 +71,8 @@ public class HousingRepositoryImpl implements HousingRepository {
     }
 
     @Override
-    public List<StatDataItemDB> findLifePrimcarerLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromStatYear) {
-        return lifePrimcarerRepos.findDataLatest(srcDataInfo, fromStatYear);
+    public List<StatDataItemDB> findLifePrimcarerLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return lifePrimcarerRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override
@@ -81,8 +81,8 @@ public class HousingRepositoryImpl implements HousingRepository {
     }
 
     @Override
-    public List<StatDataItemDB> findLifeSuppFieldLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromStatYear) {
-        return lifeSuppFieldRepos.findDataLatest(srcDataInfo, fromStatYear);
+    public List<StatDataItemDB> findLifeSuppFieldLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return lifeSuppFieldRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override

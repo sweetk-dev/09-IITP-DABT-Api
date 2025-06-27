@@ -55,16 +55,19 @@ public class BasicEduController extends BasicBaseController {
     @GetMapping("/vocaExec/latest")
     @Operation(
             summary = "장애인 진로 및 직업교육 실시 여부 조회",
-            description = "장애인 진로 및 직업교육 실시 여부. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
+            description = "장애인 진로 및 직업교육 실시 여부. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getEduVocaExecLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            Integer fromYear,
+            Integer from,
+            @Parameter(name = "to", description = "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)", example = "2022")
+            @RequestParam(required = false)
+            Integer to,
             HttpServletRequest request) {
 
         try {
-            StatDataRes statDataRes = eduReadService.getEduVocaExecLatest(fromYear);
+            StatDataRes statDataRes = eduReadService.getEduVocaExecLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
         }
         catch (Exception e) {
@@ -122,16 +125,19 @@ public class BasicEduController extends BasicBaseController {
     @GetMapping("/vocaExecWay/latest")
     @Operation(
             summary = "장애인 진로 및 직업교육 운영 방법 조회",
-            description = "장애인 진로 및 직업교육 운영 방법. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
+            description = "장애인 진로 및 직업교육 운영 방법. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getEduVocaExecWayLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            Integer fromYear,
+            Integer from,
+            @Parameter(name = "to", description = "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)", example = "2022")
+            @RequestParam(required = false)
+            Integer to,
             HttpServletRequest request) {
 
         try {
-            StatDataRes statDataRes = eduReadService.getEduVocaExecWayLatest(fromYear);
+            StatDataRes statDataRes = eduReadService.getEduVocaExecWayLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
         }
         catch (Exception e) {

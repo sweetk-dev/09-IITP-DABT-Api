@@ -41,14 +41,16 @@ public class BasicAidReadService extends AbstractBasicService {
     }
 
     @ConditionalTimed(value = "basic.aid.deviceUsg.latest", description = "장애인보조기기 사용여부 데이터 조회")
-    public StatDataRes getAidDeviceUsageLatest(Integer fromYear) {
+    public StatDataRes getAidDeviceUsageLatest(Integer from, Integer to) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getAidDeviceUsage();
-        Integer fromStatYear = getReqFromYear("AidDeviceUsageLatest", fromYear,
+        Integer formYear = getReqFromYear("AidDeviceUsageLatest", from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = aidRepository.findAidDeviceUsageLatest(srcDataInfo, fromStatYear);
+        List<StatDataItemDB> dataList = aidRepository.findAidDeviceUsageLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -66,11 +68,11 @@ public class BasicAidReadService extends AbstractBasicService {
     public StatDataRes getAidDeviceUsageYear(Integer targetYear) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getAidDeviceUsage();
-        Integer statYear = getReqFromYear("AidDeviceUsageYear", targetYear,
+        checkReqStatYear("AidDeviceUsageYear", targetYear,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = aidRepository.findAidDeviceUsageByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = aidRepository.findAidDeviceUsageByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -96,14 +98,16 @@ public class BasicAidReadService extends AbstractBasicService {
     }
 
     @ConditionalTimed(value = "basic.aid.deviceNeed.latest", description = "장애인보조기기 필요여부 데이터 조회")
-    public StatDataRes getAidDeviceNeedLatest(Integer fromYear) {
+    public StatDataRes getAidDeviceNeedLatest(Integer from, Integer to) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getAidDeviceNeed();
-        Integer fromStatYear = getReqFromYear("AidDeviceNeedLatest", fromYear,
+        Integer formYear = getReqFromYear("AidDeviceNeedLatest", from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = aidRepository.findAidDeviceNeedLatest(srcDataInfo, fromStatYear);
+        List<StatDataItemDB> dataList = aidRepository.findAidDeviceNeedLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -121,11 +125,11 @@ public class BasicAidReadService extends AbstractBasicService {
     public StatDataRes getAidDeviceNeedYear(Integer targetYear) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getAidDeviceNeed();
-        Integer statYear = getReqFromYear("AidDeviceNeedYear", targetYear,
+        checkReqStatYear("AidDeviceNeedYear", targetYear,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = aidRepository.findAidDeviceNeedByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = aidRepository.findAidDeviceNeedByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }

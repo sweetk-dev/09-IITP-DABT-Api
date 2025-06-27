@@ -56,16 +56,19 @@ public class BasicEmpController extends BasicBaseController {
     @GetMapping("/nation/latest")
     @Operation(
             summary = "장애인 근로자 고용현황 조회",
-            description = "장애인 근로자 고용현황. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
+            description = "장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getEmpNatlLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            Integer fromYear,
+            Integer from,
+            @Parameter(name = "to", description = "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)", example = "2022")
+            @RequestParam(required = false)
+            Integer to,
             HttpServletRequest request) {
 
         try {
-            StatDataRes statDataRes = empReadService.getEmpNatlLatest(fromYear);
+            StatDataRes statDataRes = empReadService.getEmpNatlLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
         }
         catch (Exception e) {
@@ -121,16 +124,19 @@ public class BasicEmpController extends BasicBaseController {
     @GetMapping("/public/latest")
     @Operation(
             summary = "공공기관 장애인고용 현황 사항 조회",
-            description = "공공기관 장애인고용 현황. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
+            description = "공공기관 장애인고용 현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getEmpNatlPublicLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            Integer fromYear,
+            Integer from,
+            @Parameter(name = "to", description = "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)", example = "2022")
+            @RequestParam(required = false)
+            Integer to,
             HttpServletRequest request) {
 
         try {
-            StatDataRes statDataRes = empReadService.getEmpNatlPublicLatest(fromYear);
+            StatDataRes statDataRes = empReadService.getEmpNatlPublicLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
         }
         catch (Exception e) {
@@ -186,16 +192,19 @@ public class BasicEmpController extends BasicBaseController {
     @GetMapping("/private/latest")
     @Operation(
             summary = "민간기업 장애인고용 현황 조회",
-            description = "민간기업 장애인고용 현황. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
+            description = "민간기업 장애인고용 현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getEmpNatlPrivateLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            Integer fromYear,
+            Integer from,
+            @Parameter(name = "to", description = "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)", example = "2022")
+            @RequestParam(required = false)
+            Integer to,
             HttpServletRequest request) {
 
         try {
-            StatDataRes statDataRes = empReadService.getEmpNatlPrivateLatest(fromYear);
+            StatDataRes statDataRes = empReadService.getEmpNatlPrivateLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
         }
         catch (Exception e) {
@@ -252,16 +261,19 @@ public class BasicEmpController extends BasicBaseController {
     @GetMapping("/govOrg/latest")
     @Operation(
             summary = "정부부문 장애인고용 현황 조회",
-            description = "정부부문 장애인고용 현황. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
+            description = "정부부문 장애인고용 현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getEmpNatlGovOrgLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            Integer fromYear,
+            Integer from,
+            @Parameter(name = "to", description = "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)", example = "2022")
+            @RequestParam(required = false)
+            Integer to,
             HttpServletRequest request) {
 
         try {
-            StatDataRes statDataRes = empReadService.getEmpNatlGovOrgLatest(fromYear);
+            StatDataRes statDataRes = empReadService.getEmpNatlGovOrgLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
         }
         catch (Exception e) {
@@ -317,16 +329,19 @@ public class BasicEmpController extends BasicBaseController {
     @GetMapping("/disTypeSev/latest")
     @Operation(
             summary = "장애유형 및 장애정도별 장애인 근로자 고용현황 조회",
-            description = "장애유형 및 장애정도별 장애인 근로자 고용현황. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
+            description = "장애유형 및 장애정도별 장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getEmpNatlDisTypeSevLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            Integer fromYear,
+            Integer from,
+            @Parameter(name = "to", description = "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)", example = "2022")
+            @RequestParam(required = false)
+            Integer to,
             HttpServletRequest request) {
 
         try {
-            StatDataRes statDataRes = empReadService.getEmpNatlDisTypeSevLatest(fromYear);
+            StatDataRes statDataRes = empReadService.getEmpNatlDisTypeSevLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
         }
         catch (Exception e) {
@@ -382,16 +397,19 @@ public class BasicEmpController extends BasicBaseController {
     @GetMapping("/disTypeIndust/latest")
     @Operation(
             summary = "장애유형 및 산업별 장애인 근로자 고용현황 조회",
-            description = "장애유형 및 산업별 장애인 근로자 고용현황. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
+            description = "장애유형 및 산업별 장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getEmpNatlDisTypeIndustLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            Integer fromYear,
+            Integer from,
+            @Parameter(name = "to", description = "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)", example = "2022")
+            @RequestParam(required = false)
+            Integer to,
             HttpServletRequest request) {
 
         try {
-            StatDataRes statDataRes = empReadService.getEmpNatlDisTypeIndustLatest(fromYear);
+            StatDataRes statDataRes = empReadService.getEmpNatlDisTypeIndustLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
         }
         catch (Exception e) {

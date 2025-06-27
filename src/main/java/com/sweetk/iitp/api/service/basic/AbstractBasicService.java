@@ -51,18 +51,53 @@ public abstract class AbstractBasicService {
     }
 
     // 연도 검증 로직
-    protected Integer getReqFromYear(String reqFnc, Integer fromYear, Integer startDate, Integer entDate) {
-        if (fromYear == null) {
-            Integer defFromYear = entDate - ApiConstants.Param.DEFAULT_STAT_REG_YEAR_PERIOD-1;
-            log.debug("[{}] :: fromYear is null, DEF_SET_fromYear = {}", reqFnc, defFromYear);
-            return defFromYear;
+    protected Integer getReqFromYear(String reqFnc, Integer from, Integer to, Integer startDate, Integer endDate) {
+
+        if (from == null || from == 0) {
+            Integer deffrom = endDate - ApiConstants.Param.DEFAULT_STAT_REG_YEAR_PERIOD-1;
+            log.debug("[{}] :: from is null, DEF_SET_from = {}", reqFnc, deffrom);
+            return deffrom;
         }
 
-        if (fromYear > entDate || (entDate - fromYear) > ApiConstants.Param.MAX_STAT_REQ_YEAR_PERIOD) {
-            String detailMsg = String.format("from(%s) is invalid (Max %s Year)", fromYear, ApiConstants.Param.MAX_STAT_REQ_YEAR_PERIOD);
+        if (from > endDate || from < startDate) {
+            String detailMsg = String.format("from(%d) is invalid ( allowed range is {%d} ~ {%d})", from, startDate, endDate);
             log.error("[{}] :: {}", reqFnc, detailMsg);
             throw new BusinessException(ErrorCode.INVALID_PARAMETER, detailMsg);
         }
-        return fromYear;
+
+        if(to != null && to != 0) {
+            if (to < startDate || to > endDate || from > to) {
+                String detailMsg = String.format("from(%d), to(%d) are invalid ( allowed range is {%d} ~ {%d})", from, to, startDate, endDate);
+                log.error("[{}] :: {}", reqFnc, detailMsg);
+                throw new BusinessException(ErrorCode.INVALID_PARAMETER, detailMsg);
+            }
+
+            if ((to - from) > ApiConstants.Param.MAX_STAT_REQ_YEAR_PERIOD) {
+                String detailMsg = String.format("from(%d), to(%d) are invalid (Max Period %d Year)", from, to, ApiConstants.Param.MAX_STAT_REQ_YEAR_PERIOD);
+                log.error("[{}] :: {}", reqFnc, detailMsg);
+                throw new BusinessException(ErrorCode.INVALID_PARAMETER, detailMsg);
+            }
+        }
+
+        return from;
     }
+
+
+    public Integer getReqToYear( Integer to, Integer endDate) {
+        return (to == null || to == 0) ? endDate : to;
+    }
+
+
+    // 연도 검증 로직
+    protected boolean checkReqStatYear(String reqFnc, Integer statYear, Integer startDate, Integer endDate) {
+
+            if (statYear == null || statYear > endDate || statYear < startDate) {
+            String detailMsg = String.format("statYear(%d) is invalid ( allowed range is {%d} ~ {%d})", statYear, startDate, endDate);
+            log.error("[{}] :: {}", reqFnc, detailMsg);
+            throw new BusinessException(ErrorCode.ENTITY_NOT_FOUND, detailMsg);
+        }
+        return true;
+    }
+
+
 } 

@@ -32,7 +32,8 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
     public List<StatDataItemDB> findLatestStats(
             EntityPath<T> stats,
             StatsSrcDataInfoEntity srcDataInfo,
-            Integer fromYear
+            Integer fromYear,
+            Integer toYear
     ) {
 
         String tableName = getTableName(stats.getType());
@@ -41,14 +42,15 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
         String sql = String.format(
                 "SELECT prd_de, c1, c2, c3, c1_obj_nm, c2_obj_nm, c3_obj_nm, itm_id, unit_nm, dt, lst_chn_de, src_data_id " +
                         "FROM %s " +
-                        "WHERE %s >= ? AND %s = ? AND deleted_at IS NULL " +
+                        "WHERE %s >= ? AND %s <= ? AND %s = ? AND deleted_at IS NULL " +
                         "ORDER BY prd_de ASC",
-                tableName, PRD_DE_COLUMN, SRC_LATEST_CHN_DT_COLUMN
+                tableName, PRD_DE_COLUMN, PRD_DE_COLUMN, SRC_LATEST_CHN_DT_COLUMN
         );
 
         List<Object[]> results = entityManager.createNativeQuery(sql)
                 .setParameter(1, fromYear.shortValue())
-                .setParameter(2, statLatestChnDt)
+                .setParameter(2, toYear.shortValue())
+                .setParameter(3, statLatestChnDt)
                 .getResultList();
 
         return results.stream()

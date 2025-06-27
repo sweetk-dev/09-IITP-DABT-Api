@@ -40,14 +40,16 @@ public class BasicFacilityReadService extends AbstractBasicService {
 
 
     @ConditionalTimed(value = "basic.facility.welfareUsage.latest", description = "사회복지시설 이용 현황 데이터 조회")
-    public StatDataRes getFcltyWelfareUsageLatest(Integer fromYear) {
+    public StatDataRes getFcltyWelfareUsageLatest(Integer from, Integer to) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getFcltyWelfareUsage();
-        Integer fromStatYear = getReqFromYear("FcltyWelfareUsageLatest", fromYear,
+        Integer formYear = getReqFromYear("FcltyWelfareUsageLatest", from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = facilityRepository.findFcltyWelfareUsageLatest(srcDataInfo, fromStatYear);
+        List<StatDataItemDB> dataList = facilityRepository.findFcltyWelfareUsageLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -65,11 +67,11 @@ public class BasicFacilityReadService extends AbstractBasicService {
     public StatDataRes getFcltyWelfareUsageYear(Integer targetYear) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getFcltyWelfareUsage();
-        Integer statYear = getReqFromYear("FcltyWelfareUsageYear", targetYear,
+        checkReqStatYear("FcltyWelfareUsageYear", targetYear,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = facilityRepository.findFcltyWelfareUsageByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = facilityRepository.findFcltyWelfareUsageByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }

@@ -55,16 +55,19 @@ public class BasicHealthController extends BasicBaseController {
     @GetMapping("/medicalUsg/latest")
     @Operation(
             summary = "장애인 의료이용 현황 조회",
-            description = "장애인 의료이용 현황 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
+            description = "장애인 의료이용 현황 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHealthMedicalUsageLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            Integer fromYear,
+            Integer from,
+            @Parameter(name = "to", description = "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)", example = "2022")
+            @RequestParam(required = false)
+            Integer to,
             HttpServletRequest request) {
 
         try {
-            StatDataRes statDataRes = healthReadService.getHealthMedicalUsageLatest(fromYear);
+            StatDataRes statDataRes = healthReadService.getHealthMedicalUsageLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
         }
         catch (Exception e) {
@@ -120,16 +123,19 @@ public class BasicHealthController extends BasicBaseController {
     @GetMapping("/disCostSub/latest")
     @Operation(
             summary = "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회",
-            description = "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
+            description = "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHealthDiseaseCostSubLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            Integer fromYear,
+            Integer from,
+            @Parameter(name = "to", description = "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)", example = "2022")
+            @RequestParam(required = false)
+            Integer to,
             HttpServletRequest request) {
 
         try {
-            StatDataRes statDataRes = healthReadService.getHealthDiseaseCostSubLatest(fromYear);
+            StatDataRes statDataRes = healthReadService.getHealthDiseaseCostSubLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
         }
         catch (Exception e) {
@@ -185,16 +191,19 @@ public class BasicHealthController extends BasicBaseController {
     @GetMapping("/sportExecType/latest")
     @Operation(
             summary = "장애인 생활체육 실행 유형 조회",
-            description = "장애인 생활체육 실행 유형 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
+            description = "장애인 생활체육 실행 유형 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHealthSportExecTypeLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            Integer fromYear,
+            Integer from,
+            @Parameter(name = "to", description = "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)", example = "2022")
+            @RequestParam(required = false)
+            Integer to,
             HttpServletRequest request) {
 
         try {
-            StatDataRes statDataRes = healthReadService.getHealthSportExecTypeLatest(fromYear);
+            StatDataRes statDataRes = healthReadService.getHealthSportExecTypeLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
         }
         catch (Exception e) {
@@ -250,16 +259,19 @@ public class BasicHealthController extends BasicBaseController {
     @GetMapping("/exrcBestAid/latest")
     @Operation(
             summary = "운동 시 가장 도움이 되는 지원 사항 조회",
-            description = "운동 시 가장 도움이 되는 지원 사항. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
+            description = "운동 시 가장 도움이 되는 지원 사항. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHealthExrcBestAidLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            Integer fromYear,
+            Integer from,
+            @Parameter(name = "to", description = "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)", example = "2022")
+            @RequestParam(required = false)
+            Integer to,
             HttpServletRequest request) {
 
         try {
-            StatDataRes statDataRes = healthReadService.getHealthExrcBestAidLatest(fromYear);
+            StatDataRes statDataRes = healthReadService.getHealthExrcBestAidLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
         }
         catch (Exception e) {

@@ -19,8 +19,8 @@ public class EmpRepositoryImpl implements EmpRepository {
     private final StatsDisEmpNatlDisTypeSevRepository empNatlDisTypeSevRepos;
 
     @Override
-    public List<StatDataItemDB> findEmpNatlLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        return empNatlRepos.findDataLatest(srcDataInfo, fromYear);
+    public List<StatDataItemDB> findEmpNatlLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return empNatlRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override
@@ -29,8 +29,8 @@ public class EmpRepositoryImpl implements EmpRepository {
     }
 
     @Override
-    public List<StatDataItemDB> findEmpNatlDisTypeIndustLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        return empNatlDisTypeIndustRepos.findDataLatest(srcDataInfo, fromYear);
+    public List<StatDataItemDB> findEmpNatlDisTypeIndustLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return empNatlDisTypeIndustRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override
@@ -39,8 +39,8 @@ public class EmpRepositoryImpl implements EmpRepository {
     }
 
     @Override
-    public List<StatDataItemDB> findEmpNatlGovOrgLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        return empNatlGovOrgRepos.findDataLatest(srcDataInfo, fromYear);
+    public List<StatDataItemDB> findEmpNatlGovOrgLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return empNatlGovOrgRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override
@@ -49,8 +49,8 @@ public class EmpRepositoryImpl implements EmpRepository {
     }
 
     @Override
-    public List<StatDataItemDB> findEmpNatlPrivateLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        return empNatlPrivateRepos.findDataLatest(srcDataInfo, fromYear);
+    public List<StatDataItemDB> findEmpNatlPrivateLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return empNatlPrivateRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override
@@ -59,8 +59,8 @@ public class EmpRepositoryImpl implements EmpRepository {
     }
 
     @Override
-    public List<StatDataItemDB> findEmpNatlPublicLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        return empNatlPublicRepos.findDataLatest(srcDataInfo, fromYear);
+    public List<StatDataItemDB> findEmpNatlPublicLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return empNatlPublicRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override
@@ -69,8 +69,8 @@ public class EmpRepositoryImpl implements EmpRepository {
     }
 
     @Override
-    public List<StatDataItemDB> findEmpNatlDisTypeSevLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        return empNatlDisTypeSevRepos.findDataLatest(srcDataInfo, fromYear);
+    public List<StatDataItemDB> findEmpNatlDisTypeSevLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return empNatlDisTypeSevRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override

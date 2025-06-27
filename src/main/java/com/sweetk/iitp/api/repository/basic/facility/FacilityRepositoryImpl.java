@@ -14,8 +14,8 @@ public class FacilityRepositoryImpl implements FacilityRepository {
     private final StatsDisFcltyWelfareUsageRepository fcltyWelfareUsageRepos;
 
     @Override
-    public List<StatDataItemDB> findFcltyWelfareUsageLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        return fcltyWelfareUsageRepos.findDataLatest(srcDataInfo, fromYear);
+    public List<StatDataItemDB> findFcltyWelfareUsageLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return fcltyWelfareUsageRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override

@@ -56,16 +56,19 @@ public class BasicSocialController extends BasicBaseController {
     @GetMapping("/social/particFreq/latest")
     @Operation(
             summary = "장애인의 사회 참여 조회",
-            description = "장애인의 사회 참여 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
+            description = "장애인의 사회 참여 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getSocialParticFreqLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            Integer fromYear,
+            Integer from,
+            @Parameter(name = "to", description = "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)", example = "2022")
+            @RequestParam(required = false)
+            Integer to,
             HttpServletRequest request) {
 
         try {
-            StatDataRes statDataRes = socialReadService.getSocialParticFreqLatest(fromYear);
+            StatDataRes statDataRes = socialReadService.getSocialParticFreqLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
         }
         catch (Exception e) {
@@ -122,16 +125,19 @@ public class BasicSocialController extends BasicBaseController {
     @GetMapping("/social/contractFreq/latest")
     @Operation(
             summary = "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도 조회",
-            description = "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
+            description = "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getSocialContactCntfreqLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            Integer fromYear,
+            Integer from,
+            @Parameter(name = "to", description = "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)", example = "2022")
+            @RequestParam(required = false)
+            Integer to,
             HttpServletRequest request) {
 
         try {
-            StatDataRes statDataRes = socialReadService.getSocialContactCntfreqLatest(fromYear);
+            StatDataRes statDataRes = socialReadService.getSocialContactCntfreqLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
         }
         catch (Exception e) {
