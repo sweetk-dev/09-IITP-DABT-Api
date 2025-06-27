@@ -22,8 +22,8 @@ public class StatsDisEmpNatlGovOrgRepositoryImpl
     }
 
     @Override
-    public List<StatDataItemDB> findDataLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        return findLatestStats(qEntity, srcDataInfo, fromYear);
+    public List<StatDataItemDB> findDataLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return findLatestStats(qEntity, srcDataInfo, fromYear, toYear);
     }
 
     @Override

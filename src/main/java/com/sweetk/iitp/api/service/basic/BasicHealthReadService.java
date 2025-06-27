@@ -40,14 +40,16 @@ public class BasicHealthReadService extends AbstractBasicService {
 
 
     @ConditionalTimed(value = "basic.health.medicalUsg.latest", description = "장애인 의료이용 현황 데이터 조회")
-    public StatDataRes getHealthMedicalUsageLatest(Integer fromYear) {
+    public StatDataRes getHealthMedicalUsageLatest(Integer from, Integer to) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHealthMedicalUsage();
-        Integer fromStatYear = getReqFromYear("HealthMedicalUsageLatest", fromYear,
+        Integer formYear = getReqFromYear("HealthMedicalUsageLatest", from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = healthRepository.findHlthMedicalUsageLatest(srcDataInfo, fromStatYear);
+        List<StatDataItemDB> dataList = healthRepository.findHlthMedicalUsageLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -65,11 +67,11 @@ public class BasicHealthReadService extends AbstractBasicService {
     public StatDataRes getHealthMedicalUsageYear(Integer targetYear) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHealthMedicalUsage();
-        Integer statYear = getReqFromYear("HealthMedicalUsageYear", targetYear,
+        checkReqStatYear("HealthMedicalUsageYear", targetYear,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = healthRepository.findHlthMedicalUsageByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = healthRepository.findHlthMedicalUsageByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -96,14 +98,16 @@ public class BasicHealthReadService extends AbstractBasicService {
 
 
     @ConditionalTimed(value = "basic.health.disCostSub.latest", description = "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 데이터 조회")
-    public StatDataRes getHealthDiseaseCostSubLatest(Integer fromYear) {
+    public StatDataRes getHealthDiseaseCostSubLatest(Integer from, Integer to) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHealthDiseaseCostSub();
-        Integer fromStatYear = getReqFromYear("HealthDiseaseCostSubLatest", fromYear,
+        Integer formYear = getReqFromYear("HealthDiseaseCostSubLatest", from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = healthRepository.findHlthDiseaseCostSubLatest(srcDataInfo, fromStatYear);
+        List<StatDataItemDB> dataList = healthRepository.findHlthDiseaseCostSubLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -121,11 +125,11 @@ public class BasicHealthReadService extends AbstractBasicService {
     public StatDataRes getHealthDiseaseCostSubYear(Integer targetYear) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHealthDiseaseCostSub();
-        Integer statYear = getReqFromYear("HealthDiseaseCostSubYear", targetYear,
+        checkReqStatYear("HealthDiseaseCostSubYear", targetYear,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = healthRepository.findHlthDiseaseCostSubByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = healthRepository.findHlthDiseaseCostSubByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -152,14 +156,16 @@ public class BasicHealthReadService extends AbstractBasicService {
 
 
     @ConditionalTimed(value = "basic.health.sportExecType.latest", description = "장애인 생활체육 실행 유형 데이터 조회")
-    public StatDataRes getHealthSportExecTypeLatest(Integer fromYear) {
+    public StatDataRes getHealthSportExecTypeLatest(Integer from, Integer to) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHealthSportExecType();
-        Integer fromStatYear = getReqFromYear("HealthSportExecTypeLatest", fromYear,
+        Integer formYear = getReqFromYear("HealthSportExecTypeLatest", from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = healthRepository.findHlthSportExecTypeLatest(srcDataInfo, fromStatYear);
+        List<StatDataItemDB> dataList = healthRepository.findHlthSportExecTypeLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -177,11 +183,11 @@ public class BasicHealthReadService extends AbstractBasicService {
     public StatDataRes getHealthSportExecTypeYear(Integer targetYear) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHealthSportExecType();
-        Integer statYear = getReqFromYear("HealthSportExecTypeYear", targetYear,
+        checkReqStatYear("HealthSportExecTypeYear", targetYear,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = healthRepository.findHlthSportExecTypeByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = healthRepository.findHlthSportExecTypeByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -208,14 +214,16 @@ public class BasicHealthReadService extends AbstractBasicService {
 
 
     @ConditionalTimed(value = "basic.health.exrcBestAid.latest", description = "운동 시 가장 도움이 되는 지원 사항 데이터 조회")
-    public StatDataRes getHealthExrcBestAidLatest(Integer fromYear) {
+    public StatDataRes getHealthExrcBestAidLatest(Integer from, Integer to) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHealthExrcBestAid();
-        Integer fromStatYear = getReqFromYear("HealthExrcBestAidLatest", fromYear,
+        Integer formYear = getReqFromYear("HealthExrcBestAidLatest", from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = healthRepository.findHlthExrcBestAidLatest(srcDataInfo, fromStatYear);
+        List<StatDataItemDB> dataList = healthRepository.findHlthExrcBestAidLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -233,11 +241,11 @@ public class BasicHealthReadService extends AbstractBasicService {
     public StatDataRes getHealthExrcBestAidYear(Integer targetYear) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHealthExrcBestAid();
-        Integer statYear = getReqFromYear("HealthExrcBestAidYear", targetYear,
+        checkReqStatYear("HealthExrcBestAidYear", targetYear,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = healthRepository.findHlthExrcBestAidByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = healthRepository.findHlthExrcBestAidByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }

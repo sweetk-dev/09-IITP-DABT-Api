@@ -41,14 +41,16 @@ public class BasicEmpReadService extends AbstractBasicService {
 
 
     @ConditionalTimed(value = "basic.emp.natl.latest", description = "장애인 근로자 고용현황 데이터 조회")
-    public StatDataRes getEmpNatlLatest(Integer fromYear) {
+    public StatDataRes getEmpNatlLatest(Integer from, Integer to) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEmpNatl();
-        Integer fromStatYear = getReqFromYear("EmpNatlLatest", fromYear,
+        Integer formYear = getReqFromYear("EmpNatlLatest", from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = empRepository.findEmpNatlLatest(srcDataInfo, fromStatYear);
+        List<StatDataItemDB> dataList = empRepository.findEmpNatlLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -66,11 +68,11 @@ public class BasicEmpReadService extends AbstractBasicService {
     public StatDataRes getEmpNatlYear(Integer targetYear) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEmpNatl();
-        Integer statYear = getReqFromYear("EmpNatlYear", targetYear,
+        checkReqStatYear("EmpNatlYear", targetYear,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = empRepository.findEmpNatlByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = empRepository.findEmpNatlByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -96,14 +98,16 @@ public class BasicEmpReadService extends AbstractBasicService {
     }
 
     @ConditionalTimed(value = "basic.emp.natl.public.latest", description = "공공기관 장애인고용 현황 데이터 조회")
-    public StatDataRes getEmpNatlPublicLatest(Integer fromYear) {
+    public StatDataRes getEmpNatlPublicLatest(Integer from, Integer to) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEmpNatlPublic();
-        Integer fromStatYear = getReqFromYear("EmpNatlPublicLatest", fromYear,
+        Integer formYear = getReqFromYear("EmpNatlPublicLatest", from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = empRepository.findEmpNatlPublicLatest(srcDataInfo, fromStatYear);
+        List<StatDataItemDB> dataList = empRepository.findEmpNatlPublicLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -121,11 +125,11 @@ public class BasicEmpReadService extends AbstractBasicService {
     public StatDataRes getEmpNatlPublicYear(Integer targetYear) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEmpNatlPublic();
-        Integer statYear = getReqFromYear("EmpNatlPublicYear", targetYear,
+        checkReqStatYear("EmpNatlPublicYear", targetYear,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = empRepository.findEmpNatlPublicByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = empRepository.findEmpNatlPublicByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -151,14 +155,16 @@ public class BasicEmpReadService extends AbstractBasicService {
     }
 
     @ConditionalTimed(value = "basic.emp.natl.private.latest", description = "민간기업 장애인고용 현황 데이터 조회")
-    public StatDataRes getEmpNatlPrivateLatest(Integer fromYear) {
+    public StatDataRes getEmpNatlPrivateLatest(Integer from, Integer to) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEmpNatlPrivate();
-        Integer fromStatYear = getReqFromYear("EmpNatlPrivateLatest", fromYear,
+        Integer formYear = getReqFromYear("EmpNatlPrivateLatest", from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = empRepository.findEmpNatlPrivateLatest(srcDataInfo, fromStatYear);
+        List<StatDataItemDB> dataList = empRepository.findEmpNatlPrivateLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -176,11 +182,11 @@ public class BasicEmpReadService extends AbstractBasicService {
     public StatDataRes getEmpNatlPrivateYear(Integer targetYear) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEmpNatlPrivate();
-        Integer statYear = getReqFromYear("EmpNatlPrivateYear", targetYear,
+        checkReqStatYear("EmpNatlPrivateYear", targetYear,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = empRepository.findEmpNatlPrivateByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = empRepository.findEmpNatlPrivateByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -206,14 +212,16 @@ public class BasicEmpReadService extends AbstractBasicService {
     }
 
     @ConditionalTimed(value = "basic.emp.natl.govOrg.latest", description = "정부부문 장애인고용 현황 데이터 조회")
-    public StatDataRes getEmpNatlGovOrgLatest(Integer fromYear) {
+    public StatDataRes getEmpNatlGovOrgLatest(Integer from, Integer to) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEmpNatlGovOrg();
-        Integer fromStatYear = getReqFromYear("EmpNatlGovOrgLatest", fromYear,
+        Integer formYear = getReqFromYear("EmpNatlGovOrgLatest", from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = empRepository.findEmpNatlGovOrgLatest(srcDataInfo, fromStatYear);
+        List<StatDataItemDB> dataList = empRepository.findEmpNatlGovOrgLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -231,11 +239,11 @@ public class BasicEmpReadService extends AbstractBasicService {
     public StatDataRes getEmpNatlGovOrgYear(Integer targetYear) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEmpNatlGovOrg();
-        Integer statYear = getReqFromYear("EmpNatlGovOrgYear", targetYear,
+        checkReqStatYear("EmpNatlGovOrgYear", targetYear,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = empRepository.findEmpNatlGovOrgByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = empRepository.findEmpNatlGovOrgByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -261,14 +269,16 @@ public class BasicEmpReadService extends AbstractBasicService {
     }
 
     @ConditionalTimed(value = "basic.emp.natl.disTypeSev.latest", description = "장애유형 및 장애정도별 장애인 근로자 고용현황 데이터 조회")
-    public StatDataRes getEmpNatlDisTypeSevLatest(Integer fromYear) {
+    public StatDataRes getEmpNatlDisTypeSevLatest(Integer from, Integer to) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEmpNatlDisTypeSev();
-        Integer fromStatYear = getReqFromYear("EmpNatlDisTypeSevLatest", fromYear,
+        Integer formYear = getReqFromYear("EmpNatlDisTypeSevLatest", from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = empRepository.findEmpNatlDisTypeSevLatest(srcDataInfo, fromStatYear);
+        List<StatDataItemDB> dataList = empRepository.findEmpNatlDisTypeSevLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -286,11 +296,11 @@ public class BasicEmpReadService extends AbstractBasicService {
     public StatDataRes getEmpNatlDisTypeSevYear(Integer targetYear) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEmpNatlDisTypeSev();
-        Integer statYear = getReqFromYear("EmpNatlDisTypeSevYear", targetYear,
+        checkReqStatYear("EmpNatlDisTypeSevYear", targetYear,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = empRepository.findEmpNatlDisTypeSevByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = empRepository.findEmpNatlDisTypeSevByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -316,14 +326,16 @@ public class BasicEmpReadService extends AbstractBasicService {
     }
 
     @ConditionalTimed(value = "basic.emp.natl.disTypeIndust.latest", description = "장애유형 및 산업별 장애인 근로자 고용현황 데이터 조회")
-    public StatDataRes getEmpNatlDisTypeIndustLatest(Integer fromYear) {
+    public StatDataRes getEmpNatlDisTypeIndustLatest(Integer from, Integer to) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEmpNatlDisTypeIndust();
-        Integer fromStatYear = getReqFromYear("EmpNatlDisTypeIndustLatest", fromYear,
+        Integer formYear = getReqFromYear("EmpNatlDisTypeIndustLatest", from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = empRepository.findEmpNatlDisTypeIndustLatest(srcDataInfo, fromStatYear);
+        List<StatDataItemDB> dataList = empRepository.findEmpNatlDisTypeIndustLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -341,11 +353,11 @@ public class BasicEmpReadService extends AbstractBasicService {
     public StatDataRes getEmpNatlDisTypeIndustYear(Integer targetYear) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEmpNatlDisTypeIndust();
-        Integer statYear = getReqFromYear("EmpNatlDisTypeIndustYear", targetYear,
+        checkReqStatYear("EmpNatlDisTypeIndustYear", targetYear,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = empRepository.findEmpNatlDisTypeIndustByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = empRepository.findEmpNatlDisTypeIndustByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }

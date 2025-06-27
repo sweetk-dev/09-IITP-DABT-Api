@@ -9,10 +9,10 @@ import java.util.List;
 @Repository
 public interface EduRepository {
     // 직업교육 이수 현황
-    List<StatDataItemDB> findEduVocaExecLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear);
+    List<StatDataItemDB> findEduVocaExecLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear);
     List<StatDataItemDB> findEduVocaExecByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear);
 
     // 직업교육 이수 방법
-    List<StatDataItemDB> findEduVocaExecWayLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear);
+    List<StatDataItemDB> findEduVocaExecWayLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear);
     List<StatDataItemDB> findEduVocaExecWayByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear);
 } 

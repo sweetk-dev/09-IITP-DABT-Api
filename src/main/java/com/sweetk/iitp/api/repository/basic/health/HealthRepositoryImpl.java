@@ -20,8 +20,8 @@ public class HealthRepositoryImpl implements HealthRepository {
     private final StatsDisHlthDiseaseCostSubRepository hlthDiseaseCostSubRepos;
 
     @Override
-    public List<StatDataItemDB> findHlthSportExecTypeLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        return hlthSportExecTypeRepos.findDataLatest(srcDataInfo, fromYear);
+    public List<StatDataItemDB> findHlthSportExecTypeLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return hlthSportExecTypeRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override
@@ -30,8 +30,8 @@ public class HealthRepositoryImpl implements HealthRepository {
     }
 
     @Override
-    public List<StatDataItemDB> findHlthMedicalUsageLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        return hlthMedicalUsageRepos.findDataLatest(srcDataInfo, fromYear);
+    public List<StatDataItemDB> findHlthMedicalUsageLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return hlthMedicalUsageRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override
@@ -40,8 +40,8 @@ public class HealthRepositoryImpl implements HealthRepository {
     }
 
     @Override
-    public List<StatDataItemDB> findHlthExrcBestAidLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        return hlthExrcBestAidRepos.findDataLatest(srcDataInfo, fromYear);
+    public List<StatDataItemDB> findHlthExrcBestAidLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return hlthExrcBestAidRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override
@@ -50,8 +50,8 @@ public class HealthRepositoryImpl implements HealthRepository {
     }
 
     @Override
-    public List<StatDataItemDB> findHlthDiseaseCostSubLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        return hlthDiseaseCostSubRepos.findDataLatest(srcDataInfo, fromYear);
+    public List<StatDataItemDB> findHlthDiseaseCostSubLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return hlthDiseaseCostSubRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override

@@ -54,16 +54,19 @@ public class BasicFacilityController extends BasicBaseController {
     @GetMapping("/welfareUsg/latest")
     @Operation(
             summary = "사회복지시설 이용 현황 조회",
-            description = "사회복지시설 이용 현황. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년"
+            description = "사회복지시설 이용 현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getFcltyWelfareUsageLatest(
-            @Parameter(name = "fromYear", description = "(옵션) 통계 시작 연도  (최대: 10년 조회)", example = "2019")
+            @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
-            Integer fromYear,
+            Integer from,
+            @Parameter(name = "to", description = "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)", example = "2022")
+            @RequestParam(required = false)
+            Integer to,
             HttpServletRequest request) {
 
         try {
-            StatDataRes statDataRes = facilityReadService.getFcltyWelfareUsageLatest(fromYear);
+            StatDataRes statDataRes = facilityReadService.getFcltyWelfareUsageLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
         }
         catch (Exception e) {

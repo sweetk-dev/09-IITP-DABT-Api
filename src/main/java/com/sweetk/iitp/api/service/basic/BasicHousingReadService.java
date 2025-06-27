@@ -40,14 +40,16 @@ public class BasicHousingReadService extends AbstractBasicService {
 
 
     @ConditionalTimed(value = "basic.housing.reg.new.latest", description = "주택 등록 신규 최신 데이터 조회")
-    public StatDataRes getHousingRegNewLatest(Integer fromYear) {
+    public StatDataRes getHousingRegNewLatest(Integer from, Integer to) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegNatlByNew();
-        Integer fromStatYear = getReqFromYear("HousingRegNewLatest", fromYear, 
+        Integer formYear = getReqFromYear("HousingRegNewLatest", from, to, 
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = housingRepository.findRegNatlByNewLatest(srcDataInfo, fromStatYear);
+        List<StatDataItemDB> dataList = housingRepository.findRegNatlByNewLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -65,11 +67,11 @@ public class BasicHousingReadService extends AbstractBasicService {
     public StatDataRes getHousingRegNewYear(Integer targetYear) {
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegNatlByNew();
-        Integer statYear = getReqFromYear("HousingRegNewYear", targetYear, 
+        checkReqStatYear("HousingRegNewYear", targetYear, 
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        List<StatDataItemDB> dataList = housingRepository.findRegNatlByNewByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = housingRepository.findRegNatlByNewByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -95,12 +97,14 @@ public class BasicHousingReadService extends AbstractBasicService {
 
 
     @ConditionalTimed(value = "basic.housing.reg.ageSevGen.latest", description = "전국 연령별,장애등급별,성별 등록장애인수 최신 데이터 조회")
-    public StatDataRes getHousingRegAgeSevGenLatest(Integer fromYear) {
+    public StatDataRes getHousingRegAgeSevGenLatest(Integer from, Integer to) {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegNatlByAgeTypeSevGen();
-        Integer fromStatYear = getReqFromYear("HousingRegAgeSevGenLatest", fromYear, 
+        Integer formYear = getReqFromYear("HousingRegAgeSevGenLatest", from, to, 
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
-        List<StatDataItemDB> dataList = housingRepository.findRegNatlByAgeTypeSevGenLatest(srcDataInfo, fromStatYear);
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
+        List<StatDataItemDB> dataList = housingRepository.findRegNatlByAgeTypeSevGenLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -115,10 +119,10 @@ public class BasicHousingReadService extends AbstractBasicService {
 
     public StatDataRes getHousingRegAgeSevGenYear(Integer targetYear) {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegNatlByAgeTypeSevGen();
-        Integer statYear = getReqFromYear("HousingRegAgeSevGenYear", targetYear, 
+        checkReqStatYear("HousingRegAgeSevGenYear", targetYear, 
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
-        List<StatDataItemDB> dataList = housingRepository.findRegNatlByAgeTypeSevGenByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = housingRepository.findRegNatlByAgeTypeSevGenByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -142,12 +146,14 @@ public class BasicHousingReadService extends AbstractBasicService {
 
 
     @ConditionalTimed(value = "basic.housing.reg.sidoSevGen.latest", description = "시도별,장애유형별,장애정도별,성별 등록장애인수 최신 데이터 조회")
-    public StatDataRes getHousingRegSidoSevGenLatest(Integer fromYear) {
+    public StatDataRes getHousingRegSidoSevGenLatest(Integer from, Integer to) {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegSidoByTypeSevGen();
-        Integer fromStatYear = getReqFromYear("HousingRegSidoAgeSevGenLatest", fromYear, 
+        Integer formYear = getReqFromYear("HousingRegSidoAgeSevGenLatest", from, to, 
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
-        List<StatDataItemDB> dataList = housingRepository.findRegSidoByTypeSevGenLatest(srcDataInfo, fromStatYear);
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
+        List<StatDataItemDB> dataList = housingRepository.findRegSidoByTypeSevGenLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -162,10 +168,10 @@ public class BasicHousingReadService extends AbstractBasicService {
 
     public StatDataRes getHousingRegSidoSevGenYear(Integer targetYear) {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegSidoByTypeSevGen();
-        Integer statYear = getReqFromYear("HousingRegSidoAgeSevGenYear", targetYear, 
+        checkReqStatYear("HousingRegSidoAgeSevGenYear", targetYear, 
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
-        List<StatDataItemDB> dataList = housingRepository.findRegSidoByTypeSevGenByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = housingRepository.findRegSidoByTypeSevGenByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -189,12 +195,14 @@ public class BasicHousingReadService extends AbstractBasicService {
 
 
     @ConditionalTimed(value = "basic.housing.life.suppNeedLvl.latest", description = "일상생활 필요 지원 정도 최신 데이터 조회")
-    public StatDataRes getHousingLifeSuppNeedLvlLatest(Integer fromYear) {
+    public StatDataRes getHousingLifeSuppNeedLvlLatest(Integer from, Integer to) {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifeSuppNeedLvl();
-        Integer fromStatYear = getReqFromYear("HousingLifeSuppNeedLvlLatest", fromYear, 
+        Integer formYear = getReqFromYear("HousingLifeSuppNeedLvlLatest", from, to, 
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
-        List<StatDataItemDB> dataList = housingRepository.findLifeSuppNeedLvlLatest(srcDataInfo, fromStatYear);
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
+        List<StatDataItemDB> dataList = housingRepository.findLifeSuppNeedLvlLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -209,10 +217,10 @@ public class BasicHousingReadService extends AbstractBasicService {
 
     public StatDataRes getHousingLifeSuppNeedLvlYear(Integer targetYear) {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifeSuppNeedLvl();
-        Integer statYear = getReqFromYear("HousingLifeSuppNeedLvlYear", targetYear, 
+        checkReqStatYear("HousingLifeSuppNeedLvlYear", targetYear, 
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
-        List<StatDataItemDB> dataList = housingRepository.findLifeSuppNeedLvlByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = housingRepository.findLifeSuppNeedLvlByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -236,12 +244,14 @@ public class BasicHousingReadService extends AbstractBasicService {
 
 
     @ConditionalTimed(value = "basic.housing.life.maincarer.latest", description = "주로 지원해주는 사람의 유형 최신 데이터 조회")
-    public StatDataRes getHousingLifeMaincarerLatest(Integer fromYear) {
+    public StatDataRes getHousingLifeMaincarerLatest(Integer from, Integer to) {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifeMaincarer();
-        Integer fromStatYear = getReqFromYear("HousingLifeMaincarerLatest", fromYear, 
+        Integer formYear = getReqFromYear("HousingLifeMaincarerLatest", from, to, 
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
-        List<StatDataItemDB> dataList = housingRepository.findLifeMaincarerLatest(srcDataInfo, fromStatYear);
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
+        List<StatDataItemDB> dataList = housingRepository.findLifeMaincarerLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -256,10 +266,10 @@ public class BasicHousingReadService extends AbstractBasicService {
 
     public StatDataRes getHousingLifeMaincarerYear(Integer targetYear) {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifeMaincarer();
-        Integer statYear = getReqFromYear("HousingLifeMaincarerYear", targetYear, 
+        checkReqStatYear("HousingLifeMaincarerYear", targetYear, 
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
-        List<StatDataItemDB> dataList = housingRepository.findLifeMaincarerByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = housingRepository.findLifeMaincarerByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -283,12 +293,14 @@ public class BasicHousingReadService extends AbstractBasicService {
 
 
     @ConditionalTimed(value = "basic.housing.life.primcarer.latest", description = "일상생활 도와주는 사람(1순위) 최신 데이터 조회")
-    public StatDataRes getHousingLifePrimcarerLatest(Integer fromYear) {
+    public StatDataRes getHousingLifePrimcarerLatest(Integer from, Integer to) {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifePrimcarer();
-        Integer fromStatYear = getReqFromYear("HousingLifePrimcarerLatest", fromYear, 
+        Integer formYear = getReqFromYear("HousingLifePrimcarerLatest", from, to, 
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
-        List<StatDataItemDB> dataList = housingRepository.findLifePrimcarerLatest(srcDataInfo, fromStatYear);
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
+        List<StatDataItemDB> dataList = housingRepository.findLifePrimcarerLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -303,10 +315,10 @@ public class BasicHousingReadService extends AbstractBasicService {
 
     public StatDataRes getHousingLifePrimcarerYear(Integer targetYear) {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifePrimcarer();
-        Integer statYear = getReqFromYear("HousingLifePrimcarerYear", targetYear, 
+        checkReqStatYear("HousingLifePrimcarerYear", targetYear, 
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
-        List<StatDataItemDB> dataList = housingRepository.findLifePrimcarerByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = housingRepository.findLifePrimcarerByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -330,12 +342,14 @@ public class BasicHousingReadService extends AbstractBasicService {
 
 
     @ConditionalTimed(value = "basic.housing.life.suppField.latest", description = "도움받는 분야 최신 데이터 조회")
-    public StatDataRes getHousingLifeSuppFieldLatest(Integer fromYear) {
+    public StatDataRes getHousingLifeSuppFieldLatest(Integer from, Integer to) {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifeSuppField();
-        Integer fromStatYear = getReqFromYear("HousingLifeSuppFieldLatest", fromYear, 
+        Integer formYear = getReqFromYear("HousingLifeSuppFieldLatest", from, to, 
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
-        List<StatDataItemDB> dataList = housingRepository.findLifeSuppFieldLatest(srcDataInfo, fromStatYear);
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
+        List<StatDataItemDB> dataList = housingRepository.findLifeSuppFieldLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }
@@ -350,10 +364,10 @@ public class BasicHousingReadService extends AbstractBasicService {
 
     public StatDataRes getHousingLifeSuppFieldYear(Integer targetYear) {
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifeSuppField();
-        Integer statYear = getReqFromYear("HousingLifeSuppFieldYear", targetYear, 
+        checkReqStatYear("HousingLifeSuppFieldYear", targetYear, 
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
-        List<StatDataItemDB> dataList = housingRepository.findLifeSuppFieldByYear(srcDataInfo, statYear);
+        List<StatDataItemDB> dataList = housingRepository.findLifeSuppFieldByYear(srcDataInfo, targetYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
         }

@@ -17,8 +17,8 @@ public class SocialRepositoryImpl implements SocialRepository {
 
 
     @Override
-    public List<StatDataItemDB> findSocParticFreqLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        return socParticFreqRepos.findDataLatest(srcDataInfo, fromYear);
+    public List<StatDataItemDB> findSocParticFreqLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return socParticFreqRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override
@@ -27,8 +27,8 @@ public class SocialRepositoryImpl implements SocialRepository {
     }
 
     @Override
-    public List<StatDataItemDB> findSocContactCntfreqLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear) {
-        return socContactCntfreqRepos.findDataLatest(srcDataInfo, fromYear);
+    public List<StatDataItemDB> findSocContactCntfreqLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return socContactCntfreqRepos.findDataLatest(srcDataInfo, fromYear, toYear);
     }
 
     @Override
