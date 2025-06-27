@@ -18,6 +18,7 @@ public class StatDataItem {
     @NonNull
     private Short prdDe;
 
+
     @Schema(description = "분류값 1", requiredMode = Schema.RequiredMode.REQUIRED,  example = "전체")
     @NonNull
     private String c1Nm;
@@ -28,19 +29,36 @@ public class StatDataItem {
     @Schema(description = "분류값 3")
     private String c3Nm;
 
+    @Schema(description = "분류코드 1 ", requiredMode = Schema.RequiredMode.REQUIRED,  example = "A")
+    @NonNull
+    private String c1ObjId;
+    
     @Schema(description = "분류명 1", requiredMode = Schema.RequiredMode.REQUIRED,  example = "특성별")
     @NonNull
     private String c1ObjNm;
 
+
+    @Schema(description = "분류코드 2 ", example = "B")
+    private String c2ObjId;
+
     @Schema(description = "분류명 2", example = "도와주는사람별")
     private String c2ObjNm;
+
+
+    @Schema(description = "분류코드 3 ")
+    private String c3ObjId;
 
     @Schema(description = "분류명 3")
     private String c3ObjNm;
 
-    @Schema(description = "항목명", requiredMode = Schema.RequiredMode.REQUIRED,  example = "일상생활 도와주는 사람(1순위)")
+    @Schema(description = "항목값", requiredMode = Schema.RequiredMode.REQUIRED,  example = "일상생활 도와주는 사람(1순위)")
     @NonNull
     private String itmNm;
+
+    @Schema(description = "항목코드", requiredMode = Schema.RequiredMode.REQUIRED,  example = "ITEM")
+    @NonNull
+    private String itmObjId;
+
 
     @Schema(description = "단위명", requiredMode = Schema.RequiredMode.REQUIRED,  example = "명")
     @NonNull
@@ -61,9 +79,6 @@ public class StatDataItem {
                 .c1Nm(entity.getC1())
                 .c2Nm(entity.getC2())
                 .c3Nm(entity.getC3())
-                .c1ObjNm(entity.getC1ObjNm())
-                .c2ObjNm(entity.getC2ObjNm())
-                .c3ObjNm(entity.getC3ObjNm())
                 .itmNm(entity.getItmId())
                 .unitNm(entity.getUnitNm())
                 .data(entity.getDt() != null ? entity.getDt().toPlainString() : null)
