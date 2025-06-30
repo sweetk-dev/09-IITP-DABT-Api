@@ -1,10 +1,8 @@
 package com.sweetk.iitp.api.entity.basic;
 
-import com.sweetk.iitp.api.constant.SysConstants;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -19,7 +17,7 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 @MappedSuperclass
-@SQLRestriction("deleted_at IS NULL")
+//@SQLRestriction("deleted_at IS NULL")
 public abstract class BaseStatsEntity implements StatsCommon {
 
     @Id
@@ -65,8 +63,8 @@ public abstract class BaseStatsEntity implements StatsCommon {
     @Column(name = "src_latest_chn_dt")
     private LocalDate srcLatestChnDt;
 
-    @Column(name = "del_yn", length = 1, nullable = false)
-    private String delYn = SysConstants.YN_N;
+//    @Column(name = "del_yn", length = 1, nullable = false)
+//    private String delYn = SysConstants.YN_N;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
@@ -82,11 +80,11 @@ public abstract class BaseStatsEntity implements StatsCommon {
     @Column(name = "updated_by", length = 40)
     private String updatedBy;
 
-    @Column(name = "deleted_at")
-    private OffsetDateTime deletedAt;
-
-    @Column(name = "deleted_by", length = 40)
-    private String deletedBy;
+//    @Column(name = "deleted_at")
+//    private OffsetDateTime deletedAt;
+//
+//    @Column(name = "deleted_by", length = 40)
+//    private String deletedBy;
 
 
 
@@ -114,7 +112,7 @@ public abstract class BaseStatsEntity implements StatsCommon {
     @PrePersist
     protected void onCreate() {
         createdAt = OffsetDateTime.now();
-        delYn = SysConstants.YN_N;
+        //delYn = SysConstants.YN_N;
     }
 
     @PreUpdate
@@ -122,9 +120,9 @@ public abstract class BaseStatsEntity implements StatsCommon {
         updatedAt = OffsetDateTime.now();
     }
 
-    public void softDelete(String deletedBy) {
-        this.deletedAt = OffsetDateTime.now();
-        this.deletedBy = deletedBy;
-        this.delYn = SysConstants.YN_Y;
-    }
+//    public void softDelete(String deletedBy) {
+//        this.deletedAt = OffsetDateTime.now();
+//        this.deletedBy = deletedBy;
+//        this.delYn = SysConstants.YN_Y;
+//    }
 }
