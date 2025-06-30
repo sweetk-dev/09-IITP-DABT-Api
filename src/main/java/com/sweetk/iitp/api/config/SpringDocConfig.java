@@ -72,7 +72,7 @@ public class SpringDocConfig {
                 .readAllAsResolvedSchema(ErrApiResDto.class)
                 .schema;
 
-        // ErrorCode enum 정보를 수동으로 스키마에 추가
+        // ErrorCode enum 정보를 수동으로 스키마에 추가 (ErrInfoDto.code 필드)
         Map<String, Schema> errorInfoProperties = errorInfoSchema.getProperties();
         if (errorInfoProperties != null) {
             Schema<?> codeSchema = errorInfoProperties.get("code");
@@ -84,7 +84,7 @@ public class SpringDocConfig {
                 List list = enumValues;
                 codeSchema.setEnum(list);
 
-                // description에 전체 에러 코드 목록 추가
+                // description에 전체 에러 코드 목록 추가 (필드 레벨)
                 String description = Arrays.stream(ErrorCode.values())
                     .map(e -> e.getCode() + ": " + e.getMessage())
                     .collect(Collectors.joining("\n"));
@@ -92,11 +92,23 @@ public class SpringDocConfig {
             }
         }
 
+        // ErrorCode enum 타입 스키마에 description 추가 (components.schemas.ErrorCode)
+        Schema<?> errorCodeSchema = new Schema<>()
+                .type("string")
+                .name("ErrorCode")
+                .example("C000")
+                ._enum(Arrays.stream(ErrorCode.values()).map(ErrorCode::getCode).collect(Collectors.toList()));
+        String errorCodeDesc = Arrays.stream(ErrorCode.values())
+                .map(e -> e.getCode() + ": " + e.getMessage())
+                .collect(Collectors.joining("\n"));
+        errorCodeSchema.setDescription("에러 코드 목록:\n" + errorCodeDesc);
+
         return new OpenAPI()
                 .components(new Components()
                         .addSchemas("ErrorInfoDto", errorInfoSchema)
                         .addSchemas("ApiResDto", apiResSchema)
                         .addSchemas("ErrApiResDto", errApiResSchema)
+                        .addSchemas("ErrorCode", errorCodeSchema)
                         .addResponses("ErrorApiResponse", new ApiResponse()
                                 .description("Error response")
                                 .content(new Content().addMediaType(
