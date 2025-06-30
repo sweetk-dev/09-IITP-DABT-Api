@@ -384,19 +384,30 @@
           "기초-사회망 현황 API V1"
         ],
         "summary": "장애인의 사회 참여 조회",
-        "description": "장애인의 사회 참여 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "장애인의 사회 참여 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getSocialParticFreqLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
-            "description": "(옵션) 통계 시작 연도  (최대: 10년 조회)",
+            "description": "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -479,19 +490,30 @@
           "기초-사회망 현황 API V1"
         ],
         "summary": "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도 조회",
-        "description": "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getSocialContactCntfreqLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
-            "description": "(옵션) 통계 시작 연도  (최대: 10년 조회)",
+            "description": "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -574,11 +596,11 @@
           "기초-주거 자립 현황 API V1"
         ],
         "summary": "시도별,장애등급별,성별 등록장애인수 조회",
-        "description": "시도별,장애등급별,성별 등록장애인수 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "시도별,장애등급별,성별 등록장애인수 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getHousingRegSidoASevGenLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
             "description": "(옵션) 통계 시작 연도 (최대: 10년 조회)",
             "required": false,
@@ -587,6 +609,17 @@
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -646,19 +679,30 @@
           "기초-주거 자립 현황 API V1"
         ],
         "summary": "신규등록 장애인현황 조회",
-        "description": "신규등록 장애인현황 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "신규등록 장애인현황 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getHousingRegNewLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
-            "description": "(옵션) 통계 시작 연도  (최대: 10년 조회)",
+            "description": "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -741,11 +785,11 @@
           "기초-주거 자립 현황 API V1"
         ],
         "summary": "전국 연령별,장애등급별,성별 등록장애인수 조회",
-        "description": "전국 연령별,장애등급별,성별 등록장애인수 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "전국 연령별,장애등급별,성별 등록장애인수 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getHousingRegAgeSevGenLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
             "description": "(옵션) 통계 시작 연도 (최대: 10년 조회)",
             "required": false,
@@ -754,6 +798,17 @@
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -836,11 +891,11 @@
           "기초-주거 자립 현황 API V1"
         ],
         "summary": "도움받는 분야  조회",
-        "description": "도움받는 분야 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "도움받는 분야 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getHousingLifeSuppFieldLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
             "description": "(옵션) 통계 시작 연도 (최대: 10년 조회)",
             "required": false,
@@ -849,6 +904,17 @@
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -931,11 +997,11 @@
           "기초-주거 자립 현황 API V1"
         ],
         "summary": "일상생활 도와주는 사람(1순위)  조회",
-        "description": "일상생활 도와주는 사람(1순위) 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "일상생활 도와주는 사람(1순위) 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getHousingLifePrimCarerLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
             "description": "(옵션) 통계 시작 연도 (최대: 10년 조회)",
             "required": false,
@@ -944,6 +1010,17 @@
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -1026,11 +1103,11 @@
           "기초-주거 자립 현황 API V1"
         ],
         "summary": "주로 지원해주는 사람의 유형  조회",
-        "description": "주로 지원해주는 사람의 유형 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "주로 지원해주는 사람의 유형 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getHousingLifeMainCarerLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
             "description": "(옵션) 통계 시작 연도 (최대: 10년 조회)",
             "required": false,
@@ -1039,6 +1116,17 @@
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -1121,11 +1209,11 @@
           "기초-주거 자립 현황 API V1"
         ],
         "summary": "일상생활 필요 지원 정도 조회",
-        "description": "일상생활 필요 지원 정도 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "일상생활 필요 지원 정도 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getHousingLifeSuppNeedLvlLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
             "description": "(옵션) 통계 시작 연도 (최대: 10년 조회)",
             "required": false,
@@ -1134,6 +1222,17 @@
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -1216,19 +1315,30 @@
           "기초-건강 관리 현황 API V1"
         ],
         "summary": "장애인 생활체육 실행 유형 조회",
-        "description": "장애인 생활체육 실행 유형 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "장애인 생활체육 실행 유형 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getHealthSportExecTypeLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
-            "description": "(옵션) 통계 시작 연도  (최대: 10년 조회)",
+            "description": "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -1311,19 +1421,30 @@
           "기초-건강 관리 현황 API V1"
         ],
         "summary": "장애인 의료이용 현황 조회",
-        "description": "장애인 의료이용 현황 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "장애인 의료이용 현황 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getHealthMedicalUsageLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
-            "description": "(옵션) 통계 시작 연도  (최대: 10년 조회)",
+            "description": "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -1406,19 +1527,30 @@
           "기초-건강 관리 현황 API V1"
         ],
         "summary": "운동 시 가장 도움이 되는 지원 사항 조회",
-        "description": "운동 시 가장 도움이 되는 지원 사항. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "운동 시 가장 도움이 되는 지원 사항. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getHealthExrcBestAidLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
-            "description": "(옵션) 통계 시작 연도  (최대: 10년 조회)",
+            "description": "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -1501,19 +1633,30 @@
           "기초-건강 관리 현황 API V1"
         ],
         "summary": "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회",
-        "description": "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getHealthDiseaseCostSubLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
-            "description": "(옵션) 통계 시작 연도  (최대: 10년 조회)",
+            "description": "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -1596,19 +1739,30 @@
           "기초-편의 시설 제공 현황 API V1"
         ],
         "summary": "사회복지시설 이용 현황 조회",
-        "description": "사회복지시설 이용 현황. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "사회복지시설 이용 현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getFcltyWelfareUsageLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
-            "description": "(옵션) 통계 시작 연도  (최대: 10년 조회)",
+            "description": "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -1691,19 +1845,30 @@
           "기초-고용 현황 API V1"
         ],
         "summary": "공공기관 장애인고용 현황 사항 조회",
-        "description": "공공기관 장애인고용 현황. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "공공기관 장애인고용 현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getEmpNatlPublicLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
-            "description": "(옵션) 통계 시작 연도  (최대: 10년 조회)",
+            "description": "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -1786,19 +1951,30 @@
           "기초-고용 현황 API V1"
         ],
         "summary": "민간기업 장애인고용 현황 조회",
-        "description": "민간기업 장애인고용 현황. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "민간기업 장애인고용 현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getEmpNatlPrivateLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
-            "description": "(옵션) 통계 시작 연도  (최대: 10년 조회)",
+            "description": "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -1881,19 +2057,30 @@
           "기초-고용 현황 API V1"
         ],
         "summary": "장애인 근로자 고용현황 조회",
-        "description": "장애인 근로자 고용현황. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getEmpNatlLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
-            "description": "(옵션) 통계 시작 연도  (최대: 10년 조회)",
+            "description": "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -1976,19 +2163,30 @@
           "기초-고용 현황 API V1"
         ],
         "summary": "정부부문 장애인고용 현황 조회",
-        "description": "정부부문 장애인고용 현황. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "정부부문 장애인고용 현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getEmpNatlGovOrgLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
-            "description": "(옵션) 통계 시작 연도  (최대: 10년 조회)",
+            "description": "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -2071,19 +2269,30 @@
           "기초-고용 현황 API V1"
         ],
         "summary": "장애유형 및 장애정도별 장애인 근로자 고용현황 조회",
-        "description": "장애유형 및 장애정도별 장애인 근로자 고용현황. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "장애유형 및 장애정도별 장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getEmpNatlDisTypeSevLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
-            "description": "(옵션) 통계 시작 연도  (최대: 10년 조회)",
+            "description": "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -2166,19 +2375,30 @@
           "기초-고용 현황 API V1"
         ],
         "summary": "장애유형 및 산업별 장애인 근로자 고용현황 조회",
-        "description": "장애유형 및 산업별 장애인 근로자 고용현황. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "장애유형 및 산업별 장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getEmpNatlDisTypeIndustLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
-            "description": "(옵션) 통계 시작 연도  (최대: 10년 조회)",
+            "description": "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -2261,19 +2481,30 @@
           "기초-진로 교육 현황 API V1"
         ],
         "summary": "장애인 진로 및 직업교육 운영 방법 조회",
-        "description": "장애인 진로 및 직업교육 운영 방법. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "장애인 진로 및 직업교육 운영 방법. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getEduVocaExecWayLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
-            "description": "(옵션) 통계 시작 연도  (최대: 10년 조회)",
+            "description": "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -2356,19 +2587,30 @@
           "기초-진로 교육 현황 API V1"
         ],
         "summary": "장애인 진로 및 직업교육 실시 여부 조회",
-        "description": "장애인 진로 및 직업교육 실시 여부. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "장애인 진로 및 직업교육 실시 여부. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getEduVocaExecLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
-            "description": "(옵션) 통계 시작 연도  (최대: 10년 조회)",
+            "description": "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -2451,19 +2693,30 @@
           "기초-보조기기 사용 현황 API V1"
         ],
         "summary": "장애인보조기기 사용여부 조회",
-        "description": "장애인보조기기 사용여부. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "장애인보조기기 사용여부. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getAidDeviceUsageLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
-            "description": "(옵션) 통계 시작 연도  (최대: 10년 조회)",
+            "description": "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -2546,19 +2799,30 @@
           "기초-보조기기 사용 현황 API V1"
         ],
         "summary": "장애인보조기기 필요여부 조회",
-        "description": "장애인보조기기 필요여부. (최대 10년) 예) fromYear(옵션)~(최종 연도), default는 최종 3개년",
+        "description": "장애인보조기기 필요여부. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
         "operationId": "getAidDeviceNeedLatest",
         "parameters": [
           {
-            "name": "fromYear",
+            "name": "from",
             "in": "query",
-            "description": "(옵션) 통계 시작 연도  (최대: 10년 조회)",
+            "description": "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
           }
         ],
         "responses": {
@@ -2761,12 +3025,12 @@
           "code": {
             "type": "string",
             "description": "에러 코드",
-            "example": "C001"
+            "example": "C000"
           },
           "message": {
             "type": "string",
             "description": "에러 메시지",
-            "example": "유효하지 않은 요청입니다."
+            "example": "요청한 parameter이 올바르지 않습니다."
           },
           "details": {
             "type": "string",
