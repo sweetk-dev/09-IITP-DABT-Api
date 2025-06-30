@@ -1,6 +1,5 @@
 package com.sweetk.iitp.api.repository.client;
 
-import com.sweetk.iitp.api.constant.DataStatusType;
 import com.sweetk.iitp.api.entity.client.OpenApiClientKeyEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +12,7 @@ import java.util.Optional;
 public interface OpenApiClientKeyRepository extends JpaRepository<OpenApiClientKeyEntity, Integer> {
 
 
-    Optional<OpenApiClientKeyEntity> findByApiKeyAndStatus(String apiKey, DataStatusType status);
+    Optional<OpenApiClientKeyEntity> findByApiKeyAndActiveYn(String apiKey, String activeYn);
 
 
     // Special queries that include deleted items
