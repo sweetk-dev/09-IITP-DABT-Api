@@ -33,8 +33,8 @@ public class ErrApiResDto {
                         .message(errorCode.getMessage())
                         .details(null)
                         .build())
-                    .build();
-        }
+                .build();
+    }
 
     public static ErrApiResDto of(ErrorCode errorCode, String detailMessage) {
         return ErrApiResDto.builder()
