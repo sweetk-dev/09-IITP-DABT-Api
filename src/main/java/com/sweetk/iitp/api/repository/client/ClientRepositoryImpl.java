@@ -1,6 +1,6 @@
 package com.sweetk.iitp.api.repository.client;
 
-import com.sweetk.iitp.api.constant.DataStatusType;
+import com.sweetk.iitp.api.constant.SysConstants;
 import com.sweetk.iitp.api.entity.client.OpenApiClientEntity;
 import com.sweetk.iitp.api.entity.client.OpenApiClientKeyEntity;
 import lombok.RequiredArgsConstructor;
@@ -69,7 +69,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     // find api key
     public Optional<OpenApiClientKeyEntity> findActiveKeyByApiKey(String apiKey) {
-        return openApiClientKeyRepository.findByApiKeyAndStatus(apiKey, DataStatusType.ACTIVE);
+        return openApiClientKeyRepository.findByApiKeyAndActiveYn(apiKey, SysConstants.YN_Y);
     }
 
 
