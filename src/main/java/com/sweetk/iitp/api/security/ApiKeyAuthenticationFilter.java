@@ -32,7 +32,23 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        
+        String path = request.getServletPath();
+
+        log.info("Request path: {}", path);
+
+        // permitAll() 경로는 인증 로직을 건너뜀
+        if (path.equals("/v3/api-docs") ||
+            path.equals("/v3/api-docs/") ||
+            path.startsWith("/v3/api-docs/") ||
+            path.startsWith("/docs/") ||
+            path.equals("/health") ||
+            path.equals("/version") ||
+            path.startsWith(ApiConstants.ApiPath.API_V1_BASIC) ||
+            path.startsWith(ApiConstants.ApiPath.API_V1_POI)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String apiKey = request.getHeader(ApiConstants.API_KEY_HEADER);
         
         if (apiKey == null || apiKey.isEmpty()) {
