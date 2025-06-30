@@ -27,7 +27,10 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/v3/api-docs/**").permitAll()
+                .requestMatchers("/v3/api-docs", "/v3/api-docs/", "/v3/api-docs/**").permitAll()
+                .requestMatchers("/docs/**").permitAll()
+                .requestMatchers(ApiConstants.ApiPath.API_V1_BASIC + "/**").permitAll()
+                .requestMatchers(ApiConstants.ApiPath.API_V1_POI + "/**").permitAll()
                 .requestMatchers("/health", "/version").permitAll()
                 .anyRequest().authenticated()
             )
