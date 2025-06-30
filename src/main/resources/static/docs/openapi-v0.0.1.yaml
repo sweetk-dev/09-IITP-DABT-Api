@@ -3023,9 +3023,7 @@
         "type": "object",
         "properties": {
           "code": {
-            "type": "string",
-            "description": "에러 코드",
-            "example": "C000"
+            "$ref": "#/components/schemas/ErrorCode"
           },
           "message": {
             "type": "string",
@@ -3039,6 +3037,34 @@
           }
         },
         "description": "Response 에러 상세 정보"
+      },
+      "ErrorCode": {
+        "type": "string",
+        "description": "에러 코드",
+        "example": "C000",
+        "enum": [
+          "S000",
+          "C000",
+          "C001",
+          "C002",
+          "C003",
+          "C004",
+          "C005",
+          "C006",
+          "C007",
+          "C008",
+          "C009",
+          "C010",
+          "C011",
+          "B001",
+          "B002",
+          "B003",
+          "B004",
+          "P001",
+          "P002",
+          "P003",
+          "P004"
+        ]
       },
       "MvPoi": {
         "type": "object",

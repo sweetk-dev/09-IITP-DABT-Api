@@ -142,6 +142,7 @@ tasks.register("copyVersionedDoc", Copy) {
         include(apiDocFileName)
     }
     into(springBootStaticDir)
+    outputs.upToDateWhen { false }
 }
 
 tasks.register("copyLatestDoc", Copy) {
@@ -151,6 +152,7 @@ tasks.register("copyLatestDoc", Copy) {
         rename { apiDocFileName -> apiDocLatestFile }
     }
     into(springBootStaticDir)
+    outputs.upToDateWhen { false }
 }
 
 tasks.register("copyDocsToResources") {
@@ -158,6 +160,7 @@ tasks.register("copyDocsToResources") {
     doLast {
         println("OpenAPI document copy completed.")
     }
+    outputs.upToDateWhen { false }
 }
 
 tasks.named('test') {
