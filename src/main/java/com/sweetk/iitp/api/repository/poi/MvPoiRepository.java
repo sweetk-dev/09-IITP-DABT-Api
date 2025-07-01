@@ -7,4 +7,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MvPoiRepository extends JpaRepository<MvPoiEntity, Long>, MvPoiRepositoryCustom {
-   }
+}
