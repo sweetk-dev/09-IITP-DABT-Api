@@ -1,7 +1,7 @@
 package com.sweetk.iitp.api.entity.basic;
 
 import com.sweetk.iitp.api.constant.DataStatusType;
-import com.sweetk.iitp.api.constant.DataStatusTypeConverter;
+import com.sweetk.iitp.api.constant.converter.DataStatusTypeConverter;
 import com.sweetk.iitp.api.constant.SysConstants;
 import com.sweetk.iitp.api.entity.sys.SysCommonCodeEntity;
 import com.sweetk.iitp.api.entity.sys.SysExtApiInfoEntity;
