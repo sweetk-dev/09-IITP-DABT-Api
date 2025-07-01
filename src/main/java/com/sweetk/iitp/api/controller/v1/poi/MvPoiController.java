@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,10 +36,8 @@ public class MvPoiController {
             description = "이동형 POI 카테고리 검색 조회 (paging):"
     )
     public ResponseEntity<ApiResDto<PageRes<MvPoi>>> searchByCategory(
-            @Parameter(name = "page", description = "페이징 정보", required = true)
-            @Valid @RequestParam PageReq page,
-            @Parameter(name = "searchKeys", description = "검색 키워드", required = false)
-            @Valid @RequestParam MvPoiSearchCatReq searchKeys,
+            @Valid @ParameterObject PageReq page,
+            @Valid @ParameterObject MvPoiSearchCatReq searchKeys,
             HttpServletRequest request) {
 
         PageRes<MvPoi> searchRet = null;
@@ -68,10 +67,8 @@ public class MvPoiController {
             description = "이동형 POI 위치기반 검색 조회 (paging):"
     )
     public ResponseEntity<ApiResDto<PageRes<MvPoi>>> searchByLocation(
-            @Parameter(name = "page", description = "페이징 정보", required = true)
-            @Valid @RequestParam PageReq page,
-            @Parameter(name = "searchKeys", description = "(옵션) 검색 키 정보", required = true)
-            @Valid @RequestParam MvPoiSearchLocReq searchKeys,
+            @Valid @ParameterObject PageReq page,
+            @Valid @ParameterObject MvPoiSearchLocReq searchKeys,
             HttpServletRequest request ) {
 
         log.debug("[{}] : {}", request.getRequestURI(), searchKeys.toString() );
