@@ -1,300 +1,167 @@
 package com.sweetk.iitp.api.repository.poi.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sweetk.iitp.api.constant.MvPoiCategoryType;
-import com.sweetk.iitp.api.constant.SysConstants;
-import com.sweetk.iitp.api.dto.common.PageRes;
+import com.sweetk.iitp.api.dto.internal.MvPoiPageResult;
 import com.sweetk.iitp.api.dto.poi.MvPoi;
-import com.sweetk.iitp.api.dto.poi.MvPoiSearchCatReq;
-import com.sweetk.iitp.api.dto.poi.MvPoiSearchLocReq;
-import com.sweetk.iitp.api.entity.poi.QMvPoiEntity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
-import java.util.Iterator;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
 public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
+    private static final Logger log = LoggerFactory.getLogger(MvPoiRepositoryImpl.class);
+
     private final JPAQueryFactory queryFactory;
-    private final QMvPoiEntity qEntity = QMvPoiEntity.mvPoiEntity;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Override
-    public PageRes<MvPoi> findPoiList(Pageable pageable) {
-        BooleanExpression baseCondition = getBaseCondition();
-        
-        List<MvPoi> content = queryFactory
-                .select(Projections.constructor(MvPoi.class,
-                        qEntity.poiId,
-                        qEntity.languageCode,
-                        qEntity.title,
-                        qEntity.summary,
-                        qEntity.basicInfo,
-                        qEntity.addressCode,
-                        qEntity.addressRoad,
-                        qEntity.addressDetail,
-                        qEntity.latitude,
-                        qEntity.longitude,
-                        qEntity.detailJson,
-                        qEntity.searchFilterJson))
-                .from(qEntity)
-                .where(baseCondition)
-                .orderBy(qEntity.title.asc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+    @PersistenceContext
+    private EntityManager entityManager;
 
-        // category, subCategory 매핑 처리
-        content = mapCategoryAndSubCategory(content);
+    @Autowired
+    private DataSource dataSource;
 
-        Long total = queryFactory
-                .select(qEntity.count())
-                .from(qEntity)
-                .where(baseCondition)
-                .fetchOne();
+    public MvPoiPageResult findByCategoryAndSubCateWithCount(
+            String category, String subCate, String name, int offset, int size
+    ) {
+        StringBuilder sql = new StringBuilder("SELECT " +
+            "poi_id, " +
+            "language_code, " +
+            "'" + (category != null ? category : "") + "' AS category, " +
+            "search_filter_json->'search_filter'->>'" + (category != null ? category : "") + "' AS sub_category, " +
+            "title, summary, basic_info, address_code, address_road, address_detail, latitude, longitude, detail_json, search_filter_json, " +
+            "COUNT(*) OVER() AS total_count " +
+            "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' ");
+        boolean hasCategory = category != null && !category.isEmpty();
+        boolean hasSubCate = subCate != null && !subCate.isEmpty();
+        boolean hasName = name != null && !name.isEmpty();
 
-        return new PageRes<MvPoi>(content, pageable, total);
-    }
-
-    @Override
-    public PageRes<MvPoi> findByCategory(MvPoiSearchCatReq catReq, Pageable pageable) {
-        BooleanExpression baseCondition = getBaseCondition();
-
-        // 1. name 단독 검색 (6번 케이스)
-        if (catReq.getCategory() == null && catReq.getSubCate() == null && catReq.getName() != null) {
-            baseCondition = baseCondition.and(qEntity.title.like("%" + catReq.getName() + "%"));
-        }
-        // 2. category 단독 검색 (1번 케이스)
-        else if (catReq.getCategory() != null && catReq.getSubCate() == null && catReq.getName() == null) {
-            baseCondition = baseCondition.and(eqCategory(catReq.getCategory()));
-        }
-        // 3. category + subCategory 검색 (2번 케이스)
-        else if (catReq.getCategory() != null && catReq.getSubCate() != null && catReq.getName() == null) {
-            baseCondition = baseCondition.and(eqCategory(catReq.getCategory()));
-            baseCondition = addSubCategoryCondition(baseCondition, catReq);
-        }
-        // 4. category + name 검색 (4번 케이스)
-        else if (catReq.getCategory() != null && catReq.getSubCate() == null && catReq.getName() != null) {
-            baseCondition = baseCondition.and(eqCategory(catReq.getCategory()))
-                    .and(qEntity.title.like("%" + catReq.getName() + "%"));
-        }
-        // 5. category + subCategory + name 검색 (5번 케이스)
-        else if (catReq.getCategory() != null && catReq.getSubCate() != null && catReq.getName() != null) {
-            baseCondition = baseCondition.and(eqCategory(catReq.getCategory()))
-                    .and(qEntity.title.like("%" + catReq.getName() + "%"));
-            baseCondition = addSubCategoryCondition(baseCondition, catReq);
-        }
-
-        List<MvPoi> content = queryFactory
-                .select(Projections.constructor(MvPoi.class,
-                        qEntity.poiId,
-                        qEntity.languageCode,
-                        qEntity.title,
-                        qEntity.summary,
-                        qEntity.basicInfo,
-                        qEntity.addressCode,
-                        qEntity.addressRoad,
-                        qEntity.addressDetail,
-                        qEntity.latitude,
-                        qEntity.longitude,
-                        qEntity.detailJson,
-                        qEntity.searchFilterJson))
-                .from(qEntity)
-                .where(baseCondition)
-                .orderBy(qEntity.title.asc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        // category, subCategory 매핑 처리
-        content = mapCategoryAndSubCategory(content);
-
-        Long total = queryFactory
-                .select(qEntity.count())
-                .from(qEntity)
-                .where(baseCondition)
-                .fetchOne();
-
-        return new PageRes<MvPoi>(content, pageable, total);
-    }
-
-    @Override
-    public PageRes<MvPoi> findByLocation(MvPoiSearchLocReq locReq, Pageable pageable) {
-        BooleanExpression baseCondition = getBaseCondition()
-                .and(withinRadius(locReq.getLatitude(), locReq.getLongitude(), locReq.getRadius()));
-
-        List<MvPoi> content = queryFactory
-                .select(Projections.constructor(MvPoi.class,
-                        qEntity.poiId,
-                        qEntity.languageCode,
-                        qEntity.title,
-                        qEntity.summary,
-                        qEntity.basicInfo,
-                        qEntity.addressCode,
-                        qEntity.addressRoad,
-                        qEntity.addressDetail,
-                        qEntity.latitude,
-                        qEntity.longitude,
-                        qEntity.detailJson,
-                        qEntity.searchFilterJson))
-                .from(qEntity)
-                .where(baseCondition)
-                .orderBy(qEntity.title.asc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        // category, subCategory 매핑 처리
-        content = mapCategoryAndSubCategory(content);
-
-        Long total = queryFactory
-                .select(qEntity.count())
-                .from(qEntity)
-                .where(baseCondition)
-                .fetchOne();
-
-        return new PageRes<MvPoi>(content, pageable, total);
-    }
-
-    /**
-     * category, subCategory 매핑 처리 공통 함수
-     */
-    private List<MvPoi> mapCategoryAndSubCategory(List<MvPoi> content) {
-        return content.stream()
-                .map(poi -> {
-                    try {
-                        String searchFilterJson = poi.getSearchFilterJson();
-                        if (searchFilterJson != null) {
-                            JsonNode rootNode = objectMapper.readTree(searchFilterJson);
-                            JsonNode searchFilterNode = rootNode.get("search_filter");
-                            if (searchFilterNode != null) {
-                                Iterator<Map.Entry<String, JsonNode>> fields = searchFilterNode.fields();
-                                while (fields.hasNext()) {
-                                    Map.Entry<String, JsonNode> entry = fields.next();
-                                    String key = entry.getKey();
-                                    MvPoiCategoryType categoryType = getCategoryType(key);
-                                    if (categoryType != null) {
-                                        String subCategory = entry.getValue().asText();
-                                        poi.setCategory(categoryType.getCode());
-                                        poi.setSubCategory(subCategory);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                        poi.setCategory("");
-                        poi.setSubCategory("");
+        if (hasCategory) {
+            sql.append("AND (search_filter_json->'search_filter' ? '").append(category).append("') ");
+            if (hasSubCate) {
+                if (subCate.contains(",")) {
+                    String[] subCates = subCate.split(",");
+                    sql.append("AND (");
+                    for (int i = 0; i < subCates.length; i++) {
+                        if (i > 0) sql.append(" OR ");
+                        sql.append("search_filter_json->'search_filter'->>'").append(category).append("' = '").append(subCates[i].trim().replace("'", "''")).append("' ");
                     }
-                    return poi;
-                })
-                .collect(Collectors.toList());
-    }
-
-    private MvPoiCategoryType getCategoryType(String key) {
-        try {
-            return MvPoiCategoryType.fromString(key);
-        } catch (IllegalArgumentException e) {
-            return null;
+                    sql.append(") ");
+                } else {
+                    sql.append("AND search_filter_json->'search_filter'->>'").append(category).append("' LIKE '%").append(subCate.replace("'", "''")).append("%' ");
+                }
+            }
         }
+        if (hasName) {
+            sql.append("AND title LIKE '%").append(name.replace("'", "''")).append("%' ");
+        }
+        sql.append("ORDER BY title OFFSET ").append(offset).append(" LIMIT ").append(size);
+
+        log.debug("[MvPoi] 최종 실행 쿼리: {}", sql);
+
+        List<MvPoi> entityList = new ArrayList<>();
+        long totalCount = 0L;
+        try (Connection conn = dataSource.getConnection();
+             java.sql.Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql.toString())) {
+            int i = 0;
+            while (rs.next()) {
+                if (i == 0) {
+                    totalCount = rs.getLong("total_count");
+                }
+                MvPoi poi = new MvPoi(
+                    rs.getLong("poi_id"),
+                    rs.getString("language_code"),
+                    category,
+                    rs.getString("sub_category"),
+                    rs.getString("title"),
+                    rs.getString("summary"),
+                    rs.getString("basic_info"),
+                    rs.getString("address_code"),
+                    rs.getString("address_road"),
+                    rs.getString("address_detail"),
+                    rs.getBigDecimal("latitude"),
+                    rs.getBigDecimal("longitude"),
+                    rs.getString("detail_json"),
+                    rs.getString("search_filter_json")
+                );
+                entityList.add(poi);
+                i++;
+            }
+            log.debug("[MvPoi] JDBC 쿼리 실행 완료 - 결과 개수: {}", entityList.size());
+        } catch (SQLException e) {
+            log.error("[MvPoi] JDBC 쿼리 실행 중 오류 발생", e);
+            throw new RuntimeException("Database query failed", e);
+        }
+        return new MvPoiPageResult(entityList, totalCount);
     }
 
-    private BooleanExpression getBaseCondition() {
-        return qEntity.isPublished.eq(SysConstants.YN_Y)
-                .and(qEntity.isDeleted.eq(SysConstants.YN_N));
-    }
-
-    private BooleanExpression eqCategory(MvPoiCategoryType category) {
-        if (category == null) return null;
-        // PostgreSQL JSON 연산자 사용
-        return qEntity.searchFilterJson.contains("\"search_filter\":{\"" + category.getCode() + "\"");
-    }
-
-    private BooleanExpression withinRadius(BigDecimal latitude, BigDecimal longitude, BigDecimal radius) {
-        if (latitude == null || longitude == null || radius == null) {
-            return null;
+    public MvPoiPageResult findByLocationWithPaging(
+        java.math.BigDecimal latitude, java.math.BigDecimal longitude, java.math.BigDecimal radius, int offset, int size
+    ) {
+        String sql = "SELECT *, COUNT(*) OVER() AS total_count FROM mv_poi " +
+                "WHERE is_published = 'Y' AND is_deleted = 'N' " +
+                "AND ST_DWithin(" +
+            "ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)::geography, " +
+                "ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography, ?) " +
+                "ORDER BY title OFFSET ? LIMIT ?";
+        
+        List<MvPoi> entityList = new ArrayList<>();
+        long totalCount = 0;
+        
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setBigDecimal(1, longitude);
+            ps.setBigDecimal(2, latitude);
+            ps.setBigDecimal(3, radius.multiply(new java.math.BigDecimal(1000)));
+            ps.setInt(4, offset);
+            ps.setInt(5, size);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    if (totalCount == 0) {
+                        totalCount = rs.getLong("total_count");
+                    }
+                    
+                    entityList.add(new MvPoi(
+                        rs.getLong("poi_id"),
+                        rs.getString("language_code"),
+                        null,
+                        null,
+                        rs.getString("title"),
+                        rs.getString("summary"),
+                        rs.getString("basic_info"),
+                        rs.getString("address_code"),
+                        rs.getString("address_road"),
+                        rs.getString("address_detail"),
+                        rs.getBigDecimal("latitude"),
+                        rs.getBigDecimal("longitude"),
+                        rs.getString("detail_json"),
+                        rs.getString("search_filter_json")
+                    ));
+                }
+            }
+            
+        } catch (SQLException e) {
+            log.error("[MvPoi] JDBC 위치 기반 쿼리 실행 중 오류 발생", e);
+            throw new RuntimeException("Database query failed", e);
         }
         
-        // ST_DWithin을 사용하여 반경 검색
-        // radius는 미터 단위로 변환 (1km = 1000m)
-        return Expressions.booleanTemplate(
-            "ST_DWithin(" +
-            "ST_SetSRID(ST_MakePoint({0}, {1}), 4326)::geography, " +
-            "ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)::geography, " +
-            "{2})",
-            longitude.doubleValue(), latitude.doubleValue(), radius.doubleValue() * 1000
-        );
-    }
-
-    /**
-     * subCategory 검색 조건 추가
-     */
-    private BooleanExpression addSubCategoryCondition(BooleanExpression baseCondition, MvPoiSearchCatReq catReq) {
-        MvPoiCategoryType categoryType = catReq.getCategory();
-        if (categoryType == null) {
-            return baseCondition;
-        }
-
-        if (categoryType.isArray()) {
-            // isArray가 true인 경우 like 검색
-            if (catReq.getSubCate().contains(",")) {
-                // 여러 subCategory를 OR 조건으로 검색
-                String[] subCategories = catReq.getSubCate().split(",");
-                BooleanExpression subCategoryCondition = null;
-                for (String subCategory : subCategories) {
-                    // PostgreSQL JSON 연산자 사용
-                    BooleanExpression likeCondition = Expressions.booleanTemplate(
-                        "search_filter_json->'search_filter'->>'{0}' LIKE {1}",
-                        categoryType.getCode(),
-                        "%" + subCategory.trim() + "%"
-                    );
-                    subCategoryCondition = subCategoryCondition == null ? likeCondition : subCategoryCondition.or(likeCondition);
-                }
-                return baseCondition.and(subCategoryCondition);
-            } else {
-                // 단일 subCategory like 검색
-                return baseCondition.and(Expressions.booleanTemplate(
-                    "search_filter_json->'search_filter'->>'{0}' LIKE {1}",
-                    categoryType.getCode(),
-                    "%" + catReq.getSubCate() + "%"
-                ));
-            }
-        } else {
-            // isArray가 false인 경우 정확한 매칭
-            if (catReq.getSubCate().contains(",")) {
-                // 여러 subCategory를 OR 조건으로 검색
-                String[] subCategories = catReq.getSubCate().split(",");
-                BooleanExpression subCategoryCondition = null;
-                for (String subCategory : subCategories) {
-                    // PostgreSQL JSON 연산자 사용
-                    BooleanExpression eqCondition = Expressions.booleanTemplate(
-                        "search_filter_json->'search_filter'->>'{0}' = {1}",
-                        categoryType.getCode(),
-                        subCategory.trim()
-                    );
-                    subCategoryCondition = subCategoryCondition == null ? eqCondition : subCategoryCondition.or(eqCondition);
-                }
-                return baseCondition.and(subCategoryCondition);
-            } else {
-                // 단일 subCategory 정확한 매칭
-                return baseCondition.and(Expressions.booleanTemplate(
-                    "search_filter_json->'search_filter'->>'{0}' = {1}",
-                    categoryType.getCode(),
-                    catReq.getSubCate()
-                ));
-            }
-        }
+        return new MvPoiPageResult(entityList, totalCount);
     }
 } 
