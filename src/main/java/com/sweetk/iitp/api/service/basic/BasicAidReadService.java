@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BasicAidReadService extends AbstractBasicService {
+public class BasicAidReadService extends BasicService {
 
     private final AidRepository aidRepository;
     private final MetadataService metadataService;

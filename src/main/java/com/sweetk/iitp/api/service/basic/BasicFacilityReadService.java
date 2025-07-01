@@ -23,7 +23,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BasicFacilityReadService extends AbstractBasicService {
+public class BasicFacilityReadService extends BasicService {
 
     private final FacilityRepository facilityRepository;
     private final MetadataService metadataService;

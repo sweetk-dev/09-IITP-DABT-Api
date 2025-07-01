@@ -5,8 +5,6 @@ import com.sweetk.iitp.api.constant.ApiConstants;
 import com.sweetk.iitp.api.dto.basic.StatDataRes;
 import com.sweetk.iitp.api.dto.basic.StatInfo;
 import com.sweetk.iitp.api.dto.common.ApiResDto;
-import com.sweetk.iitp.api.exception.BusinessException;
-import com.sweetk.iitp.api.exception.ErrorCode;
 import com.sweetk.iitp.api.service.basic.BasicEmpReadService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -42,14 +40,8 @@ public class BasicEmpController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getEmpNatlInfo(
             HttpServletRequest request) {
 
-        try {
             StatInfo statinfo = empReadService.getEmpNatlInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -67,14 +59,8 @@ public class BasicEmpController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = empReadService.getEmpNatlLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping("/nation/{statYear}")
@@ -88,14 +74,8 @@ public class BasicEmpController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = empReadService.getEmpNatlYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -110,14 +90,8 @@ public class BasicEmpController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getEmpNatlPublicInfo(
             HttpServletRequest request) {
 
-        try {
             StatInfo statinfo = empReadService.getEmpNatlPublicInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -135,15 +109,10 @@ public class BasicEmpController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = empReadService.getEmpNatlPublicLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
+
 
     @GetMapping("/public/{statYear}")
     @Operation(
@@ -156,14 +125,8 @@ public class BasicEmpController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = empReadService.getEmpNatlPublicYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -178,14 +141,8 @@ public class BasicEmpController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getEmpNatlPrivateInfo(
             HttpServletRequest request) {
 
-        try {
             StatInfo statinfo = empReadService.getEmpNatlPrivateInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -203,14 +160,8 @@ public class BasicEmpController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = empReadService.getEmpNatlPrivateLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping("/private/{statYear}")
@@ -224,14 +175,8 @@ public class BasicEmpController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = empReadService.getEmpNatlPrivateYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -247,14 +192,8 @@ public class BasicEmpController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getEmpNatlGovOrgInfo(
             HttpServletRequest request) {
 
-        try {
             StatInfo statinfo = empReadService.getEmpNatlGovOrgInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -272,14 +211,8 @@ public class BasicEmpController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = empReadService.getEmpNatlGovOrgLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping("/govOrg/{statYear}")
@@ -293,14 +226,8 @@ public class BasicEmpController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = empReadService.getEmpNatlGovOrgYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -315,14 +242,8 @@ public class BasicEmpController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getEmpNatlDisTypeSevInfo(
             HttpServletRequest request) {
 
-        try {
             StatInfo statinfo = empReadService.getEmpNatlDisTypeSevInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -340,14 +261,8 @@ public class BasicEmpController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = empReadService.getEmpNatlDisTypeSevLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping("/disTypeSev/{statYear}")
@@ -361,14 +276,8 @@ public class BasicEmpController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = empReadService.getEmpNatlDisTypeSevYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -383,14 +292,8 @@ public class BasicEmpController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getEmpNatlDisTypeIndustInfo(
             HttpServletRequest request) {
 
-        try {
             StatInfo statinfo = empReadService.getEmpNatlDisTypeIndustInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -408,14 +311,8 @@ public class BasicEmpController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = empReadService.getEmpNatlDisTypeIndustLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping("/disTypeIndust/{statYear}")
@@ -429,14 +326,8 @@ public class BasicEmpController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = empReadService.getEmpNatlDisTypeIndustYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 }

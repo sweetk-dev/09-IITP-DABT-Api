@@ -44,15 +44,8 @@ public class BasicHousingController extends BasicBaseController {
     )
     public ResponseEntity<ApiResDto> getHousingRegNewInfo(
             HttpServletRequest request) {
-
-        try {
             StatInfo statinfo = housingReadService.getHousingRegNewInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -70,14 +63,8 @@ public class BasicHousingController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = housingReadService.getHousingRegNewLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping("/reg/new/{statYear}")
@@ -91,14 +78,8 @@ public class BasicHousingController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = housingReadService.getHousingRegNewYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -114,14 +95,8 @@ public class BasicHousingController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getHousingRegAgeSevGenInfo(
             HttpServletRequest request) {
 
-        try {
             StatInfo statinfo = housingReadService.getHousingRegAgeSevGenInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -139,14 +114,8 @@ public class BasicHousingController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = housingReadService.getHousingRegAgeSevGenLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping("/reg/ageSevGen/{statYear}")
@@ -160,14 +129,8 @@ public class BasicHousingController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = housingReadService.getHousingRegAgeSevGenYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -188,14 +151,8 @@ public class BasicHousingController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = housingReadService.getHousingRegSidoSevGenLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping("/reg/sidoSevGen/{statYear}")
@@ -209,14 +166,8 @@ public class BasicHousingController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = housingReadService.getHousingRegSidoSevGenYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -231,14 +182,8 @@ public class BasicHousingController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getHousingLifeSuppNeedLvlInfo(
             HttpServletRequest request) {
 
-        try {
             StatInfo statinfo = housingReadService.getHousingLifeSuppNeedLvlInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -256,14 +201,8 @@ public class BasicHousingController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = housingReadService.getHousingLifeSuppNeedLvlLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -278,14 +217,8 @@ public class BasicHousingController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = housingReadService.getHousingLifeSuppNeedLvlYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -301,14 +234,8 @@ public class BasicHousingController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getHousingLifeMainCarerInfo(
             HttpServletRequest request) {
 
-        try {
             StatInfo statinfo = housingReadService.getHousingLifeMaincarerInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -326,14 +253,8 @@ public class BasicHousingController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = housingReadService.getHousingLifeMaincarerLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -348,14 +269,8 @@ public class BasicHousingController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = housingReadService.getHousingLifeMaincarerYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -397,14 +312,8 @@ public class BasicHousingController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = housingReadService.getHousingLifePrimcarerLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping("/life/primCarer/{statYear}")
@@ -418,14 +327,8 @@ public class BasicHousingController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = housingReadService.getHousingLifePrimcarerYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -442,14 +345,8 @@ public class BasicHousingController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getHousingLifeSuppFieldInfo(
             HttpServletRequest request) {
 
-        try {
             StatInfo statinfo = housingReadService.getHousingLifeSuppFieldInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -467,14 +364,8 @@ public class BasicHousingController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = housingReadService.getHousingLifeSuppFieldLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -489,14 +380,8 @@ public class BasicHousingController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = housingReadService.getHousingLifeSuppFieldYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 }
