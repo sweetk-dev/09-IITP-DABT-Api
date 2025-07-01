@@ -1,4 +1,4 @@
-package com.sweetk.iitp.api.controller.v1;
+package com.sweetk.iitp.api.controller.v1.common;
 
 
 import com.sweetk.iitp.api.constant.ApiConstants;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping(ApiConstants.ApiPath.API_V1)
+@RequestMapping(ApiConstants.ApiPath.API_V1_COMMON)
 @RequiredArgsConstructor
 @Tag(name = "API V1 - Common", description = "Common API Operations V1")
 public class CommonController {
