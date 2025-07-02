@@ -23,7 +23,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BasicHealthReadService extends AbstractBasicService {
+public class BasicHealthReadService extends BasicService {
 
     private final HealthRepository healthRepository;
     private final MetadataService metadataService;

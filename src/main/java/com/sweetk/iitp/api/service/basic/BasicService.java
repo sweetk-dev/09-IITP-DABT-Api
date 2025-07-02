@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-public abstract class AbstractBasicService {
+public class BasicService {
 
     // 공통 데이터 변환 로직
     protected List<StatDataItem> makeStatDataItemList(List<StatDataItemDB> dataList,
@@ -57,10 +57,16 @@ public abstract class AbstractBasicService {
     // 연도 검증 로직
     protected Integer getReqFromYear(String reqFnc, Integer from, Integer to, Integer startDate, Integer endDate) {
 
-        if (from == null || from == 0) {
-            Integer deffrom = endDate - ApiConstants.Param.DEFAULT_STAT_REG_YEAR_PERIOD-1;
-            log.debug("[{}] :: from is null, DEF_SET_from = {}", reqFnc, deffrom);
-            return deffrom;
+        if (from == null || from == 0 ) {
+            if( to == null || to == 0 ) {
+                Integer deffrom = endDate - ApiConstants.Param.DEFAULT_STAT_REG_YEAR_PERIOD-1;
+                log.debug("[{}] :: from is null, DEF_SET_from = {}", reqFnc, deffrom);
+                return deffrom;
+            }
+
+            String detailMsg = String.format("from(%d), to(%d) are invalid ( allowed range is {%d} ~ {%d})", from, to, startDate, endDate);
+            log.error("[{}] :: {}", reqFnc, detailMsg);
+            throw new BusinessException(ErrorCode.INVALID_PARAMETER, detailMsg);
         }
 
         if (from > endDate || from < startDate) {

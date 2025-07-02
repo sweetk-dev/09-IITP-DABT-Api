@@ -23,12 +23,12 @@ public class PageRes<T> {
     private int size;
 
     @Schema(description = "전체 항목 수", example = "100")
-    private long totalElements;
+    private long total;
 
     public PageRes(List<T> content, Pageable pageable, Long total) {
         this.content = content;
         this.page = pageable.getPageNumber();
         this.size = pageable.getPageSize();
-        this.totalElements = total;
+        this.total = total;
     }
 }

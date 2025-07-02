@@ -1,5 +1,6 @@
-package com.sweetk.iitp.api.constant;
+package com.sweetk.iitp.api.constant.converter;
 
+import com.sweetk.iitp.api.constant.DataStatusType;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

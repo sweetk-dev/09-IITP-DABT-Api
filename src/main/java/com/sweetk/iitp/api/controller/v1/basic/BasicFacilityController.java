@@ -5,8 +5,6 @@ import com.sweetk.iitp.api.constant.ApiConstants;
 import com.sweetk.iitp.api.dto.basic.StatDataRes;
 import com.sweetk.iitp.api.dto.basic.StatInfo;
 import com.sweetk.iitp.api.dto.common.ApiResDto;
-import com.sweetk.iitp.api.exception.BusinessException;
-import com.sweetk.iitp.api.exception.ErrorCode;
 import com.sweetk.iitp.api.service.basic.BasicFacilityReadService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,14 +38,8 @@ public class BasicFacilityController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getFcltyWelfareUsageInfo(
             HttpServletRequest request) {
 
-        try {
             StatInfo statinfo = facilityReadService.getFcltyWelfareUsageInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -65,14 +57,8 @@ public class BasicFacilityController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = facilityReadService.getFcltyWelfareUsageLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping("/welfareUsg/{statYear}")
@@ -86,13 +72,7 @@ public class BasicFacilityController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = facilityReadService.getFcltyWelfareUsageYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 }

@@ -9,7 +9,7 @@ plugins {
     id 'org.springframework.boot' version '3.2.5'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'com.github.node-gradle.node' version '7.0.1'
-    id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
+    id 'org.springdoc.openapi-gradle-plugin' version '1.9.0'
 }
 
 group = 'com.sweetk'
@@ -30,15 +30,15 @@ ext {
     buildTime = new Date().format("yyyyMMddHHmmss")
     
     // OpenAPI 문서 생성용 포트
-    openApiDocPort = 28080
+    openApiDocPort = 28081
 
     openApiOutputDir = file("$rootDir/docs-dist")
     springBootStaticDir = file("src/main/resources/static/docs")
     apiDocFileName = "openapi-${apiDocversionTag}.yaml"
-    apiDocLatestFile = "openapi-latest.yaml"
+    apiDocLatestFile = "latest.yaml"
 
     // 문서 생성용 URL은 항상 로컬만 사용
-    apiDocUrlBase = "http://localhost:28080/api"
+    apiDocUrlBase = "http://localhost:${openApiDocPort}"
 
     environments = ['local', 'dev', 'stage', 'prod']
     defaultEnv = 'dev'
@@ -72,9 +72,11 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
-    // OpenAPI
+    // OpenAPI - springdoc-openapi-starter-webmvc-api만 사용 (Swagger UI 없이 /v3/api-docs만 제공)
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.3.0'
-    implementation 'org.springdoc:springdoc-openapi-starter-common:2.3.0'
+    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.20'
+    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.20'
+    implementation 'io.swagger.core.v3:swagger-models-jakarta:2.2.20'
     
     // Rate Limiting
     implementation 'com.bucket4j:bucket4j-core:8.7.0'
@@ -114,11 +116,24 @@ tasks.register('cleanQuerydsl', Delete) {
     delete file(querydslDir)
 }
 
+// Replace the existing generateOpenApiDocs task with this new configuration
 openApi {
-    outputDir = openApiOutputDir
-    outputFileName = apiDocFileName
-    apiDocsUrl = "${apiDocUrlBase}/v3/api-docs"
-    // 필요시 waitTimeInSeconds 등 추가 설정
+    apiDocsUrl.set("${apiDocUrlBase}/v3/api-docs")
+    outputDir.set(file(openApiOutputDir))
+    outputFileName.set(apiDocFileName)
+    waitTimeInSeconds.set(30)
+    
+    customBootRun {
+        args.set([
+            "--spring.profiles.active=local",
+            "--springdoc.api-docs.enabled=true",
+            "--springdoc.swagger-ui.enabled=false",
+            "--springdoc.api-docs.path=/v3/api-docs",
+            "--springdoc.packages-to-scan=com.sweetk.iitp.api.controller",
+            "--springdoc.paths-to-match=/api/**",
+            "--server.port=${openApiDocPort}"
+        ])
+    }
 }
 
 tasks.register("copyVersionedDoc", Copy) {
@@ -127,15 +142,17 @@ tasks.register("copyVersionedDoc", Copy) {
         include(apiDocFileName)
     }
     into(springBootStaticDir)
+    outputs.upToDateWhen { false }
 }
 
 tasks.register("copyLatestDoc", Copy) {
     dependsOn("copyVersionedDoc")
     from(openApiOutputDir) {
         include(apiDocFileName)
-        rename { apiDocFileName -> "latest.yaml" }
+        rename { apiDocFileName -> apiDocLatestFile }
     }
     into(springBootStaticDir)
+    outputs.upToDateWhen { false }
 }
 
 tasks.register("copyDocsToResources") {
@@ -143,6 +160,7 @@ tasks.register("copyDocsToResources") {
     doLast {
         println("OpenAPI document copy completed.")
     }
+    outputs.upToDateWhen { false }
 }
 
 tasks.named('test') {
@@ -255,9 +273,6 @@ tasks.named('processResources') {
               .replace('@springdoc.version@', apiDocVersion)
         }
     }
-}
-
-tasks.named('generateOpenApiDocs') {
 }
 
 task encrypt(type: JavaExec) {

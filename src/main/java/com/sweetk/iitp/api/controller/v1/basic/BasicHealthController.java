@@ -5,8 +5,6 @@ import com.sweetk.iitp.api.constant.ApiConstants;
 import com.sweetk.iitp.api.dto.basic.StatDataRes;
 import com.sweetk.iitp.api.dto.basic.StatInfo;
 import com.sweetk.iitp.api.dto.common.ApiResDto;
-import com.sweetk.iitp.api.exception.BusinessException;
-import com.sweetk.iitp.api.exception.ErrorCode;
 import com.sweetk.iitp.api.service.basic.BasicHealthReadService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,14 +39,8 @@ public class BasicHealthController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getHealthMedicalUsageInfo(
             HttpServletRequest request) {
 
-        try {
             StatInfo statinfo = healthReadService.getHealthMedicalUsageInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -66,14 +58,8 @@ public class BasicHealthController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = healthReadService.getHealthMedicalUsageLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping("/medicalUsg/{statYear}")
@@ -87,14 +73,8 @@ public class BasicHealthController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = healthReadService.getHealthMedicalUsageYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -109,14 +89,8 @@ public class BasicHealthController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getHealthDiseaseCostSubInfo(
             HttpServletRequest request) {
 
-        try {
             StatInfo statinfo = healthReadService.getHealthDiseaseCostSubInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -134,14 +108,8 @@ public class BasicHealthController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = healthReadService.getHealthDiseaseCostSubLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping("/disCostSub/{statYear}")
@@ -155,14 +123,8 @@ public class BasicHealthController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = healthReadService.getHealthDiseaseCostSubYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -177,14 +139,8 @@ public class BasicHealthController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getHealthSportExecTypeInfo(
             HttpServletRequest request) {
 
-        try {
             StatInfo statinfo = healthReadService.getHealthSportExecTypeInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -202,14 +158,8 @@ public class BasicHealthController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = healthReadService.getHealthSportExecTypeLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping("/sportExecType/{statYear}")
@@ -223,14 +173,8 @@ public class BasicHealthController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = healthReadService.getHealthSportExecTypeYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -245,14 +189,8 @@ public class BasicHealthController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getHealthExrcBestAidInfo(
             HttpServletRequest request) {
 
-        try {
             StatInfo statinfo = healthReadService.getHealthExrcBestAidInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -270,14 +208,8 @@ public class BasicHealthController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = healthReadService.getHealthExrcBestAidLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping("/exrcBestAid/{statYear}")
@@ -291,16 +223,8 @@ public class BasicHealthController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = healthReadService.getHealthExrcBestAidYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
-
-
 
 }

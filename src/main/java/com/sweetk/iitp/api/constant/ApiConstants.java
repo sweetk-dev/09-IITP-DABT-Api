@@ -14,6 +14,7 @@ public final class ApiConstants {
 
         public static final String API_V1 = "/api/v1";
 
+        public static final String API_V1_COMMON = API_V1 + "/comm";
         public static final String API_V1_CLIENT = API_V1 + "/mgmt/client";
 
         public static final String API_V1_POI = API_V1 + "/poi";

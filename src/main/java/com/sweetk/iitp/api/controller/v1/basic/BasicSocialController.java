@@ -5,8 +5,6 @@ import com.sweetk.iitp.api.constant.ApiConstants;
 import com.sweetk.iitp.api.dto.basic.StatDataRes;
 import com.sweetk.iitp.api.dto.basic.StatInfo;
 import com.sweetk.iitp.api.dto.common.ApiResDto;
-import com.sweetk.iitp.api.exception.BusinessException;
-import com.sweetk.iitp.api.exception.ErrorCode;
 import com.sweetk.iitp.api.service.basic.BasicSocialReadService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -42,14 +40,8 @@ public class BasicSocialController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getSocialParticFreqInfo(
             HttpServletRequest request) {
 
-        try {
             StatInfo statinfo = socialReadService.getSocialParticFreqInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -67,14 +59,8 @@ public class BasicSocialController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = socialReadService.getSocialParticFreqLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping("/social/particFreq/{statYear}")
@@ -88,14 +74,8 @@ public class BasicSocialController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = socialReadService.getSocialParticFreqYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -111,14 +91,8 @@ public class BasicSocialController extends BasicBaseController {
     public ResponseEntity<ApiResDto> getSocialContactCntfreqInfo(
             HttpServletRequest request) {
 
-        try {
             StatInfo statinfo = socialReadService.getSocialContactCntfreqInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
@@ -136,14 +110,8 @@ public class BasicSocialController extends BasicBaseController {
             Integer to,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = socialReadService.getSocialContactCntfreqLatest(from, to);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping("/social/contractFreq/{statYear}")
@@ -157,13 +125,8 @@ public class BasicSocialController extends BasicBaseController {
             Integer statYear,
             HttpServletRequest request) {
 
-        try {
             StatDataRes statDataRes = socialReadService.getSocialContactCntfreqYear(statYear);
             return ResponseEntity.ok(ApiResDto.success(statDataRes));
-        }
-        catch (Exception e) {
-            log.error("{} Fail,Error: {}", request.getRequestURI(), e.getMessage(), e);
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
+
 }

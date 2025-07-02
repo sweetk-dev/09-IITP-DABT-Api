@@ -1,13 +1,11 @@
 package com.sweetk.iitp.api.dto.common;
 
 import com.sweetk.iitp.api.exception.ErrorCode;
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
 
 @Getter
-@Builder
 @Schema(description = "에러 응답 전용" )
 public class ErrApiResDto {
     @Schema(example = "false")
@@ -22,30 +20,18 @@ public class ErrApiResDto {
     @Schema(description = "에러 정보", implementation = ErrInfoDto.class)
     private final ErrInfoDto error;
 
+    public ErrApiResDto(boolean success, Object data, HttpStatus status, ErrInfoDto error) {
+        this.success = success;
+        this.data = data;
+        this.status = status;
+        this.error = error;
+    }
 
     public static ErrApiResDto of(ErrorCode errorCode) {
-        return ErrApiResDto.builder()
-                .success(false)
-                .data(null)
-                .status(errorCode.getStatus())
-                .error(ErrInfoDto.builder()
-                        .code(errorCode.getCode())
-                        .message(errorCode.getMessage())
-                        .details(null)
-                        .build())
-                    .build();
-        }
+        return new ErrApiResDto(false, null, errorCode.getStatus(), ErrInfoDto.of(errorCode, null));
+    }
 
     public static ErrApiResDto of(ErrorCode errorCode, String detailMessage) {
-        return ErrApiResDto.builder()
-                .success(false)
-                .data(null)
-                .status(errorCode.getStatus())
-                .error(ErrInfoDto.builder()
-                        .code(errorCode.getCode())
-                        .message(errorCode.getMessage())
-                        .details(detailMessage)
-                        .build())
-                .build();
+        return new ErrApiResDto(false, null, errorCode.getStatus(), ErrInfoDto.of(errorCode, detailMessage));
     }
 }
