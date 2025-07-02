@@ -1,7 +1,5 @@
 package com.sweetk.iitp.api.entity.basic;
 
-import com.sweetk.iitp.api.constant.SysConstants;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -33,19 +31,19 @@ public interface StatsCommon {
 
     OffsetDateTime getCreatedAt();
     OffsetDateTime getUpdatedAt();
-    OffsetDateTime getDeletedAt();
+    //OffsetDateTime getDeletedAt();
 
     String getCreatedBy();
     String getUpdatedBy();
-    String getDeletedBy();
-
-    String getDelYn();
+//    String getDeletedBy();
+//
+//    String getDelYn();
 
     default boolean isDtBigDecimal() {
         return getDt() instanceof BigDecimal;
     }
 
-    default boolean isDeleted() {
-        return SysConstants.YN_Y.equals(getDelYn()) || getDeletedAt() != null;
-    }
+//    default boolean isDeleted() {
+//        return SysConstants.YN_Y.equals(getDelYn()) || getDeletedAt() != null;
+//    }
 }

@@ -1,17 +1,16 @@
 package com.sweetk.iitp.api.repository.poi.impl;
 
-import com.sweetk.iitp.api.dto.common.PageRes;
-import com.sweetk.iitp.api.dto.poi.MvPoi;
-import com.sweetk.iitp.api.dto.poi.MvPoiSearchCatReq;
-import com.sweetk.iitp.api.dto.poi.MvPoiSearchLocReq;
-import org.springframework.data.domain.Pageable;
+import com.sweetk.iitp.api.dto.internal.MvPoiPageResult;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MvPoiRepositoryCustom {
-    PageRes<MvPoi> findPoiList(Pageable pageable);
-    PageRes<MvPoi> findByCategory(MvPoiSearchCatReq catReq, Pageable pageable);
-    PageRes<MvPoi> findByLocation(MvPoiSearchLocReq locReq, Pageable pageable);
+    MvPoiPageResult findByCategoryAndSubCateWithCount(
+        String category, String subCate, String name, int offset, int size
+    );
+    MvPoiPageResult findByLocationWithPaging(
+        java.math.BigDecimal latitude, java.math.BigDecimal longitude, java.math.BigDecimal radius, int offset, int size
+    );
 
 
     /*

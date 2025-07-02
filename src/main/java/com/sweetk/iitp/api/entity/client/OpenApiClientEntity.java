@@ -1,7 +1,7 @@
 package com.sweetk.iitp.api.entity.client;
 
 import com.sweetk.iitp.api.constant.DataStatusType;
-import com.sweetk.iitp.api.constant.DataStatusTypeConverter;
+import com.sweetk.iitp.api.constant.converter.DataStatusTypeConverter;
 import com.sweetk.iitp.api.constant.SysConstants;
 import jakarta.persistence.*;
 import lombok.Getter;

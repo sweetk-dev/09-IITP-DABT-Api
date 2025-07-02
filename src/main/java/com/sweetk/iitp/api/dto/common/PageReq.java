@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 
 @Data
@@ -24,4 +26,8 @@ public class PageReq {
 
 //    @Pattern(regexp = "^(?i)(ASC|DESC)$", message = "Sort direction must be either 'ASC' or 'DESC'")
 //    private String sortDirection;
+
+    public Pageable toPageable() {
+        return PageRequest.of(this.page, this.size);
+    }
 }
