@@ -20,6 +20,14 @@ public class HousingRepositoryImpl implements HousingRepository {
     private final StatsDisRegNatlByNewRepository regNatlByNewRepos;
     private final StatsDisRegSidoByTypeSevGenRepository regSidoByAgeTypeSevGenRepos;
 
+
+
+    //RegNatlByNew
+    @Override
+    public Integer getRegNatlByNewLatestCount (StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return regNatlByNewRepos.getDataLatestCount(srcDataInfo, fromYear, toYear);
+    }
+
     @Override
     public List<StatDataItemDB> findRegNatlByNewLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
         return regNatlByNewRepos.findDataLatest(srcDataInfo, fromYear, toYear);
@@ -28,6 +36,12 @@ public class HousingRepositoryImpl implements HousingRepository {
     @Override
     public List<StatDataItemDB> findRegNatlByNewByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
         return regNatlByNewRepos.findDataByYear(srcDataInfo, targetYear);
+    }
+
+    //RegNatlByAgeTypeSevGen
+    @Override
+    public Integer getRegNatlByAgeTypeSevGenLatestCount (StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return regNatlByAgeTypeSevGenRepos.getDataLatestCount(srcDataInfo, fromYear, toYear);
     }
 
     @Override
@@ -40,6 +54,13 @@ public class HousingRepositoryImpl implements HousingRepository {
         return regNatlByAgeTypeSevGenRepos.findDataByYear(srcDataInfo, targetYear);
     }
 
+
+    //RegSidoByTypeSevGen
+    @Override
+    public Integer getRegSidoByTypeSevGenLatestCount (StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return regSidoByAgeTypeSevGenRepos.getDataLatestCount(srcDataInfo, fromYear, toYear);
+    }
+
     @Override
     public List<StatDataItemDB> findRegSidoByTypeSevGenLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
         return regSidoByAgeTypeSevGenRepos.findDataLatest(srcDataInfo, fromYear, toYear);
@@ -48,6 +69,13 @@ public class HousingRepositoryImpl implements HousingRepository {
     @Override
     public List<StatDataItemDB> findRegSidoByTypeSevGenByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
         return regSidoByAgeTypeSevGenRepos.findDataByYear(srcDataInfo, targetYear);
+    }
+
+
+    //LifeSuppNeedLvl
+    @Override
+    public Integer getLifeSuppNeedLvlLatestCount (StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return lifeSuppNeedLvlRepos.getDataLatestCount(srcDataInfo, fromYear, toYear);
     }
 
     @Override
@@ -60,6 +88,13 @@ public class HousingRepositoryImpl implements HousingRepository {
         return lifeSuppNeedLvlRepos.findDataByYear(srcDataInfo, targetYear);
     }
 
+
+    //LifeMaincarer
+    @Override
+    public Integer getLifeMaincarerLatestCount (StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return lifeMaincarerRepos.getDataLatestCount(srcDataInfo, fromYear, toYear);
+    }
+
     @Override
     public List<StatDataItemDB> findLifeMaincarerLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
         return lifeMaincarerRepos.findDataLatest(srcDataInfo, fromYear, toYear);
@@ -70,6 +105,12 @@ public class HousingRepositoryImpl implements HousingRepository {
         return lifeMaincarerRepos.findDataByYear(srcDataInfo, targetYear);
     }
 
+    //LifePrimcarer
+    @Override
+    public Integer getLifePrimcarerLatestCount (StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return lifePrimcarerRepos.getDataLatestCount(srcDataInfo, fromYear, toYear);
+    }
+
     @Override
     public List<StatDataItemDB> findLifePrimcarerLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
         return lifePrimcarerRepos.findDataLatest(srcDataInfo, fromYear, toYear);
@@ -78,6 +119,13 @@ public class HousingRepositoryImpl implements HousingRepository {
     @Override
     public List<StatDataItemDB> findLifePrimcarerByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
         return lifePrimcarerRepos.findDataByYear(srcDataInfo, targetYear);
+    }
+
+
+    //LifeSuppField
+    @Override
+    public Integer getLifeSuppFieldLatestCount (StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return lifeSuppFieldRepos.getDataLatestCount(srcDataInfo, fromYear, toYear);
     }
 
     @Override

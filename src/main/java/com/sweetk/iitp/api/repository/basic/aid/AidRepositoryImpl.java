@@ -15,6 +15,13 @@ public class AidRepositoryImpl implements AidRepository {
     private final StatsDisAidDeviceNeedRepository aidDeviceNeedRepos;
     private final StatsDisAidDeviceUsageRepository aidDeviceUsageRepos;
 
+
+    //AidDeviceNeed
+    @Override
+    public Integer getAidDeviceNeedLatestCount (StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return aidDeviceNeedRepos.getDataLatestCount(srcDataInfo, fromYear, toYear);
+    }
+
     @Override
     public List<StatDataItemDB> findAidDeviceNeedLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
         return aidDeviceNeedRepos.findDataLatest(srcDataInfo, fromYear, toYear);
@@ -23,6 +30,13 @@ public class AidRepositoryImpl implements AidRepository {
     @Override
     public List<StatDataItemDB> findAidDeviceNeedByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
         return aidDeviceNeedRepos.findDataByYear(srcDataInfo, targetYear);
+    }
+
+
+    //AidDeviceUsage
+    @Override
+    public Integer getAidDeviceUsageLatestCount (StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return aidDeviceUsageRepos.getDataLatestCount(srcDataInfo, fromYear, toYear);
     }
 
     @Override

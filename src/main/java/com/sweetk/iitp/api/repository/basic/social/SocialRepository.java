@@ -10,10 +10,12 @@ import java.util.List;
 public interface SocialRepository {
 
     //StatsDisSocParticFreq
+    Integer getSocParticFreqLatestCount (StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear);
     List<StatDataItemDB> findSocParticFreqLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear);
     List<StatDataItemDB> findSocParticFreqByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear);
 
     // StatsDisSocContactCntfreq
+    Integer getSocContactCntfreqLatestCount(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear);
     List<StatDataItemDB> findSocContactCntfreqLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear);
     List<StatDataItemDB> findSocContactCntfreqByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear);
 
