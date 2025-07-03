@@ -6,7 +6,9 @@ import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
 import com.sweetk.iitp.api.dto.internal.StatMetaCodeDB;
 import com.sweetk.iitp.api.exception.BusinessException;
 import com.sweetk.iitp.api.exception.ErrorCode;
+import com.sweetk.iitp.api.config.ApiProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +17,9 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class BasicService {
+
+    @Autowired
+    protected ApiProperties apiProperties;
 
     // 공통 데이터 변환 로직
     protected List<StatDataItem> makeStatDataItemList(List<StatDataItemDB> dataList,
@@ -98,7 +103,15 @@ public class BasicService {
     }
 
 
-    // 연도 검증 로직
+
+    /**
+     *  요청 통계 연도 검증 로직
+     * @param reqFnc
+     * @param statYear
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     protected boolean checkReqStatYear(String reqFnc, Integer statYear, Integer startDate, Integer endDate) {
 
             if (statYear == null || statYear > endDate || statYear < startDate) {
@@ -109,5 +122,18 @@ public class BasicService {
         return true;
     }
 
+    /**
+     * 통계 데이터 건수 제한 체크 (공통)
+     * @param reqFnc
+     * @param totalCount 전체 데이터 건수
+     */
+    protected void checkStatsDataLimitOrThrow(String reqFnc, int totalCount) {
+        int limit = apiProperties.getStatsData() != null ? apiProperties.getStatsData().getLimitCount() : 0;
+        if (limit > 0 && totalCount > limit) {
+            String msg = String.format("조회 건수(%d)가 허용된 최대값(%d)을 초과했습니다.", totalCount, limit);
+            log.warn("[{}] :: [통계 데이터 건수 제한] {}", reqFnc, msg);
+            throw new BusinessException(ErrorCode.EXCEED_STATS_DATA_LIMIT, msg);
+        }
+    }
 
 } 
