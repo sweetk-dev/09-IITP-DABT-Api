@@ -58,6 +58,13 @@ public enum ErrorCode {
     @Schema(name = "B004", description = "잘못된 API 버전입니다.")
     INVALID_VERSION(HttpStatus.BAD_REQUEST, "B004", "잘못된 API 버전입니다."),
 
+
+
+    //Stats Error
+    @Schema(name = "S001", description = "조회 건수가 허용된 최대값을 초과했습니다.")
+    EXCEED_STATS_DATA_LIMIT(HttpStatus.BAD_REQUEST, "S001", "조회 건수가 허용된 최대값을 초과했습니다."),
+
+
     // POI Errors
     @Schema(name = "P001", description = "POI를 찾을 수 없습니다.")
     POI_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "POI를 찾을 수 없습니다."),
