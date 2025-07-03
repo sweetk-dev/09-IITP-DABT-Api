@@ -1,0 +1,19 @@
+# IITP API 로컬 환경 설정 파일
+# 로컬 환경에서 사용되는 특정 설정을 포함합니다.
+# 이 설정은 application.yml의 기본 설정을 오버라이드합니다.
+# 그러나 명시적으로  application.yml 은 공통 설정만 명시합니다.
+#  application.yml의 공통 설정 + 본 설정
+
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/iitp
+    username: postgres
+    password: postgres
+
+server:
+  port: 28080
+
+logging:
+  config: classpath:log4j2-local.xml
+# ... 기존 설정 ... 
