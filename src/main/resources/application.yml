@@ -70,6 +70,8 @@ api:
     enabled: true
     capacity: 100
     time-window: 60
+  stats_data:
+    limit_count: 40000
 
 management:
   metrics:
