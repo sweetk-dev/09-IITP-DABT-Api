@@ -9,11 +9,14 @@ import java.util.List;
 public class ApiProperties {
     private Version version;
     private RateLimit rateLimit;
+    private StatsData statsData;
 
     public Version getVersion() { return version; }
     public void setVersion(Version version) { this.version = version; }
     public RateLimit getRateLimit() { return rateLimit; }
     public void setRateLimit(RateLimit rateLimit) { this.rateLimit = rateLimit; }
+    public StatsData getStatsData() { return statsData; }
+    public void setStatsData(StatsData statsData) { this.statsData = statsData; }
 
     public static class Version {
         private String current;
@@ -34,5 +37,11 @@ public class ApiProperties {
         public void setCapacity(int capacity) { this.capacity = capacity; }
         public int getTimeWindow() { return timeWindow; }
         public void setTimeWindow(int timeWindow) { this.timeWindow = timeWindow; }
+    }
+
+    public static class StatsData {
+        private int limitCount;
+        public int getLimitCount() { return limitCount; }
+        public void setLimitCount(int limitCount) { this.limitCount = limitCount; }
     }
 } 
