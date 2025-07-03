@@ -13,6 +13,12 @@ import java.util.List;
 public class FacilityRepositoryImpl implements FacilityRepository {
     private final StatsDisFcltyWelfareUsageRepository fcltyWelfareUsageRepos;
 
+
+    @Override
+    public Integer getFcltyWelfareUsageLatestCount (StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return fcltyWelfareUsageRepos.getDataLatestCount(srcDataInfo, fromYear, toYear);
+    }
+
     @Override
     public List<StatDataItemDB> findFcltyWelfareUsageLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
         return fcltyWelfareUsageRepos.findDataLatest(srcDataInfo, fromYear, toYear);

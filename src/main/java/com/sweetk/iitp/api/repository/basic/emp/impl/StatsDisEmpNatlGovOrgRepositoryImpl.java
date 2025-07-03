@@ -21,6 +21,12 @@ public class StatsDisEmpNatlGovOrgRepositoryImpl
         super(queryFactory);
     }
 
+
+    @Override
+    public Integer getDataLatestCount (StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear){
+        return getLatestStatsCount(qEntity, srcDataInfo, fromYear, toYear);
+    }
+
     @Override
     public List<StatDataItemDB> findDataLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
         return findLatestStats(qEntity, srcDataInfo, fromYear, toYear);
