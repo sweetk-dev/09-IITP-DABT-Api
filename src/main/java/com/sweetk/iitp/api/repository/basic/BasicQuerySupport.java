@@ -28,7 +28,51 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
     private static final String SRC_LATEST_CHN_DT_COLUMN = "src_latest_chn_dt";
 
 
-    // 공통 쿼리 메서드
+    /**
+     *  조회기간에 맞는 통계 데이터 의 총 개수 조회
+     * @param stats
+     * @param srcDataInfo
+     * @param fromYear
+     * @param toYear
+     * @return
+     */
+    public Integer  getLatestStatsCount (
+            EntityPath<T> stats,
+            StatsSrcDataInfoEntity srcDataInfo,
+            Integer fromYear,
+            Integer toYear
+    ){
+        String tableName = getTableName(stats.getType());
+        LocalDate statLatestChnDt = LocalDate.parse(srcDataInfo.getStatLatestChnDt());
+
+        String sql = String.format(
+                "SELECT count(*) " +
+                        "FROM %s " +
+                        "WHERE %s >= ? AND %s <= ? AND %s = ? " +
+                        //"WHERE %s >= ? AND %s <= ? AND %s = ? AND deleted_at IS NULL "
+                tableName, PRD_DE_COLUMN, PRD_DE_COLUMN, SRC_LATEST_CHN_DT_COLUMN
+        );
+
+        Object results = entityManager.createNativeQuery(sql)
+                .setParameter(1, fromYear.shortValue())
+                .setParameter(2, toYear.shortValue())
+                .setParameter(3, statLatestChnDt)
+                .getSingleResult();
+
+        return results != null ? ((Number) results).intValue() : 0;
+    }
+
+
+
+    /**
+     *  조회기간에 맞는 통계 데이터 조회  
+     *
+     * @param stats
+     * @param srcDataInfo
+     * @param fromYear
+     * @param toYear
+     * @return List<StatDataItemDB>
+     */
     public List<StatDataItemDB> findLatestStats(
             EntityPath<T> stats,
             StatsSrcDataInfoEntity srcDataInfo,
@@ -70,8 +114,13 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
     }
 
 
-
-
+    /**
+     * 해당 년도의 통계 데이터 조회
+     * @param stats
+     * @param srcDataInfo
+     * @param targetYear
+     * @return List<StatDataItemDB>
+     */
     public List<StatDataItemDB> findTargetStats(
             EntityPath<T> stats,
             StatsSrcDataInfoEntity srcDataInfo,
