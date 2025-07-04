@@ -2,12 +2,12 @@
 # 개발 환경에서 사용되는 특정 설정을 포함합니다.
 # 이 설정은 application.yml의 기본 설정을 오버라이드합니다.
 
-
+# 암호화 키는 환경변수 JASYPT_ENCRYPTOR_PASSWORD 로 주입
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/iitp
-    username: postgres
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://<DB_HOST>:5432/iitp_dev
+    username: iitp_dev
+    password: ENC(YYk4eNCtcM8dKoJRzrxfa2abus8I44In)
 
 logging:
   config: classpath:log4j2-dev.xml
