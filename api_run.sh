@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export SPRING_PROFILES_ACTIVE=dev
+export JASYPT_ENCRYPTOR_PASSWORD="${JASYPT_ENCRYPTOR_PASSWORD:?set encryptor password}"
 
 JAR_FILE="iitp-api.jar"
 LOG_FILE="./logs/iitp-api.log"
