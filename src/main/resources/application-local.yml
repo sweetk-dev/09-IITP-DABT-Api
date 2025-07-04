@@ -7,8 +7,8 @@
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/iitp
-    username: postgres
+    url: jdbc:postgresql://192.168.90.171:5432/challenged
+    username: challenged
     password: postgres
 
 server:
