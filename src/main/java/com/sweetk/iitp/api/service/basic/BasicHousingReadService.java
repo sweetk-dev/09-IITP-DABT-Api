@@ -41,14 +41,19 @@ public class BasicHousingReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.housing.reg.new.latest", description = "주택 등록 신규 최신 데이터 조회")
     public StatDataRes getHousingRegNewLatest(Integer from, Integer to) {
+        String fnc = "HousingRegNewLatest";
+
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegNatlByNew();
-        Integer formYear = getReqFromYear("HousingRegNewLatest", from, to, 
+        Integer formYear = getReqFromYear(fnc, from, to,
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
+        Integer dataCnt = housingRepository.getRegNatlByNewLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
+
         List<StatDataItemDB> dataList = housingRepository.findRegNatlByNewLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -98,11 +103,16 @@ public class BasicHousingReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.housing.reg.ageSevGen.latest", description = "전국 연령별,장애등급별,성별 등록장애인수 최신 데이터 조회")
     public StatDataRes getHousingRegAgeSevGenLatest(Integer from, Integer to) {
+        String fnc = "HousingRegAgeSevGenLatest";
+
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegNatlByAgeTypeSevGen();
-        Integer formYear = getReqFromYear("HousingRegAgeSevGenLatest", from, to, 
+        Integer formYear = getReqFromYear(fnc, from, to,
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
+        Integer dataCnt = housingRepository.getRegNatlByAgeTypeSevGenLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
 
         List<StatDataItemDB> dataList = housingRepository.findRegNatlByAgeTypeSevGenLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
@@ -147,11 +157,16 @@ public class BasicHousingReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.housing.reg.sidoSevGen.latest", description = "시도별,장애유형별,장애정도별,성별 등록장애인수 최신 데이터 조회")
     public StatDataRes getHousingRegSidoSevGenLatest(Integer from, Integer to) {
+        String fnc = "HousingRegSidoAgeSevGenLatest";
+
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegSidoByTypeSevGen();
-        Integer formYear = getReqFromYear("HousingRegSidoAgeSevGenLatest", from, to, 
+        Integer formYear = getReqFromYear(fnc, from, to,
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
+        Integer dataCnt = housingRepository.getRegSidoByTypeSevGenLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
 
         List<StatDataItemDB> dataList = housingRepository.findRegSidoByTypeSevGenLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
@@ -196,11 +211,16 @@ public class BasicHousingReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.housing.life.suppNeedLvl.latest", description = "일상생활 필요 지원 정도 최신 데이터 조회")
     public StatDataRes getHousingLifeSuppNeedLvlLatest(Integer from, Integer to) {
+        String fnc = "HousingLifeSuppNeedLvlLatest";
+
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifeSuppNeedLvl();
-        Integer formYear = getReqFromYear("HousingLifeSuppNeedLvlLatest", from, to, 
+        Integer formYear = getReqFromYear(fnc, from, to,
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
+        Integer dataCnt = housingRepository.getLifeSuppNeedLvlLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
 
         List<StatDataItemDB> dataList = housingRepository.findLifeSuppNeedLvlLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
@@ -245,11 +265,16 @@ public class BasicHousingReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.housing.life.maincarer.latest", description = "주로 지원해주는 사람의 유형 최신 데이터 조회")
     public StatDataRes getHousingLifeMaincarerLatest(Integer from, Integer to) {
+        String fnc = "HousingLifeMaincarerLatest";
+
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifeMaincarer();
-        Integer formYear = getReqFromYear("HousingLifeMaincarerLatest", from, to, 
+        Integer formYear = getReqFromYear(fnc, from, to,
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
+        Integer dataCnt = housingRepository.getLifeMaincarerLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
 
         List<StatDataItemDB> dataList = housingRepository.findLifeMaincarerLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
@@ -294,11 +319,16 @@ public class BasicHousingReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.housing.life.primcarer.latest", description = "일상생활 도와주는 사람(1순위) 최신 데이터 조회")
     public StatDataRes getHousingLifePrimcarerLatest(Integer from, Integer to) {
+        String fnc = "HousingLifePrimcarerLatest";
+
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifePrimcarer();
-        Integer formYear = getReqFromYear("HousingLifePrimcarerLatest", from, to, 
+        Integer formYear = getReqFromYear(fnc, from, to,
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
+        Integer dataCnt = housingRepository.getLifePrimcarerLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
 
         List<StatDataItemDB> dataList = housingRepository.findLifePrimcarerLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
@@ -343,11 +373,16 @@ public class BasicHousingReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.housing.life.suppField.latest", description = "도움받는 분야 최신 데이터 조회")
     public StatDataRes getHousingLifeSuppFieldLatest(Integer from, Integer to) {
+        String fnc = "HousingLifeSuppFieldLatest";
+
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingLifeSuppField();
-        Integer formYear = getReqFromYear("HousingLifeSuppFieldLatest", from, to, 
+        Integer formYear = getReqFromYear(fnc, from, to,
             srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
+        Integer dataCnt = housingRepository.getLifeSuppFieldLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
 
         List<StatDataItemDB> dataList = housingRepository.findLifeSuppFieldLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {

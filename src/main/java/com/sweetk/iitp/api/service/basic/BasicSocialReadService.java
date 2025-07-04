@@ -44,14 +44,19 @@ public class BasicSocialReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.social.particFreq.latest", description = "장애인의 사회 참여 데이터 조회")
     public StatDataRes getSocialParticFreqLatest(Integer from, Integer to) {
+        String fnc = "SocialParticFreqLatest";
+
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getSocialParticFreq();
-        Integer formYear = getReqFromYear("SocialParticFreqLatest", from, to,
+        Integer formYear = getReqFromYear(fnc, from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
+        Integer dataCnt = socialRepository.getSocParticFreqLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
+
         List<StatDataItemDB> dataList = socialRepository.findSocParticFreqLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -102,14 +107,19 @@ public class BasicSocialReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.social.contactCntfreq.latest", description = "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도 데이터 조회")
     public StatDataRes getSocialContactCntfreqLatest(Integer from, Integer to) {
+        String fnc = "SocialContactCntfreqLatest";
+
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getSocialContactCntfreq();
-        Integer formYear = getReqFromYear("SocialContactCntfreqLatest", from, to,
+        Integer formYear = getReqFromYear(fnc, from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
         
         // 2. 기본 데이터 조회
+        Integer dataCnt = socialRepository.getSocContactCntfreqLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
+
         List<StatDataItemDB> dataList = socialRepository.findSocContactCntfreqLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());

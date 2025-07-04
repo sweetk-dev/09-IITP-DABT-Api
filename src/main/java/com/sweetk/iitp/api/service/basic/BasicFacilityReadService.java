@@ -41,14 +41,19 @@ public class BasicFacilityReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.facility.welfareUsage.latest", description = "사회복지시설 이용 현황 데이터 조회")
     public StatDataRes getFcltyWelfareUsageLatest(Integer from, Integer to) {
+        String fnc = "FcltyWelfareUsageLatest";
+
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getFcltyWelfareUsage();
-        Integer formYear = getReqFromYear("FcltyWelfareUsageLatest", from, to,
+        Integer formYear = getReqFromYear(fnc, from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
+        Integer dataCnt = facilityRepository.getFcltyWelfareUsageLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
+
         List<StatDataItemDB> dataList = facilityRepository.findFcltyWelfareUsageLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());

@@ -42,14 +42,19 @@ public class BasicEmpReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.emp.natl.latest", description = "장애인 근로자 고용현황 데이터 조회")
     public StatDataRes getEmpNatlLatest(Integer from, Integer to) {
+        String fnc = "EmpNatlLatest";
+
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEmpNatl();
-        Integer formYear = getReqFromYear("EmpNatlLatest", from, to,
+        Integer formYear = getReqFromYear(fnc, from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
+        Integer dataCnt = empRepository.getEmpNatlLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
+
         List<StatDataItemDB> dataList = empRepository.findEmpNatlLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -99,14 +104,19 @@ public class BasicEmpReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.emp.natl.public.latest", description = "공공기관 장애인고용 현황 데이터 조회")
     public StatDataRes getEmpNatlPublicLatest(Integer from, Integer to) {
+        String fnc = "EmpNatlPublicLatest";
+
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEmpNatlPublic();
-        Integer formYear = getReqFromYear("EmpNatlPublicLatest", from, to,
+        Integer formYear = getReqFromYear(fnc, from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
+        Integer dataCnt = empRepository.getEmpNatlPublicLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
+
         List<StatDataItemDB> dataList = empRepository.findEmpNatlPublicLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -156,14 +166,19 @@ public class BasicEmpReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.emp.natl.private.latest", description = "민간기업 장애인고용 현황 데이터 조회")
     public StatDataRes getEmpNatlPrivateLatest(Integer from, Integer to) {
+        String fnc = "EmpNatlPrivateLatest";
+
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEmpNatlPrivate();
-        Integer formYear = getReqFromYear("EmpNatlPrivateLatest", from, to,
+        Integer formYear = getReqFromYear(fnc, from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
+        Integer dataCnt = empRepository.getEmpNatlPrivateLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
+
         List<StatDataItemDB> dataList = empRepository.findEmpNatlPrivateLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -213,14 +228,19 @@ public class BasicEmpReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.emp.natl.govOrg.latest", description = "정부부문 장애인고용 현황 데이터 조회")
     public StatDataRes getEmpNatlGovOrgLatest(Integer from, Integer to) {
+        String fnc = "EmpNatlGovOrgLatest";
+
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEmpNatlGovOrg();
-        Integer formYear = getReqFromYear("EmpNatlGovOrgLatest", from, to,
+        Integer formYear = getReqFromYear(fnc, from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
+        Integer dataCnt = empRepository.getEmpNatlGovOrgLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
+
         List<StatDataItemDB> dataList = empRepository.findEmpNatlGovOrgLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -270,14 +290,19 @@ public class BasicEmpReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.emp.natl.disTypeSev.latest", description = "장애유형 및 장애정도별 장애인 근로자 고용현황 데이터 조회")
     public StatDataRes getEmpNatlDisTypeSevLatest(Integer from, Integer to) {
+        String fnc = "EmpNatlDisTypeSevLatest";
+
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEmpNatlDisTypeSev();
-        Integer formYear = getReqFromYear("EmpNatlDisTypeSevLatest", from, to,
+        Integer formYear = getReqFromYear(fnc, from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
+        Integer dataCnt = empRepository.getEmpNatlDisTypeSevLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
+
         List<StatDataItemDB> dataList = empRepository.findEmpNatlDisTypeSevLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -327,14 +352,19 @@ public class BasicEmpReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.emp.natl.disTypeIndust.latest", description = "장애유형 및 산업별 장애인 근로자 고용현황 데이터 조회")
     public StatDataRes getEmpNatlDisTypeIndustLatest(Integer from, Integer to) {
+        String fnc = "EmpNatlDisTypeIndustLatest";
+
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEmpNatlDisTypeIndust();
-        Integer formYear = getReqFromYear("EmpNatlDisTypeIndustLatest", from, to,
+        Integer formYear = getReqFromYear(fnc, from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
+        Integer dataCnt = empRepository.getEmpNatlDisTypeIndustLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
+
         List<StatDataItemDB> dataList = empRepository.findEmpNatlDisTypeIndustLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
