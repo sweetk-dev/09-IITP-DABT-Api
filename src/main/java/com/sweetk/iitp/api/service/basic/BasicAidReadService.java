@@ -42,14 +42,19 @@ public class BasicAidReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.aid.deviceUsg.latest", description = "장애인보조기기 사용여부 데이터 조회")
     public StatDataRes getAidDeviceUsageLatest(Integer from, Integer to) {
+        String fnc = "AidDeviceUsageLatest";
+
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getAidDeviceUsage();
-        Integer formYear = getReqFromYear("AidDeviceUsageLatest", from, to,
+        Integer formYear = getReqFromYear(fnc, from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
+        Integer dataCnt = aidRepository.getAidDeviceUsageLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
+
         List<StatDataItemDB> dataList = aidRepository.findAidDeviceUsageLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -99,14 +104,19 @@ public class BasicAidReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.aid.deviceNeed.latest", description = "장애인보조기기 필요여부 데이터 조회")
     public StatDataRes getAidDeviceNeedLatest(Integer from, Integer to) {
+        String  fnc = "AidDeviceNeedLatest";
+
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getAidDeviceNeed();
-        Integer formYear = getReqFromYear("AidDeviceNeedLatest", from, to,
+        Integer formYear = getReqFromYear(fnc, from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
+        Integer dataCnt = aidRepository.getAidDeviceNeedLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
+
         List<StatDataItemDB> dataList = aidRepository.findAidDeviceNeedLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());

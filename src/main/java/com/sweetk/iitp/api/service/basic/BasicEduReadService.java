@@ -40,14 +40,19 @@ public class BasicEduReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.edu.vocaExec.latest", description = "장애인 진로 및 직업교육 실시 여부 데이터 조회")
     public StatDataRes getEduVocaExecLatest(Integer from, Integer to) {
+        String fnc = "EduVocaExecLatest";
+
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEduVocaExec();
-        Integer formYear = getReqFromYear("EduVocaExecLatest", from, to,
+        Integer formYear = getReqFromYear(fnc, from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
+        Integer dataCnt = eduRepository.getEduVocaExecLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
+
         List<StatDataItemDB> dataList = eduRepository.findEduVocaExecLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -97,14 +102,19 @@ public class BasicEduReadService extends BasicService {
 
     @ConditionalTimed(value = "basic.edu.vocaExecWay.latest", description = "장애인 진로 및 직업교육 운영 방법 데이터 조회")
     public StatDataRes getEduVocaExecWayLatest(Integer from, Integer to) {
+        String fnc = "EduVocaExecWayLatest";
+
         // 1. 데이터 소스 정보 조회
         StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getEduVocaExecWay();
-        Integer formYear = getReqFromYear("EduVocaExecWayLatest", from, to,
+        Integer formYear = getReqFromYear(fnc, from, to,
                 srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
+        Integer dataCnt = eduRepository.getEduVocaExecWayLatestCount(srcDataInfo, formYear, toYear);
+        checkStatsDataLimitOrThrow(fnc, dataCnt);
+
         List<StatDataItemDB> dataList = eduRepository.findEduVocaExecWayLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
