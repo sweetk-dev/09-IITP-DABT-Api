@@ -23,7 +23,7 @@ java {
 }
 
 ext {
-    jarVersion = '0.0.1'
+    jarVersion = '0.0.2'
     apiDocVersion = 'v0.0.1'
     apiDocversionTag = apiDocVersion
     env = findProperty("env") ?: "local"
