@@ -3094,6 +3094,7 @@
           "B002",
           "B003",
           "B004",
+          "S001",
           "P001",
           "P002",
           "P003",
@@ -3180,7 +3181,7 @@
             "example": "{}"
           }
         },
-        "description": "이동현 POI 정보"
+        "description": "현재 페이지의 데이터 목록"
       },
       "PageResMvPoi": {
         "type": "object",
@@ -3204,7 +3205,7 @@
             "format": "int32",
             "example": 10
           },
-          "totalElements": {
+          "total": {
             "type": "integer",
             "description": "전체 항목 수",
             "format": "int64",
