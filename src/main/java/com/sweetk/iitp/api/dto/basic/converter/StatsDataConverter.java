@@ -1,6 +1,6 @@
 package com.sweetk.iitp.api.dto.basic.converter;
 
-import com.sweetk.iitp.api.constant.ApiConstants;
+import com.sweetk.iitp.api.constant.BasicConstants;
 import com.sweetk.iitp.api.dto.basic.StatDataItem;
 import com.sweetk.iitp.api.dto.basic.StatDataRes;
 import com.sweetk.iitp.api.dto.basic.StatInfo;
@@ -22,7 +22,7 @@ public class StatsDataConverter {
         return  StatInfo.builder()
                 .tblName(infoEntity.getStatTblName())
                 .period(infoEntity.getPeriodicity())
-                .collectDate(String.format(ApiConstants.Param.FORMAT_STAT_COLLECT_DATE, infoEntity.getCollectStartDt(), infoEntity.getCollectEndDt()))
+                .collectDate(String.format(BasicConstants.Api.FORMAT_STAT_COLLECT_DATE, infoEntity.getCollectStartDt(), infoEntity.getCollectEndDt()))
                 .orgName(infoEntity.getStatOrgName())
                 .surveyName(infoEntity.getStatSurveyName())
                 .latestChnDate(infoEntity.getStatLatestChnDt())
@@ -38,7 +38,7 @@ public class StatsDataConverter {
         StatInfo statInfo = StatInfo.builder()
                 .tblName(infoEntity.getStatTblName())
                 .period(infoEntity.getPeriodicity())
-                .collectDate(String.format(ApiConstants.Param.FORMAT_STAT_COLLECT_DATE, infoEntity.getCollectStartDt(), infoEntity.getCollectEndDt()))
+                .collectDate(String.format(BasicConstants.Api.FORMAT_STAT_COLLECT_DATE, infoEntity.getCollectStartDt(), infoEntity.getCollectEndDt()))
                 .orgName(infoEntity.getStatOrgName())
                 .surveyName(infoEntity.getStatSurveyName())
                 .latestChnDate(infoEntity.getStatLatestChnDt())
@@ -64,7 +64,7 @@ public class StatsDataConverter {
         StatInfo statInfo = StatInfo.builder()
                 .tblName(infoEntity.getStatTblName())
                 .period(infoEntity.getPeriodicity())
-                .collectDate(String.format(ApiConstants.Param.FORMAT_STAT_COLLECT_DATE, infoEntity.getCollectStartDt(), infoEntity.getCollectEndDt()))
+                .collectDate(String.format(BasicConstants.Api.FORMAT_STAT_COLLECT_DATE, infoEntity.getCollectStartDt(), infoEntity.getCollectEndDt()))
                 .orgName(infoEntity.getStatOrgName())
                 .surveyName(infoEntity.getStatSurveyName())
                 .latestChnDate(infoEntity.getStatLatestChnDt())
