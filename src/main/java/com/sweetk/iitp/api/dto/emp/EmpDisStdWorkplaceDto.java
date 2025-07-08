@@ -1,6 +1,8 @@
 package com.sweetk.iitp.api.dto.emp;
 
 import lombok.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -8,5 +10,19 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class EmpDisStdWorkplaceDto {
-    // 실제 필드 정의 필요
+    private Integer id;
+    private String certNo;
+    private String companyName;
+    private String branch;
+    private String ceo;
+    private String businessNo;
+    private String address;
+    private LocalDate certDate;
+    private String tel;
+    private String businessItem;
+    private String type;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private String createdBy;
+    private String updatedBy;
 } 

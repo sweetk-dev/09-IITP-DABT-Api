@@ -16,17 +16,14 @@ public class EmpDisTrainingUsageEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
-    private Integer seqNo;
-
     @Column(length = 100, nullable = false)
-    private String trainingOrgCategory;
+    private String orgCategory;
 
     @Column(nullable = false)
-    private Integer trainingUserCount;
+    private Integer userCount;
 
     @Column(nullable = false)
-    private Integer employmentCount;
+    private Integer employedCount;
 
     @Column(nullable = false)
     private OffsetDateTime createdAt;

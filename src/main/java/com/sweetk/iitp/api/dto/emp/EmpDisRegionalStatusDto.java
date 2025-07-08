@@ -17,11 +17,10 @@ import java.math.BigDecimal;
 public class EmpDisRegionalStatusDto {
 
     private Integer id;
-    private Integer seqNo;
     private String region;
     private Integer companyCount;
     private Integer workerCount;
     private Integer obligationCount;
-    private Integer severeCount;
-    private BigDecimal severeRate;
+    private Integer severe2xCount;
+    private BigDecimal severe2xRate;
 } 

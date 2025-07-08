@@ -22,7 +22,6 @@ public class EmpDisObligationStatusReadService {
 
     private EmpDisObligationStatusDto toDto(EmpDisObligationStatusEntity e) {
         return EmpDisObligationStatusDto.builder()
-                .seqNo(e.getSeqNo())
                 .orgName(e.getOrgName())
                 .workplaceCount(e.getWorkplaceCount())
                 .workerCount(e.getWorkerCount())

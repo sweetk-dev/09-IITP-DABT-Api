@@ -53,19 +53,19 @@ public interface EmpDisRegionalStatusRepository extends JpaRepository<EmpDisRegi
     /**
      * 평균 고용률 조회
      */
-    @Query("SELECT AVG(e.severeRate) FROM EmpDisRegionalStatusEntity e")
+    @Query("SELECT AVG(e.severe2xRate) FROM EmpDisRegionalStatusEntity e")
     BigDecimal findAverageSevereRate();
 
     /**
      * 지역별 평균 고용률 조회
      */
-    @Query("SELECT e.region, AVG(e.severeRate) as avgRate FROM EmpDisRegionalStatusEntity e GROUP BY e.region ORDER BY avgRate DESC")
+    @Query("SELECT e.region, AVG(e.severe2xRate) as avgRate FROM EmpDisRegionalStatusEntity e GROUP BY e.region ORDER BY avgRate DESC")
     List<Object[]> findAverageSevereRateByRegion();
 
     /**
      * 고용률이 평균 이상인 지역 조회
      */
-    @Query("SELECT e FROM EmpDisRegionalStatusEntity e WHERE e.severeRate >= (SELECT AVG(e2.severeRate) FROM EmpDisRegionalStatusEntity e2) ORDER BY e.severeRate DESC")
+    @Query("SELECT e FROM EmpDisRegionalStatusEntity e WHERE e.severe2xRate >= (SELECT AVG(e2.severe2xRate) FROM EmpDisRegionalStatusEntity e2) ORDER BY e.severe2xRate DESC")
     List<EmpDisRegionalStatusEntity> findBySevereRateAboveAverage();
 
     /**

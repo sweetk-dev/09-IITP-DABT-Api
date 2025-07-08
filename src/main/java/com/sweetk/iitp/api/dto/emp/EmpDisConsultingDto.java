@@ -1,6 +1,8 @@
 package com.sweetk.iitp.api.dto.emp;
 
 import lombok.*;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
 
 @Getter
 @Setter
@@ -8,5 +10,18 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class EmpDisConsultingDto {
-    // 실제 필드 정의 필요
+    private Integer id;
+    private Integer seqNo;
+    private String diagnosisNo;
+    private LocalDate receiveDate;
+    private String businessNo;
+    private String companyName;
+    private String address;
+    private String businessType;
+    private String regionalOffice;
+    private String officeTel;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime updatedAt;
+    private String createdBy;
+    private String updatedBy;
 } 
