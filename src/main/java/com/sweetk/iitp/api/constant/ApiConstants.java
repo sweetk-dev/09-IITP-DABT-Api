@@ -9,7 +9,7 @@ public final class ApiConstants {
 
     public static final class ApiPath {
         private ApiPath() {
-            throw new IllegalStateException("ApiPath constants Error");
+            throw new IllegalStateException("ApiConstants- ApiPath constants Error");
         }
 
         public static final String API_V1 = "/api/v1";
@@ -36,7 +36,7 @@ public final class ApiConstants {
 
     public static final class Param {
         private Param() {
-            throw new IllegalStateException("Param constants Error");
+            throw new IllegalStateException("ApiConstants - Param constants Error");
         }
 
         public static final Integer DEFAULT_PAGE = 1;
@@ -47,10 +47,5 @@ public final class ApiConstants {
 
         public static final Integer DEFAULT_STAT_REG_YEAR_PERIOD = 3;   //Default 요청 통계 기간
         public static final Integer MAX_STAT_REQ_YEAR_PERIOD = 10;      // 최대 조회할 수 있는 요청 통계 기간
-
-        public static final String FORMAT_STAT_COLLECT_DATE = "%s~%s";
-        public static final String FORMAT_STAT_LATEST_CHN_DATE = "yyyy-MM-dd";
     }
-
-
 } 
