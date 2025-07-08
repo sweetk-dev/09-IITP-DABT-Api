@@ -1,19 +1,12 @@
 package com.sweetk.iitp.api.entity.emp;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-/**
- * 지역별 장애인 고용 현황 엔티티
- */
 @Entity
 @Table(name = "emp_dis_regional_status")
 @Data
@@ -21,16 +14,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmpDisRegionalStatusEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "seq_no", nullable = false)
-    private Integer seqNo;
+    /**
+     * 연도 (YYYY)
+     */
+    @Column(name = "year", nullable = false)
+    private Integer year;
 
-    @Column(name = "region", nullable = false, length = 100)
+    @Column(name = "region", length = 100, nullable = false)
     private String region;
 
     @Column(name = "company_count", nullable = false)
@@ -42,11 +36,11 @@ public class EmpDisRegionalStatusEntity {
     @Column(name = "obligation_count", nullable = false)
     private Integer obligationCount;
 
-    @Column(name = "severe_count", nullable = false)
-    private Integer severeCount;
+    @Column(name = "severe_2x_count", nullable = false)
+    private Integer severe2xCount;
 
-    @Column(name = "severe_rate", nullable = false, precision = 5, scale = 2)
-    private BigDecimal severeRate;
+    @Column(name = "severe_2x_rate", precision = 5, scale = 2, nullable = false)
+    private BigDecimal severe2xRate;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

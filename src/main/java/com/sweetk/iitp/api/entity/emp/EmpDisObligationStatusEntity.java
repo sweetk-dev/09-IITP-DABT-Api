@@ -20,9 +20,6 @@ public class EmpDisObligationStatusEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
-    private Integer seqNo;
-
     @Column(length = 100, nullable = false)
     private String orgName;
 

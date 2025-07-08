@@ -16,5 +16,5 @@ public class EmpDisBurdenWorkplaceDto {
     private String workItem;
     private Integer workerCount;
     private Integer disabledCount;
-    private Integer severeCount;
+    private Integer severe2xCount;
 } 

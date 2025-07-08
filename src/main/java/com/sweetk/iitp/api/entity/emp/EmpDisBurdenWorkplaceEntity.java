@@ -17,9 +17,6 @@ public class EmpDisBurdenWorkplaceEntity {
     private Integer id;
 
     @Column(nullable = false)
-    private Integer seqNo;
-
-    @Column(nullable = false)
     private Integer year;
 
     @Column(length = 200, nullable = false)
@@ -41,7 +38,7 @@ public class EmpDisBurdenWorkplaceEntity {
     private Integer disabledCount;
 
     @Column(nullable = false)
-    private Integer severeCount;
+    private Integer severe2xCount;
 
     @Column(nullable = false)
     private OffsetDateTime createdAt;

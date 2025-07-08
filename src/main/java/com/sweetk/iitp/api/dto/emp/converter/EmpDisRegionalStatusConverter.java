@@ -23,13 +23,12 @@ public class EmpDisRegionalStatusConverter {
 
         return EmpDisRegionalStatusDto.builder()
                 .id(entity.getId())
-                .seqNo(entity.getSeqNo())
                 .region(entity.getRegion())
                 .companyCount(entity.getCompanyCount())
                 .workerCount(entity.getWorkerCount())
                 .obligationCount(entity.getObligationCount())
-                .severeCount(entity.getSevereCount())
-                .severeRate(entity.getSevereRate())
+                .severe2xCount(entity.getSevere2xCount())
+                .severe2xRate(entity.getSevere2xRate())
                 .build();
     }
 
@@ -56,13 +55,12 @@ public class EmpDisRegionalStatusConverter {
 
         return EmpDisRegionalStatusEntity.builder()
                 .id(dto.getId())
-                .seqNo(dto.getSeqNo())
                 .region(dto.getRegion())
                 .companyCount(dto.getCompanyCount())
                 .workerCount(dto.getWorkerCount())
                 .obligationCount(dto.getObligationCount())
-                .severeCount(dto.getSevereCount())
-                .severeRate(dto.getSevereRate())
+                .severe2xCount(dto.getSevere2xCount())
+                .severe2xRate(dto.getSevere2xRate())
                 .build();
     }
 

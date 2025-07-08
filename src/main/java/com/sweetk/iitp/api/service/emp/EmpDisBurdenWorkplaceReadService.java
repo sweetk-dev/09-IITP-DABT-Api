@@ -22,7 +22,6 @@ public class EmpDisBurdenWorkplaceReadService {
 
     private EmpDisBurdenWorkplaceDto toDto(EmpDisBurdenWorkplaceEntity e) {
         return EmpDisBurdenWorkplaceDto.builder()
-                .seqNo(e.getSeqNo())
                 .year(e.getYear())
                 .companyName(e.getCompanyName())
                 .facilityType(e.getFacilityType())
@@ -30,7 +29,7 @@ public class EmpDisBurdenWorkplaceReadService {
                 .workItem(e.getWorkItem())
                 .workerCount(e.getWorkerCount())
                 .disabledCount(e.getDisabledCount())
-                .severeCount(e.getSevereCount())
+                .severe2xCount(e.getSevere2xCount())
                 .build();
     }
 } 

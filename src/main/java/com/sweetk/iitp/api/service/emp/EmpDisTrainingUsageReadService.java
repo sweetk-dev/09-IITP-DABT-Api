@@ -22,10 +22,9 @@ public class EmpDisTrainingUsageReadService {
 
     private EmpDisTrainingUsageDto toDto(EmpDisTrainingUsageEntity e) {
         return EmpDisTrainingUsageDto.builder()
-                .seqNo(e.getSeqNo())
-                .trainingOrgCategory(e.getTrainingOrgCategory())
-                .trainingUserCount(e.getTrainingUserCount())
-                .employmentCount(e.getEmploymentCount())
+                .orgCategory(e.getOrgCategory())
+                .userCount(e.getUserCount())
+                .employedCount(e.getEmployedCount())
                 .build();
     }
 } 
