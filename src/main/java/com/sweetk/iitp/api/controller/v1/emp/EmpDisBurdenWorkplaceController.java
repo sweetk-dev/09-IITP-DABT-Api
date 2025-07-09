@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.sweetk.iitp.api.constant.ApiConstants.ApiPath.API_V1_EMP;
+
+
 @RestController
-@RequestMapping("/v1/emp/burden-workplace")
+@RequestMapping(API_V1_EMP + "/burden-workplace")
 @RequiredArgsConstructor
 public class EmpDisBurdenWorkplaceController {
     private final EmpDisBurdenWorkplaceReadService service;

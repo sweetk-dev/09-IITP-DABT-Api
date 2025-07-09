@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.sweetk.iitp.api.constant.ApiConstants.ApiPath.API_V1_EMP;
+
 /**
  * 지역별 장애인 고용 현황 컨트롤러
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/emp/regional-status")
+@RequestMapping(API_V1_EMP + "/regional-status")
 @RequiredArgsConstructor
 @Tag(name = "지역별 장애인 고용 현황", description = "지역별 장애인 고용 현황 API")
 public class EmpDisRegionalStatusController {

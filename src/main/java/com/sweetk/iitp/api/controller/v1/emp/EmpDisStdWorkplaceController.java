@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.sweetk.iitp.api.constant.ApiConstants.ApiPath.API_V1_EMP;
+
 @RestController
-@RequestMapping("/v1/emp/std-workplace")
+@RequestMapping(API_V1_EMP + "/std-workplace")
 @RequiredArgsConstructor
 public class EmpDisStdWorkplaceController {
     private final EmpDisStdWorkplaceReadService service;
