@@ -17,8 +17,11 @@ public final class ApiConstants {
         public static final String API_V1_COMMON = API_V1 + "/comm";
         public static final String API_V1_CLIENT = API_V1 + "/mgmt/client";
 
+
+        //For Poi
         public static final String API_V1_POI = API_V1 + "/poi";
 
+        //For Basic
         public static final String API_V1_BASIC = API_V1 + "/basic";
         public static final String API_V1_BASIC_HOUSING = API_V1_BASIC + "/housing";
         public static final String API_V1_BASIC_health  = API_V1_BASIC + "/health";
@@ -29,8 +32,8 @@ public final class ApiConstants {
         public static final String API_V1_BASIC_FACILITY = API_V1_BASIC + "/facility";
 
 
-        public static final String API_V1_MGMT = API_V1 + "/mgmt";
-        public static final String API_V1_MGMT_CLIENT = API_V1_MGMT + "/client";
+        //For Employment
+        public static final String API_V1_EMP = API_V1 + "/emp";
     }
 
 
