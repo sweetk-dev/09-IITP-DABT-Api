@@ -29,12 +29,13 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/v3/api-docs", "/v3/api-docs/", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/docs/**").permitAll()
-                .requestMatchers(ApiConstants.ApiPath.API_V1_BASIC + "/**").permitAll()
-                .requestMatchers(ApiConstants.ApiPath.API_V1_POI + "/**").permitAll()
+//                .requestMatchers(ApiConstants.ApiPath.API_V1_BASIC + "/**").permitAll()
+//                .requestMatchers(ApiConstants.ApiPath.API_V1_POI + "/**").permitAll()
                 .requestMatchers(ApiConstants.ApiPath.API_V1+ "/health").permitAll()
                 .requestMatchers(ApiConstants.ApiPath.API_V1_COMMON+  "/**").permitAll()
                 .requestMatchers("/favicon.ico").permitAll()
-                .anyRequest().authenticated()
+                //.anyRequest().authenticated()
+                    .anyRequest()
             )
             .addFilterBefore(new ApiKeyAuthenticationFilter(clientRepository), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class);

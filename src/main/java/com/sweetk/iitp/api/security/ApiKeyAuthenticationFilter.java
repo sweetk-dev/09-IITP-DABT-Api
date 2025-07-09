@@ -42,9 +42,9 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
             path.startsWith("/v3/api-docs/") ||
             path.startsWith("/docs/") ||
             path.equals("/favicon.ico") ||
-            path.startsWith( ApiConstants.ApiPath.API_V1_COMMON) ||
-            path.startsWith(ApiConstants.ApiPath.API_V1_BASIC) ||
-            path.startsWith(ApiConstants.ApiPath.API_V1_POI)) {
+//            path.startsWith(ApiConstants.ApiPath.API_V1_BASIC) ||
+//             path.startsWith(ApiConstants.ApiPath.API_V1_POI) ||
+            path.startsWith( ApiConstants.ApiPath.API_V1_COMMON)){
             filterChain.doFilter(request, response);
             return;
         }
