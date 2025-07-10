@@ -9,7 +9,6 @@ public class EmpDisJobseekerMapper {
     public static EmpDisJobseekerDto toDto(EmpDisJobseekerEntity entity) {
         if (entity == null) return null;
         return EmpDisJobseekerDto.builder()
-                .id(entity.getId())
                 .seqNo(entity.getSeqNo())
                 .regDate(entity.getRegDate())
                 .age(entity.getAge())
@@ -20,10 +19,6 @@ public class EmpDisJobseekerMapper {
                 .disabilityType(entity.getDisabilityType())
                 .severity(entity.getSeverity())
                 .orgType(entity.getOrgType())
-                .createdAt(entity.getCreatedAt())
-                .updatedAt(entity.getUpdatedAt())
-                .createdBy(entity.getCreatedBy())
-                .updatedBy(entity.getUpdatedBy())
                 .build();
     }
 
