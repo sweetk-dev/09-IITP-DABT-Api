@@ -31,8 +31,6 @@ public class MvPoiReadService {
 
 
     public PageRes<MvPoi> getPoiByCategory(MvPoiSearchCatReq searchReq, PageReq pageReq) {
-        log.debug("MvPoiReadService.getPoiByCategory :: ========== {}, {}", searchReq,  pageReq);
-
         // 파라미터 준비
         String category = searchReq.getCategory() != null ? searchReq.getCategory().getCode() : null;
         String subCate = searchReq.getSubCate();
