@@ -9,7 +9,6 @@ public class EmpDisJobPostingMapper {
     public static EmpDisJobPostingDto toDto(EmpDisJobPostingEntity entity) {
         if (entity == null) return null;
         return EmpDisJobPostingDto.builder()
-            .id(entity.getId())
             .seqNo(entity.getSeqNo())
             .applyDate(entity.getApplyDate())
             .recruitPeriod(entity.getRecruitPeriod())
@@ -28,10 +27,6 @@ public class EmpDisJobPostingMapper {
             .office(entity.getOffice())
             .regDate(entity.getRegDate())
             .tel(entity.getTel())
-            .createdAt(entity.getCreatedAt())
-            .updatedAt(entity.getUpdatedAt())
-            .createdBy(entity.getCreatedBy())
-            .updatedBy(entity.getUpdatedBy())
             .build();
     }
     public static List<EmpDisJobPostingDto> toDtoList(List<EmpDisJobPostingEntity> entities) {
