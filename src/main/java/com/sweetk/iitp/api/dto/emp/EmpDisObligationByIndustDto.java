@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmpDisIndustryObligationDto {
+public class EmpDisObligationByIndustDto {
     private Integer year;
     private String industry;
     private Integer companyCount;
