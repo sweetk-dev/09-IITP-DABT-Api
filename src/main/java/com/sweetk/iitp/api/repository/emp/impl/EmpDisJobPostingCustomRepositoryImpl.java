@@ -20,7 +20,7 @@ public class EmpDisJobPostingCustomRepositoryImpl implements EmpDisJobPostingCus
 
     // 검색 키에 따라 구직자 현황 조회 (최신순, 페이징)
     @Override
-    public Page<EmpDisJobPostingEntity> findJobPostsBySearchKey(EmpSearchReqJobPost searchReq, Pageable pageable) {
+    public Page<EmpDisJobPostingEntity> findJobPostBySearchKey(EmpSearchReqJobPost searchReq, Pageable pageable) {
         StringBuilder jpql = new StringBuilder("SELECT e FROM EmpDisJobPostingEntity e WHERE 1=1");
         StringBuilder countJpql = new StringBuilder("SELECT COUNT(e) FROM EmpDisJobPostingEntity e WHERE 1=1");
         List<Object> params = new ArrayList<>();
