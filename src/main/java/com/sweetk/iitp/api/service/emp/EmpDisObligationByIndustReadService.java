@@ -1,8 +1,8 @@
 package com.sweetk.iitp.api.service.emp;
 
 import com.sweetk.iitp.api.dto.emp.EmpDisObligationByIndustDto;
-import com.sweetk.iitp.api.entity.emp.EmpDisIndustryObligationEntity;
-import com.sweetk.iitp.api.repository.emp.EmpDisObligationByIndustRepository;
+import com.sweetk.iitp.api.entity.emp.EmpDisObligationByIndustEntity;
+import com.sweetk.iitp.api.repository.emp.impl.EmpDisObligationByIndustRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ public class EmpDisObligationByIndustReadService {
                 .collect(Collectors.toList());
     }
 
-    private EmpDisObligationByIndustDto toDto(EmpDisIndustryObligationEntity e) {
+    private EmpDisObligationByIndustDto toDto(EmpDisObligationByIndustEntity e) {
         return EmpDisObligationByIndustDto.builder()
                 .year(e.getYear())
                 .industry(e.getIndustry())

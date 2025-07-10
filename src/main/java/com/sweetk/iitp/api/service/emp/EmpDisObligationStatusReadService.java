@@ -2,7 +2,7 @@ package com.sweetk.iitp.api.service.emp;
 
 import com.sweetk.iitp.api.dto.emp.EmpDisObligationStatusDto;
 import com.sweetk.iitp.api.entity.emp.EmpDisObligationStatusEntity;
-import com.sweetk.iitp.api.repository.emp.EmpDisObligationStatusRepository;
+import com.sweetk.iitp.api.repository.emp.impl.EmpDisObligationStatusRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

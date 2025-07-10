@@ -3,7 +3,7 @@ package com.sweetk.iitp.api.service.emp;
 import com.sweetk.iitp.api.dto.emp.EmpDisRegionalStatusDto;
 import com.sweetk.iitp.api.dto.emp.converter.EmpDisRegionalStatusConverter;
 import com.sweetk.iitp.api.entity.emp.EmpDisRegionalStatusEntity;
-import com.sweetk.iitp.api.repository.emp.EmpDisRegionalStatusRepository;
+import com.sweetk.iitp.api.repository.emp.impl.EmpDisRegionalStatusRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

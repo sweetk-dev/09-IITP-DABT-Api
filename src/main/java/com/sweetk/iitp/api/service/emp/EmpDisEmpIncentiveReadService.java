@@ -2,7 +2,7 @@ package com.sweetk.iitp.api.service.emp;
 
 import com.sweetk.iitp.api.dto.emp.EmpDisEmpIncentiveDto;
 import com.sweetk.iitp.api.entity.emp.EmpDisEmpIncentiveEntity;
-import com.sweetk.iitp.api.repository.emp.EmpDisEmpIncentiveRepository;
+import com.sweetk.iitp.api.repository.emp.impl.EmpDisEmpIncentiveRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
