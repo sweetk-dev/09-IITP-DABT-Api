@@ -2,7 +2,7 @@ package com.sweetk.iitp.api.service.emp;
 
 import com.sweetk.iitp.api.dto.emp.EmpDisTrainingUsageDto;
 import com.sweetk.iitp.api.entity.emp.EmpDisTrainingUsageEntity;
-import com.sweetk.iitp.api.repository.emp.EmpDisTrainingUsageRepository;
+import com.sweetk.iitp.api.repository.emp.impl.EmpDisTrainingUsageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -2,7 +2,7 @@ package com.sweetk.iitp.api.service.emp;
 
 import com.sweetk.iitp.api.dto.emp.EmpDisConsultingDto;
 import com.sweetk.iitp.api.entity.emp.EmpDisConsultingEntity;
-import com.sweetk.iitp.api.repository.emp.EmpDisConsultingRepository;
+import com.sweetk.iitp.api.repository.emp.impl.EmpDisConsultingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
