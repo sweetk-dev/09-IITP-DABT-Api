@@ -9,7 +9,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmpDisJobseekerStatusDto {
+public class EmpDisJobseekerDto {
     private Integer id;
     private Integer seqNo;
     private LocalDate regDate;
