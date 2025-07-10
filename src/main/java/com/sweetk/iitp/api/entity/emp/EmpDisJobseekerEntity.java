@@ -18,7 +18,7 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class EmpDisJobseekerStatusEntity {
+public class EmpDisJobseekerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
