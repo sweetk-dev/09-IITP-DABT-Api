@@ -9,7 +9,6 @@ public class EmpDisRegionalStatusMapper {
     public static EmpDisRegionalStatusDto toDto(EmpDisRegionalStatusEntity entity) {
         if (entity == null) return null;
         return EmpDisRegionalStatusDto.builder()
-            .id(entity.getId())
             .region(entity.getRegion())
             .companyCount(entity.getCompanyCount())
             .workerCount(entity.getWorkerCount())

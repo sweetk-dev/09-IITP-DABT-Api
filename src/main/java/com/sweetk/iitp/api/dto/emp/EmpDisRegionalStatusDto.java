@@ -15,8 +15,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmpDisRegionalStatusDto {
-
-    private Integer id;
     private String region;
     private Integer companyCount;
     private Integer workerCount;

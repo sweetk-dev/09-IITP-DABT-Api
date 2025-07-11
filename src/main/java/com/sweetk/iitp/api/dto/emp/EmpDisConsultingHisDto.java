@@ -10,7 +10,6 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @Builder
 public class EmpDisConsultingHisDto {
-    private Integer id;
     private Integer seqNo;
     private String diagnosisNo;
     private LocalDate receiveDate;

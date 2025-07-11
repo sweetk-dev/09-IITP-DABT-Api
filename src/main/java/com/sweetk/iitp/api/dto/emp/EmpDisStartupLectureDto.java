@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmpDisStartupLectureDto {
-    private Integer id;
     private Integer year;
     private String onlineType;
     private String category;

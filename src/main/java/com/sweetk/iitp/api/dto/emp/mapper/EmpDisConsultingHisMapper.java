@@ -9,7 +9,6 @@ public class EmpDisConsultingHisMapper {
     public static EmpDisConsultingHisDto toDto(EmpDisConsultingHisEntity entity) {
         if (entity == null) return null;
         return EmpDisConsultingHisDto.builder()
-            .id(entity.getId())
             .seqNo(entity.getSeqNo())
             .diagnosisNo(entity.getDiagnosisNo())
             .receiveDate(entity.getReceiveDate())

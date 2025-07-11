@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmpDisStaffTrainCrsDto {
-    private Integer id;
     private String courseType;
     private String courseName;
     private String courseContent;

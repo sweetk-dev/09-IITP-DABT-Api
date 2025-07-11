@@ -9,7 +9,6 @@ public class EmpDisStdWorkplaceMapper {
     public static EmpDisStdWorkplaceDto toDto(EmpDisStdWorkplaceEntity entity) {
         if (entity == null) return null;
         return EmpDisStdWorkplaceDto.builder()
-            .id(entity.getId())
             .certNo(entity.getCertNo())
             .companyName(entity.getCompanyName())
             .branch(entity.getBranch())
