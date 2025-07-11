@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmpDisDevSupportOrgDto {
-    private Integer id;
     private Integer seqNo;
     private String orgName;
     private String region;

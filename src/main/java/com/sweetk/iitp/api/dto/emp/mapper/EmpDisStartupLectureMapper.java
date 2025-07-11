@@ -10,7 +10,6 @@ public class EmpDisStartupLectureMapper {
     public static EmpDisStartupLectureDto toDto(EmpDisStartupLectureEntity entity) {
         if (entity == null) return null;
         return EmpDisStartupLectureDto.builder()
-            .id(entity.getId())
             .year(entity.getYear())
             .onlineType(entity.getOnlineType())
             .category(entity.getCategory())

@@ -9,7 +9,6 @@ public class EmpDisStaffTrainCrsMapper {
     public static EmpDisStaffTrainCrsDto toDto(EmpDisStaffTrainCrsEntity entity) {
         if (entity == null) return null;
         return EmpDisStaffTrainCrsDto.builder()
-            .id(entity.getId())
             .courseType(entity.getCourseType())
             .courseName(entity.getCourseName())
             .courseContent(entity.getCourseContent())

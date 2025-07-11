@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class EmpDisStdWorkplaceDto {
-    private Integer id;
     private String certNo;
     private String companyName;
     private String branch;

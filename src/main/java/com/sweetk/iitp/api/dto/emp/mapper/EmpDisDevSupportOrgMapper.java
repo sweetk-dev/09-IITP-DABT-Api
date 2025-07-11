@@ -9,7 +9,6 @@ public class EmpDisDevSupportOrgMapper {
     public static EmpDisDevSupportOrgDto toDto(EmpDisDevSupportOrgEntity entity) {
         if (entity == null) return null;
         return EmpDisDevSupportOrgDto.builder()
-            .id(entity.getId())
             .seqNo(entity.getSeqNo())
             .orgName(entity.getOrgName())
             .region(entity.getRegion())
