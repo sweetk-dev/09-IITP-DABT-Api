@@ -10,9 +10,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
-/**
- * 고용-장애인 구직자 현황
- */
+
+//01. 장애인 구직자 현황
 @Entity
 @Table(name = "emp_dis_jobseeker_status")
 @Getter

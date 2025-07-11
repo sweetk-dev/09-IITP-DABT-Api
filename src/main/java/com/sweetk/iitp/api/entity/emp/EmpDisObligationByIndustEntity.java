@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.OffsetDateTime;
 
+//14. 산업별 의무고용 현황
 @Entity
 @Table(name = "emp_dis_obligation_by_indust")
 @Getter

@@ -5,9 +5,7 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
-/**
- * 고용-장애인 고용의무 현황 통계
- */
+//03. 장애인 고용의무 현황 통계
 @Entity
 @Table(name = "emp_dis_obligation_status")
 @Getter

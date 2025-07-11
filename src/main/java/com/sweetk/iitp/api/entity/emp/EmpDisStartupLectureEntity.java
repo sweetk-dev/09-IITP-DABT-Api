@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+//10. 장애인기업종합지원센터 창업넷 일반강좌 정보
 @Entity
 @Table(name = "emp_dis_startup_lecture")
 @Data

@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+//11. 장애인 표준사업장 현황
 @Entity
 @Table(name = "emp_dis_std_workplace")
 @Data

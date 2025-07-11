@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.OffsetDateTime;
 
+//13. 신규고용장려금 지역별 지급 현황
 @Entity
 @Table(name = "emp_dis_emp_incentive")
 @Getter

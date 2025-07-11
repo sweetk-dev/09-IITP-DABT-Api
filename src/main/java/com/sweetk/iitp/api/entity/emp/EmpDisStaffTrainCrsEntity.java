@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+//08. 고용개발원 교육정보
 @Entity
 @Table(name = "emp_dis_staff_train_crs")
 @Data

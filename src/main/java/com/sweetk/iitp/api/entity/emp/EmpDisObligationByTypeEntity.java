@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.OffsetDateTime;
 
+//12. 장애인 의무고용 사업체 장애유형별 고용현황
 @Entity
 @Table(name = "emp_dis_obligation_by_type")
 @Getter
