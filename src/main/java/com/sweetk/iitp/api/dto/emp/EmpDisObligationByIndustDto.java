@@ -3,6 +3,8 @@ package com.sweetk.iitp.api.dto.emp;
 import lombok.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,5 +23,5 @@ public class EmpDisObligationByIndustDto {
     @Schema(description = "의무고용인원", example = "535")
     private Integer obligationCount;
     @Schema(description = "장애인 고용률", example = "2.86")
-    private Double empRate;
+    private BigDecimal empRate;
 } 

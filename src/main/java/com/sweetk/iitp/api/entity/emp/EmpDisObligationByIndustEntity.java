@@ -2,6 +2,8 @@ package com.sweetk.iitp.api.entity.emp;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 //14. 산업별 의무고용 현황
@@ -33,7 +35,7 @@ public class EmpDisObligationByIndustEntity {
     private Integer obligationCount;
 
     @Column(nullable = false, precision = 5, scale = 2)
-    private Double empRate;
+    private BigDecimal empRate;
 
     @Column(nullable = false)
     private OffsetDateTime createdAt;
