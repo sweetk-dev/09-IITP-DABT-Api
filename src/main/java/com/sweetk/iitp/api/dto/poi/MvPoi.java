@@ -1,15 +1,14 @@
 package com.sweetk.iitp.api.dto.poi;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.math.BigDecimal;
 
 public record MvPoi(
-    @Schema(description = "POI 고유 식별자", example = "1")
-    @JsonProperty("poi_id")
-    Long poiId,
+//    @Schema(description = "POI 고유 식별자", example = "1")
+//    @JsonProperty("poi_id")
+//    Long poiId,
 
     @Schema(description = "언어 코드", example = "ko")
     @JsonProperty("language_code")
