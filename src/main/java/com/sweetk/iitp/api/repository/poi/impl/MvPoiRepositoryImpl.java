@@ -84,7 +84,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
                     totalCount = rs.getLong("total_count");
                 }
                 MvPoi poi = new MvPoi(
-                    rs.getLong("poi_id"),
+                    //rs.getLong("poi_id"),
                     rs.getString("language_code"),
                     category,
                     rs.getString("sub_category"),
@@ -139,7 +139,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
                     }
                     
                     entityList.add(new MvPoi(
-                        rs.getLong("poi_id"),
+                        //rs.getLong("poi_id"),
                         rs.getString("language_code"),
                         null,
                         null,
