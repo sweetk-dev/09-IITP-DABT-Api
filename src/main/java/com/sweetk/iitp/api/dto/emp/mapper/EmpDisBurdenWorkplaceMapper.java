@@ -16,7 +16,7 @@ public class EmpDisBurdenWorkplaceMapper {
             .workItem(entity.getWorkItem())
             .workerCount(entity.getWorkerCount())
             .disabledCount(entity.getDisabledCount())
-            .severe2xCount(entity.getSevere2xCount())
+            .severeCount(entity.getSevereCount())
             .build();
     }
     public static List<EmpDisBurdenWorkplaceDto> toDtoList(List<EmpDisBurdenWorkplaceEntity> entities) {
