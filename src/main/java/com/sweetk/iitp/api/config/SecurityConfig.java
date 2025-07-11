@@ -34,8 +34,8 @@ public class SecurityConfig {
                 .requestMatchers(ApiConstants.ApiPath.API_V1+ "/health").permitAll()
                 .requestMatchers(ApiConstants.ApiPath.API_V1_COMMON+  "/**").permitAll()
                 .requestMatchers("/favicon.ico").permitAll()
-                //.anyRequest().authenticated()
-                    .anyRequest()
+                .anyRequest().authenticated()
+                    //.anyRequest()
             )
             .addFilterBefore(new ApiKeyAuthenticationFilter(clientRepository), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class);
