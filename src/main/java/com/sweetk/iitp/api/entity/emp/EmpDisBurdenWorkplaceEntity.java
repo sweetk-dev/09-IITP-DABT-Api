@@ -41,7 +41,7 @@ public class EmpDisBurdenWorkplaceEntity {
     private Integer disabledCount;
 
     @Column(nullable = false)
-    private Integer severe2xCount;
+    private Integer severeCount;
 
     @Column(nullable = false)
     private OffsetDateTime createdAt;

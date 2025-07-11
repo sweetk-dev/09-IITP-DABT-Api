@@ -19,7 +19,7 @@ public class EmpDisCenterUsageEntity {
     private Integer id;
 
     @Column(length = 100, nullable = false)
-    private String orgCategory;
+    private String trainOrg;
 
     @Column(nullable = false)
     private Integer userCount;

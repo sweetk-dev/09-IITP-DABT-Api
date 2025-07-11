@@ -9,7 +9,7 @@ public class EmpDisCenterUsageMapper {
     public static EmpDisCenterUsageDto toDto(EmpDisCenterUsageEntity entity) {
         if (entity == null) return null;
         return EmpDisCenterUsageDto.builder()
-            .orgCategory(entity.getOrgCategory())
+            .trainOrg(entity.getTrainOrg())
             .userCount(entity.getUserCount())
             .employedCount(entity.getEmployedCount())
             .build();
