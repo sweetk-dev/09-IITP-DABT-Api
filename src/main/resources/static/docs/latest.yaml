@@ -46,6 +46,10 @@
       "description": "Common API Operations V1"
     },
     {
+      "name": "장애인 고용 관련 데이터 API V1",
+      "description": "장애인 고용 관련 데이터 OpenApi V1"
+    },
+    {
       "name": "기초-사회망 현황 API V1",
       "description": "기초-사회망 현황 OpenApi V1"
     },
@@ -382,6 +386,487 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResMvPoi"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/emp/workplace/standard": {
+      "get": {
+        "tags": [
+          "장애인 고용 관련 데이터 API V1"
+        ],
+        "summary": "장애인 표준사업장 현황 조회",
+        "description": "한국장애인고용공단 장애인 표준사업장 현황",
+        "operationId": "getStandardWorkplace",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/emp/workplace/burden-redct": {
+      "get": {
+        "tags": [
+          "장애인 고용 관련 데이터 API V1"
+        ],
+        "summary": "장애인고용 부담금감면 연계고용사업장 정보 조회",
+        "description": "한국장애인고용공단 장애인고용 부담금감면 연계고용사업장 정보",
+        "operationId": "getBurdenRedctWorkplace",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/emp/obligation/status": {
+      "get": {
+        "tags": [
+          "장애인 고용 관련 데이터 API V1"
+        ],
+        "summary": "장애인 고용의무 현황 통계 조회",
+        "description": "한국장애인고용공단 장애인 고용의무 현황 통계 ",
+        "operationId": "getObligationStatus",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/emp/obligation/industry": {
+      "get": {
+        "tags": [
+          "장애인 고용 관련 데이터 API V1"
+        ],
+        "summary": "산업별 장애인 의무고용 현황 조회",
+        "description": "한국장애인고용공단 산업별 장애인 의무고용 현황 통계 ",
+        "operationId": "getObligationByIndustry",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/emp/obligation/fulfillment": {
+      "get": {
+        "tags": [
+          "장애인 고용 관련 데이터 API V1"
+        ],
+        "summary": "장애인 의무고용 - 사업체 현황 조회",
+        "description": "고용노동부 장애인 의무고용 - 사업체 현황 통계 ",
+        "operationId": "getObligationFulfillment",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/emp/obligation/dis-type": {
+      "get": {
+        "tags": [
+          "장애인 고용 관련 데이터 API V1"
+        ],
+        "summary": "장애인 의무고용 사업체 장애유형별 고용현황 조회",
+        "description": "한국장애인고용공단 장애인 의무고용 사업체 장애유형별 고용현황",
+        "operationId": "getObligationByType",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/emp/job/seeker": {
+      "get": {
+        "tags": [
+          "장애인 고용 관련 데이터 API V1"
+        ],
+        "summary": "장애인 구직자 검색 조회 (paging)",
+        "description": "한국장애인고용공단 장애인 구직자 검색 ",
+        "operationId": "searchJobSeeker",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "페이지 번호, 0 이상.",
+            "required": true,
+            "schema": {
+              "minimum": 0,
+              "type": "string",
+              "description": "페이지 번호, 0 이상."
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "페이지 사이즈 , 0 이상.",
+            "required": true,
+            "schema": {
+              "minimum": 10,
+              "type": "string",
+              "description": "페이지 사이즈 , 0 이상."
+            }
+          },
+          {
+            "name": "salaryType",
+            "in": "query",
+            "description": "급여 형태(옵션)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "급여 형태(옵션)",
+              "example": "hourly",
+              "enum": [
+                "hourly",
+                "monthly"
+              ]
+            },
+            "example": "hourly"
+          },
+          {
+            "name": "jobType",
+            "in": "query",
+            "description": "업종(2글자 이상) (옵션)",
+            "required": false,
+            "schema": {
+              "maxLength": 2147483647,
+              "minLength": 2,
+              "type": "string",
+              "description": "업종(2글자 이상) (옵션)",
+              "example": "세탁원"
+            },
+            "example": "세탁원"
+          },
+          {
+            "name": "region",
+            "in": "query",
+            "description": "희망 지역(2글자 이상) (옵션)",
+            "required": false,
+            "schema": {
+              "maxLength": 2147483647,
+              "minLength": 2,
+              "type": "string",
+              "description": "희망 지역(2글자 이상) (옵션)",
+              "example": "보령시"
+            },
+            "example": "보령시"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoPageResEmpDisJobseekerDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/emp/job/posting": {
+      "get": {
+        "tags": [
+          "장애인 고용 관련 데이터 API V1"
+        ],
+        "summary": "장애인 구인 정보 검색 조회 (paging)",
+        "description": "한국장애인고용공단 장애인 구인 정보 검색",
+        "operationId": "searchJobPosting",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "페이지 번호, 0 이상.",
+            "required": true,
+            "schema": {
+              "minimum": 0,
+              "type": "string",
+              "description": "페이지 번호, 0 이상."
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "페이지 사이즈 , 0 이상.",
+            "required": true,
+            "schema": {
+              "minimum": 10,
+              "type": "string",
+              "description": "페이지 사이즈 , 0 이상."
+            }
+          },
+          {
+            "name": "empType",
+            "in": "query",
+            "description": "고용 형태(옵션)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "고용 형태(옵션)",
+              "example": "part",
+              "enum": [
+                "part",
+                "regular",
+                "contract"
+              ]
+            },
+            "example": "part"
+          },
+          {
+            "name": "jobType",
+            "in": "query",
+            "description": "업종(2글자 이상) (옵션)",
+            "required": false,
+            "schema": {
+              "maxLength": 2147483647,
+              "minLength": 2,
+              "type": "string",
+              "description": "업종(2글자 이상) (옵션)",
+              "example": "세탁원"
+            },
+            "example": "세탁원"
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "사업장 주소(2글자 이상) (옵션)",
+            "required": false,
+            "schema": {
+              "maxLength": 2147483647,
+              "minLength": 2,
+              "type": "string",
+              "description": "사업장 주소(2글자 이상) (옵션)",
+              "example": "보령시"
+            },
+            "example": "보령시"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "사업장명(2글자 이상) (옵션)",
+            "required": false,
+            "schema": {
+              "maxLength": 2147483647,
+              "minLength": 2,
+              "type": "string",
+              "description": "사업장명(2글자 이상) (옵션)",
+              "example": "대성산업"
+            },
+            "example": "대성산업"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoPageResEmpDisJobPostingDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/emp/emp/region": {
+      "get": {
+        "tags": [
+          "장애인 고용 관련 데이터 API V1"
+        ],
+        "summary": "지역별 장애인 고용 현황 조회",
+        "description": "한국장애인고용공단 지역별 장애인 고용 현황 ",
+        "operationId": "getEmpStatusByRegion",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/emp/emp/incentive": {
+      "get": {
+        "tags": [
+          "장애인 고용 관련 데이터 API V1"
+        ],
+        "summary": "장애인 신규고용장려금 지역별 지급 현황 조회",
+        "description": "한국장애인고용공단 신규고용장려금 지역별 지급 현황 ",
+        "operationId": "getEmpIncentive",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/emp/emp/consul-his": {
+      "get": {
+        "tags": [
+          "장애인 고용 관련 데이터 API V1"
+        ],
+        "summary": "장애인 고용컨설팅 이력 조회",
+        "description": "한국장애인고용공단 장애인 고용컨설팅 이력 정보 ",
+        "operationId": "getConsultingHis",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/emp/edu/training/staff": {
+      "get": {
+        "tags": [
+          "장애인 고용 관련 데이터 API V1"
+        ],
+        "summary": "고용개발원 교육정보 조회",
+        "description": "한국장애인고용공단 고용개발원 교육정보(장애인고용 전문인력 교육과정)",
+        "operationId": "getStaffTrainingCourse",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/emp/edu/lecture/startup": {
+      "get": {
+        "tags": [
+          "장애인 고용 관련 데이터 API V1"
+        ],
+        "summary": "창업넷 일반강좌 정보 조회",
+        "description": "장애인기업종합지원센터 창업넷 일반강좌 정보",
+        "operationId": "getStartupLecture",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/emp/dev/support-org": {
+      "get": {
+        "tags": [
+          "장애인 고용 관련 데이터 API V1"
+        ],
+        "summary": "발달장애인 지원 기관 및 제공서비스 조회",
+        "description": "한국장애인개발원 발달장애인 지원 기관 및 제공서비스",
+        "operationId": "getDevDisSupportOrg",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/emp/center/usage": {
+      "get": {
+        "tags": [
+          "장애인 고용 관련 데이터 API V1"
+        ],
+        "summary": "발달장애인훈련센터 이용자현황 조회",
+        "description": "한국장애인고용공단 발달장애인훈련센터 이용자현황",
+        "operationId": "getCenterUsage",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoObject"
                 }
               }
             }
@@ -3104,12 +3589,6 @@
       "MvPoi": {
         "type": "object",
         "properties": {
-          "poi_id": {
-            "type": "integer",
-            "description": "POI 고유 식별자",
-            "format": "int64",
-            "example": 1
-          },
           "language_code": {
             "type": "string",
             "description": "언어 코드",
@@ -3307,6 +3786,414 @@
           }
         },
         "description": "공통 응답 포맷"
+      },
+      "ApiResDtoPageResEmpDisJobseekerDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageResEmpDisJobseekerDto"
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "EmpDisJobseekerDto": {
+        "type": "object",
+        "properties": {
+          "seqNo": {
+            "type": "integer",
+            "description": "순번",
+            "format": "int32",
+            "example": 1
+          },
+          "regDate": {
+            "type": "string",
+            "description": "등록일",
+            "format": "date",
+            "example": "2024-01-01"
+          },
+          "age": {
+            "type": "integer",
+            "description": "나이",
+            "format": "int32",
+            "example": 30
+          },
+          "region": {
+            "type": "string",
+            "description": "지역",
+            "example": "서울"
+          },
+          "jobType": {
+            "type": "string",
+            "description": "직종",
+            "example": "사무직"
+          },
+          "salaryType": {
+            "type": "string",
+            "description": "임금형태",
+            "example": "월급"
+          },
+          "salaryAmount": {
+            "type": "integer",
+            "description": "임금액",
+            "format": "int32",
+            "example": 2500000
+          },
+          "disabilityType": {
+            "type": "string",
+            "description": "장애유형",
+            "example": "지체장애"
+          },
+          "severity": {
+            "type": "string",
+            "description": "중증여부",
+            "example": "중증"
+          },
+          "orgType": {
+            "type": "string",
+            "description": "기관유형",
+            "example": "공공기관"
+          }
+        },
+        "description": "장애인 구직자 현황 DTO"
+      },
+      "PageResEmpDisJobseekerDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "description": "현재 페이지의 데이터 목록",
+            "items": {
+              "$ref": "#/components/schemas/EmpDisJobseekerDto"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "description": "현재 페이지 번호",
+            "format": "int32",
+            "example": 1
+          },
+          "size": {
+            "type": "integer",
+            "description": "페이지당 항목 수",
+            "format": "int32",
+            "example": 10
+          },
+          "total": {
+            "type": "integer",
+            "description": "전체 항목 수",
+            "format": "int64",
+            "example": 100
+          }
+        },
+        "description": "페이징 처리된 응답 데이터"
+      },
+      "ApiResDtoPageResEmpDisJobPostingDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageResEmpDisJobPostingDto"
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "EmpDisJobPostingDto": {
+        "type": "object",
+        "properties": {
+          "seqNo": {
+            "type": "integer",
+            "description": "순번",
+            "format": "int32",
+            "example": 1
+          },
+          "applyDate": {
+            "type": "string",
+            "description": "구인신청일자",
+            "format": "date",
+            "example": "2024-01-01"
+          },
+          "recruitPeriod": {
+            "type": "string",
+            "description": "구인기간",
+            "example": "2024-01-01 ~ 2024-01-31"
+          },
+          "companyName": {
+            "type": "string",
+            "description": "사업장명",
+            "example": "행복회사"
+          },
+          "jobType": {
+            "type": "string",
+            "description": "직종",
+            "example": "사무직"
+          },
+          "empType": {
+            "type": "string",
+            "description": "고용형태 ",
+            "example": "정규직"
+          },
+          "salaryType": {
+            "type": "string",
+            "description": "임금형태",
+            "example": "월급"
+          },
+          "salaryAmount": {
+            "type": "integer",
+            "description": "임금액",
+            "format": "int32",
+            "example": 2500000
+          },
+          "hireType": {
+            "type": "string",
+            "description": "채용형태",
+            "example": "공개채용"
+          },
+          "experience": {
+            "type": "string",
+            "description": "경력",
+            "example": "신입"
+          },
+          "education": {
+            "type": "string",
+            "description": "학력",
+            "example": "대졸"
+          },
+          "major": {
+            "type": "string",
+            "description": "전공",
+            "example": "경영학"
+          },
+          "license": {
+            "type": "string",
+            "description": "자격증",
+            "example": "컴퓨터활용능력"
+          },
+          "address": {
+            "type": "string",
+            "description": "주소",
+            "example": "서울특별시 강남구 ..."
+          },
+          "companyType": {
+            "type": "string",
+            "description": "기업형태",
+            "example": "중소기업"
+          },
+          "office": {
+            "type": "string",
+            "description": "담당기관",
+            "example": "서울고용센터"
+          },
+          "regDate": {
+            "type": "string",
+            "description": "등록일",
+            "format": "date",
+            "example": "2024-01-01"
+          },
+          "tel": {
+            "type": "string",
+            "description": "전화번호",
+            "example": "02-1234-5678"
+          }
+        },
+        "description": "장애인 구인 정보 DTO"
+      },
+      "PageResEmpDisJobPostingDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "description": "현재 페이지의 데이터 목록",
+            "items": {
+              "$ref": "#/components/schemas/EmpDisJobPostingDto"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "description": "현재 페이지 번호",
+            "format": "int32",
+            "example": 1
+          },
+          "size": {
+            "type": "integer",
+            "description": "페이지당 항목 수",
+            "format": "int32",
+            "example": 10
+          },
+          "total": {
+            "type": "integer",
+            "description": "전체 항목 수",
+            "format": "int64",
+            "example": 100
+          }
+        },
+        "description": "페이징 처리된 응답 데이터"
       }
     },
     "securitySchemes": {
