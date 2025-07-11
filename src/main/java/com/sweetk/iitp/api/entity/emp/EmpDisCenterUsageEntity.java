@@ -5,13 +5,13 @@ import lombok.*;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "emp_dis_training_usage")
+@Table(name = "emp_dis_center_usage")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmpDisTrainingUsageEntity {
+public class EmpDisCenterUsageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

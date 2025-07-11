@@ -8,12 +8,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "emp_dis_training_course")
+@Table(name = "emp_dis_staff_train_crs")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmpDisTrainingCourseEntity {
+public class EmpDisStaffTrainCrsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

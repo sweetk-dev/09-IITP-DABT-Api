@@ -1,14 +1,14 @@
 package com.sweetk.iitp.api.dto.emp.mapper;
 
-import com.sweetk.iitp.api.dto.emp.EmpDisTrainingCourseDto;
-import com.sweetk.iitp.api.entity.emp.EmpDisTrainingCourseEntity;
+import com.sweetk.iitp.api.dto.emp.EmpDisStaffTrainCrsDto;
+import com.sweetk.iitp.api.entity.emp.EmpDisStaffTrainCrsEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class EmpDisTrainingCourseMapper {
-    public static EmpDisTrainingCourseDto toDto(EmpDisTrainingCourseEntity entity) {
+public class EmpDisStaffTrainCrsMapper {
+    public static EmpDisStaffTrainCrsDto toDto(EmpDisStaffTrainCrsEntity entity) {
         if (entity == null) return null;
-        return EmpDisTrainingCourseDto.builder()
+        return EmpDisStaffTrainCrsDto.builder()
             .id(entity.getId())
             .courseType(entity.getCourseType())
             .courseName(entity.getCourseName())
@@ -24,7 +24,7 @@ public class EmpDisTrainingCourseMapper {
             .target(entity.getTarget())
             .build();
     }
-    public static List<EmpDisTrainingCourseDto> toDtoList(List<EmpDisTrainingCourseEntity> entities) {
-        return entities == null ? null : entities.stream().map(EmpDisTrainingCourseMapper::toDto).collect(Collectors.toList());
+    public static List<EmpDisStaffTrainCrsDto> toDtoList(List<EmpDisStaffTrainCrsEntity> entities) {
+        return entities == null ? null : entities.stream().map(EmpDisStaffTrainCrsMapper::toDto).collect(Collectors.toList());
     }
 } 

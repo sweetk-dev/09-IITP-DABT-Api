@@ -1,14 +1,14 @@
 package com.sweetk.iitp.api.dto.emp.mapper;
 
-import com.sweetk.iitp.api.dto.emp.EmpDisConsultingDto;
-import com.sweetk.iitp.api.entity.emp.EmpDisConsultingEntity;
+import com.sweetk.iitp.api.dto.emp.EmpDisConsultingHisDto;
+import com.sweetk.iitp.api.entity.emp.EmpDisConsultingHisEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class EmpDisConsultingMapper {
-    public static EmpDisConsultingDto toDto(EmpDisConsultingEntity entity) {
+public class EmpDisConsultingHisMapper {
+    public static EmpDisConsultingHisDto toDto(EmpDisConsultingHisEntity entity) {
         if (entity == null) return null;
-        return EmpDisConsultingDto.builder()
+        return EmpDisConsultingHisDto.builder()
             .id(entity.getId())
             .seqNo(entity.getSeqNo())
             .diagnosisNo(entity.getDiagnosisNo())
@@ -25,7 +25,7 @@ public class EmpDisConsultingMapper {
             .updatedBy(entity.getUpdatedBy())
             .build();
     }
-    public static List<EmpDisConsultingDto> toDtoList(List<EmpDisConsultingEntity> entities) {
-        return entities == null ? null : entities.stream().map(EmpDisConsultingMapper::toDto).collect(Collectors.toList());
+    public static List<EmpDisConsultingHisDto> toDtoList(List<EmpDisConsultingHisEntity> entities) {
+        return entities == null ? null : entities.stream().map(EmpDisConsultingHisMapper::toDto).collect(Collectors.toList());
     }
 } 

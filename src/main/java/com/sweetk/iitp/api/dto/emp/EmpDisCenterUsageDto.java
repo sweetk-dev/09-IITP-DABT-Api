@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmpDisTrainingUsageDto {
+public class EmpDisCenterUsageDto {
     private Integer seqNo;
     private String orgCategory;
     private Integer userCount;
