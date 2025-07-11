@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.OffsetDateTime;
 
+
+
+//06. 장애인고용 부담금감면 연계고용사업장 정보
 @Entity
 @Table(name = "emp_dis_burden_workplace")
 @Getter

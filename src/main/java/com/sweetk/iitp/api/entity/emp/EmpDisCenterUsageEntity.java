@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.OffsetDateTime;
 
+
+//02. 발달장애인훈련센터 이용자현황
 @Entity
 @Table(name = "emp_dis_center_usage")
 @Getter

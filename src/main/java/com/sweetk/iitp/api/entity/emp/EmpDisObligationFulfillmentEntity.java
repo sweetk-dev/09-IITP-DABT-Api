@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.OffsetDateTime;
 
+//15. 장애인 의무고용 - 사업체 현황
 @Entity
 @Table(name = "emp_dis_obligation_fulfillment")
 @Getter

@@ -7,6 +7,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+
+//07. 지역별 장애인 고용 현황
 @Entity
 @Table(name = "emp_dis_regional_status")
 @Data

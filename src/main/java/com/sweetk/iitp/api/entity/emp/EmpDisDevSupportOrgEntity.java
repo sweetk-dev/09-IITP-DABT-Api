@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
+//09. 한국장애인개발원 발달장애인 지원 기관 및 제공서비스
 @Entity
 @Table(name = "emp_dis_dev_support_org")
 @Data
