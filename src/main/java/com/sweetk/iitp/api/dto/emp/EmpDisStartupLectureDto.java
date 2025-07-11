@@ -11,18 +11,19 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmpDisTrainingCourseDto {
+public class EmpDisStartupLectureDto {
     private Integer id;
-    private String courseType;
-    private String courseName;
-    private String courseContent;
-    private String method;
+    private Integer year;
+    private String onlineType;
+    private String category;
+    private String title;
     private LocalDate startDate;
     private LocalDate endDate;
+    private Integer hours;
     private Integer recruitCount;
     private LocalDate applyStartDate;
     private LocalDate applyEndDate;
-    private String applyMethod;
-    private String location;
-    private String target;
+    private String orgName;
+    private Integer applyCount;
+    private Integer completeCount;
 } 

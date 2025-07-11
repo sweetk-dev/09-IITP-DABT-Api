@@ -9,7 +9,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmpDisConsultingDto {
+public class EmpDisConsultingHisDto {
     private Integer id;
     private Integer seqNo;
     private String diagnosisNo;

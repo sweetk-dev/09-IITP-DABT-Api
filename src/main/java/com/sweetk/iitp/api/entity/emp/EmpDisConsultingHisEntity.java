@@ -14,11 +14,11 @@ import java.time.OffsetDateTime;
  * 고용-장애인 고용컨설팅
  */
 @Entity
-@Table(name = "emp_dis_consulting")
+@Table(name = "emp_dis_consulting_his")
 @Getter
 @Setter
 @NoArgsConstructor
-public class EmpDisConsultingEntity {
+public class EmpDisConsultingHisEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

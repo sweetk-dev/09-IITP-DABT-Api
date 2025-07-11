@@ -1,14 +1,15 @@
 package com.sweetk.iitp.api.dto.emp.mapper;
 
-import com.sweetk.iitp.api.dto.emp.EmpDisEntreLectureDto;
-import com.sweetk.iitp.api.entity.emp.EmpDisEntreLectureEntity;
+import com.sweetk.iitp.api.dto.emp.EmpDisStartupLectureDto;
+import com.sweetk.iitp.api.entity.emp.EmpDisStartupLectureEntity;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class EmpDisEntreLectureMapper {
-    public static EmpDisEntreLectureDto toDto(EmpDisEntreLectureEntity entity) {
+public class EmpDisStartupLectureMapper {
+    public static EmpDisStartupLectureDto toDto(EmpDisStartupLectureEntity entity) {
         if (entity == null) return null;
-        return EmpDisEntreLectureDto.builder()
+        return EmpDisStartupLectureDto.builder()
             .id(entity.getId())
             .year(entity.getYear())
             .onlineType(entity.getOnlineType())
@@ -25,7 +26,7 @@ public class EmpDisEntreLectureMapper {
             .completeCount(entity.getCompleteCount())
             .build();
     }
-    public static List<EmpDisEntreLectureDto> toDtoList(List<EmpDisEntreLectureEntity> entities) {
-        return entities == null ? null : entities.stream().map(EmpDisEntreLectureMapper::toDto).collect(Collectors.toList());
+    public static List<EmpDisStartupLectureDto> toDtoList(List<EmpDisStartupLectureEntity> entities) {
+        return entities == null ? null : entities.stream().map(EmpDisStartupLectureMapper::toDto).collect(Collectors.toList());
     }
 } 
