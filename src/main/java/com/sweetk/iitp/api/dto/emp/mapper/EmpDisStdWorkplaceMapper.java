@@ -19,10 +19,6 @@ public class EmpDisStdWorkplaceMapper {
             .tel(entity.getTel())
             .businessItem(entity.getBusinessItem())
             .type(entity.getType())
-            .createdAt(entity.getCreatedAt())
-            .updatedAt(entity.getUpdatedAt())
-            .createdBy(entity.getCreatedBy())
-            .updatedBy(entity.getUpdatedBy())
             .build();
     }
     public static List<EmpDisStdWorkplaceDto> toDtoList(List<EmpDisStdWorkplaceEntity> entities) {
