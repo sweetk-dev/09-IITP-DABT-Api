@@ -2,8 +2,8 @@ package com.sweetk.iitp.api.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
@@ -19,7 +19,7 @@ public class OpenApiConfig {
 
     @Bean
     public OpenAPI openAPI() {
-        return new OpenAPI()
+        OpenAPI openAPI = new OpenAPI()
                 .info(new Info()
                         .title("IITP API")
                         .description("""
@@ -45,17 +45,12 @@ public class OpenApiConfig {
                                 .name("Proprietary")
                                 .url("https://iitp.kr/license")))
                 .servers(List.of(
+//                        new Server()
+//                                .url("https://api.iitp.kr")
+//                                .description("Production Server"),
                         new Server()
-                                .url("https://api.iitp.kr")
-                                .description("Production Server"),
-                        new Server()
-                                .url("https://api-dev.iitp.kr")
-                                .description("Development Server")
-                ))
-                .tags(List.of(
-                        new Tag().name("POI").description("POI 관련 API"),
-                        new Tag().name("POI V1").description("POI API V1"),
-                        new Tag().name("POI V2").description("POI API V2")
+                                .url("http://localhost:4010")
+                                .description("Prism Mock 서버")
                 ))
                 .components(new Components()
                         .addSecuritySchemes("ApiKeyAuth", 
@@ -65,5 +60,6 @@ public class OpenApiConfig {
                                         .name("X-API-Key")
                                         .description("API Key for authentication")))
                 .addSecurityItem(new SecurityRequirement().addList("ApiKeyAuth"));
+        return openAPI;
     }
 } 

@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
  * - ErrorCode enum 값들을 OpenAPI 스키마에 포함
  * - 각 에러 코드의 설명을 스키마의 description에 추가
  * - 공통 응답 형식 (ApiResDto, ErrApiResDto) 정의
+ * - x-tagGroups를 통한 API 그룹핑 (Stoplight Elements 지원)
  */
 @Configuration
 @OpenAPIDefinition(
@@ -53,6 +54,7 @@ public class SpringDocConfig {
      * 1. ErrorCode enum의 모든 값을 자동으로 스캔하여 문서에 포함
      * 2. 각 에러 코드의 설명을 스키마의 description에 추가
      * 3. 공통 응답 형식 스키마 정의
+     * 4. x-tagGroups를 통한 API 그룹핑 설정
      * 
      * ErrorCode enum이 변경되어도 별도의 수동 작업이 필요하지 않습니다.
      * Arrays.stream(ErrorCode.values())를 통해 현재 정의된 모든 에러 코드를
@@ -103,7 +105,7 @@ public class SpringDocConfig {
                 .collect(Collectors.joining("\n"));
         errorCodeSchema.setDescription("에러 코드 목록:\n" + errorCodeDesc);
 
-        return new OpenAPI()
+        OpenAPI openAPI = new OpenAPI()
                 .components(new Components()
                         .addSchemas("ErrorInfoDto", errorInfoSchema)
                         .addSchemas("ApiResDto", apiResSchema)
@@ -117,5 +119,7 @@ public class SpringDocConfig {
                                 ))
                         )
                 );
+
+        return openAPI;
     }
 }
