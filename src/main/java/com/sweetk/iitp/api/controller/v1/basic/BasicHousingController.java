@@ -51,8 +51,8 @@ public class BasicHousingController extends BasicBaseController {
 
     @GetMapping("/reg/new/latest")
     @Operation(
-            summary = "신규등록 장애인현황 조회",
-            description = "신규등록 장애인현황 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "신규등록 장애인현황 조회(최신)",
+            description = "신규등록 장애인현황 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHousingRegNewLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
@@ -69,7 +69,7 @@ public class BasicHousingController extends BasicBaseController {
 
     @GetMapping("/reg/new/{statYear}")
     @Operation(
-            summary = "해당 연도의  신규등록 장애인현황 조회",
+            summary = "해당 연도의  신규등록 장애인현황 조회(연도)",
             description = "해당 연도의 신규등록 장애인현황 조회"
     )
     public ResponseEntity<ApiResDto> getHousingRegNewYear(
@@ -102,8 +102,8 @@ public class BasicHousingController extends BasicBaseController {
 
     @GetMapping("/reg/ageSevGen/latest")
     @Operation(
-            summary = "전국 연령별,장애등급별,성별 등록장애인수 조회",
-            description = "전국 연령별,장애등급별,성별 등록장애인수 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "전국 연령별,장애등급별,성별 등록장애인수 조회(최신)",
+            description = "전국 연령별,장애등급별,성별 등록장애인수 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHousingRegAgeSevGenLatest(
             @Parameter(name = "from", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
@@ -120,7 +120,7 @@ public class BasicHousingController extends BasicBaseController {
 
     @GetMapping("/reg/ageSevGen/{statYear}")
     @Operation(
-            summary = "해당 연도의  전국 연령별,장애등급별,성별 등록장애인수 조회",
+            summary = "해당 연도의  전국 연령별,장애등급별,성별 등록장애인수 조회(연도)",
             description = "해당 연도의 전국 연령별,장애등급별,성별 등록장애인수 조회"
     )
     public ResponseEntity<ApiResDto> getHousingRegAgeSevGenYear(
@@ -137,10 +137,22 @@ public class BasicHousingController extends BasicBaseController {
     /*******************************
      * 시도별,장애유형별,장애정도별,성별 등록장애인수
      *******************************/
+    @GetMapping("/reg/sidoSevGen/info")
+    @Operation(
+            summary = "시도별,장애등급별,성별 등록장애인수 통계 정보 조회",
+            description = "시도별,장애등급별,성별 등록장애인수 통계 정보 조회"
+    )
+    public ResponseEntity<ApiResDto> getHousingRegSidoSevGenInfo(
+            HttpServletRequest request) {
+
+        StatInfo statinfo = housingReadService.getHousingRegSidoSevGenInfo();
+        return ResponseEntity.ok(ApiResDto.success(statinfo));
+    }
+
     @GetMapping("/reg/sidoSevGen/latest")
     @Operation(
-            summary = "시도별,장애등급별,성별 등록장애인수 조회",
-            description = "시도별,장애등급별,성별 등록장애인수 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "시도별,장애등급별,성별 등록장애인수 조회(최신)",
+            description = "시도별,장애등급별,성별 등록장애인수 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHousingRegSidoASevGenLatest(
             @Parameter(name = "from", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
@@ -157,7 +169,7 @@ public class BasicHousingController extends BasicBaseController {
 
     @GetMapping("/reg/sidoSevGen/{statYear}")
     @Operation(
-            summary = "해당 연도의  시도별,장애등급별,성별 등록장애인수 조회",
+            summary = "해당 연도의  시도별,장애등급별,성별 등록장애인수 조회(연도)",
             description = "해당 연도의 시도별,장애등급별,성별 등록장애인수 조회"
     )
     public ResponseEntity<ApiResDto> getHousingRegSidoSevGenYear(
@@ -189,8 +201,8 @@ public class BasicHousingController extends BasicBaseController {
 
     @GetMapping("/life/SuppNeedLvl/latest")
     @Operation(
-            summary = "일상생활 필요 지원 정도 조회",
-            description = "일상생활 필요 지원 정도 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "일상생활 필요 지원 정도 조회(최신)",
+            description = "일상생활 필요 지원 정도 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHousingLifeSuppNeedLvlLatest(
             @Parameter(name = "from", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
@@ -208,7 +220,7 @@ public class BasicHousingController extends BasicBaseController {
 
     @GetMapping("/life/SuppNeedLvl/{statYear}")
     @Operation(
-            summary = "해당 연도의 일상생활 필요 지원 정도 조회",
+            summary = "해당 연도의 일상생활 필요 지원 정도 조회(연도)",
             description = "해당 연도의 일상생활 필요 지원 정도 조회"
     )
     public ResponseEntity<ApiResDto> getHousingLifeSuppNeedLvlYear(
@@ -241,8 +253,8 @@ public class BasicHousingController extends BasicBaseController {
 
     @GetMapping("/life/mainCarer/latest")
     @Operation(
-            summary = "주로 지원해주는 사람의 유형  조회",
-            description = "주로 지원해주는 사람의 유형 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "주로 지원해주는 사람의 유형  조회(최신)",
+            description = "주로 지원해주는 사람의 유형 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHousingLifeMainCarerLatest(
             @Parameter(name = "from", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
@@ -260,7 +272,7 @@ public class BasicHousingController extends BasicBaseController {
 
     @GetMapping("/life/mainCarer/{statYear}")
     @Operation(
-            summary = "해당 연도의 주로 지원해주는 사람의 유형 조회",
+            summary = "해당 연도의 주로 지원해주는 사람의 유형 조회(연도)",
             description = "해당 연도의 주로 지원해주는 사람의 유형 조회"
     )
     public ResponseEntity<ApiResDto> getHousingLifeMainCarerYear(
@@ -300,8 +312,8 @@ public class BasicHousingController extends BasicBaseController {
 
     @GetMapping("/life/primCarer/latest")
     @Operation(
-            summary = "일상생활 도와주는 사람(1순위)  조회",
-            description = "일상생활 도와주는 사람(1순위) 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "일상생활 도와주는 사람(1순위)  조회(최신)",
+            description = "일상생활 도와주는 사람(1순위) 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHousingLifePrimCarerLatest(
             @Parameter(name = "from", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
@@ -318,7 +330,7 @@ public class BasicHousingController extends BasicBaseController {
 
     @GetMapping("/life/primCarer/{statYear}")
     @Operation(
-            summary = "해당 연도의 일상생활 도와주는 사람(1순위) 조회",
+            summary = "해당 연도의 일상생활 도와주는 사람(1순위) 조회(연도)",
             description = "해당 연도의 일상생활 도와주는 사람(1순위) 조회"
     )
     public ResponseEntity<ApiResDto> getHousingLifePrimCarerYear(
@@ -352,8 +364,8 @@ public class BasicHousingController extends BasicBaseController {
 
     @GetMapping("/life/suppField/latest")
     @Operation(
-            summary = "도움받는 분야  조회",
-            description = "도움받는 분야 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "도움받는 분야  조회(최신)",
+            description = "도움받는 분야 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHousingLifeSuppFieldLatest(
             @Parameter(name = "from", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
@@ -371,7 +383,7 @@ public class BasicHousingController extends BasicBaseController {
 
     @GetMapping("/life/suppField/{statYear}")
     @Operation(
-            summary = "해당 연도의 도움받는 분야 조회",
+            summary = "해당 연도의 도움받는 분야 조회(연도)",
             description = "해당 연도의 도움받는 분야 조회"
     )
     public ResponseEntity<ApiResDto> getHousingLifeSuppFieldYear(

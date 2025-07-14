@@ -47,8 +47,8 @@ public class BasicAidController extends BasicBaseController {
 
     @GetMapping("/deviceUsg/latest")
     @Operation(
-            summary = "장애인보조기기 사용여부 조회",
-            description = "장애인보조기기 사용여부. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "장애인보조기기 사용여부 조회(최신)",
+            description = "장애인보조기기 사용여부. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getAidDeviceUsageLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
@@ -65,7 +65,7 @@ public class BasicAidController extends BasicBaseController {
 
     @GetMapping("/deviceUsg/{statYear}")
     @Operation(
-            summary = "해당 연도의 장애인보조기기 사용여부 조회",
+            summary = "해당 연도의 장애인보조기기 사용여부 조회(연도)",
             description = "해당 연도의 장애인보조기기 사용여부 조회"
     )
     public ResponseEntity<ApiResDto> getAidDeviceUsageYear(
@@ -97,8 +97,8 @@ public class BasicAidController extends BasicBaseController {
 
     @GetMapping("/deviceNeed/latest")
     @Operation(
-            summary = "장애인보조기기 필요여부 조회",
-            description = "장애인보조기기 필요여부. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "장애인보조기기 필요여부 조회(최신)",
+            description = "장애인보조기기 필요여부. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getAidDeviceNeedLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
@@ -115,7 +115,7 @@ public class BasicAidController extends BasicBaseController {
 
     @GetMapping("/deviceNeed/{statYear}")
     @Operation(
-            summary = "해당 연도의 장애인보조기기 필요여부 조회",
+            summary = "해당 연도의 장애인보조기기 필요여부 조회(연도)",
             description = "해당 연도의 장애인보조기기 필요여부 조회"
     )
     public ResponseEntity<ApiResDto> getAidDeviceNeedYear(

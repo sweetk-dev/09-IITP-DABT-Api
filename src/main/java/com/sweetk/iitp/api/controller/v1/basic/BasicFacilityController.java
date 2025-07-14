@@ -45,8 +45,8 @@ public class BasicFacilityController extends BasicBaseController {
 
     @GetMapping("/welfareUsg/latest")
     @Operation(
-            summary = "사회복지시설 이용 현황 조회",
-            description = "사회복지시설 이용 현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "사회복지시설 이용 현황 조회(최신)",
+            description = "사회복지시설 이용 현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getFcltyWelfareUsageLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
@@ -63,7 +63,7 @@ public class BasicFacilityController extends BasicBaseController {
 
     @GetMapping("/welfareUsg/{statYear}")
     @Operation(
-            summary = "해당 연도의 사회복지시설 이용 현황  조회",
+            summary = "해당 연도의 사회복지시설 이용 현황  조회(연도)",
             description = "해당 연도의 사회복지시설 이용 현황 조회"
     )
     public ResponseEntity<ApiResDto> getFcltyWelfareUsageYear(
