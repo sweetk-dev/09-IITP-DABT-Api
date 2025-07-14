@@ -24,7 +24,7 @@ java {
 
 ext {
     jarVersion = '0.0.3'
-    apiDocVersion = 'v0.0.1'
+    apiDocVersion = 'v0.0.2'
     apiDocversionTag = apiDocVersion
     env = findProperty("env") ?: "local"
     buildTime = new Date().format("yyyyMMddHHmmss")
@@ -157,8 +157,18 @@ tasks.register("copyLatestDoc", Copy) {
 
 tasks.register("copyDocsToResources") {
     dependsOn("copyVersionedDoc", "copyLatestDoc")
+    doFirst {
+        // 현재 버전 파일명을 txt로 저장
+        def apiDocFileName = project.ext.apiDocFileName
+        def scriptFile = "scripts/api-doc-filename.txt"
+        file(scriptFile).text = apiDocFileName
+    }
     doLast {
         println("OpenAPI document copy completed.")
+        // x-tagGroups 자동 추가 스크립트 실행
+        exec {
+            commandLine "python", "scripts/add-x-tagGroups.py"
+        }
     }
     outputs.upToDateWhen { false }
 }
