@@ -2,6 +2,7 @@ package com.sweetk.iitp.api.controller.v1.common;
 
 
 import com.sweetk.iitp.api.constant.ApiConstants;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+@Hidden
 @RestController
 @RequestMapping(ApiConstants.ApiPath.API_V1_COMMON)
 @RequiredArgsConstructor

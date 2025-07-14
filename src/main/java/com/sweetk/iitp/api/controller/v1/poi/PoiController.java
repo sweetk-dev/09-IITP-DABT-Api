@@ -2,16 +2,17 @@ package com.sweetk.iitp.api.controller.v1.poi;
 
 import com.sweetk.iitp.api.constant.ApiConstants;
 import com.sweetk.iitp.api.service.poi.MvPoiReadService;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Hidden
 @Slf4j
 @RestController
 @RequestMapping(ApiConstants.ApiPath.API_V1_POI)
 @RequiredArgsConstructor
-//@Tag(name = "이동형 POI API V1", description = "이동형 API ")
 public class PoiController {
 
     private final MvPoiReadService mvPoiReadService;
