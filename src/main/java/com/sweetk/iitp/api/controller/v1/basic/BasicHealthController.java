@@ -46,8 +46,8 @@ public class BasicHealthController extends BasicBaseController {
 
     @GetMapping("/medicalUsg/latest")
     @Operation(
-            summary = "장애인 의료이용 현황 조회",
-            description = "장애인 의료이용 현황 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "장애인 의료이용 현황 조회(최신)",
+            description = "장애인 의료이용 현황 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHealthMedicalUsageLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
@@ -64,7 +64,7 @@ public class BasicHealthController extends BasicBaseController {
 
     @GetMapping("/medicalUsg/{statYear}")
     @Operation(
-            summary = "해당 연도의 장애인 의료이용 현황 조회",
+            summary = "해당 연도의 장애인 의료이용 현황 조회(연도)",
             description = "해당 연도의 장애인 의료이용 현황 조회"
     )
     public ResponseEntity<ApiResDto> getHealthMedicalUsageYear(
@@ -96,8 +96,8 @@ public class BasicHealthController extends BasicBaseController {
 
     @GetMapping("/disCostSub/latest")
     @Operation(
-            summary = "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회",
-            description = "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회(최신)",
+            description = "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHealthDiseaseCostSubLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
@@ -114,7 +114,7 @@ public class BasicHealthController extends BasicBaseController {
 
     @GetMapping("/disCostSub/{statYear}")
     @Operation(
-            summary = "해당 연도의 장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회",
+            summary = "해당 연도의 장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회(연도)",
             description = "해당 연도의 장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회"
     )
     public ResponseEntity<ApiResDto> getHealthDiseaseCostSubYear(
@@ -146,8 +146,8 @@ public class BasicHealthController extends BasicBaseController {
 
     @GetMapping("/sportExecType/latest")
     @Operation(
-            summary = "장애인 생활체육 실행 유형 조회",
-            description = "장애인 생활체육 실행 유형 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "장애인 생활체육 실행 유형 조회(최신)",
+            description = "장애인 생활체육 실행 유형 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHealthSportExecTypeLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
@@ -164,7 +164,7 @@ public class BasicHealthController extends BasicBaseController {
 
     @GetMapping("/sportExecType/{statYear}")
     @Operation(
-            summary = "해당 연도의 장애인 생활체육 실행 유형 조회",
+            summary = "해당 연도의 장애인 생활체육 실행 유형 조회(연도)",
             description = "해당 연도의 장애인 생활체육 실행 유형 조회"
     )
     public ResponseEntity<ApiResDto> getHealthSportExecTypeYear(
@@ -196,8 +196,8 @@ public class BasicHealthController extends BasicBaseController {
 
     @GetMapping("/exrcBestAid/latest")
     @Operation(
-            summary = "운동 시 가장 도움이 되는 지원 사항 조회",
-            description = "운동 시 가장 도움이 되는 지원 사항. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "운동 시 가장 도움이 되는 지원 사항 조회(최신)",
+            description = "운동 시 가장 도움이 되는 지원 사항. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getHealthExrcBestAidLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
@@ -214,7 +214,7 @@ public class BasicHealthController extends BasicBaseController {
 
     @GetMapping("/exrcBestAid/{statYear}")
     @Operation(
-            summary = "해당 연도의 운동 시 가장 도움이 되는 지원 사항 조회",
+            summary = "해당 연도의 운동 시 가장 도움이 되는 지원 사항 조회(연도)",
             description = "해당 연도의 운동 시 가장 도움이 되는 지원 사항 조회"
     )
     public ResponseEntity<ApiResDto> getHealthExrcBestAidYear(

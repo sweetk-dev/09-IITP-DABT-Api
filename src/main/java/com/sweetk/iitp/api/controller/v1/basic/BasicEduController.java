@@ -46,8 +46,8 @@ public class BasicEduController extends BasicBaseController {
 
     @GetMapping("/vocaExec/latest")
     @Operation(
-            summary = "장애인 진로 및 직업교육 실시 여부 조회",
-            description = "장애인 진로 및 직업교육 실시 여부. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "장애인 진로 및 직업교육 실시 여부 조회(최신)",
+            description = "장애인 진로 및 직업교육 실시 여부. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getEduVocaExecLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
@@ -64,7 +64,7 @@ public class BasicEduController extends BasicBaseController {
 
     @GetMapping("/vocaExec/{statYear}")
     @Operation(
-            summary = "해당 연도의 장애인 진로 및 직업교육 실시 여부 조회",
+            summary = "해당 연도의 장애인 진로 및 직업교육 실시 여부 조회(연도)",
             description = "해당 연도의 장애인 진로 및 직업교육 실시 여부 조회"
     )
     public ResponseEntity<ApiResDto> getEduVocaExecYear(
@@ -97,8 +97,8 @@ public class BasicEduController extends BasicBaseController {
 
     @GetMapping("/vocaExecWay/latest")
     @Operation(
-            summary = "장애인 진로 및 직업교육 운영 방법 조회",
-            description = "장애인 진로 및 직업교육 운영 방법. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "장애인 진로 및 직업교육 운영 방법 조회(연도)",
+            description = "장애인 진로 및 직업교육 운영 방법. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getEduVocaExecWayLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
@@ -115,7 +115,7 @@ public class BasicEduController extends BasicBaseController {
 
     @GetMapping("/vocaExecWay/{statYear}")
     @Operation(
-            summary = "해당 연도의 장애인 진로 및 직업교육 운영 방법 조회",
+            summary = "해당 연도의 장애인 진로 및 직업교육 운영 방법 조회(연도)",
             description = "해당 연도의 장애인 진로 및 직업교육 운영 방법 조회"
     )
     public ResponseEntity<ApiResDto> getEduVocaExecWayYear(

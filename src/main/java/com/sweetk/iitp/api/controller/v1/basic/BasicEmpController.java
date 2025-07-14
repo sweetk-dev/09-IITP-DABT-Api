@@ -47,8 +47,8 @@ public class BasicEmpController extends BasicBaseController {
 
     @GetMapping("/nation/latest")
     @Operation(
-            summary = "장애인 근로자 고용현황 조회",
-            description = "장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "장애인 근로자 고용현황 조회(최신)",
+            description = "장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getEmpNatlLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
@@ -65,7 +65,7 @@ public class BasicEmpController extends BasicBaseController {
 
     @GetMapping("/nation/{statYear}")
     @Operation(
-            summary = "해당 연도의 장애인 근로자 고용현황 조회",
+            summary = "해당 연도의 장애인 근로자 고용현황 조회(연도)",
             description = "해당 연도의 장애인 근로자 고용현황 조회"
     )
     public ResponseEntity<ApiResDto> getEmpNatlYear(
@@ -97,8 +97,8 @@ public class BasicEmpController extends BasicBaseController {
 
     @GetMapping("/public/latest")
     @Operation(
-            summary = "공공기관 장애인고용 현황 사항 조회",
-            description = "공공기관 장애인고용 현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "공공기관 장애인고용 현황 조회(최신)",
+            description = "공공기관 장애인고용 현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getEmpNatlPublicLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
@@ -116,7 +116,7 @@ public class BasicEmpController extends BasicBaseController {
 
     @GetMapping("/public/{statYear}")
     @Operation(
-            summary = "공공기관 장애인고용 현황 조회",
+            summary = "해당연도 공공기관 장애인고용 현황 조회(연도)",
             description = "공공기관 장애인고용 현황 조회"
     )
     public ResponseEntity<ApiResDto> getEmpNatlPublicYear(
@@ -148,8 +148,8 @@ public class BasicEmpController extends BasicBaseController {
 
     @GetMapping("/private/latest")
     @Operation(
-            summary = "민간기업 장애인고용 현황 조회",
-            description = "민간기업 장애인고용 현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "민간기업 장애인고용 현황 조회(최신)",
+            description = "민간기업 장애인고용 현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getEmpNatlPrivateLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
@@ -166,7 +166,7 @@ public class BasicEmpController extends BasicBaseController {
 
     @GetMapping("/private/{statYear}")
     @Operation(
-            summary = "민간기업 장애인고용 현황 조회",
+            summary = "해당연도 민간기업 장애인고용 현황 조회(연도)",
             description = "민간기업 장애인고용 현황 조회"
     )
     public ResponseEntity<ApiResDto> getEmpNatlPrivateYear(
@@ -199,8 +199,8 @@ public class BasicEmpController extends BasicBaseController {
 
     @GetMapping("/govOrg/latest")
     @Operation(
-            summary = "정부부문 장애인고용 현황 조회",
-            description = "정부부문 장애인고용 현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "정부부문 장애인고용 현황 조회(최신)",
+            description = "정부부문 장애인고용 현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getEmpNatlGovOrgLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
@@ -217,7 +217,7 @@ public class BasicEmpController extends BasicBaseController {
 
     @GetMapping("/govOrg/{statYear}")
     @Operation(
-            summary = "정부부문 장애인고용 현황 조회",
+            summary = "해당 연도의 정부부문 장애인고용 현황 조회(연도)",
             description = "정부부문 장애인고용 현황 조회"
     )
     public ResponseEntity<ApiResDto> getEmpNatlGovOrgYear(
@@ -249,8 +249,8 @@ public class BasicEmpController extends BasicBaseController {
 
     @GetMapping("/disTypeSev/latest")
     @Operation(
-            summary = "장애유형 및 장애정도별 장애인 근로자 고용현황 조회",
-            description = "장애유형 및 장애정도별 장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "장애유형 및 장애정도별 장애인 근로자 고용현황 조회(최신)",
+            description = "장애유형 및 장애정도별 장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getEmpNatlDisTypeSevLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
@@ -267,7 +267,7 @@ public class BasicEmpController extends BasicBaseController {
 
     @GetMapping("/disTypeSev/{statYear}")
     @Operation(
-            summary = "장애유형 및 장애정도별 장애인 근로자 고용현황 조회",
+            summary = "해당연도의 장애유형 및 장애정도별 장애인 근로자 고용현황 조회(연도)",
             description = "장애유형 및 장애정도별 장애인 근로자 고용현황 조회"
     )
     public ResponseEntity<ApiResDto> getEmpNatlDisTypeSevYear(
@@ -299,8 +299,8 @@ public class BasicEmpController extends BasicBaseController {
 
     @GetMapping("/disTypeIndust/latest")
     @Operation(
-            summary = "장애유형 및 산업별 장애인 근로자 고용현황 조회",
-            description = "장애유형 및 산업별 장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년"
+            summary = "장애유형 및 산업별 장애인 근로자 고용현황 조회(최신)",
+            description = "장애유형 및 산업별 장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
     public ResponseEntity<ApiResDto> getEmpNatlDisTypeIndustLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
@@ -317,7 +317,7 @@ public class BasicEmpController extends BasicBaseController {
 
     @GetMapping("/disTypeIndust/{statYear}")
     @Operation(
-            summary = "장애유형 및 산업별 장애인 근로자 고용현황 조회",
+            summary = "해당연도의 장애유형 및 산업별 장애인 근로자 고용현황 조회(연도)",
             description = "장애유형 및 산업별 장애인 근로자 고용현황 조회"
     )
     public ResponseEntity<ApiResDto> getEmpNatlDisTypeIndustYear(
