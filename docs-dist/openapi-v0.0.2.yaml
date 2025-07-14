@@ -3,16 +3,12 @@
   "info": {
     "title": "IITP Open API Documentation",
     "description": "IITP Open API 문서입니다.",
-    "version": "v0.0.1"
+    "version": "v0.0.2"
   },
   "servers": [
     {
-      "url": "https://api.iitp.kr",
-      "description": "Production Server"
-    },
-    {
-      "url": "https://api-dev.iitp.kr",
-      "description": "Development Server"
+      "url": "http://localhost:4010",
+      "description": "Prism Mock 서버"
     }
   ],
   "security": [
@@ -22,8 +18,16 @@
   ],
   "tags": [
     {
-      "name": "기초 데이터 API V1",
-      "description": "기초 데이터 OpenAPI V1 "
+      "name": "장애인 고용 관련 데이터 API V1",
+      "description": "장애인 고용 관련 데이터 OpenApi V1"
+    },
+    {
+      "name": "기초-사회망 현황 API V1",
+      "description": "기초-사회망 현황 OpenApi V1"
+    },
+    {
+      "name": "기초-편의 시설 제공 현황 API V1",
+      "description": "기초-편의 시설 제공 현황 OpenApi V1"
     },
     {
       "name": "이동형 POI API V1",
@@ -38,40 +42,12 @@
       "description": "기초-주거 자립 현황 OpenApi V1"
     },
     {
-      "name": "기초-보조기기 사용 현황 API V1",
-      "description": "기초-보조기기 사용 현황 OpenApi V1"
-    },
-    {
-      "name": "API V1 - Common",
-      "description": "Common API Operations V1"
-    },
-    {
-      "name": "장애인 고용 관련 데이터 API V1",
-      "description": "장애인 고용 관련 데이터 OpenApi V1"
-    },
-    {
-      "name": "기초-사회망 현황 API V1",
-      "description": "기초-사회망 현황 OpenApi V1"
-    },
-    {
-      "name": "기초-편의 시설 제공 현황 API V1",
-      "description": "기초-편의 시설 제공 현황 OpenApi V1"
-    },
-    {
-      "name": "POI V1",
-      "description": "POI API V1"
-    },
-    {
-      "name": "POI V2",
-      "description": "POI API V2"
-    },
-    {
-      "name": "POI",
-      "description": "POI 관련 API"
-    },
-    {
       "name": "기초-진로 교육 현황 API V1",
       "description": "기초-진로 교육 현황 OpenApi V1"
+    },
+    {
+      "name": "기초-보조기기 사용 현황 API V1",
+      "description": "기초-보조기기 사용 현황 OpenApi V1"
     },
     {
       "name": "기초-고용 현황 API V1",
@@ -79,141 +55,6 @@
     }
   ],
   "paths": {
-    "/api/v1/sample/{id}": {
-      "get": {
-        "tags": [
-          "sample-controller"
-        ],
-        "operationId": "getSample",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "sample-controller"
-        ],
-        "operationId": "updateSample",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "sample-controller"
-        ],
-        "operationId": "deleteSample",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/sample": {
-      "post": {
-        "tags": [
-          "sample-controller"
-        ],
-        "operationId": "createSample",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/poi/search": {
       "get": {
         "tags": [
@@ -874,60 +715,12 @@
         }
       }
     },
-    "/api/v1/comm/version": {
-      "get": {
-        "tags": [
-          "API V1 - Common"
-        ],
-        "operationId": "getVersion",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/comm/health": {
-      "get": {
-        "tags": [
-          "API V1 - Common"
-        ],
-        "summary": "Check API health status",
-        "operationId": "healthCheck",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "object"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/basic/social/social/particFreq/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-사회망 현황 API V1"
         ],
-        "summary": "해당 연도의 장애인의 사회 참여 조회",
+        "summary": "해당 연도의 장애인의 사회 참여 조회(연도)",
         "description": "해당 연도의 장애인의 사회 참여 조회",
         "operationId": "getSocialParticFreqYear",
         "parameters": [
@@ -960,11 +753,10 @@
     "/api/v1/basic/social/social/particFreq/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-사회망 현황 API V1"
         ],
-        "summary": "장애인의 사회 참여 조회",
-        "description": "장애인의 사회 참여 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "장애인의 사회 참여 조회(최신)",
+        "description": "장애인의 사회 참여 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getSocialParticFreqLatest",
         "parameters": [
           {
@@ -1007,7 +799,6 @@
     "/api/v1/basic/social/social/particFreq/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-사회망 현황 API V1"
         ],
         "summary": "장애인의 사회 참여 통계 정보 조회",
@@ -1030,10 +821,9 @@
     "/api/v1/basic/social/social/contractFreq/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-사회망 현황 API V1"
         ],
-        "summary": "해당 연도의 가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도 조회",
+        "summary": "해당 연도의 가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도 조회(연도)",
         "description": "해당 연도의 가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도 조회",
         "operationId": "getSocialContactCntfreqYear",
         "parameters": [
@@ -1066,11 +856,10 @@
     "/api/v1/basic/social/social/contractFreq/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-사회망 현황 API V1"
         ],
-        "summary": "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도 조회",
-        "description": "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도 조회(최신)",
+        "description": "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getSocialContactCntfreqLatest",
         "parameters": [
           {
@@ -1113,7 +902,6 @@
     "/api/v1/basic/social/social/contractFreq/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-사회망 현황 API V1"
         ],
         "summary": "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도 통계 정보 조회",
@@ -1136,10 +924,9 @@
     "/api/v1/basic/housing/reg/sidoSevGen/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
-        "summary": "해당 연도의  시도별,장애등급별,성별 등록장애인수 조회",
+        "summary": "해당 연도의  시도별,장애등급별,성별 등록장애인수 조회(연도)",
         "description": "해당 연도의 시도별,장애등급별,성별 등록장애인수 조회",
         "operationId": "getHousingRegSidoSevGenYear",
         "parameters": [
@@ -1172,11 +959,10 @@
     "/api/v1/basic/housing/reg/sidoSevGen/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
-        "summary": "시도별,장애등급별,성별 등록장애인수 조회",
-        "description": "시도별,장애등급별,성별 등록장애인수 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "시도별,장애등급별,성별 등록장애인수 조회(최신)",
+        "description": "시도별,장애등급별,성별 등록장애인수 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getHousingRegSidoASevGenLatest",
         "parameters": [
           {
@@ -1216,13 +1002,34 @@
         }
       }
     },
+    "/api/v1/basic/housing/reg/sidoSevGen/info": {
+      "get": {
+        "tags": [
+          "기초-주거 자립 현황 API V1"
+        ],
+        "summary": "시도별,장애등급별,성별 등록장애인수 통계 정보 조회",
+        "description": "시도별,장애등급별,성별 등록장애인수 통계 정보 조회",
+        "operationId": "getHousingRegSidoSevGenInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/basic/housing/reg/new/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
-        "summary": "해당 연도의  신규등록 장애인현황 조회",
+        "summary": "해당 연도의  신규등록 장애인현황 조회(연도)",
         "description": "해당 연도의 신규등록 장애인현황 조회",
         "operationId": "getHousingRegNewYear",
         "parameters": [
@@ -1255,11 +1062,10 @@
     "/api/v1/basic/housing/reg/new/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
-        "summary": "신규등록 장애인현황 조회",
-        "description": "신규등록 장애인현황 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "신규등록 장애인현황 조회(최신)",
+        "description": "신규등록 장애인현황 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getHousingRegNewLatest",
         "parameters": [
           {
@@ -1302,7 +1108,6 @@
     "/api/v1/basic/housing/reg/new/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
         "summary": "신규등록 장애인현황 통계 정보 조회",
@@ -1325,10 +1130,9 @@
     "/api/v1/basic/housing/reg/ageSevGen/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
-        "summary": "해당 연도의  전국 연령별,장애등급별,성별 등록장애인수 조회",
+        "summary": "해당 연도의  전국 연령별,장애등급별,성별 등록장애인수 조회(연도)",
         "description": "해당 연도의 전국 연령별,장애등급별,성별 등록장애인수 조회",
         "operationId": "getHousingRegAgeSevGenYear",
         "parameters": [
@@ -1361,11 +1165,10 @@
     "/api/v1/basic/housing/reg/ageSevGen/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
-        "summary": "전국 연령별,장애등급별,성별 등록장애인수 조회",
-        "description": "전국 연령별,장애등급별,성별 등록장애인수 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "전국 연령별,장애등급별,성별 등록장애인수 조회(최신)",
+        "description": "전국 연령별,장애등급별,성별 등록장애인수 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getHousingRegAgeSevGenLatest",
         "parameters": [
           {
@@ -1408,7 +1211,6 @@
     "/api/v1/basic/housing/reg/ageSevGen/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
         "summary": "전국 연령별,장애등급별,성별 등록장애인수 통계 정보 조회",
@@ -1431,10 +1233,9 @@
     "/api/v1/basic/housing/life/suppField/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
-        "summary": "해당 연도의 도움받는 분야 조회",
+        "summary": "해당 연도의 도움받는 분야 조회(연도)",
         "description": "해당 연도의 도움받는 분야 조회",
         "operationId": "getHousingLifeSuppFieldYear",
         "parameters": [
@@ -1467,11 +1268,10 @@
     "/api/v1/basic/housing/life/suppField/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
-        "summary": "도움받는 분야  조회",
-        "description": "도움받는 분야 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "도움받는 분야  조회(최신)",
+        "description": "도움받는 분야 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getHousingLifeSuppFieldLatest",
         "parameters": [
           {
@@ -1514,7 +1314,6 @@
     "/api/v1/basic/housing/life/suppField/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
         "summary": "도움받는 분야 통계 정보 조회",
@@ -1537,10 +1336,9 @@
     "/api/v1/basic/housing/life/primCarer/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
-        "summary": "해당 연도의 일상생활 도와주는 사람(1순위) 조회",
+        "summary": "해당 연도의 일상생활 도와주는 사람(1순위) 조회(연도)",
         "description": "해당 연도의 일상생활 도와주는 사람(1순위) 조회",
         "operationId": "getHousingLifePrimCarerYear",
         "parameters": [
@@ -1573,11 +1371,10 @@
     "/api/v1/basic/housing/life/primCarer/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
-        "summary": "일상생활 도와주는 사람(1순위)  조회",
-        "description": "일상생활 도와주는 사람(1순위) 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "일상생활 도와주는 사람(1순위)  조회(최신)",
+        "description": "일상생활 도와주는 사람(1순위) 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getHousingLifePrimCarerLatest",
         "parameters": [
           {
@@ -1620,7 +1417,6 @@
     "/api/v1/basic/housing/life/primCarer/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
         "summary": "일상생활 도와주는 사람(1순위) 통계 정보 조회",
@@ -1643,10 +1439,9 @@
     "/api/v1/basic/housing/life/mainCarer/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
-        "summary": "해당 연도의 주로 지원해주는 사람의 유형 조회",
+        "summary": "해당 연도의 주로 지원해주는 사람의 유형 조회(연도)",
         "description": "해당 연도의 주로 지원해주는 사람의 유형 조회",
         "operationId": "getHousingLifeMainCarerYear",
         "parameters": [
@@ -1679,11 +1474,10 @@
     "/api/v1/basic/housing/life/mainCarer/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
-        "summary": "주로 지원해주는 사람의 유형  조회",
-        "description": "주로 지원해주는 사람의 유형 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "주로 지원해주는 사람의 유형  조회(최신)",
+        "description": "주로 지원해주는 사람의 유형 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getHousingLifeMainCarerLatest",
         "parameters": [
           {
@@ -1726,7 +1520,6 @@
     "/api/v1/basic/housing/life/mainCarer/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
         "summary": "주로 지원해주는 사람의 유형 통계 정보 조회",
@@ -1749,10 +1542,9 @@
     "/api/v1/basic/housing/life/SuppNeedLvl/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
-        "summary": "해당 연도의 일상생활 필요 지원 정도 조회",
+        "summary": "해당 연도의 일상생활 필요 지원 정도 조회(연도)",
         "description": "해당 연도의 일상생활 필요 지원 정도 조회",
         "operationId": "getHousingLifeSuppNeedLvlYear",
         "parameters": [
@@ -1785,11 +1577,10 @@
     "/api/v1/basic/housing/life/SuppNeedLvl/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
-        "summary": "일상생활 필요 지원 정도 조회",
-        "description": "일상생활 필요 지원 정도 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "일상생활 필요 지원 정도 조회(최신)",
+        "description": "일상생활 필요 지원 정도 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getHousingLifeSuppNeedLvlLatest",
         "parameters": [
           {
@@ -1832,7 +1623,6 @@
     "/api/v1/basic/housing/life/SuppNeedLvl/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-주거 자립 현황 API V1"
         ],
         "summary": "일상생활 필요 지원 정도 통계 정보 조회",
@@ -1855,10 +1645,9 @@
     "/api/v1/basic/health/sportExecType/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-건강 관리 현황 API V1"
         ],
-        "summary": "해당 연도의 장애인 생활체육 실행 유형 조회",
+        "summary": "해당 연도의 장애인 생활체육 실행 유형 조회(연도)",
         "description": "해당 연도의 장애인 생활체육 실행 유형 조회",
         "operationId": "getHealthSportExecTypeYear",
         "parameters": [
@@ -1891,11 +1680,10 @@
     "/api/v1/basic/health/sportExecType/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-건강 관리 현황 API V1"
         ],
-        "summary": "장애인 생활체육 실행 유형 조회",
-        "description": "장애인 생활체육 실행 유형 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "장애인 생활체육 실행 유형 조회(최신)",
+        "description": "장애인 생활체육 실행 유형 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getHealthSportExecTypeLatest",
         "parameters": [
           {
@@ -1938,7 +1726,6 @@
     "/api/v1/basic/health/sportExecType/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-건강 관리 현황 API V1"
         ],
         "summary": "장애인 생활체육 실행 유형 통계 정보 조회",
@@ -1961,10 +1748,9 @@
     "/api/v1/basic/health/medicalUsg/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-건강 관리 현황 API V1"
         ],
-        "summary": "해당 연도의 장애인 의료이용 현황 조회",
+        "summary": "해당 연도의 장애인 의료이용 현황 조회(연도)",
         "description": "해당 연도의 장애인 의료이용 현황 조회",
         "operationId": "getHealthMedicalUsageYear",
         "parameters": [
@@ -1997,11 +1783,10 @@
     "/api/v1/basic/health/medicalUsg/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-건강 관리 현황 API V1"
         ],
-        "summary": "장애인 의료이용 현황 조회",
-        "description": "장애인 의료이용 현황 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "장애인 의료이용 현황 조회(최신)",
+        "description": "장애인 의료이용 현황 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getHealthMedicalUsageLatest",
         "parameters": [
           {
@@ -2044,7 +1829,6 @@
     "/api/v1/basic/health/medicalUsg/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-건강 관리 현황 API V1"
         ],
         "summary": "장애인 의료이용 현황 통계 정보 조회",
@@ -2067,10 +1851,9 @@
     "/api/v1/basic/health/exrcBestAid/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-건강 관리 현황 API V1"
         ],
-        "summary": "해당 연도의 운동 시 가장 도움이 되는 지원 사항 조회",
+        "summary": "해당 연도의 운동 시 가장 도움이 되는 지원 사항 조회(연도)",
         "description": "해당 연도의 운동 시 가장 도움이 되는 지원 사항 조회",
         "operationId": "getHealthExrcBestAidYear",
         "parameters": [
@@ -2103,11 +1886,10 @@
     "/api/v1/basic/health/exrcBestAid/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-건강 관리 현황 API V1"
         ],
-        "summary": "운동 시 가장 도움이 되는 지원 사항 조회",
-        "description": "운동 시 가장 도움이 되는 지원 사항. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "운동 시 가장 도움이 되는 지원 사항 조회(최신)",
+        "description": "운동 시 가장 도움이 되는 지원 사항. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getHealthExrcBestAidLatest",
         "parameters": [
           {
@@ -2150,7 +1932,6 @@
     "/api/v1/basic/health/exrcBestAid/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-건강 관리 현황 API V1"
         ],
         "summary": "운동 시 가장 도움이 되는 지원 사항 통계 정보 조회",
@@ -2173,10 +1954,9 @@
     "/api/v1/basic/health/disCostSub/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-건강 관리 현황 API V1"
         ],
-        "summary": "해당 연도의 장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회",
+        "summary": "해당 연도의 장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회(연도)",
         "description": "해당 연도의 장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회",
         "operationId": "getHealthDiseaseCostSubYear",
         "parameters": [
@@ -2209,11 +1989,10 @@
     "/api/v1/basic/health/disCostSub/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-건강 관리 현황 API V1"
         ],
-        "summary": "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회",
-        "description": "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회(최신)",
+        "description": "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getHealthDiseaseCostSubLatest",
         "parameters": [
           {
@@ -2256,7 +2035,6 @@
     "/api/v1/basic/health/disCostSub/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-건강 관리 현황 API V1"
         ],
         "summary": "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 통계 정보 조회",
@@ -2279,10 +2057,9 @@
     "/api/v1/basic/facility/welfareUsg/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-편의 시설 제공 현황 API V1"
         ],
-        "summary": "해당 연도의 사회복지시설 이용 현황  조회",
+        "summary": "해당 연도의 사회복지시설 이용 현황  조회(연도)",
         "description": "해당 연도의 사회복지시설 이용 현황 조회",
         "operationId": "getFcltyWelfareUsageYear",
         "parameters": [
@@ -2315,11 +2092,10 @@
     "/api/v1/basic/facility/welfareUsg/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-편의 시설 제공 현황 API V1"
         ],
-        "summary": "사회복지시설 이용 현황 조회",
-        "description": "사회복지시설 이용 현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "사회복지시설 이용 현황 조회(최신)",
+        "description": "사회복지시설 이용 현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getFcltyWelfareUsageLatest",
         "parameters": [
           {
@@ -2362,7 +2138,6 @@
     "/api/v1/basic/facility/welfareUsg/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-편의 시설 제공 현황 API V1"
         ],
         "summary": "사회복지시설 이용 현황 통계 정보 조회",
@@ -2385,10 +2160,9 @@
     "/api/v1/basic/emp/public/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-고용 현황 API V1"
         ],
-        "summary": "공공기관 장애인고용 현황 조회",
+        "summary": "해당연도 공공기관 장애인고용 현황 조회(연도)",
         "description": "공공기관 장애인고용 현황 조회",
         "operationId": "getEmpNatlPublicYear",
         "parameters": [
@@ -2421,11 +2195,10 @@
     "/api/v1/basic/emp/public/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-고용 현황 API V1"
         ],
-        "summary": "공공기관 장애인고용 현황 사항 조회",
-        "description": "공공기관 장애인고용 현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "공공기관 장애인고용 현황 조회(최신)",
+        "description": "공공기관 장애인고용 현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getEmpNatlPublicLatest",
         "parameters": [
           {
@@ -2468,7 +2241,6 @@
     "/api/v1/basic/emp/public/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-고용 현황 API V1"
         ],
         "summary": "공공기관 장애인고용 현황 통계 정보 조회",
@@ -2491,10 +2263,9 @@
     "/api/v1/basic/emp/private/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-고용 현황 API V1"
         ],
-        "summary": "민간기업 장애인고용 현황 조회",
+        "summary": "해당연도 민간기업 장애인고용 현황 조회(연도)",
         "description": "민간기업 장애인고용 현황 조회",
         "operationId": "getEmpNatlPrivateYear",
         "parameters": [
@@ -2527,11 +2298,10 @@
     "/api/v1/basic/emp/private/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-고용 현황 API V1"
         ],
-        "summary": "민간기업 장애인고용 현황 조회",
-        "description": "민간기업 장애인고용 현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "민간기업 장애인고용 현황 조회(최신)",
+        "description": "민간기업 장애인고용 현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getEmpNatlPrivateLatest",
         "parameters": [
           {
@@ -2574,7 +2344,6 @@
     "/api/v1/basic/emp/private/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-고용 현황 API V1"
         ],
         "summary": "민간기업 장애인고용 현황 통계 정보 조회",
@@ -2597,10 +2366,9 @@
     "/api/v1/basic/emp/nation/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-고용 현황 API V1"
         ],
-        "summary": "해당 연도의 장애인 근로자 고용현황 조회",
+        "summary": "해당 연도의 장애인 근로자 고용현황 조회(연도)",
         "description": "해당 연도의 장애인 근로자 고용현황 조회",
         "operationId": "getEmpNatlYear",
         "parameters": [
@@ -2633,11 +2401,10 @@
     "/api/v1/basic/emp/nation/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-고용 현황 API V1"
         ],
-        "summary": "장애인 근로자 고용현황 조회",
-        "description": "장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "장애인 근로자 고용현황 조회(최신)",
+        "description": "장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getEmpNatlLatest",
         "parameters": [
           {
@@ -2680,7 +2447,6 @@
     "/api/v1/basic/emp/nation/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-고용 현황 API V1"
         ],
         "summary": "장애인 근로자 고용현황 통계 정보 조회",
@@ -2703,10 +2469,9 @@
     "/api/v1/basic/emp/govOrg/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-고용 현황 API V1"
         ],
-        "summary": "정부부문 장애인고용 현황 조회",
+        "summary": "해당 연도의 정부부문 장애인고용 현황 조회(연도)",
         "description": "정부부문 장애인고용 현황 조회",
         "operationId": "getEmpNatlGovOrgYear",
         "parameters": [
@@ -2739,11 +2504,10 @@
     "/api/v1/basic/emp/govOrg/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-고용 현황 API V1"
         ],
-        "summary": "정부부문 장애인고용 현황 조회",
-        "description": "정부부문 장애인고용 현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "정부부문 장애인고용 현황 조회(최신)",
+        "description": "정부부문 장애인고용 현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getEmpNatlGovOrgLatest",
         "parameters": [
           {
@@ -2786,7 +2550,6 @@
     "/api/v1/basic/emp/govOrg/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-고용 현황 API V1"
         ],
         "summary": "정부부문 장애인고용 현황 통계 정보 조회",
@@ -2809,10 +2572,9 @@
     "/api/v1/basic/emp/disTypeSev/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-고용 현황 API V1"
         ],
-        "summary": "장애유형 및 장애정도별 장애인 근로자 고용현황 조회",
+        "summary": "해당연도의 장애유형 및 장애정도별 장애인 근로자 고용현황 조회(연도)",
         "description": "장애유형 및 장애정도별 장애인 근로자 고용현황 조회",
         "operationId": "getEmpNatlDisTypeSevYear",
         "parameters": [
@@ -2845,11 +2607,10 @@
     "/api/v1/basic/emp/disTypeSev/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-고용 현황 API V1"
         ],
-        "summary": "장애유형 및 장애정도별 장애인 근로자 고용현황 조회",
-        "description": "장애유형 및 장애정도별 장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "장애유형 및 장애정도별 장애인 근로자 고용현황 조회(최신)",
+        "description": "장애유형 및 장애정도별 장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getEmpNatlDisTypeSevLatest",
         "parameters": [
           {
@@ -2892,7 +2653,6 @@
     "/api/v1/basic/emp/disTypeSev/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-고용 현황 API V1"
         ],
         "summary": "장애유형 및 장애정도별 장애인 근로자 고용현황 통계 정보 조회",
@@ -2915,10 +2675,9 @@
     "/api/v1/basic/emp/disTypeIndust/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-고용 현황 API V1"
         ],
-        "summary": "장애유형 및 산업별 장애인 근로자 고용현황 조회",
+        "summary": "해당연도의 장애유형 및 산업별 장애인 근로자 고용현황 조회(연도)",
         "description": "장애유형 및 산업별 장애인 근로자 고용현황 조회",
         "operationId": "getEmpNatlDisTypeIndustYear",
         "parameters": [
@@ -2951,11 +2710,10 @@
     "/api/v1/basic/emp/disTypeIndust/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-고용 현황 API V1"
         ],
-        "summary": "장애유형 및 산업별 장애인 근로자 고용현황 조회",
-        "description": "장애유형 및 산업별 장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "장애유형 및 산업별 장애인 근로자 고용현황 조회(최신)",
+        "description": "장애유형 및 산업별 장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getEmpNatlDisTypeIndustLatest",
         "parameters": [
           {
@@ -2998,7 +2756,6 @@
     "/api/v1/basic/emp/disTypeIndust/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-고용 현황 API V1"
         ],
         "summary": "장애유형 및 산업별 장애인 근로자 고용현황 통계 정보 조회",
@@ -3021,10 +2778,9 @@
     "/api/v1/basic/edu/vocaExecWay/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-진로 교육 현황 API V1"
         ],
-        "summary": "해당 연도의 장애인 진로 및 직업교육 운영 방법 조회",
+        "summary": "해당 연도의 장애인 진로 및 직업교육 운영 방법 조회(연도)",
         "description": "해당 연도의 장애인 진로 및 직업교육 운영 방법 조회",
         "operationId": "getEduVocaExecWayYear",
         "parameters": [
@@ -3057,11 +2813,10 @@
     "/api/v1/basic/edu/vocaExecWay/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-진로 교육 현황 API V1"
         ],
-        "summary": "장애인 진로 및 직업교육 운영 방법 조회",
-        "description": "장애인 진로 및 직업교육 운영 방법. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "장애인 진로 및 직업교육 운영 방법 조회(연도)",
+        "description": "장애인 진로 및 직업교육 운영 방법. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getEduVocaExecWayLatest",
         "parameters": [
           {
@@ -3104,7 +2859,6 @@
     "/api/v1/basic/edu/vocaExecWay/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-진로 교육 현황 API V1"
         ],
         "summary": "장애인 진로 및 직업교육 운영 방법 통계 정보 조회",
@@ -3127,10 +2881,9 @@
     "/api/v1/basic/edu/vocaExec/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-진로 교육 현황 API V1"
         ],
-        "summary": "해당 연도의 장애인 진로 및 직업교육 실시 여부 조회",
+        "summary": "해당 연도의 장애인 진로 및 직업교육 실시 여부 조회(연도)",
         "description": "해당 연도의 장애인 진로 및 직업교육 실시 여부 조회",
         "operationId": "getEduVocaExecYear",
         "parameters": [
@@ -3163,11 +2916,10 @@
     "/api/v1/basic/edu/vocaExec/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-진로 교육 현황 API V1"
         ],
-        "summary": "장애인 진로 및 직업교육 실시 여부 조회",
-        "description": "장애인 진로 및 직업교육 실시 여부. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "장애인 진로 및 직업교육 실시 여부 조회(최신)",
+        "description": "장애인 진로 및 직업교육 실시 여부. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getEduVocaExecLatest",
         "parameters": [
           {
@@ -3210,7 +2962,6 @@
     "/api/v1/basic/edu/vocaExec/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-진로 교육 현황 API V1"
         ],
         "summary": "장애인 진로 및 직업교육 실시 여부 통계 정보 조회",
@@ -3233,10 +2984,9 @@
     "/api/v1/basic/aid/deviceUsg/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-보조기기 사용 현황 API V1"
         ],
-        "summary": "해당 연도의 장애인보조기기 사용여부 조회",
+        "summary": "해당 연도의 장애인보조기기 사용여부 조회(연도)",
         "description": "해당 연도의 장애인보조기기 사용여부 조회",
         "operationId": "getAidDeviceUsageYear",
         "parameters": [
@@ -3269,11 +3019,10 @@
     "/api/v1/basic/aid/deviceUsg/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-보조기기 사용 현황 API V1"
         ],
-        "summary": "장애인보조기기 사용여부 조회",
-        "description": "장애인보조기기 사용여부. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "장애인보조기기 사용여부 조회(최신)",
+        "description": "장애인보조기기 사용여부. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getAidDeviceUsageLatest",
         "parameters": [
           {
@@ -3316,7 +3065,6 @@
     "/api/v1/basic/aid/deviceUsg/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-보조기기 사용 현황 API V1"
         ],
         "summary": "장애인보조기기 사용여부 통계 정보 조회",
@@ -3339,10 +3087,9 @@
     "/api/v1/basic/aid/deviceNeed/{statYear}": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-보조기기 사용 현황 API V1"
         ],
-        "summary": "해당 연도의 장애인보조기기 필요여부 조회",
+        "summary": "해당 연도의 장애인보조기기 필요여부 조회(연도)",
         "description": "해당 연도의 장애인보조기기 필요여부 조회",
         "operationId": "getAidDeviceNeedYear",
         "parameters": [
@@ -3375,11 +3122,10 @@
     "/api/v1/basic/aid/deviceNeed/latest": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-보조기기 사용 현황 API V1"
         ],
-        "summary": "장애인보조기기 필요여부 조회",
-        "description": "장애인보조기기 필요여부. (최대 10년) 예) from(옵션)~(최종 연도), default는 최종 3개년",
+        "summary": "장애인보조기기 필요여부 조회(최신)",
+        "description": "장애인보조기기 필요여부. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
         "operationId": "getAidDeviceNeedLatest",
         "parameters": [
           {
@@ -3422,7 +3168,6 @@
     "/api/v1/basic/aid/deviceNeed/info": {
       "get": {
         "tags": [
-          "기초 데이터 API V1",
           "기초-보조기기 사용 현황 API V1"
         ],
         "summary": "장애인보조기기 필요여부 통계 정보 조회",
