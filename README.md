@@ -94,11 +94,23 @@ build.bat [local|dev|stage|prod]
 - 옵션 생략 시 local
 - OpenAPI 문서 생성/복사 + JAR 빌드 자동화
 
-### 2. OpenAPI 문서 자동화
+### 2. ## OpenAPI 문서 자동화 및 Stoplight Elements 그룹핑 안내
+
+### 2.1. OpenAPI 문서 자동화
 - 문서만 생성: `./gradlew generateOpenApiDocs`
 - 문서 생성+복사: `./gradlew copyDocsToResources`
 - build.sh/build.bat 사용 시 자동 포함
 - 문서 위치: `docs-dist/`, `src/main/resources/static/docs/`
+
+### 2.2. Stoplight Elements 그룹핑(x-tagGroups) 자동 추가
+- Stoplight Elements에서 API 그룹핑을 위해 OpenAPI 문서의 root에 `x-tagGroups`가 필요합니다.
+- 본 프로젝트는 빌드 후 파이썬 스크립트(`scripts/add-x-tagGroups.py`)로 자동 추가합니다.
+- **최초 1회만 아래 명령어로 PyYAML 패키지를 설치하세요:**
+
+```sh
+pip install pyyaml
+```
+- 이후 `./gradlew copyDocsToResources` 또는 빌드 스크립트 실행 시 자동으로 그룹핑 정보가 추가됩니다.
 
 ### 3. 서버 실행
 
@@ -167,7 +179,7 @@ spring:
 - 암호화 알고리즘은 기본적으로 `PBEWithMD5AndDES`를 사용합니다.
 - 암호화키는 외부에 노출되지 않도록 주의하세요.
 
-### 1-1. 암호화 스크립트 사용법
+### 4-1. 암호화 스크립트 사용법
 - Mac/Linux: `./encrypt.sh 평문 암호화키`
 - Windows: `encrypt.bat 평문 암호화키`
 - 인코딩 옵션이 자동 적용되어 한글/다국어도 안전하게 암호화됩니다.
@@ -176,3 +188,5 @@ spring:
 
 ## 기타
 - 문의/이슈는 [이슈 트래커/연락처]로
+
+---
