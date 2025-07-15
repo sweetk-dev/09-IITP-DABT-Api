@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:4010",
+      "url": "http://192.168.60.142:4010",
       "description": "Prism Mock 서버"
     }
   ],
