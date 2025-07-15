@@ -1,4 +1,5 @@
-# IITP API Service
+# 09-IITP-DABT-Api
+9.모델 연동 API 모듈
 
 ## 프로젝트 개요
 IITP API 서비스는 장애인 통계 및 POI 정보를 제공하는 RESTful API 서버입니다.
