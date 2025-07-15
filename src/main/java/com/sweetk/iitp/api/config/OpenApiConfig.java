@@ -8,7 +8,6 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
-import io.swagger.v3.oas.models.tags.Tag;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -49,7 +48,7 @@ public class OpenApiConfig {
 //                                .url("https://api.iitp.kr")
 //                                .description("Production Server"),
                         new Server()
-                                .url("http://localhost:4010")
+                                .url("http://192.168.60.142:4010")
                                 .description("Prism Mock 서버")
                 ))
                 .components(new Components()
