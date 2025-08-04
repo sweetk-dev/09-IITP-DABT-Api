@@ -2,28 +2,20 @@ package com.sweetk.iitp.api.controller.v1.poi;
 
 import com.sweetk.iitp.api.constant.ApiConstants;
 import com.sweetk.iitp.api.dto.common.ApiResDto;
-import com.sweetk.iitp.api.dto.common.PageReq;
-import com.sweetk.iitp.api.dto.common.PageRes;
 import com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfo;
-import com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfoSearchCatReq;
-import com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfoSearchLocReq;
 import com.sweetk.iitp.api.exception.BusinessException;
 import com.sweetk.iitp.api.exception.ErrorCode;
 import com.sweetk.iitp.api.service.poi.PoiPublicToiletInfoReadService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "공중 화장실 정보", description = "공중 화장실 위치 및 시설 정보 관련 API")
 @Slf4j
@@ -34,6 +26,26 @@ public class PoiPublicToiletInfoController {
 
     private final PoiPublicToiletInfoReadService poiPublicToiletInfoReadService;
 
+
+    @GetMapping("/{toiletId}")
+    @Operation(
+            summary = "공중 화장실 상세 조회",
+            description = "공중 화장실 ID로 상세 정보 조회."
+    )
+    public ResponseEntity<ApiResDto<PoiPublicToiletInfo>> getPublicToiletById(
+            @Parameter(description = "공중 화장실 ID", required = true)
+            @PathVariable Integer toiletId) {
+
+        log.info("공중 화장실 상세 조회 요청 - ID: {}", toiletId);
+
+        return poiPublicToiletInfoReadService.findById(toiletId)
+                .map(toilet -> ResponseEntity.ok(ApiResDto.success(toilet)))
+                .orElseThrow(()->new BusinessException(ErrorCode.POI_NOT_FOUND));
+    }
+
+
+
+    /*
     @GetMapping("/{toiletId}")
     @Operation(
         summary = "공중 화장실 상세 조회",
@@ -139,5 +151,5 @@ public class PoiPublicToiletInfoController {
         return ResponseEntity.ok(ApiResDto.success(searchRet));
     }
 
-
+*/
 } 

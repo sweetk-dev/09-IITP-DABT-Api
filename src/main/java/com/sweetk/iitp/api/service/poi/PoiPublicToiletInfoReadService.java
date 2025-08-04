@@ -6,6 +6,8 @@ import com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfo;
 import com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfoSearchCatReq;
 import com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfoSearchLocReq;
 import com.sweetk.iitp.api.dto.poi.converter.PoiPublicToiletInfoConverter;
+import com.sweetk.iitp.api.exception.BusinessException;
+import com.sweetk.iitp.api.exception.ErrorCode;
 import com.sweetk.iitp.api.repository.poi.PoiPublicToiletInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,8 +61,13 @@ public class PoiPublicToiletInfoReadService {
      */
     public Optional<PoiPublicToiletInfo> findById(Integer toiletId) {
         log.debug("공중 화장실 조회 요청 - ID: {}", toiletId);
-        return poiPublicToiletInfoRepository.findById(toiletId)
-                .map(PoiPublicToiletInfoConverter::toDto);
+        try {
+            return poiPublicToiletInfoRepository.findById(toiletId)
+                    .map(PoiPublicToiletInfoConverter::toDto);
+        } catch (Exception e) {
+            log.error("공중 화장실 조회 중 오류 발생 - ID: {}, 오류: {}", toiletId, e.getMessage(), e);
+            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
