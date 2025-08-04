@@ -2,15 +2,20 @@ package com.sweetk.iitp.api.service.poi;
 
 import com.sweetk.iitp.api.dto.common.PageReq;
 import com.sweetk.iitp.api.dto.common.PageRes;
+import com.sweetk.iitp.api.constant.MvPoiCategoryType;
 import com.sweetk.iitp.api.dto.internal.MvPoiPageResult;
 import com.sweetk.iitp.api.dto.poi.MvPoi;
 import com.sweetk.iitp.api.dto.poi.MvPoiSearchCatReq;
 import com.sweetk.iitp.api.dto.poi.MvPoiSearchLocReq;
+import com.sweetk.iitp.api.exception.BusinessException;
+import com.sweetk.iitp.api.exception.ErrorCode;
 import com.sweetk.iitp.api.repository.poi.MvPoiRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -18,6 +23,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MvPoiReadService {
     private final MvPoiRepository mvPoiRepos;
+
+    public Optional<MvPoi> findById(Long poiId) {
+        return mvPoiRepos.findByIdWithCategory(poiId);
+    }
+
+    public PageRes<MvPoi> getPoiByCategoryType(String categoryType, PageReq pageReq) {
+        int offset = pageReq.getPage() * pageReq.getSize();
+        int size = pageReq.getSize();
+        
+        MvPoiPageResult result = mvPoiRepos.findByCategoryTypeWithCount(categoryType, offset, size);
+        return new PageRes<>(result.content, pageReq.toPageable(), result.totalCount);
+    }
 
     public PageRes<MvPoi> getAllPoi(PageReq pageReq) {
         int offset = pageReq.getPage() * pageReq.getSize();
