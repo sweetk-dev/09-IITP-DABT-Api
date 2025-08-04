@@ -79,7 +79,6 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
                 entityList.add(poi);
                 i++;
             }
-            log.debug("[MvPoi] 카테고리별 조회 완료 - 결과 개수: {}", entityList.size());
         } catch (SQLException e) {
             log.error("[MvPoi] 카테고리별 조회 쿼리 실행 중 오류 발생", e);
             throw new RuntimeException("Database query failed", e);
@@ -105,12 +104,32 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
             
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    // JSON에서 카테고리 정보 추출 (기본값 설정)
-                    String category = "tourist_spot"; // 기본값
-                    String subCategory = "general"; // 기본값
+                    // JSON에서 카테고리 정보 추출
+                    String searchFilterJson = rs.getString("search_filter_json");
+                    String category = ""; // 기본값
+                    String subCategory = ""; // 기본값
                     
-                    // TODO: search_filter_json에서 실제 카테고리 정보를 추출하는 로직 필요
-                    // 현재는 기본값으로 설정
+                                         if (searchFilterJson != null && !searchFilterJson.trim().isEmpty()) {
+                         try {
+                             // JSON 파싱하여 첫 번째 카테고리와 서브카테고리 추출
+                             com.fasterxml.jackson.databind.JsonNode jsonNode = objectMapper.readTree(searchFilterJson);
+                             com.fasterxml.jackson.databind.JsonNode searchFilter = jsonNode.get("search_filter");
+                             
+                             if (searchFilter != null && searchFilter.isObject()) {
+                                 java.util.Iterator<String> categoryNames = searchFilter.fieldNames();
+                                 if (categoryNames.hasNext()) {
+                                     category = categoryNames.next();
+                                     com.fasterxml.jackson.databind.JsonNode subCategories = searchFilter.get(category);
+                                     if (subCategories != null) {
+                                         // 서브카테고리는 문자열 그대로 사용
+                                         subCategory = subCategories.asText();
+                                     }
+                                 }
+                             }
+                         } catch (Exception e) {
+                             log.warn("[MvPoi] JSON 파싱 실패, 기본값 사용: {}", e.getMessage());
+                         }
+                     }
                     
                     MvPoi poi = new MvPoi(
                         rs.getString("language_code"),

@@ -13,10 +13,7 @@ import com.sweetk.iitp.api.exception.ErrorCode;
 import com.sweetk.iitp.api.service.poi.MvPoiReadService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -41,20 +38,12 @@ public class MvPoiController {
     @GetMapping("/{poiId}")
     @Operation(
         summary = "이동형 POI 상세 조회",
-        description = "이동형 POI ID로 상세 정보를 조회합니다."
+        description = "이동형 POI ID로 상세 정보 조회"
     )
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "조회 성공",
-            content = @Content(schema = @Schema(implementation = MvPoi.class))),
-        @ApiResponse(responseCode = "404", description = "POI를 찾을 수 없음"),
-        @ApiResponse(responseCode = "500", description = "서버 오류")
-    })
     public ResponseEntity<ApiResDto<MvPoi>> getPoiById(
             @Parameter(description = "POI ID", required = true)
             @PathVariable Long poiId,
             HttpServletRequest request) {
-        
-        log.debug("[{}] : POI ID: {}", request.getRequestURI(), poiId);
         
         return mvPoiReadService.findById(poiId)
                 .map(poi -> ResponseEntity.ok(ApiResDto.success(poi)))
@@ -64,24 +53,15 @@ public class MvPoiController {
     @GetMapping("/category/{categoryType}")
     @Operation(
         summary = "이동형 POI 카테고리별 조회",
-        description = "카테고리 유형별로 이동형 POI를 조회합니다."
+        description = "카테고리 유형별로 이동형 POI를 조회"
     )
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "조회 성공",
-            content = @Content(schema = @Schema(implementation = PageRes.class))),
-        @ApiResponse(responseCode = "400", description = "잘못된 카테고리 유형"),
-        @ApiResponse(responseCode = "500", description = "서버 오류")
-    })
-                 public ResponseEntity<ApiResDto<PageRes<MvPoi>>> getPoiByCategory(
-                          @Parameter(description = "카테고리 유형", required = true,
-                         example = "tourist_spot",
-                         schema = @Schema(allowableValues = {"tourist_spot", "restaurant", "shopping", "accommodation"}))
-                          @PathVariable MvPoiCategoryType categoryType,
-                          @Valid @ParameterObject PageReq page,
-                          HttpServletRequest request) {
-        
-        log.debug("[{}] : 카테고리: {}, 페이지: {}", request.getRequestURI(), categoryType, page);
-        
+    public ResponseEntity<ApiResDto<PageRes<MvPoi>>> getPoiByCategory(
+              @Parameter(description = "카테고리 유형", required = true,
+             example = "tourist_spot",
+             schema = @Schema(allowableValues = {"tourist_spot", "restaurant", "shopping", "accommodation"}))
+              @PathVariable MvPoiCategoryType categoryType,
+              @Valid @ParameterObject PageReq page,
+              HttpServletRequest request) {
         try {
             PageRes<MvPoi> result = mvPoiReadService.getPoiByCategoryType(categoryType.getCode(), page);
             return ResponseEntity.ok(ApiResDto.success(result));
