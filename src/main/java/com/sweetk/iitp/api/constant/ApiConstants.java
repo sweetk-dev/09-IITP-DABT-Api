@@ -21,6 +21,15 @@ public final class ApiConstants {
 
         //For Poi
         public static final String API_V1_POI = API_V1 + "/poi";
+        public static final String API_V1_POI_BARRIER_FREE = API_V1_POI + "/barrier-free";
+        public static final String API_V1_POI_BF_TOUR = API_V1_POI_BARRIER_FREE + "/tour";
+
+        public static final String API_V1_POI_ELEVATOR = API_V1_POI + "/elevator";
+        public static final String API_V1_POI_PUBLIC_TOILET = API_V1_POI + "/public-toilet";
+
+
+
+
 
         //For Basic
         public static final String API_V1_BASIC = API_V1 + "/basic";

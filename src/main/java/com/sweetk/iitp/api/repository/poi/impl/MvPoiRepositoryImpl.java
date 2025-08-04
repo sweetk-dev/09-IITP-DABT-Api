@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -34,6 +35,107 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
     @Autowired
     private DataSource dataSource;
+
+    public MvPoiPageResult findByCategoryTypeWithCount(String categoryType, int offset, int size) {
+        StringBuilder sql = new StringBuilder("SELECT " +
+            "poi_id, " +
+            "language_code, " +
+            "'" + categoryType + "' AS category, " +
+            "search_filter_json->'search_filter'->>'" + categoryType + "' AS sub_category, " +
+            "title, summary, basic_info, address_code, address_road, address_detail, latitude, longitude, detail_json, search_filter_json, " +
+            "COUNT(*) OVER() AS total_count " +
+            "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' " +
+            "AND (search_filter_json->'search_filter' ? '" + categoryType + "') " +
+            "ORDER BY title OFFSET " + offset + " LIMIT " + size);
+
+        log.debug("[MvPoi] 카테고리별 조회 쿼리: {}", sql);
+
+        List<MvPoi> entityList = new ArrayList<>();
+        long totalCount = 0L;
+        try (Connection conn = dataSource.getConnection();
+             java.sql.Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql.toString())) {
+            int i = 0;
+            while (rs.next()) {
+                if (i == 0) {
+                    totalCount = rs.getLong("total_count");
+                }
+                MvPoi poi = new MvPoi(
+                    //rs.getLong("poi_id"),
+                    rs.getString("language_code"),
+                    categoryType,
+                    rs.getString("sub_category"),
+                    rs.getString("title"),
+                    rs.getString("summary"),
+                    rs.getString("basic_info"),
+                    rs.getString("address_code"),
+                    rs.getString("address_road"),
+                    rs.getString("address_detail"),
+                    rs.getBigDecimal("latitude"),
+                    rs.getBigDecimal("longitude"),
+                    rs.getString("detail_json"),
+                    rs.getString("search_filter_json")
+                );
+                entityList.add(poi);
+                i++;
+            }
+            log.debug("[MvPoi] 카테고리별 조회 완료 - 결과 개수: {}", entityList.size());
+        } catch (SQLException e) {
+            log.error("[MvPoi] 카테고리별 조회 쿼리 실행 중 오류 발생", e);
+            throw new RuntimeException("Database query failed", e);
+        }
+        return new MvPoiPageResult(entityList, totalCount);
+    }
+
+    @Override
+    public Optional<MvPoi> findByIdWithCategory(Long poiId) {
+        String sql = "SELECT " +
+            "poi_id, " +
+            "language_code, " +
+            "title, summary, basic_info, address_code, address_road, address_detail, " +
+            "latitude, longitude, detail_json, search_filter_json " +
+            "FROM mv_poi WHERE poi_id = ? AND is_published = 'Y' AND is_deleted = 'N'";
+
+        log.debug("[MvPoi] ID별 조회 쿼리: {}", sql);
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setLong(1, poiId);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    // JSON에서 카테고리 정보 추출 (기본값 설정)
+                    String category = "tourist_spot"; // 기본값
+                    String subCategory = "general"; // 기본값
+                    
+                    // TODO: search_filter_json에서 실제 카테고리 정보를 추출하는 로직 필요
+                    // 현재는 기본값으로 설정
+                    
+                    MvPoi poi = new MvPoi(
+                        rs.getString("language_code"),
+                        category,
+                        subCategory,
+                        rs.getString("title"),
+                        rs.getString("summary"),
+                        rs.getString("basic_info"),
+                        rs.getString("address_code"),
+                        rs.getString("address_road"),
+                        rs.getString("address_detail"),
+                        rs.getBigDecimal("latitude"),
+                        rs.getBigDecimal("longitude"),
+                        rs.getString("detail_json"),
+                        rs.getString("search_filter_json")
+                    );
+                    return Optional.of(poi);
+                }
+                return Optional.empty();
+            }
+        } catch (SQLException e) {
+            log.error("[MvPoi] ID별 조회 쿼리 실행 중 오류 발생", e);
+            throw new RuntimeException("Database query failed", e);
+        }
+    }
 
     public MvPoiPageResult findByCategoryAndSubCateWithCount(
             String category, String subCate, String name, int offset, int size
