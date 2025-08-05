@@ -69,4 +69,24 @@ public interface PoiTourBfFacilityRepositoryCustom {
      * 위치 기반 무장애 관광지 시설 개수 조회
      */
     long countByLocation(BigDecimal latitude, BigDecimal longitude, BigDecimal radius);
+    
+    /**
+     * 시도 코드로 무장애 관광지 시설 조회 (페이징)
+     */
+    List<PoiTourBfFacility> findBySidoCodeWithPaging(String sidoCode, int offset, int size);
+    
+    /**
+     * 시도 코드로 무장애 관광지 시설 개수 조회
+     */
+    long countBySidoCode(String sidoCode);
+    
+    /**
+     * 전체 무장애 관광지 시설 조회 (페이징)
+     */
+    List<PoiTourBfFacility> findAllWithPaging(int offset, int size);
+    
+    /**
+     * 전체 무장애 관광지 시설 개수 조회
+     */
+    long countAll();
 } 

@@ -103,9 +103,9 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
                     rs.getString("stroller_rent_yn"),
                     rs.getString("addr_road"),
                     rs.getString("addr_jibun"),
-                    rs.getBigDecimal("latitude") != null ? rs.getBigDecimal("latitude").doubleValue() : null,
-                    rs.getBigDecimal("longitude") != null ? rs.getBigDecimal("longitude").doubleValue() : null,
-                    rs.getString("base_dt") != null ? LocalDate.parse(rs.getString("base_dt")) : null
+                                            rs.getBigDecimal("latitude") != null ? rs.getBigDecimal("latitude").doubleValue() : null,
+                        rs.getBigDecimal("longitude") != null ? rs.getBigDecimal("longitude").doubleValue() : null,
+                        rs.getDate("base_dt") != null ? rs.getDate("base_dt").toLocalDate() : null
                 );
                 entityList.add(facility);
             }
@@ -217,7 +217,7 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
                         rs.getString("addr_jibun"),
                         rs.getBigDecimal("latitude") != null ? rs.getBigDecimal("latitude").doubleValue() : null,
                         rs.getBigDecimal("longitude") != null ? rs.getBigDecimal("longitude").doubleValue() : null,
-                        rs.getString("base_dt") != null ? LocalDate.parse(rs.getString("base_dt")) : null
+                        rs.getDate("base_dt") != null ? rs.getDate("base_dt").toLocalDate() : null
                     );
                     entityList.add(facility);
                 }
@@ -363,5 +363,160 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
         }
 
         return query.getResultList();
+    }
+
+    @Override
+    public List<PoiTourBfFacility> findBySidoCodeWithPaging(String sidoCode, int offset, int size) {
+        String sql = "SELECT fclt_id, sido_code, fclt_name, toilet_yn, elevator_yn, parking_yn, slope_yn, " +
+            "subway_yn, bus_stop_yn, wheelchair_rent_yn, tactile_map_yn, audio_guide_yn, " +
+            "nursing_room_yn, accessible_room_yn, stroller_rent_yn, addr_road, addr_jibun, " +
+            "latitude, longitude, base_dt " +
+            "FROM poi_tour_bf_facility " +
+            "WHERE sido_code = ? AND del_yn = 'N' " +
+            "ORDER BY fclt_name OFFSET ? LIMIT ?";
+
+        log.debug("[PoiTourBfFacility] 시도별 조회 쿼리: {}", sql);
+
+        List<PoiTourBfFacility> entityList = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, sidoCode);
+            ps.setInt(2, offset);
+            ps.setInt(3, size);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiTourBfFacility facility = new PoiTourBfFacility(
+                        rs.getInt("fclt_id"),
+                        rs.getString("sido_code"),
+                        rs.getString("fclt_name"),
+                        rs.getString("toilet_yn"),
+                        rs.getString("elevator_yn"),
+                        rs.getString("parking_yn"),
+                        rs.getString("slope_yn"),
+                        rs.getString("subway_yn"),
+                        rs.getString("bus_stop_yn"),
+                        rs.getString("wheelchair_rent_yn"),
+                        rs.getString("tactile_map_yn"),
+                        rs.getString("audio_guide_yn"),
+                        rs.getString("nursing_room_yn"),
+                        rs.getString("accessible_room_yn"),
+                        rs.getString("stroller_rent_yn"),
+                        rs.getString("addr_road"),
+                        rs.getString("addr_jibun"),
+                        rs.getBigDecimal("latitude") != null ? rs.getBigDecimal("latitude").doubleValue() : null,
+                        rs.getBigDecimal("longitude") != null ? rs.getBigDecimal("longitude").doubleValue() : null,
+                        rs.getDate("base_dt") != null ? rs.getDate("base_dt").toLocalDate() : null
+                    );
+                    entityList.add(facility);
+                }
+            }
+            log.debug("[PoiTourBfFacility] 시도별 조회 완료 - 결과 개수: {}", entityList.size());
+        } catch (SQLException e) {
+            log.error("[PoiTourBfFacility] 시도별 조회 쿼리 실행 중 오류 발생", e);
+            throw new RuntimeException("Database sido query failed", e);
+        }
+        
+        return entityList;
+    }
+
+    @Override
+    public long countBySidoCode(String sidoCode) {
+        String sql = "SELECT COUNT(*) FROM poi_tour_bf_facility WHERE sido_code = ? AND del_yn = 'N'";
+
+        log.debug("[PoiTourBfFacility] 시도별 Count 쿼리: {}", sql);
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, sidoCode);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+                return 0L;
+            }
+        } catch (SQLException e) {
+            log.error("[PoiTourBfFacility] 시도별 Count 쿼리 실행 중 오류 발생", e);
+            throw new RuntimeException("Database sido count query failed", e);
+        }
+    }
+
+    @Override
+    public List<PoiTourBfFacility> findAllWithPaging(int offset, int size) {
+        String sql = "SELECT fclt_id, sido_code, fclt_name, toilet_yn, elevator_yn, parking_yn, slope_yn, " +
+            "subway_yn, bus_stop_yn, wheelchair_rent_yn, tactile_map_yn, audio_guide_yn, " +
+            "nursing_room_yn, accessible_room_yn, stroller_rent_yn, addr_road, addr_jibun, " +
+            "latitude, longitude, base_dt " +
+            "FROM poi_tour_bf_facility " +
+            "WHERE del_yn = 'N' " +
+            "ORDER BY fclt_name OFFSET ? LIMIT ?";
+
+        log.debug("[PoiTourBfFacility] 전체 조회 쿼리: {}", sql);
+
+        List<PoiTourBfFacility> entityList = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, offset);
+            ps.setInt(2, size);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiTourBfFacility facility = new PoiTourBfFacility(
+                        rs.getInt("fclt_id"),
+                        rs.getString("sido_code"),
+                        rs.getString("fclt_name"),
+                        rs.getString("toilet_yn"),
+                        rs.getString("elevator_yn"),
+                        rs.getString("parking_yn"),
+                        rs.getString("slope_yn"),
+                        rs.getString("subway_yn"),
+                        rs.getString("bus_stop_yn"),
+                        rs.getString("wheelchair_rent_yn"),
+                        rs.getString("tactile_map_yn"),
+                        rs.getString("audio_guide_yn"),
+                        rs.getString("nursing_room_yn"),
+                        rs.getString("accessible_room_yn"),
+                        rs.getString("stroller_rent_yn"),
+                        rs.getString("addr_road"),
+                        rs.getString("addr_jibun"),
+                        rs.getBigDecimal("latitude") != null ? rs.getBigDecimal("latitude").doubleValue() : null,
+                        rs.getBigDecimal("longitude") != null ? rs.getBigDecimal("longitude").doubleValue() : null,
+                        rs.getDate("base_dt") != null ? rs.getDate("base_dt").toLocalDate() : null
+                    );
+                    entityList.add(facility);
+                }
+            }
+            log.debug("[PoiTourBfFacility] 전체 조회 완료 - 결과 개수: {}", entityList.size());
+        } catch (SQLException e) {
+            log.error("[PoiTourBfFacility] 전체 조회 쿼리 실행 중 오류 발생", e);
+            throw new RuntimeException("Database all query failed", e);
+        }
+        
+        return entityList;
+    }
+
+    @Override
+    public long countAll() {
+        String sql = "SELECT COUNT(*) FROM poi_tour_bf_facility WHERE del_yn = 'N'";
+
+        log.debug("[PoiTourBfFacility] 전체 Count 쿼리: {}", sql);
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+                return 0L;
+            }
+        } catch (SQLException e) {
+            log.error("[PoiTourBfFacility] 전체 Count 쿼리 실행 중 오류 발생", e);
+            throw new RuntimeException("Database all count query failed", e);
+        }
     }
 } 
