@@ -1,6 +1,6 @@
 package com.sweetk.iitp.api.dto.poi;
 
-import com.sweetk.iitp.api.constant.MvPoiCategoryType;
+import com.sweetk.iitp.api.constant.poi.MvPoiCategoryType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

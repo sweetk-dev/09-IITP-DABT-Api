@@ -2,13 +2,10 @@ package com.sweetk.iitp.api.service.poi;
 
 import com.sweetk.iitp.api.dto.common.PageReq;
 import com.sweetk.iitp.api.dto.common.PageRes;
-import com.sweetk.iitp.api.constant.MvPoiCategoryType;
 import com.sweetk.iitp.api.dto.internal.MvPoiPageResult;
 import com.sweetk.iitp.api.dto.poi.MvPoi;
 import com.sweetk.iitp.api.dto.poi.MvPoiSearchCatReq;
 import com.sweetk.iitp.api.dto.poi.MvPoiSearchLocReq;
-import com.sweetk.iitp.api.exception.BusinessException;
-import com.sweetk.iitp.api.exception.ErrorCode;
 import com.sweetk.iitp.api.repository.poi.MvPoiRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
