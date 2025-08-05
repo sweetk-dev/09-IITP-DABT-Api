@@ -1,7 +1,7 @@
 package com.sweetk.iitp.api.controller.v1.poi;
 
 import com.sweetk.iitp.api.constant.ApiConstants;
-import com.sweetk.iitp.api.constant.MvPoiCategoryType;
+import com.sweetk.iitp.api.constant.poi.MvPoiCategoryType;
 import com.sweetk.iitp.api.dto.common.ApiResDto;
 import com.sweetk.iitp.api.dto.common.PageReq;
 import com.sweetk.iitp.api.dto.common.PageRes;
@@ -13,7 +13,10 @@ import com.sweetk.iitp.api.exception.ErrorCode;
 import com.sweetk.iitp.api.service.poi.MvPoiReadService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -40,6 +43,12 @@ public class MvPoiController {
         summary = "이동형 POI 상세 조회",
         description = "이동형 POI ID로 상세 정보 조회"
     )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "조회 성공",
+            content = @Content(schema = @Schema(implementation = MvPoi.class))),
+        @ApiResponse(responseCode = "404", description = "POI를 찾을 수 없음"),
+        @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
     public ResponseEntity<ApiResDto<MvPoi>> getPoiById(
             @Parameter(description = "POI ID", required = true)
             @PathVariable Long poiId,
@@ -55,6 +64,12 @@ public class MvPoiController {
         summary = "이동형 POI 카테고리별 조회",
         description = "카테고리 유형별로 이동형 POI를 조회"
     )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "조회 성공",
+            content = @Content(schema = @Schema(implementation = PageRes.class))),
+        @ApiResponse(responseCode = "400", description = "잘못된 카테고리 유형"),
+        @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
     public ResponseEntity<ApiResDto<PageRes<MvPoi>>> getPoiByCategory(
               @Parameter(description = "카테고리 유형", required = true,
              example = "tourist_spot",
@@ -76,22 +91,20 @@ public class MvPoiController {
             summary = "이동형 POI 카테고리 검색 조회",
             description = "이동형 POI 카테고리 검색 조회 (paging):"
     )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "검색 성공",
+            content = @Content(schema = @Schema(implementation = PageRes.class))),
+        @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
     public ResponseEntity<ApiResDto<PageRes<MvPoi>>> searchByCategory(
             @Valid @ParameterObject PageReq page,
             @Valid @ParameterObject MvPoiSearchCatReq searchKeys,
             HttpServletRequest request) {
 
-        PageRes<MvPoi> searchRet = null;
-
         try {
-            //검색 키워드 확인
-            if (searchKeys == null) {
-                searchRet = mvPoiReadService.getAllPoi(page);
-            } else {
-                searchRet = mvPoiReadService.getPoiByCategory(searchKeys, page);
-            }
-
-            log.debug("[{}] : {}", request.getRequestURI(), searchKeys.toString());
+            PageRes<MvPoi> searchRet = mvPoiReadService.getPoiByCategory(searchKeys, page);
+            
+            log.debug("[{}] : {}", request.getRequestURI(), searchKeys != null ? searchKeys.toString() : "null");
             return ResponseEntity.ok(ApiResDto.success(searchRet));
         } catch (Exception e) {
             log.error("[{}] : {}", request.getRequestURI(), e.getMessage());
@@ -107,6 +120,11 @@ public class MvPoiController {
             summary = "이동형 POI 위치기반 검색 조회",
             description = "이동형 POI 위치기반 검색 조회 (paging):"
     )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "검색 성공",
+            content = @Content(schema = @Schema(implementation = PageRes.class))),
+        @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
     public ResponseEntity<ApiResDto<PageRes<MvPoi>>> searchByLocation(
             @Valid @ParameterObject PageReq page,
             @Valid @ParameterObject MvPoiSearchLocReq searchKeys,
@@ -114,8 +132,12 @@ public class MvPoiController {
 
         log.debug("[{}] : {}", request.getRequestURI(), searchKeys.toString() );
 
-        PageRes<MvPoi> searchRet = mvPoiReadService.getPoiByLocation( searchKeys, page );
-
-        return ResponseEntity.ok(ApiResDto.success(searchRet));
+        try {
+            PageRes<MvPoi> searchRet = mvPoiReadService.getPoiByLocation( searchKeys, page );
+            return ResponseEntity.ok(ApiResDto.success(searchRet));
+        } catch (Exception e) {
+            log.error("[{}] : {}", request.getRequestURI(), e.getMessage());
+            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
     }
 } 

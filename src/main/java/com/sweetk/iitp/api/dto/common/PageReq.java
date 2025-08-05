@@ -18,7 +18,7 @@ public class PageReq {
 
     @NotNull
     @Min(value = 20, message = "Page size must be greater than or equal to 10")
-    @Schema(description = "페이지 사이즈 , 0 이상.", required = true)
+    @Schema(description = "페이지 사이즈 , 20 이상.", required = true)
     private int size;
 
 //    @Schema(description = "정렬 기준 (id, name)등 ", example = "id")

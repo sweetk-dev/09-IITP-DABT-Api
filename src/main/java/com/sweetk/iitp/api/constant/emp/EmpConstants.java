@@ -1,4 +1,4 @@
-package com.sweetk.iitp.api.constant;
+package com.sweetk.iitp.api.constant.emp;
 
 public final class EmpConstants {
     private EmpConstants() {

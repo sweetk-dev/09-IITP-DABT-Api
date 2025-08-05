@@ -1,4 +1,4 @@
-package com.sweetk.iitp.api.constant;
+package com.sweetk.iitp.api.constant.poi;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
