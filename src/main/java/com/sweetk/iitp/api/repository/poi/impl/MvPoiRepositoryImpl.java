@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,17 +37,73 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     @Autowired
     private DataSource dataSource;
 
+
+
+    public List<MvPoi> findAll() {
+        return;
+    }
+
+    public List<MvPoi> findAllWithCount(int offset, int size) {
+        return;
+    }
+
+
+    public List<MvPoi> findByCategoryType(String categoryType) {
+        StringBuilder sql = new StringBuilder("SELECT " +
+                "poi_id, " +
+                "language_code, " +
+                "'" + categoryType + "' AS category, " +
+                "search_filter_json->'search_filter'->>'" + categoryType + "' AS sub_category, " +
+                "title, summary, basic_info, address_code, address_road, address_detail, latitude, longitude, detail_json, search_filter_json, " +
+                "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' " +
+                "AND (search_filter_json->'search_filter' ? '" + categoryType + "') " +
+                "ORDER BY title");
+
+        log.debug("[MvPoi] 카테고리별 조회 쿼리: {}", sql);
+
+        List<MvPoi> entityList = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             java.sql.Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql.toString())) {
+            while (rs.next()) {
+                MvPoi poi = new MvPoi(
+                        //rs.getLong("poi_id"),
+                        rs.getString("language_code"),
+                        categoryType,
+                        rs.getString("sub_category"),
+                        rs.getString("title"),
+                        rs.getString("summary"),
+                        rs.getString("basic_info"),
+                        rs.getString("address_code"),
+                        rs.getString("address_road"),
+                        rs.getString("address_detail"),
+                        rs.getBigDecimal("latitude"),
+                        rs.getBigDecimal("longitude"),
+                        rs.getString("detail_json"),
+                        rs.getString("search_filter_json")
+                );
+                entityList.add(poi);
+            }
+        } catch (SQLException e) {
+            log.error("[MvPoi] 카테고리별 조회 쿼리 실행 중 오류 발생", e);
+            throw new RuntimeException("Database query failed", e);
+        }
+        return entityList;
+    }
+
+
+
     public MvPoiPageResult findByCategoryTypeWithCount(String categoryType, int offset, int size) {
         StringBuilder sql = new StringBuilder("SELECT " +
-            "poi_id, " +
-            "language_code, " +
-            "'" + categoryType + "' AS category, " +
-            "search_filter_json->'search_filter'->>'" + categoryType + "' AS sub_category, " +
-            "title, summary, basic_info, address_code, address_road, address_detail, latitude, longitude, detail_json, search_filter_json, " +
-            "COUNT(*) OVER() AS total_count " +
-            "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' " +
-            "AND (search_filter_json->'search_filter' ? '" + categoryType + "') " +
-            "ORDER BY title OFFSET " + offset + " LIMIT " + size);
+                "poi_id, " +
+                "language_code, " +
+                "'" + categoryType + "' AS category, " +
+                "search_filter_json->'search_filter'->>'" + categoryType + "' AS sub_category, " +
+                "title, summary, basic_info, address_code, address_road, address_detail, latitude, longitude, detail_json, search_filter_json, " +
+                "COUNT(*) OVER() AS total_count " +
+                "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' " +
+                "AND (search_filter_json->'search_filter' ? '" + categoryType + "') " +
+                "ORDER BY title OFFSET " + offset + " LIMIT " + size);
 
         log.debug("[MvPoi] 카테고리별 조회 쿼리: {}", sql);
 
@@ -61,20 +118,20 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
                     totalCount = rs.getLong("total_count");
                 }
                 MvPoi poi = new MvPoi(
-                    //rs.getLong("poi_id"),
-                    rs.getString("language_code"),
-                    categoryType,
-                    rs.getString("sub_category"),
-                    rs.getString("title"),
-                    rs.getString("summary"),
-                    rs.getString("basic_info"),
-                    rs.getString("address_code"),
-                    rs.getString("address_road"),
-                    rs.getString("address_detail"),
-                    rs.getBigDecimal("latitude"),
-                    rs.getBigDecimal("longitude"),
-                    rs.getString("detail_json"),
-                    rs.getString("search_filter_json")
+                        //rs.getLong("poi_id"),
+                        rs.getString("language_code"),
+                        categoryType,
+                        rs.getString("sub_category"),
+                        rs.getString("title"),
+                        rs.getString("summary"),
+                        rs.getString("basic_info"),
+                        rs.getString("address_code"),
+                        rs.getString("address_road"),
+                        rs.getString("address_detail"),
+                        rs.getBigDecimal("latitude"),
+                        rs.getBigDecimal("longitude"),
+                        rs.getString("detail_json"),
+                        rs.getString("search_filter_json")
                 );
                 entityList.add(poi);
                 i++;
@@ -231,8 +288,8 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
         return new MvPoiPageResult(entityList, totalCount);
     }
 
-    public MvPoiPageResult findByLocationWithPaging(
-        java.math.BigDecimal latitude, java.math.BigDecimal longitude, java.math.BigDecimal radius, int offset, int size
+    public MvPoiPageResult findByLocationWithCount(
+            BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size
     ) {
         String sql = "SELECT *, COUNT(*) OVER() AS total_count FROM mv_poi " +
                 "WHERE is_published = 'Y' AND is_deleted = 'N' " +

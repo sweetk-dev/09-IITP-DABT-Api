@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -25,7 +26,13 @@ public class MvPoiReadService {
         return mvPoiRepos.findByIdWithCategory(poiId);
     }
 
-    public PageRes<MvPoi> getPoiByCategoryType(String categoryType, PageReq pageReq) {
+
+    public List<MvPoi> getPoiByCategoryType(String categoryType) {
+        return mvPoiRepos.findByCategoryType(categoryType);
+    }
+
+
+    public PageRes<MvPoi> getPoiByCategoryTypePaging(String categoryType, PageReq pageReq) {
         int offset = pageReq.getPage() * pageReq.getSize();
         int size = pageReq.getSize();
         
@@ -33,18 +40,33 @@ public class MvPoiReadService {
         return new PageRes<>(result.content, pageReq.toPageable(), result.totalCount);
     }
 
-    public PageRes<MvPoi> getAllPoi(PageReq pageReq) {
+    public List<MvPoi> getAllPoi() {
+        return mvPoiRepos.findAllAndIsDeletedFalseAndIsPublishedTrue();
+    }
+
+
+    public PageRes<MvPoi> getAllPoiPaging(PageReq pageReq) {
         int offset = pageReq.getPage() * pageReq.getSize();
         int size = pageReq.getSize();
         MvPoiPageResult result =
-            mvPoiRepos.findByCategoryAndSubCateWithCount(
-                null, null, null, offset, size
-            );
+                mvPoiRepos.findByCategoryAndSubCateWithCount(
+                        null, null, null, offset, size
+                );
         return new PageRes<>(result.content, pageReq.toPageable(), result.totalCount);
     }
 
 
-    public PageRes<MvPoi> getPoiByCategory(MvPoiSearchCatReq searchReq, PageReq pageReq) {
+    public List<MvPoi> getPoiByCategory(MvPoiSearchCatReq searchReq) {
+        // 파라미터 준비
+        String category = searchReq.getCategory() != null ? searchReq.getCategory().getCode() : null;
+        String subCate = searchReq.getSubCate();
+        String name = searchReq.getName();
+
+        // Impl의 네이티브 쿼리 메서드 호출
+        return mvPoiRepos.findByCategoryAndSubCate( category, subCate, name);
+    }
+
+    public PageRes<MvPoi> getPoiByCategoryPaging(MvPoiSearchCatReq searchReq, PageReq pageReq) {
         // 파라미터 준비
         String category = searchReq.getCategory() != null ? searchReq.getCategory().getCode() : null;
         String subCate = searchReq.getSubCate();
@@ -62,11 +84,23 @@ public class MvPoiReadService {
     }
 
 
-    public PageRes<MvPoi> getPoiByLocation(MvPoiSearchLocReq searchReq, PageReq pageReq) {
+    public List<MvPoi> getPoiByLocation(MvPoiSearchLocReq searchReq) {
+
+        return mvPoiRepos.findByLocation(
+                searchReq.getCategory().getCode(),
+                searchReq.getName(),
+                searchReq.getLatitude(),
+                searchReq.getLongitude(),
+                searchReq.getRadius()
+        );
+    }
+
+
+    public PageRes<MvPoi> getPoiByLocationPaging(MvPoiSearchLocReq searchReq, PageReq pageReq) {
         int offset = pageReq.getPage() * pageReq.getSize();
         int size = pageReq.getSize();
         MvPoiPageResult result =
-            mvPoiRepos.findByLocationWithPaging(
+            mvPoiRepos.findByLocationWithCount(
                 searchReq.getLatitude(),
                 searchReq.getLongitude(),
                 searchReq.getRadius(),
@@ -75,66 +109,4 @@ public class MvPoiReadService {
             );
         return new PageRes<>(result.content, pageReq.toPageable(), result.totalCount);
     }
-
-
-    /*
-     @Override
-    public List<Poi> findAll() {
-        return poiRepository.findAllByActiveTrue();
-    }
-
-    @Override
-    public Page<Poi> findAll(Pageable pageable) {
-        return poiRepository.findAllByActiveTrue(pageable);
-    }
-
-    @Override
-    public Optional<Poi> findById(Long id) {
-        return poiRepository.findByIdAndActiveTrue(id);
-    }
-
-    @Override
-    @Transactional
-    public Poi save(Poi poi) {
-        return poiRepository.save(poi);
-    }
-
-    @Override
-    @Transactional
-    public Poi update(Long id, Poi poi) {
-        return poiRepository.findByIdAndActiveTrue(id)
-                .map(existingPoi -> {
-                    poi.setId(id);
-                    return poiRepository.save(poi);
-                })
-                .orElseThrow(() -> new ApiException(ErrorCode.ENTITY_NOT_FOUND.getCode(), "POI not found"));
-    }
-
-    @Override
-    @Transactional
-    public void delete(Long id) {
-        poiRepository.deleteById(id);
-    }
-
-    @Override
-    @Transactional
-    public void softDelete(Long id) {
-        poiRepository.softDelete(id);
-    }
-
-    @Override
-    public Page<Poi> findByType(String type, Pageable pageable) {
-        return poiRepository.findByType(type, pageable);
-    }
-
-    @Override
-    public Page<Poi> findByNameContaining(String name, Pageable pageable) {
-        return poiRepository.findByNameContaining(name, pageable);
-    }
-
-    @Override
-    public Page<Poi> findByLocationWithinRadius(Double latitude, Double longitude, Double radius, Pageable pageable) {
-        return poiRepository.findByLocationWithinRadius(latitude, longitude, radius, pageable);
-    }
-     */
 }
