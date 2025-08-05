@@ -1,12 +1,16 @@
 package com.sweetk.iitp.api.service.poi;
 
+import com.sweetk.iitp.api.constant.CommonCodeConstants;
 import com.sweetk.iitp.api.dto.common.PageReq;
 import com.sweetk.iitp.api.dto.common.PageRes;
 import com.sweetk.iitp.api.dto.poi.PoiSubwayElevator;
 import com.sweetk.iitp.api.dto.poi.PoiSubwayElevatorSearchCatReq;
 import com.sweetk.iitp.api.dto.poi.PoiSubwayElevatorSearchLocReq;
 import com.sweetk.iitp.api.dto.poi.converter.PoiSubwayElevatorConverter;
+import com.sweetk.iitp.api.exception.BusinessException;
+import com.sweetk.iitp.api.exception.ErrorCode;
 import com.sweetk.iitp.api.repository.poi.PoiSubwayElevatorRepository;
+import com.sweetk.iitp.api.service.sys.SysCommonCodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,7 @@ import java.util.stream.Collectors;
 public class PoiSubwayElevatorReadService {
 
     private final PoiSubwayElevatorRepository poiSubwayElevatorRepository;
+    private final SysCommonCodeService commonCodeService;
 
     /**
      * 지하철 엘리베이터 ID로 조회
@@ -37,24 +42,24 @@ public class PoiSubwayElevatorReadService {
      * 시도별 지하철 엘리베이터 조회 (페이징)
      */
     public PageRes<PoiSubwayElevator> getSubwayElevatorsBySido(String sidoCode, PageReq pageReq) {
+
+        if(!commonCodeService.isValidCode(CommonCodeConstants.SysCodeGroup.SIDO_CODE, sidoCode)) {
+            throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE,"sidoCode(%s) not valid".formatted(sidoCode) );
+        }
+
         log.debug("시도별 지하철 엘리베이터 조회 요청 - 시도 코드: {}, 페이지: {}", sidoCode, pageReq);
         
         int offset = pageReq.getPage() * pageReq.getSize();
         int size = pageReq.getSize();
         
-        List<PoiSubwayElevator> results = poiSubwayElevatorRepository.findByCategoryConditions(
-                null, // stationName
-                sidoCode, // sidoCode
-                null, // nodeTypeCode
+        // 시도별 조회 전용 함수 사용 (성능 최적화)
+        List<PoiSubwayElevator> results = poiSubwayElevatorRepository.findBySidoCodeWithPaging(
+                sidoCode,
                 offset,
                 size
         );
         
-        long totalCount = poiSubwayElevatorRepository.countByCategoryConditions(
-                null, // stationName
-                sidoCode, // sidoCode
-                null  // nodeTypeCode
-        );
+        long totalCount = poiSubwayElevatorRepository.countBySidoCode(sidoCode);
         
         return new PageRes<>(results, pageReq.toPageable(), totalCount);
     }
@@ -84,41 +89,66 @@ public class PoiSubwayElevatorReadService {
     }
 
     /**
-     * 카테고리 기반 지하철 엘리베이터 검색
+     * 카테고리 기반 지하철 엘리베이터 검색 (통합 처리)
      */
     public PageRes<PoiSubwayElevator> getSubwayElevatorsByCategory(PoiSubwayElevatorSearchCatReq searchReq, PageReq pageReq) {
         log.debug("지하철 엘리베이터 카테고리 검색 요청 - 검색조건: {}, 페이지: {}", searchReq, pageReq);
         
+        // 검색 조건이 없는 경우 전체 조회 (성능 최적화)
+        if (searchReq == null || !hasSearchConditions(searchReq)) {
+            return getAllSubwayElevators(pageReq);
+        }
+        
+        // 검색 조건이 있는 경우 조건 검색
+        return searchSubwayElevatorsByConditions(searchReq, pageReq);
+    }
+
+    /**
+     * 검색 조건 존재 여부 확인
+     */
+    private boolean hasSearchConditions(PoiSubwayElevatorSearchCatReq searchReq) {
+        return (searchReq.getStationName() != null && !searchReq.getStationName().trim().isEmpty()) ||
+               (searchReq.getSidoCode() != null && !searchReq.getSidoCode().trim().isEmpty()) ||
+               (searchReq.getNodeTypeCode() != null);
+    }
+
+    /**
+     * 전체 지하철 엘리베이터 조회 (검색 조건 없음)
+     */
+    private PageRes<PoiSubwayElevator> getAllSubwayElevators(PageReq pageReq) {
+        log.debug("전체 지하철 엘리베이터 조회");
+        
         int offset = pageReq.getPage() * pageReq.getSize();
         int size = pageReq.getSize();
         
-        // 검색 조건 확인
-        boolean hasStationName = searchReq != null && searchReq.getStationName() != null && !searchReq.getStationName().trim().isEmpty();
-        boolean hasSidoCode = searchReq != null && searchReq.getSidoCode() != null && !searchReq.getSidoCode().trim().isEmpty();
-        boolean hasNodeTypeCode = searchReq != null && searchReq.getNodeTypeCode() != null;
+        // 전체 조회 전용 함수 사용 (성능 최적화)
+        List<PoiSubwayElevator> results = poiSubwayElevatorRepository.findAllWithPaging(offset, size);
+        long totalCount = poiSubwayElevatorRepository.countAll();
         
-        // 검색 조건이 없는 경우 전체 조회
-        if (!hasStationName && !hasSidoCode && !hasNodeTypeCode) {
-            List<PoiSubwayElevator> results = poiSubwayElevatorRepository.findAllWithPagination(pageReq.toPageable())
-                    .map(PoiSubwayElevatorConverter::toDto)
-                    .getContent();
-            long totalCount = poiSubwayElevatorRepository.count();
-            return new PageRes<>(results, pageReq.toPageable(), totalCount);
-        }
+        return new PageRes<>(results, pageReq.toPageable(), totalCount);
+    }
+
+    /**
+     * 조건 검색으로 지하철 엘리베이터 조회
+     */
+    private PageRes<PoiSubwayElevator> searchSubwayElevatorsByConditions(PoiSubwayElevatorSearchCatReq searchReq, PageReq pageReq) {
+        log.debug("조건 검색으로 지하철 엘리베이터 조회");
         
-        // 복합 조건 검색
+        int offset = pageReq.getPage() * pageReq.getSize();
+        int size = pageReq.getSize();
+        
         List<PoiSubwayElevator> results = poiSubwayElevatorRepository.findByCategoryConditions(
-                searchReq != null ? searchReq.getStationName() : null,
-                searchReq != null ? searchReq.getSidoCode() : null,
-                searchReq != null ? searchReq.getNodeTypeCode() : null,
+                searchReq.getStationName(),
+                searchReq.getSidoCode(),
+                searchReq.getNodeTypeCode(),
                 offset,
                 size
         );
         
         long totalCount = poiSubwayElevatorRepository.countByCategoryConditions(
-                searchReq != null ? searchReq.getStationName() : null,
-                searchReq != null ? searchReq.getSidoCode() : null,
-                searchReq != null ? searchReq.getNodeTypeCode() : null
+                searchReq.getStationName(),
+                searchReq.getSidoCode(),
+                searchReq.getNodeTypeCode()
         );
         
         return new PageRes<>(results, pageReq.toPageable(), totalCount);

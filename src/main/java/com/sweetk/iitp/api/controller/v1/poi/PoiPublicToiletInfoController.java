@@ -24,10 +24,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "공중 화장실 정보", description = "공중 화장실 위치 및 시설 정보 관련 API")
+@Tag(name = "편의시설 - 공중 화장실 정보", description = "편의시설 - 공중 화장실 위치 및 시설 정보 관련 API")
 @Slf4j
 @RestController
-@RequestMapping(ApiConstants.ApiPath.API_V1_POI + "/public-toilet")
+@RequestMapping(ApiConstants.ApiPath.API_V1_POI_PUBLIC_PUBLIC_TOILET)
 @RequiredArgsConstructor
 public class PoiPublicToiletInfoController {
 
@@ -47,14 +47,14 @@ public class PoiPublicToiletInfoController {
 
         return poiPublicToiletInfoReadService.findById(toiletId)
                 .map(toilet -> ResponseEntity.ok(ApiResDto.success(toilet)))
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(()->new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
     }
 
 
     @GetMapping("/sido/{sidoCode}")
     @Operation(
             summary = "시도별 공중 화장실 조회",
-            description = "시도 코드로 공중 화장실 목록을 조회합니다."
+            description = "시도 코드로 공중 화장실 목록 조회"
     )
     public ResponseEntity<ApiResDto<PageRes<PoiPublicToiletInfo>>> getPublicToiletsBySido(
             @Parameter(description = "시도 코드 (7자리)", required = true, example = "9110000")

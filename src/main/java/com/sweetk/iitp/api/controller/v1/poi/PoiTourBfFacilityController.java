@@ -23,14 +23,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
-@Tag(name = "무장애 관광지 시설", description = "무장애(Barrier Free) 관광지 시설 관련 API")
+@Tag(name = "편의시설 - 무장애 관광지 시설", description = "편의시설 -무장애(Barrier Free) 관광지 시설 관련 API")
 @Slf4j
 @RestController
-@RequestMapping(ApiConstants.ApiPath.API_V1_POI + "/tour-bf-facility")
+@RequestMapping(ApiConstants.ApiPath.API_V1_POI_BF_TOUR)
 @RequiredArgsConstructor
 public class PoiTourBfFacilityController {
 
@@ -62,14 +63,8 @@ public class PoiTourBfFacilityController {
     @GetMapping("/sido/{sidoCode}")
     @Operation(
         summary = "시도별 무장애 관광지 시설 조회",
-        description = "시도 코드로 무장애 관광지 시설 목록을 조회합니다."
+        description = "시도 코드로 무장애 관광지 시설 목록 조회."
     )
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "조회 성공",
-            content = @Content(schema = @Schema(implementation = PageRes.class))),
-        @ApiResponse(responseCode = "400", description = "잘못된 시도 코드"),
-        @ApiResponse(responseCode = "500", description = "서버 오류")
-    })
     public ResponseEntity<ApiResDto<PageRes<PoiTourBfFacility>>> getTourBfFacilitiesBySido(
             @Parameter(description = "시도 코드 (7자리)", required = true, example = "1100000")
             @PathVariable String sidoCode,
@@ -102,15 +97,8 @@ public class PoiTourBfFacilityController {
             @Valid @ParameterObject PoiTourBfFacilitySearchCatReq searchKeys,
             HttpServletRequest request) {
         
-        PageRes<PoiTourBfFacility> searchRet = null;
-        
         try {
-            // 검색 키워드 확인
-            if (searchKeys == null) {
-                searchRet = poiTourBfFacilityReadService.getTourBfFacilitiesByCategory(null, page);
-            } else {
-                searchRet = poiTourBfFacilityReadService.getTourBfFacilitiesByCategory(searchKeys, page);
-            }
+            PageRes<PoiTourBfFacility> searchRet = poiTourBfFacilityReadService.getTourBfFacilitiesByCategory(searchKeys, page);
             
             log.debug("[{}] : {}", request.getRequestURI(), searchKeys != null ? searchKeys.toString() : "null");
             return ResponseEntity.ok(ApiResDto.success(searchRet));

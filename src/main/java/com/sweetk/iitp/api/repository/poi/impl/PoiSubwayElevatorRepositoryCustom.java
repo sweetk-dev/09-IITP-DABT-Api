@@ -69,4 +69,24 @@ public interface PoiSubwayElevatorRepositoryCustom {
      * 위치 기반 지하철 엘리베이터 개수 조회
      */
     long countByLocation(BigDecimal latitude, BigDecimal longitude, BigDecimal radius);
+    
+    /**
+     * 시도 코드로 지하철 엘리베이터 조회 (페이징)
+     */
+    List<PoiSubwayElevator> findBySidoCodeWithPaging(String sidoCode, int offset, int size);
+    
+    /**
+     * 시도 코드로 지하철 엘리베이터 개수 조회
+     */
+    long countBySidoCode(String sidoCode);
+    
+    /**
+     * 전체 지하철 엘리베이터 조회 (페이징)
+     */
+    List<PoiSubwayElevator> findAllWithPaging(int offset, int size);
+    
+    /**
+     * 전체 지하철 엘리베이터 개수 조회
+     */
+    long countAll();
 } 

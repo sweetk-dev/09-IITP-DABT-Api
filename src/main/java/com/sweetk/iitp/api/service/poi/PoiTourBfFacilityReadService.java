@@ -1,12 +1,16 @@
 package com.sweetk.iitp.api.service.poi;
 
+import com.sweetk.iitp.api.constant.CommonCodeConstants;
 import com.sweetk.iitp.api.dto.common.PageReq;
 import com.sweetk.iitp.api.dto.common.PageRes;
 import com.sweetk.iitp.api.dto.poi.PoiTourBfFacility;
 import com.sweetk.iitp.api.dto.poi.PoiTourBfFacilitySearchCatReq;
 import com.sweetk.iitp.api.dto.poi.PoiTourBfFacilitySearchLocReq;
 import com.sweetk.iitp.api.dto.poi.converter.PoiTourBfFacilityConverter;
+import com.sweetk.iitp.api.exception.BusinessException;
+import com.sweetk.iitp.api.exception.ErrorCode;
 import com.sweetk.iitp.api.repository.poi.PoiTourBfFacilityRepository;
+import com.sweetk.iitp.api.service.sys.SysCommonCodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,7 @@ import java.util.stream.Collectors;
 public class PoiTourBfFacilityReadService {
 
     private final PoiTourBfFacilityRepository poiTourBfFacilityRepository;
+    private final SysCommonCodeService commonCodeService;
 
     /**
      * 무장애 관광지 시설 ID로 조회
@@ -37,90 +42,103 @@ public class PoiTourBfFacilityReadService {
      * 시도별 무장애 관광지 시설 조회 (페이징)
      */
     public PageRes<PoiTourBfFacility> getTourBfFacilitiesBySido(String sidoCode, PageReq pageReq) {
+        if(!commonCodeService.isValidCode(CommonCodeConstants.SysCodeGroup.SIDO_CODE, sidoCode)) {
+            throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE,"sidoCode(%s) not valid".formatted(sidoCode) );
+        }
+
         log.debug("시도별 무장애 관광지 시설 조회 요청 - 시도 코드: {}, 페이지: {}", sidoCode, pageReq);
         
         int offset = pageReq.getPage() * pageReq.getSize();
         int size = pageReq.getSize();
         
-        List<PoiTourBfFacility> results = poiTourBfFacilityRepository.findByCategoryConditions(
-                null, // fcltName
-                sidoCode, // sidoCode
-                null, // toiletYn
-                null, // elevatorYn
-                null, // parkingYn
-                null, // wheelchairRentYn
-                null, // tactileMapYn
-                null, // audioGuideYn
+        // 시도별 조회 전용 함수 사용 (성능 최적화)
+        List<PoiTourBfFacility> results = poiTourBfFacilityRepository.findBySidoCodeWithPaging(
+                sidoCode,
                 offset,
                 size
         );
         
-        long totalCount = poiTourBfFacilityRepository.countByCategoryConditions(
-                null, // fcltName
-                sidoCode, // sidoCode
-                null, // toiletYn
-                null, // elevatorYn
-                null, // parkingYn
-                null, // wheelchairRentYn
-                null, // tactileMapYn
-                null  // audioGuideYn
-        );
+        long totalCount = poiTourBfFacilityRepository.countBySidoCode(sidoCode);
         
         return new PageRes<>(results, pageReq.toPageable(), totalCount);
     }
 
     /**
-     * 카테고리 기반 무장애 관광지 시설 검색
+     * 카테고리 기반 무장애 관광지 시설 검색 (통합 처리)
      */
     public PageRes<PoiTourBfFacility> getTourBfFacilitiesByCategory(PoiTourBfFacilitySearchCatReq searchReq, PageReq pageReq) {
         log.debug("무장애 관광지 시설 카테고리 검색 요청 - 검색조건: {}, 페이지: {}", searchReq, pageReq);
         
+        // 검색 조건이 없는 경우 전체 조회 (성능 최적화)
+        if (searchReq == null || !hasSearchConditions(searchReq)) {
+            return getAllTourBfFacilities(pageReq);
+        }
+        
+        // 검색 조건이 있는 경우 조건 검색
+        return searchTourBfFacilitiesByConditions(searchReq, pageReq);
+    }
+
+    /**
+     * 검색 조건 존재 여부 확인
+     */
+    private boolean hasSearchConditions(PoiTourBfFacilitySearchCatReq searchReq) {
+        return (searchReq.getFcltName() != null && !searchReq.getFcltName().trim().isEmpty()) ||
+               (searchReq.getSidoCode() != null && !searchReq.getSidoCode().trim().isEmpty()) ||
+               (searchReq.getToiletYn() != null && !searchReq.getToiletYn().trim().isEmpty()) ||
+               (searchReq.getElevatorYn() != null && !searchReq.getElevatorYn().trim().isEmpty()) ||
+               (searchReq.getParkingYn() != null && !searchReq.getParkingYn().trim().isEmpty()) ||
+               (searchReq.getWheelchairRentYn() != null && !searchReq.getWheelchairRentYn().trim().isEmpty()) ||
+               (searchReq.getTactileMapYn() != null && !searchReq.getTactileMapYn().trim().isEmpty()) ||
+               (searchReq.getAudioGuideYn() != null && !searchReq.getAudioGuideYn().trim().isEmpty());
+    }
+
+    /**
+     * 전체 무장애 관광지 시설 조회 (검색 조건 없음)
+     */
+    private PageRes<PoiTourBfFacility> getAllTourBfFacilities(PageReq pageReq) {
+        log.debug("전체 무장애 관광지 시설 조회");
+        
         int offset = pageReq.getPage() * pageReq.getSize();
         int size = pageReq.getSize();
         
-        // 검색 조건 확인
-        boolean hasFcltName = searchReq != null && searchReq.getFcltName() != null && !searchReq.getFcltName().trim().isEmpty();
-        boolean hasSidoCode = searchReq != null && searchReq.getSidoCode() != null && !searchReq.getSidoCode().trim().isEmpty();
-        boolean hasToiletYn = searchReq != null && searchReq.getToiletYn() != null && !searchReq.getToiletYn().trim().isEmpty();
-        boolean hasElevatorYn = searchReq != null && searchReq.getElevatorYn() != null && !searchReq.getElevatorYn().trim().isEmpty();
-        boolean hasParkingYn = searchReq != null && searchReq.getParkingYn() != null && !searchReq.getParkingYn().trim().isEmpty();
-        boolean hasWheelchairRentYn = searchReq != null && searchReq.getWheelchairRentYn() != null && !searchReq.getWheelchairRentYn().trim().isEmpty();
-        boolean hasTactileMapYn = searchReq != null && searchReq.getTactileMapYn() != null && !searchReq.getTactileMapYn().trim().isEmpty();
-        boolean hasAudioGuideYn = searchReq != null && searchReq.getAudioGuideYn() != null && !searchReq.getAudioGuideYn().trim().isEmpty();
+        // 전체 조회 전용 함수 사용 (성능 최적화)
+        List<PoiTourBfFacility> results = poiTourBfFacilityRepository.findAllWithPaging(offset, size);
+        long totalCount = poiTourBfFacilityRepository.countAll();
         
-        // 검색 조건이 없는 경우 전체 조회
-        if (!hasFcltName && !hasSidoCode && !hasToiletYn && !hasElevatorYn && !hasParkingYn && 
-            !hasWheelchairRentYn && !hasTactileMapYn && !hasAudioGuideYn) {
-            List<PoiTourBfFacility> results = poiTourBfFacilityRepository.findAllWithPagination(pageReq.toPageable())
-                    .map(PoiTourBfFacilityConverter::toDto)
-                    .getContent();
-            long totalCount = poiTourBfFacilityRepository.count();
-            return new PageRes<>(results, pageReq.toPageable(), totalCount);
-        }
+        return new PageRes<>(results, pageReq.toPageable(), totalCount);
+    }
+
+    /**
+     * 조건 검색으로 무장애 관광지 시설 조회
+     */
+    private PageRes<PoiTourBfFacility> searchTourBfFacilitiesByConditions(PoiTourBfFacilitySearchCatReq searchReq, PageReq pageReq) {
+        log.debug("조건 검색으로 무장애 관광지 시설 조회");
         
-        // 복합 조건 검색
+        int offset = pageReq.getPage() * pageReq.getSize();
+        int size = pageReq.getSize();
+        
         List<PoiTourBfFacility> results = poiTourBfFacilityRepository.findByCategoryConditions(
-                searchReq != null ? searchReq.getFcltName() : null,
-                searchReq != null ? searchReq.getSidoCode() : null,
-                searchReq != null ? searchReq.getToiletYn() : null,
-                searchReq != null ? searchReq.getElevatorYn() : null,
-                searchReq != null ? searchReq.getParkingYn() : null,
-                searchReq != null ? searchReq.getWheelchairRentYn() : null,
-                searchReq != null ? searchReq.getTactileMapYn() : null,
-                searchReq != null ? searchReq.getAudioGuideYn() : null,
+                searchReq.getFcltName(),
+                searchReq.getSidoCode(),
+                searchReq.getToiletYn(),
+                searchReq.getElevatorYn(),
+                searchReq.getParkingYn(),
+                searchReq.getWheelchairRentYn(),
+                searchReq.getTactileMapYn(),
+                searchReq.getAudioGuideYn(),
                 offset,
                 size
         );
         
         long totalCount = poiTourBfFacilityRepository.countByCategoryConditions(
-                searchReq != null ? searchReq.getFcltName() : null,
-                searchReq != null ? searchReq.getSidoCode() : null,
-                searchReq != null ? searchReq.getToiletYn() : null,
-                searchReq != null ? searchReq.getElevatorYn() : null,
-                searchReq != null ? searchReq.getParkingYn() : null,
-                searchReq != null ? searchReq.getWheelchairRentYn() : null,
-                searchReq != null ? searchReq.getTactileMapYn() : null,
-                searchReq != null ? searchReq.getAudioGuideYn() : null
+                searchReq.getFcltName(),
+                searchReq.getSidoCode(),
+                searchReq.getToiletYn(),
+                searchReq.getElevatorYn(),
+                searchReq.getParkingYn(),
+                searchReq.getWheelchairRentYn(),
+                searchReq.getTactileMapYn(),
+                searchReq.getAudioGuideYn()
         );
         
         return new PageRes<>(results, pageReq.toPageable(), totalCount);
@@ -157,6 +175,10 @@ public class PoiTourBfFacilityReadService {
      * 시도 코드로 무장애 관광지 시설 조회 (기존 메서드)
      */
     public List<PoiTourBfFacility> findBySidoCode(String sidoCode) {
+        if(!commonCodeService.isValidCode(CommonCodeConstants.SysCodeGroup.SIDO_CODE, sidoCode)) {
+            throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE,"sidoCode(%s) not valid".formatted(sidoCode) );
+        }
+
         log.debug("시도 코드로 무장애 관광지 시설 조회 요청 - 시도 코드: {}", sidoCode);
         return poiTourBfFacilityRepository.findBySidoCode(sidoCode)
                 .stream()
@@ -211,45 +233,4 @@ public class PoiTourBfFacilityReadService {
                 .collect(Collectors.toList());
     }
 
-    /*
-     * 검색 조건으로 무장애 관광지 시설 조회 (기존 메서드 - 사용하지 않음)
-     * 새로운 카테고리 검색과 위치 검색으로 대체됨
-     */
-    /*
-    public Page<PoiTourBfFacility> search(PoiTourBfFacilitySearchReq searchReq) {
-        log.debug("무장애 관광지 시설 검색 요청 - {}", searchReq);
-        
-        // 기본값 설정
-        int page = searchReq.page() != null ? searchReq.page() : 0;
-        int size = searchReq.size() != null ? searchReq.size() : 20;
-        Pageable pageable = PageRequest.of(page, size);
-        
-        // 복합 조건 검색이 있는 경우
-        if (searchReq.sidoCode() != null || searchReq.fcltName() != null || 
-            searchReq.toiletYn() != null || searchReq.elevatorYn() != null || 
-            searchReq.parkingYn() != null || searchReq.slopeYn() != null) {
-            
-            List<PoiTourBfFacility> results = findByMultipleConditions(
-                searchReq.sidoCode(), searchReq.fcltName(), 
-                searchReq.toiletYn(), searchReq.elevatorYn(), 
-                searchReq.parkingYn(), searchReq.slopeYn()
-            );
-            return new org.springframework.data.domain.PageImpl<>(results, pageable, results.size());
-        }
-        
-        // 위치 기반 검색
-        if (searchReq.minLatitude() != null && searchReq.maxLatitude() != null && 
-            searchReq.minLongitude() != null && searchReq.maxLongitude() != null) {
-            List<PoiTourBfFacility> results = findByLocationRange(
-                searchReq.minLatitude(), searchReq.maxLatitude(), 
-                searchReq.minLongitude(), searchReq.maxLongitude()
-            );
-            return new org.springframework.data.domain.PageImpl<>(results, pageable, results.size());
-        }
-        
-        // 기본 전체 조회
-        return poiTourBfFacilityRepository.findAllWithPagination(pageable)
-                .map(PoiTourBfFacilityConverter::toDto);
-    }
-    */
 } 

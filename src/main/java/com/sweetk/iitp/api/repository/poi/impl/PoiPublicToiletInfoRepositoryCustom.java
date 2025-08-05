@@ -1,5 +1,7 @@
 package com.sweetk.iitp.api.repository.poi.impl;
 
+import com.sweetk.iitp.api.constant.poi.PoiPublicToiletType;
+import com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfo;
 import com.sweetk.iitp.api.entity.poi.PoiPublicToiletInfoEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -63,20 +65,20 @@ public interface PoiPublicToiletInfoRepositoryCustom {
     /**
      * 카테고리 조건으로 공중 화장실 검색 (페이징)
      */
-    List<com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfo> findByCategoryConditions(
-            String toiletName, String sidoCode, String toiletType, 
+    List<PoiPublicToiletInfo> findByCategoryConditions(
+            String toiletName, String sidoCode, PoiPublicToiletType toiletType, 
             String disabilityFacilityYn, String open24hYn, int offset, int size);
     
     /**
      * 카테고리 조건으로 공중 화장실 개수 조회
      */
-    long countByCategoryConditions(String toiletName, String sidoCode, String toiletType, 
+    long countByCategoryConditions(String toiletName, String sidoCode, PoiPublicToiletType toiletType, 
                                  String disabilityFacilityYn, String open24hYn);
     
     /**
      * 위치 기반 공중 화장실 검색 (페이징)
      */
-    List<com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfo> findByLocationWithPaging(
+    List<PoiPublicToiletInfo> findByLocationWithPaging(
             java.math.BigDecimal latitude, java.math.BigDecimal longitude, 
             java.math.BigDecimal radius, int offset, int size);
     
@@ -85,4 +87,24 @@ public interface PoiPublicToiletInfoRepositoryCustom {
      */
     long countByLocation(java.math.BigDecimal latitude, java.math.BigDecimal longitude, 
                         java.math.BigDecimal radius);
+    
+    /**
+     * 시도 코드로 공중 화장실 조회 (페이징)
+     */
+    List<PoiPublicToiletInfo> findBySidoCodeWithPaging(String sidoCode, int offset, int size);
+    
+    /**
+     * 시도 코드로 공중 화장실 개수 조회
+     */
+    long countBySidoCode(String sidoCode);
+    
+    /**
+     * 전체 공중 화장실 조회 (페이징)
+     */
+    List<PoiPublicToiletInfo> findAllWithPaging(int offset, int size);
+    
+    /**
+     * 전체 공중 화장실 개수 조회
+     */
+    long countAll();
 } 
