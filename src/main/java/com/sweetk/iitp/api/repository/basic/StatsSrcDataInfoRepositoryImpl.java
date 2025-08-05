@@ -27,8 +27,8 @@ public class StatsSrcDataInfoRepositoryImpl implements StatsSrcDataInfoRepositor
             .select(qSrc, qCode)
             .from(qSrc)
             .leftJoin(qCode)
-                .on(qSrc.statOrgId.eq(qCode.codeId)
-                    .and(qCode.grpId.eq("stats_src_orgId")))
+                .on(qSrc.statOrgId.eq(qCode.id.codeId)
+                    .and(qCode.id.grpId.eq("stats_src_orgId")))
             .where(
                 qSrc.intgTblId.eq(intgTblId),
                 qSrc.status.eq(DataStatusType.ACTIVE)

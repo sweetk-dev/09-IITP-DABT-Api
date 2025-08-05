@@ -1,32 +1,30 @@
 package com.sweetk.iitp.api.entity.sys;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "sys_common_code")
-@IdClass(SysCommonCodeIdEntity.class)
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class SysCommonCodeEntity {
 
-    @Id
-    @Column(name = "grp_id", length = 40, nullable = false)
-    private String grpId;
+    @EmbeddedId
+    private SysCommonCodeIdEntity id;
 
-    @Id
-    @Column(name = "code_id", length = 32, nullable = false)
-    private String codeId;
-
-    @Column(name = "grp_nm", length = 80, nullable = false)
+    @Column(name = "grp_nm", nullable = false, length = 80)
     private String grpNm;
 
-    @Column(name = "code_nm", length = 64, nullable = false)
+    @Column(name = "code_nm", nullable = false, length = 64)
     private String codeNm;
 
     @Column(name = "parent_grp_id", length = 40)
@@ -35,7 +33,7 @@ public class SysCommonCodeEntity {
     @Column(name = "parent_code_id", length = 40)
     private String parentCodeId;
 
-    @Column(name = "code_type", length = 1, nullable = false)
+    @Column(name = "code_type", nullable = false, length = 1)
     private String codeType;
 
     @Column(name = "code_lvl")
@@ -55,6 +53,14 @@ public class SysCommonCodeEntity {
 
     @Column(name = "memo", length = 255)
     private String memo;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
