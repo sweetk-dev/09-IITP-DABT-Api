@@ -3,6 +3,7 @@ package com.sweetk.iitp.api.service.poi;
 import com.sweetk.iitp.api.constant.CommonCodeConstants.SysCodeGroup;
 import com.sweetk.iitp.api.dto.common.PageReq;
 import com.sweetk.iitp.api.dto.common.PageRes;
+import com.sweetk.iitp.api.dto.internal.MvPoiPageResult;
 import com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfo;
 import com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfoSearchCatReq;
 import com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfoSearchLocReq;
@@ -15,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -104,9 +104,21 @@ public class PoiPublicToiletInfoReadService {
      */
     public PageRes<PoiPublicToiletInfo> getPublicToiletsByCategoryPaging(PoiPublicToiletInfoSearchCatReq searchReq, PageReq pageReq) {
         log.debug("공중 화장실 카테고리 검색 요청 - 검색조건: {}, 페이지: {}", searchReq, pageReq);
-        
+
+        int offset = pageReq.getPage() * pageReq.getSize();
+        int size = pageReq.getSize();
+
         // 검색 조건이 있는 경우 조건 검색
-        return searchPublicToiletsByConditions(searchReq, pageReq);
+        MvPoiPageResult<PoiPublicToiletInfo> pageResult =  publicToiletInfoRepository.findByCategoryConditionsWithPaging(
+                                                                searchReq.getToiletName(),
+                                                                searchReq.getSidoCode(),
+                                                                searchReq.getToiletType(),
+                                                                searchReq.getOpen24hYn(),
+                                                                offset,
+                                                                size
+                                                            );
+
+        return new PageRes<>(pageResult.getResults(), pageReq.toPageable(), pageResult.getTotalCount());
     }
 
     /**
@@ -114,13 +126,12 @@ public class PoiPublicToiletInfoReadService {
      */
     public List<PoiPublicToiletInfo> getPublicToiletsByCategory(PoiPublicToiletInfoSearchCatReq searchReq) {
         log.debug("공중 화장실 카테고리 검색 요청 - 검색조건: {}", searchReq);
-        
+
         // 검색 조건이 없는 경우 빈 결과 반환 (카테고리 검색은 조건이 있어야 함)
         if (searchReq == null || !hasSearchConditions(searchReq)) {
-            log.debug("카테고리 검색 조건이 없어 빈 결과 반환");
-            return new ArrayList<>();
+            return getAllPublicToilets();
         }
-        
+
         // 검색 조건이 있는 경우 조건 검색
         return searchPublicToiletsByConditions(searchReq);
     }
@@ -133,28 +144,6 @@ public class PoiPublicToiletInfoReadService {
                (searchReq.getSidoCode() != null && !searchReq.getSidoCode().trim().isEmpty()) ||
                (searchReq.getToiletType() != null) ||
                "Y".equals(searchReq.getOpen24hYn());
-    }
-
-    /**
-     * 조건 검색으로 공중 화장실 조회 (페이징)
-     */
-    private PageRes<PoiPublicToiletInfo> searchPublicToiletsByConditions(PoiPublicToiletInfoSearchCatReq searchReq, PageReq pageReq) {
-        
-        int offset = pageReq.getPage() * pageReq.getSize();
-        int size = pageReq.getSize();
-        
-        // COUNT(*) OVER() 사용하여 단일 쿼리로 데이터와 총 개수 조회
-        com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiPublicToiletInfo> pageResult =
-            publicToiletInfoRepository.findByCategoryConditionsWithCount(
-                searchReq.getToiletName(),
-                searchReq.getSidoCode(),
-                searchReq.getToiletType(),
-                searchReq.getOpen24hYn(),
-                offset,
-                size
-            );
-        
-        return new PageRes<>(pageResult.getResults(), pageReq.toPageable(), pageResult.getTotalCount());
     }
 
     /**

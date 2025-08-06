@@ -434,14 +434,11 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
     }
 
 
+// 페이징 결과와 총 개수를 함께 반환하는 메서드들
 
-
-    
-    // 페이징 결과와 총 개수를 함께 반환하는 메서드들
-    
     @Override
-    public com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiPublicToiletInfo> findByCategoryConditionsWithCount(
-            String toiletName, String sidoCode, PoiPublicToiletType toiletType, 
+    public com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiPublicToiletInfo> findByCategoryConditionsWithPaging(
+            String toiletName, String sidoCode, PoiPublicToiletType toiletType,
             String open24hYn, int offset, int size) {
         StringBuilder sql = new StringBuilder(addCountToQuery(toiletBaseQuery));
         sql = buildCategoryConditionsSql(sql, toiletName, sidoCode, toiletType, open24hYn);
@@ -451,11 +448,11 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
 
         List<PoiPublicToiletInfo> entityList = new ArrayList<>();
         long totalCount = 0;
-        
+
         try (Connection conn = dataSource.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql.toString())) {
-            
+
             while (rs.next()) {
                 PoiPublicToiletInfo toilet = setPoiPublicToiletInfo(rs);
                 entityList.add(toilet);
@@ -469,9 +466,12 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
             log.error("[PoiPublicToiletInfo] 카테고리 검색 쿼리 실행 중 오류 발생 (페이징 + 카운트)", e);
             throw new RuntimeException("Database category search query failed", e);
         }
-        
+
         return new com.sweetk.iitp.api.dto.internal.MvPoiPageResult<>(entityList, totalCount);
     }
+
+    
+
 
 
 } 
