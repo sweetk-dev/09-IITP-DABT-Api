@@ -57,7 +57,7 @@ public class MvPoiController {
             summary = "이동형 POI 카테고리별 조회(all)",
             description = "카테고리 유형별로 이동형 POI를 조회(all)"
     )
-    public ResponseEntity<ApiResDto> getPoiByCategory(
+    public ResponseEntity<ApiResDto<List<MvPoi>>> getPoiByCategory(
             @Parameter(description = "카테고리 유형", required = true,
                     example = "tourist_spot",
                     schema = @Schema(allowableValues = {"tourist_spot", "restaurant", "shopping", "accommodation"}))
@@ -99,7 +99,7 @@ public class MvPoiController {
             summary = "이동형 POI 카테고리 검색 조회(all)",
             description = "이동형 POI 카테고리 검색 조회(all)"
     )
-    public ResponseEntity<ApiResDto> searchByCategory(
+    public ResponseEntity<ApiResDto<List<MvPoi>>> searchByCategory(
             @Valid @ParameterObject PageReq page,
             @Valid @ParameterObject MvPoiSearchCatReq searchKeys,
             HttpServletRequest request) {
@@ -157,7 +157,7 @@ public class MvPoiController {
             summary = "이동형 POI 위치기반 검색 조회(all)",
             description = "이동형 POI 위치기반 검색 조회(all):"
     )
-    public ResponseEntity<ApiResDto> searchByLocation(
+    public ResponseEntity<ApiResDto<List<MvPoi>>> searchByLocation(
             @Valid @ParameterObject MvPoiSearchLocReq searchKeys,
             HttpServletRequest request ) {
 
