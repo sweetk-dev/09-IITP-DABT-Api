@@ -33,9 +33,9 @@ public class PoiPublicToiletInfoSearchCatReq {
             allowableValues = {"PUBLIC","SIMPLE", "OPEN", "MOBILE"})
     private PoiPublicToiletType toiletType;
     
-    @Schema(description = "장애인 시설 보유 여부", example = "Y", 
-            allowableValues = {"Y", "N"})
-    private String disabilityFacilityYn;
+//    @Schema(description = "장애인 시설 보유 여부", example = "Y",
+//            allowableValues = {"Y", "N"})
+//    private String disabilityFacilityYn;
     
     @Schema(description = "24시간 개방 여부", example = "Y", 
             allowableValues = {"Y", "N"})
