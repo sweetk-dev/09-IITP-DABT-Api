@@ -6,7 +6,6 @@ import com.sweetk.iitp.api.dto.common.PageRes;
 import com.sweetk.iitp.api.dto.poi.PoiSubwayElevator;
 import com.sweetk.iitp.api.dto.poi.PoiSubwayElevatorSearchCatReq;
 import com.sweetk.iitp.api.dto.poi.PoiSubwayElevatorSearchLocReq;
-import com.sweetk.iitp.api.dto.poi.converter.PoiSubwayElevatorConverter;
 import com.sweetk.iitp.api.exception.BusinessException;
 import com.sweetk.iitp.api.exception.ErrorCode;
 import com.sweetk.iitp.api.repository.poi.PoiSubwayElevatorRepository;
@@ -16,9 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -34,15 +33,26 @@ public class PoiSubwayElevatorReadService {
      */
     public Optional<PoiSubwayElevator> findById(Integer subwayId) {
         log.debug("지하철 엘리베이터 조회 요청 - ID: {}", subwayId);
-        return poiSubwayElevatorRepository.findById(subwayId)
-                .map(PoiSubwayElevatorConverter::toDto);
+        return poiSubwayElevatorRepository.findByIdToDto(subwayId);
+    }
+
+    /**
+     * 시도별 지하철 엘리베이터 조회 (전체 결과)
+     */
+    public List<PoiSubwayElevator> getSubwayElevatorsBySido(String sidoCode) {
+        if(!commonCodeService.isValidCode(CommonCodeConstants.SysCodeGroup.SIDO_CODE, sidoCode)) {
+            throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE,"sidoCode(%s) not valid".formatted(sidoCode) );
+        }
+
+        log.debug("시도별 지하철 엘리베이터 조회 요청 - 시도 코드: {}", sidoCode);
+        
+        return poiSubwayElevatorRepository.findBySidoCodeToDto(sidoCode);
     }
 
     /**
      * 시도별 지하철 엘리베이터 조회 (페이징)
      */
-    public PageRes<PoiSubwayElevator> getSubwayElevatorsBySido(String sidoCode, PageReq pageReq) {
-
+    public PageRes<PoiSubwayElevator> getSubwayElevatorsBySidoPaging(String sidoCode, PageReq pageReq) {
         if(!commonCodeService.isValidCode(CommonCodeConstants.SysCodeGroup.SIDO_CODE, sidoCode)) {
             throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE,"sidoCode(%s) not valid".formatted(sidoCode) );
         }
@@ -52,55 +62,61 @@ public class PoiSubwayElevatorReadService {
         int offset = pageReq.getPage() * pageReq.getSize();
         int size = pageReq.getSize();
         
-        // 시도별 조회 전용 함수 사용 (성능 최적화)
-        List<PoiSubwayElevator> results = poiSubwayElevatorRepository.findBySidoCodeWithPaging(
-                sidoCode,
-                offset,
-                size
-        );
+        // COUNT(*) OVER() 사용하여 단일 쿼리로 데이터와 총 개수 조회
+        com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiSubwayElevator> pageResult =
+            poiSubwayElevatorRepository.findBySidoCodeWithPaging(sidoCode, offset, size);
         
-        long totalCount = poiSubwayElevatorRepository.countBySidoCode(sidoCode);
+        return new PageRes<>(pageResult.getResults(), pageReq.toPageable(), pageResult.getTotalCount());
+    }
+
+    /**
+     * 시군구별 지하철 엘리베이터 조회 (전체 결과)
+     */
+    public List<PoiSubwayElevator> getSubwayElevatorsBySigungu(String sidoCode, String sigunguCode) {
+        log.debug("시군구별 지하철 엘리베이터 조회 요청 - 시도 코드: {}, 시군구 코드: {}", sidoCode, sigunguCode);
         
-        return new PageRes<>(results, pageReq.toPageable(), totalCount);
+        return poiSubwayElevatorRepository.findBySigunguConditions(sidoCode, sigunguCode);
     }
 
     /**
      * 시군구별 지하철 엘리베이터 조회 (페이징)
      */
-    public PageRes<PoiSubwayElevator> getSubwayElevatorsBySigungu(String sidoCode, String sigunguCode, PageReq pageReq) {
+    public PageRes<PoiSubwayElevator> getSubwayElevatorsBySigunguPaging(String sidoCode, String sigunguCode, PageReq pageReq) {
         log.debug("시군구별 지하철 엘리베이터 조회 요청 - 시도 코드: {}, 시군구 코드: {}, 페이지: {}", sidoCode, sigunguCode, pageReq);
         
         int offset = pageReq.getPage() * pageReq.getSize();
         int size = pageReq.getSize();
         
-        List<PoiSubwayElevator> results = poiSubwayElevatorRepository.findBySigunguConditions(
-                sidoCode,
-                sigunguCode,
-                offset,
-                size
-        );
+        // COUNT(*) OVER() 사용하여 단일 쿼리로 데이터와 총 개수 조회
+        com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiSubwayElevator> pageResult =
+            poiSubwayElevatorRepository.findBySigunguConditionsWithPaging(sidoCode, sigunguCode, offset, size);
         
-        long totalCount = poiSubwayElevatorRepository.countBySigunguConditions(
-                sidoCode,
-                sigunguCode
-        );
-        
-        return new PageRes<>(results, pageReq.toPageable(), totalCount);
+        return new PageRes<>(pageResult.getResults(), pageReq.toPageable(), pageResult.getTotalCount());
     }
 
     /**
-     * 카테고리 기반 지하철 엘리베이터 검색 (통합 처리)
+     * 카테고리 기반 지하철 엘리베이터 검색 (전체 결과)
      */
-    public PageRes<PoiSubwayElevator> getSubwayElevatorsByCategory(PoiSubwayElevatorSearchCatReq searchReq, PageReq pageReq) {
-        log.debug("지하철 엘리베이터 카테고리 검색 요청 - 검색조건: {}, 페이지: {}", searchReq, pageReq);
+    public List<PoiSubwayElevator> getSubwayElevatorsByCategory(PoiSubwayElevatorSearchCatReq searchReq) {
+        log.debug("지하철 엘리베이터 카테고리 검색 요청 - 검색조건: {}", searchReq);
         
-        // 검색 조건이 없는 경우 전체 조회 (성능 최적화)
+        // 검색 조건이 없는 경우 빈 결과 반환 (카테고리 검색은 조건이 있어야 함)
         if (searchReq == null || !hasSearchConditions(searchReq)) {
-            return getAllSubwayElevators(pageReq);
+            log.debug("카테고리 검색 조건이 없어 빈 결과 반환");
+            return new ArrayList<>();
         }
         
         // 검색 조건이 있는 경우 조건 검색
-        return searchSubwayElevatorsByConditions(searchReq, pageReq);
+        return searchSubwayElevatorsByConditions(searchReq);
+    }
+
+    /**
+     * 카테고리 기반 지하철 엘리베이터 검색 (페이징)
+     */
+    public PageRes<PoiSubwayElevator> getSubwayElevatorsByCategoryPaging(PoiSubwayElevatorSearchCatReq searchReq, PageReq pageReq) {
+        log.debug("지하철 엘리베이터 카테고리 검색 요청 - 검색조건: {}, 페이지: {}", searchReq, pageReq);
+        // 검색 조건이 있는 경우 조건 검색
+        return searchSubwayElevatorsByConditionsPaging(searchReq, pageReq);
     }
 
     /**
@@ -113,115 +129,99 @@ public class PoiSubwayElevatorReadService {
     }
 
     /**
-     * 전체 지하철 엘리베이터 조회 (검색 조건 없음)
+     * 조건 검색으로 지하철 엘리베이터 조회 (전체 결과)
      */
-    private PageRes<PoiSubwayElevator> getAllSubwayElevators(PageReq pageReq) {
-        log.debug("전체 지하철 엘리베이터 조회");
+    private List<PoiSubwayElevator> searchSubwayElevatorsByConditions(PoiSubwayElevatorSearchCatReq searchReq) {
+        log.debug("조건 검색으로 지하철 엘리베이터 조회 (전체 결과)");
         
-        int offset = pageReq.getPage() * pageReq.getSize();
-        int size = pageReq.getSize();
-        
-        // 전체 조회 전용 함수 사용 (성능 최적화)
-        List<PoiSubwayElevator> results = poiSubwayElevatorRepository.findAllWithPaging(offset, size);
-        long totalCount = poiSubwayElevatorRepository.countAll();
-        
-        return new PageRes<>(results, pageReq.toPageable(), totalCount);
+        return poiSubwayElevatorRepository.findByCategoryConditions(
+                searchReq.getStationName(),
+                searchReq.getSidoCode(),
+                searchReq.getNodeTypeCodeValue() // Integer 값으로 변환
+        );
     }
 
     /**
-     * 조건 검색으로 지하철 엘리베이터 조회
+     * 조건 검색으로 지하철 엘리베이터 조회 (페이징)
      */
-    private PageRes<PoiSubwayElevator> searchSubwayElevatorsByConditions(PoiSubwayElevatorSearchCatReq searchReq, PageReq pageReq) {
-        log.debug("조건 검색으로 지하철 엘리베이터 조회");
+    private PageRes<PoiSubwayElevator> searchSubwayElevatorsByConditionsPaging(PoiSubwayElevatorSearchCatReq searchReq, PageReq pageReq) {
+        log.debug("조건 검색으로 지하철 엘리베이터 조회 (페이징)");
         
         int offset = pageReq.getPage() * pageReq.getSize();
         int size = pageReq.getSize();
         
-        List<PoiSubwayElevator> results = poiSubwayElevatorRepository.findByCategoryConditions(
+        // COUNT(*) OVER() 사용하여 단일 쿼리로 데이터와 총 개수 조회
+        com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiSubwayElevator> pageResult =
+            poiSubwayElevatorRepository.findByCategoryConditionsWithPaging(
                 searchReq.getStationName(),
                 searchReq.getSidoCode(),
                 searchReq.getNodeTypeCodeValue(), // Integer 값으로 변환
                 offset,
                 size
-        );
+            );
         
-        long totalCount = poiSubwayElevatorRepository.countByCategoryConditions(
-                searchReq.getStationName(),
-                searchReq.getSidoCode(),
-                searchReq.getNodeTypeCodeValue() // Integer 값으로 변환
-        );
-        
-        return new PageRes<>(results, pageReq.toPageable(), totalCount);
+        return new PageRes<>(pageResult.getResults(), pageReq.toPageable(), pageResult.getTotalCount());
     }
 
     /**
-     * 위치 기반 지하철 엘리베이터 검색
+     * 위치 기반 지하철 엘리베이터 검색 (전체 결과)
      */
-    public PageRes<PoiSubwayElevator> getSubwayElevatorsByLocation(PoiSubwayElevatorSearchLocReq searchReq, PageReq pageReq) {
+    public List<PoiSubwayElevator> getSubwayElevatorByLocation(PoiSubwayElevatorSearchLocReq searchReq) {
+        log.debug("지하철 엘리베이터 위치 기반 검색 요청 - 위도: {}, 경도: {}, 반경: {}m", 
+                searchReq.getLatitude(), searchReq.getLongitude(), searchReq.getRadius());
+        
+        return poiSubwayElevatorRepository.findByLocation(
+                searchReq.getLatitude(),
+                searchReq.getLongitude(),
+                searchReq.getRadius()
+        );
+    }
+
+    /**
+     * 위치 기반 지하철 엘리베이터 검색 (페이징)
+     */
+    public PageRes<PoiSubwayElevator> getSubwayElevatorsByLocationPaging(PoiSubwayElevatorSearchLocReq searchReq, PageReq pageReq) {
         log.debug("지하철 엘리베이터 위치 기반 검색 요청 - 위도: {}, 경도: {}, 반경: {}m, 페이지: {}", 
                 searchReq.getLatitude(), searchReq.getLongitude(), searchReq.getRadius(), pageReq);
         
         int offset = pageReq.getPage() * pageReq.getSize();
         int size = pageReq.getSize();
         
-        List<PoiSubwayElevator> results = poiSubwayElevatorRepository.findByLocationWithPaging(
+        // COUNT(*) OVER() 사용하여 단일 쿼리로 데이터와 총 개수 조회
+        com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiSubwayElevator> pageResult =
+            poiSubwayElevatorRepository.findByLocationWithPaging(
                 searchReq.getLatitude(),
                 searchReq.getLongitude(),
                 searchReq.getRadius(),
                 offset,
                 size
-        );
+            );
         
-        long totalCount = poiSubwayElevatorRepository.countByLocation(
-                searchReq.getLatitude(),
-                searchReq.getLongitude(),
-                searchReq.getRadius()
-        );
+        return new PageRes<>(pageResult.getResults(), pageReq.toPageable(), pageResult.getTotalCount());
+    }
+
+    /**
+     * 전체 지하철 엘리베이터 조회 (전체 결과)
+     */
+    public List<PoiSubwayElevator> getAllSubwayElevators() {
+        log.debug("전체 지하철 엘리베이터 조회 (전체 결과)");
         
-        return new PageRes<>(results, pageReq.toPageable(), totalCount);
+        return poiSubwayElevatorRepository.findAllToDto();
     }
 
     /**
-     * 시도 코드로 지하철 엘리베이터 조회 (기존 메서드)
+     * 전체 지하철 엘리베이터 조회 (페이징)
      */
-    public List<PoiSubwayElevator> findBySidoCode(String sidoCode) {
-        log.debug("시도 코드로 지하철 엘리베이터 조회 요청 - 시도 코드: {}", sidoCode);
-        return poiSubwayElevatorRepository.findBySidoCode(sidoCode)
-                .stream()
-                .map(PoiSubwayElevatorConverter::toDto)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * 지하철역 코드로 지하철 엘리베이터 조회 (기존 메서드)
-     */
-    public List<PoiSubwayElevator> findByStationCode(String stationCode) {
-        log.debug("지하철역 코드로 지하철 엘리베이터 조회 요청 - 역 코드: {}", stationCode);
-        return poiSubwayElevatorRepository.findByStationCode(stationCode)
-                .stream()
-                .map(PoiSubwayElevatorConverter::toDto)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * 위치 기반 지하철 엘리베이터 조회 (기존 메서드)
-     */
-    public List<PoiSubwayElevator> findByLocationRange(Double minLat, Double maxLat, Double minLng, Double maxLng) {
-        log.debug("위치 기반 지하철 엘리베이터 조회 요청 - 위도: {}~{}, 경도: {}~{}", minLat, maxLat, minLng, maxLng);
-        return poiSubwayElevatorRepository.findByLocationRange(minLat, maxLat, minLng, maxLng)
-                .stream()
-                .map(PoiSubwayElevatorConverter::toDto)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * 노드 유형 코드로 지하철 엘리베이터 조회 (기존 메서드)
-     */
-    public List<PoiSubwayElevator> findByNodeTypeCode(Integer nodeTypeCode) {
-        log.debug("노드 유형 코드로 지하철 엘리베이터 조회 요청 - 노드 유형: {}", nodeTypeCode);
-        return poiSubwayElevatorRepository.findByNodeTypeCode(nodeTypeCode)
-                .stream()
-                .map(PoiSubwayElevatorConverter::toDto)
-                .collect(Collectors.toList());
+    public PageRes<PoiSubwayElevator> getAllSubwayElevators(PageReq pageReq) {
+        log.debug("전체 지하철 엘리베이터 조회 (페이징)");
+        
+        int offset = pageReq.getPage() * pageReq.getSize();
+        int size = pageReq.getSize();
+        
+        // COUNT(*) OVER() 사용하여 단일 쿼리로 데이터와 총 개수 조회
+        com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiSubwayElevator> pageResult =
+            poiSubwayElevatorRepository.findAllWithPaging(offset, size);
+        
+        return new PageRes<>(pageResult.getResults(), pageReq.toPageable(), pageResult.getTotalCount());
     }
 } 
