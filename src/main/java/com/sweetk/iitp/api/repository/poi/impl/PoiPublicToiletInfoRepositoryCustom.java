@@ -1,6 +1,7 @@
 package com.sweetk.iitp.api.repository.poi.impl;
 
 import com.sweetk.iitp.api.constant.poi.PoiPublicToiletType;
+import com.sweetk.iitp.api.dto.internal.MvPoiPageResult;
 import com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfo;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public interface PoiPublicToiletInfoRepositoryCustom {
     /**
      * 카테고리 조건으로 공중 화장실 검색 (페이징 + 총 개수)
      */
-    com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiPublicToiletInfo> findByCategoryConditionsWithCount(
+    MvPoiPageResult<PoiPublicToiletInfo> findByCategoryConditionsWithPaging(
             String toiletName, String sidoCode, PoiPublicToiletType toiletType,
             String open24hYn, int offset, int size);
 
@@ -55,7 +56,7 @@ public interface PoiPublicToiletInfoRepositoryCustom {
     /**
      * 위치 기반 공중 화장실 검색 (페이징 - 통합)
      */
-    com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiPublicToiletInfo> findByLocationWithPaging(
+    MvPoiPageResult<PoiPublicToiletInfo> findByLocationWithPaging(
             java.math.BigDecimal latitude, java.math.BigDecimal longitude, 
             java.math.BigDecimal radius, String toiletName, PoiPublicToiletType toiletType, 
             String open24hYn, int offset, int size);
@@ -65,12 +66,12 @@ public interface PoiPublicToiletInfoRepositoryCustom {
     /**
      * 시도 코드로 공중 화장실 조회 (페이징)
      */
-    com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiPublicToiletInfo> findBySidoCodeWithPaging(String sidoCode, int offset, int size);
+    MvPoiPageResult<PoiPublicToiletInfo> findBySidoCodeWithPaging(String sidoCode, int offset, int size);
     
     /**
      * 전체 공중 화장실 조회 (페이징)
      */
-    com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiPublicToiletInfo> findAllWithPaging(int offset, int size);
+    MvPoiPageResult<PoiPublicToiletInfo> findAllWithPaging(int offset, int size);
     
     /**
      * 전체 공중 화장실 조회 (전체 결과)
