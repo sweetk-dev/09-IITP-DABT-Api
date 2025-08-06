@@ -23,7 +23,7 @@ public class MvPoiReadService {
     private final MvPoiRepository mvPoiRepos;
 
     public Optional<MvPoi> findById(Long poiId) {
-        return mvPoiRepos.findByIdWithCategory(poiId);
+        return mvPoiRepos.findByIdWithPublished(poiId);
     }
 
 
@@ -41,17 +41,14 @@ public class MvPoiReadService {
     }
 
     public List<MvPoi> getAllPoi() {
-        return mvPoiRepos.findAllAndIsDeletedFalseAndIsPublishedTrue();
+        return mvPoiRepos.findAllPublished();
     }
 
 
     public PageRes<MvPoi> getAllPoiPaging(PageReq pageReq) {
         int offset = pageReq.getPage() * pageReq.getSize();
         int size = pageReq.getSize();
-        MvPoiPageResult result =
-                mvPoiRepos.findByCategoryAndSubCateWithCount(
-                        null, null, null, offset, size
-                );
+        MvPoiPageResult result = mvPoiRepos.findAllWithCount(offset, size);
         return new PageRes<>(result.content, pageReq.toPageable(), result.totalCount);
     }
 
@@ -75,10 +72,8 @@ public class MvPoiReadService {
         int size = pageReq.getSize();
 
         // Impl의 네이티브 쿼리 메서드 호출
-        MvPoiPageResult result =
-                mvPoiRepos.findByCategoryAndSubCateWithCount(
-                        category, subCate, name, offset, size
-                );
+        MvPoiPageResult result = mvPoiRepos.findByCategoryAndSubCateWithCount(
+                                        category, subCate, name, offset, size);
 
         return new PageRes<>(result.content, pageReq.toPageable(), result.totalCount);
     }
@@ -86,8 +81,9 @@ public class MvPoiReadService {
 
     public List<MvPoi> getPoiByLocation(MvPoiSearchLocReq searchReq) {
 
+        String category = searchReq.getCategory() != null ? searchReq.getCategory().getCode() : null;
         return mvPoiRepos.findByLocation(
-                searchReq.getCategory().getCode(),
+                category,
                 searchReq.getName(),
                 searchReq.getLatitude(),
                 searchReq.getLongitude(),
@@ -99,14 +95,17 @@ public class MvPoiReadService {
     public PageRes<MvPoi> getPoiByLocationPaging(MvPoiSearchLocReq searchReq, PageReq pageReq) {
         int offset = pageReq.getPage() * pageReq.getSize();
         int size = pageReq.getSize();
-        MvPoiPageResult result =
-            mvPoiRepos.findByLocationWithCount(
-                searchReq.getLatitude(),
-                searchReq.getLongitude(),
-                searchReq.getRadius(),
-                offset,
-                size
-            );
+        String category = searchReq.getCategory() != null ? searchReq.getCategory().getCode() : null;
+
+        MvPoiPageResult result = mvPoiRepos.findByLocationWithCount(
+                            category,
+                            searchReq.getName(),
+                            searchReq.getLatitude(),
+                            searchReq.getLongitude(),
+                            searchReq.getRadius(),
+                            offset,
+                            size
+                        );
         return new PageRes<>(result.content, pageReq.toPageable(), result.totalCount);
     }
 }

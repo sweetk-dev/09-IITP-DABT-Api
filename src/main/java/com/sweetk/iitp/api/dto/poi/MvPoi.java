@@ -6,23 +6,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 
 public record MvPoi(
-//    @Schema(description = "POI 고유 식별자", example = "1")
-//    @JsonProperty("poi_id")
-//    Long poiId,
+    @Schema(description = "POI 고유 식별자", example = "1")
+    @JsonProperty("poi_id")
+    Long poiId,
 
     @Schema(description = "언어 코드", example = "ko")
     @JsonProperty("language_code")
     String languageCode,
-
-    @Schema(description = "카테고리",
-            example = "tourist_spot",
-            allowableValues = {"tourist_spot", "restaurant", "shopping", "accommodation"})
-    @JsonProperty("category")
-    String category,
-
-    @Schema(description = "서브 카테고리", example = "역사 · 고궁 · 문화재")
-    @JsonProperty("sub_category")
-    String subCategory,
 
     @Schema(description = "POI 제목", example = "서대문형무소역사관")
     @JsonProperty("title")

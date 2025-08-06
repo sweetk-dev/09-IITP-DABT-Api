@@ -49,7 +49,7 @@ public class MvPoiController {
         
         return mvPoiReadService.findById(poiId)
                 .map(poi -> ResponseEntity.ok(ApiResDto.success(poi)))
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(()->new BusinessException(ErrorCode.POI_NOT_FOUND));
     }
 
     @GetMapping("/category/{categoryType}")
