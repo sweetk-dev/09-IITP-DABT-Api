@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Tag(name = "편의시설 - 공중 화장실 정보", description = "편의시설 - 공중 화장실 위치 및 시설 정보 관련 API")
 @Slf4j
 @RestController
@@ -32,7 +34,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class PoiPublicToiletInfoController {
 
     private final PoiPublicToiletInfoReadService poiPublicToiletInfoReadService;
-
 
     @GetMapping("/{toiletId}")
     @Operation(
@@ -50,19 +51,15 @@ public class PoiPublicToiletInfoController {
                 .orElseThrow(()->new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
     }
 
-
-    @GetMapping("/sido/{sidoCode}")
+    @GetMapping("/all")
     @Operation(
-            summary = "시도별 공중 화장실 조회",
-            description = "시도 코드로 공중 화장실 목록 조회"
+            summary = "전체 공중 화장실 조회 (전체 결과)",
+            description = "모든 공중 화장실 목록을 조회합니다. 전체 결과를 반환합니다."
     )
-    public ResponseEntity<ApiResDto<PageRes<PoiPublicToiletInfo>>> getPublicToiletsBySido(
-            @Parameter(description = "시도 코드 (7자리)", required = true, example = "9110000")
-            @PathVariable String sidoCode,
-            @Valid @ParameterObject PageReq page,
+    public ResponseEntity<ApiResDto<List<PoiPublicToiletInfo>>> getAllPublicToilets(
             HttpServletRequest request) {
         try {
-            PageRes<PoiPublicToiletInfo> result = poiPublicToiletInfoReadService.getPublicToiletsBySido(sidoCode, page);
+            List<PoiPublicToiletInfo> result = poiPublicToiletInfoReadService.getAllPublicToilets();
             return ResponseEntity.ok(ApiResDto.success(result));
         } catch (Exception e) {
             log.error("[{}] : {}", request.getRequestURI(), e.getMessage());
@@ -70,19 +67,71 @@ public class PoiPublicToiletInfoController {
         }
     }
 
+    @GetMapping("/all/paging")
+    @Operation(
+            summary = "전체 공중 화장실 조회 (페이징)",
+            description = "모든 공중 화장실 목록을 조회합니다. 페이징 처리된 결과를 반환합니다."
+    )
+    public ResponseEntity<ApiResDto<PageRes<PoiPublicToiletInfo>>> getAllPublicToiletsPaging(
+            @Valid @ParameterObject PageReq page,
+            HttpServletRequest request) {
+        try {
+            PageRes<PoiPublicToiletInfo> result = poiPublicToiletInfoReadService.getAllPublicToilets(page);
+            return ResponseEntity.ok(ApiResDto.success(result));
+        } catch (Exception e) {
+            log.error("[{}] : {}", request.getRequestURI(), e.getMessage());
+            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/sido/{sidoCode}")
+    @Operation(
+            summary = "시도별 공중 화장실 조회 (전체 결과)",
+            description = "시도 코드로 공중 화장실 목록을 조회합니다. 전체 결과를 반환합니다."
+    )
+    public ResponseEntity<ApiResDto<List<PoiPublicToiletInfo>>> getPublicToiletsBySido(
+            @Parameter(description = "시도 코드 (7자리)", required = true, example = "9110000")
+            @PathVariable String sidoCode,
+            HttpServletRequest request) {
+        try {
+            List<PoiPublicToiletInfo> result = poiPublicToiletInfoReadService.getPublicToiletsBySido(sidoCode);
+            return ResponseEntity.ok(ApiResDto.success(result));
+        } catch (Exception e) {
+            log.error("[{}] : {}", request.getRequestURI(), e.getMessage());
+            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/sido/{sidoCode}/paging")
+    @Operation(
+            summary = "시도별 공중 화장실 조회 (페이징)",
+            description = "시도 코드로 공중 화장실 목록을 조회합니다. 페이징 처리된 결과를 반환합니다."
+    )
+    public ResponseEntity<ApiResDto<PageRes<PoiPublicToiletInfo>>> getPublicToiletsBySidoPaging(
+            @Parameter(description = "시도 코드 (7자리)", required = true, example = "9110000")
+            @PathVariable String sidoCode,
+            @Valid @ParameterObject PageReq page,
+            HttpServletRequest request) {
+        try {
+            PageRes<PoiPublicToiletInfo> result = poiPublicToiletInfoReadService.getPublicToiletsBySidoPaging(sidoCode, page);
+            return ResponseEntity.ok(ApiResDto.success(result));
+        } catch (Exception e) {
+            log.error("[{}] : {}", request.getRequestURI(), e.getMessage());
+            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @GetMapping("/search")
     @Operation(
-            summary = "공중 화장실 카테고리 검색",
-            description = "이름, 시도코드, 유형, 장애인시설, 24시간개방으로 공중 화장실을 검색합니다."
+            summary = "공중 화장실 카테고리 검색 (전체 결과)",
+            description = "이름, 시도코드, 유형, 24시간개방으로 공중 화장실을 검색합니다. 검색 조건이 있어야 합니다. 전체 결과를 반환합니다."
     )
-    public ResponseEntity<ApiResDto<PageRes<PoiPublicToiletInfo>>> searchByCategory(
-            @Valid @ParameterObject PageReq page,
+    public ResponseEntity<ApiResDto<List<PoiPublicToiletInfo>>> searchByCategory(
             @Valid @ParameterObject PoiPublicToiletInfoSearchCatReq searchKeys,
             HttpServletRequest request) {
 
         try {
-            PageRes<PoiPublicToiletInfo> searchRet = poiPublicToiletInfoReadService.getPublicToiletsByCategory(searchKeys, page);
+            List<PoiPublicToiletInfo> searchRet = poiPublicToiletInfoReadService.getPublicToiletsByCategory(searchKeys);
             
             log.debug("[{}] : {}", request.getRequestURI(), searchKeys != null ? searchKeys.toString() : "null");
             return ResponseEntity.ok(ApiResDto.success(searchRet));
@@ -92,23 +141,57 @@ public class PoiPublicToiletInfoController {
         }
     }
 
+    @GetMapping("/search/paging")
+    @Operation(
+            summary = "공중 화장실 카테고리 검색 (페이징)",
+            description = "이름, 시도코드, 유형, 24시간개방으로 공중 화장실을 검색합니다. 검색 조건이 있어야 합니다. 페이징 처리된 결과를 반환합니다."
+    )
+    public ResponseEntity<ApiResDto<PageRes<PoiPublicToiletInfo>>> searchByCategoryPaging(
+            @Valid @ParameterObject PageReq page,
+            @Valid @ParameterObject PoiPublicToiletInfoSearchCatReq searchKeys,
+            HttpServletRequest request) {
 
+        try {
+            PageRes<PoiPublicToiletInfo> searchRet = poiPublicToiletInfoReadService.getPublicToiletsByCategoryPaging(searchKeys, page);
+
+            log.debug("[{}] : {}", request.getRequestURI(), searchKeys != null ? searchKeys.toString() : "null");
+            return ResponseEntity.ok(ApiResDto.success(searchRet));
+        } catch (Exception e) {
+            log.error("[{}] : {}", request.getRequestURI(), e.getMessage());
+            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @GetMapping("/search/location")
     @Operation(
-        summary = "공중 화장실 위치 기반 검색",
-        description = "위치 기준 반경 내 공중 화장실을 검색합니다."
+        summary = "공중 화장실 위치 기반 검색 (전체 결과)",
+        description = "위치 기준 반경 내 공중 화장실을 검색합니다. 전체 결과를 반환합니다."
     )
-    public ResponseEntity<ApiResDto<PageRes<PoiPublicToiletInfo>>> searchByLocation(
-            @Valid @ParameterObject PageReq page,
+    public ResponseEntity<ApiResDto<List<PoiPublicToiletInfo>>> searchByLocation(
             @Valid @ParameterObject PoiPublicToiletInfoSearchLocReq searchKeys,
             HttpServletRequest request) {
         
         log.debug("[{}] : {}", request.getRequestURI(), searchKeys.toString());
         
-        PageRes<PoiPublicToiletInfo> searchRet = poiPublicToiletInfoReadService.getPublicToiletsByLocation(searchKeys, page);
+        List<PoiPublicToiletInfo> searchRet = poiPublicToiletInfoReadService.getPublicToiletsByLocation(searchKeys);
         
         return ResponseEntity.ok(ApiResDto.success(searchRet));
     }
 
+    @GetMapping("/search/location/paging")
+    @Operation(
+            summary = "공중 화장실 위치 기반 검색 (페이징)",
+            description = "위치 기준 반경 내 공중 화장실을 검색합니다. 페이징 처리된 결과를 반환합니다."
+    )
+    public ResponseEntity<ApiResDto<PageRes<PoiPublicToiletInfo>>> searchByLocationPaging(
+            @Valid @ParameterObject PageReq page,
+            @Valid @ParameterObject PoiPublicToiletInfoSearchLocReq searchKeys,
+            HttpServletRequest request) {
+
+        log.debug("[{}] : {}", request.getRequestURI(), searchKeys.toString());
+
+        PageRes<PoiPublicToiletInfo> searchRet = poiPublicToiletInfoReadService.getPublicToiletsByLocationPaging(searchKeys, page);
+
+        return ResponseEntity.ok(ApiResDto.success(searchRet));
+    }
 } 
