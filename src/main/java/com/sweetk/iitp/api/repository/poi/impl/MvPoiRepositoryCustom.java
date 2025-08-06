@@ -11,8 +11,18 @@ import java.util.Optional;
 @Repository
 public interface MvPoiRepositoryCustom {
 
-    List<MvPoi> findAll();
+    /**
+     * POI ID로 상세 정보 조회
+     */
+    Optional<MvPoi> findByIdWithPublished(Long poiId);
+
+
+    List<MvPoi> findAllPublished();
     MvPoiPageResult findAllWithCount(int offset, int size);
+
+
+    List<MvPoi> findByCategoryType(String categoryType);
+    MvPoiPageResult findByCategoryTypeWithCount( String categoryType, int offset, int size);
 
 
     List<MvPoi> findByCategoryAndSubCate(String category, String subCate, String name);
@@ -24,22 +34,7 @@ public interface MvPoiRepositoryCustom {
             String category, String name,  BigDecimal latitude, BigDecimal longitude, BigDecimal radius
     );
     MvPoiPageResult findByLocationWithCount(
-            BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size
+            String category, String name, BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size
     );
 
-    List<MvPoi> findByCategoryType(String categoryType);
-    MvPoiPageResult findByCategoryTypeWithCount( String categoryType, int offset, int size);
-
-    /**
-     * POI ID로 상세 정보 조회 (JSON에서 카테고리 정보 추출)
-     */
-    Optional<MvPoi> findByIdWithCategory(Long poiId);
-
-
-    /*
-    Page<MvPoiEntity> findAllByActiveTrue(Pageable pageable);
-    Page<MvPoiEntity> findByType(String type, Pageable pageable);
-    Page<MvPoiEntity> findByNameContaining(String name, Pageable pageable);
-    Page<MvPoiEntity> findByLocationWithinRadius(Double latitude, Double longitude, Double radius, Pageable pageable);
-     */
 } 
