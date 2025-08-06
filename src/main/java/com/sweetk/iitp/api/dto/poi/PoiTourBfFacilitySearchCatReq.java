@@ -17,7 +17,7 @@ public class PoiTourBfFacilitySearchCatReq {
     @Size(min = 2, message = "시설명은 최소 2글자 이상이어야 합니다")
     private String fcltName;
     
-    @Schema(description = "시도 코드 (7자리)", example = "1100000")
+    @Schema(description = "시도 코드 (7자리)", example = "9110000")
     @Pattern(regexp = "^\\d{7}$", message = "시도 코드는 7자리 숫자여야 합니다")
     private String sidoCode;
     
