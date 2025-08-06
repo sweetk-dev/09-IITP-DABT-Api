@@ -140,7 +140,7 @@ public class PoiSubwayElevatorReadService {
         List<PoiSubwayElevator> results = poiSubwayElevatorRepository.findByCategoryConditions(
                 searchReq.getStationName(),
                 searchReq.getSidoCode(),
-                searchReq.getNodeTypeCode(),
+                searchReq.getNodeTypeCodeValue(), // Integer 값으로 변환
                 offset,
                 size
         );
@@ -148,7 +148,7 @@ public class PoiSubwayElevatorReadService {
         long totalCount = poiSubwayElevatorRepository.countByCategoryConditions(
                 searchReq.getStationName(),
                 searchReq.getSidoCode(),
-                searchReq.getNodeTypeCode()
+                searchReq.getNodeTypeCodeValue() // Integer 값으로 변환
         );
         
         return new PageRes<>(results, pageReq.toPageable(), totalCount);

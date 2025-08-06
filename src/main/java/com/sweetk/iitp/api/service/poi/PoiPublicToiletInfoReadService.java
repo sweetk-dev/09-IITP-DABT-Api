@@ -190,7 +190,7 @@ public class PoiPublicToiletInfoReadService {
         return (searchReq.getToiletName() != null && !searchReq.getToiletName().trim().isEmpty()) ||
                (searchReq.getSidoCode() != null && !searchReq.getSidoCode().trim().isEmpty()) ||
                (searchReq.getToiletType() != null) ||
-               "Y".equals(searchReq.getDisabilityFacilityYn()) ||
+              // "Y".equals(searchReq.getDisabilityFacilityYn()) ||
                "Y".equals(searchReq.getOpen24hYn());
     }
 
@@ -222,7 +222,7 @@ public class PoiPublicToiletInfoReadService {
                 searchReq.getToiletName(),
                 searchReq.getSidoCode(),
                 searchReq.getToiletType(),
-                searchReq.getDisabilityFacilityYn(),
+                //searchReq.getDisabilityFacilityYn(),
                 searchReq.getOpen24hYn(),
                 offset,
                 size
@@ -232,7 +232,7 @@ public class PoiPublicToiletInfoReadService {
                 searchReq.getToiletName(),
                 searchReq.getSidoCode(),
                 searchReq.getToiletType(),
-                searchReq.getDisabilityFacilityYn(),
+                //searchReq.getDisabilityFacilityYn(),
                 searchReq.getOpen24hYn()
         );
         

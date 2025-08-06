@@ -67,13 +67,15 @@ public interface PoiPublicToiletInfoRepositoryCustom {
      */
     List<PoiPublicToiletInfo> findByCategoryConditions(
             String toiletName, String sidoCode, PoiPublicToiletType toiletType, 
-            String disabilityFacilityYn, String open24hYn, int offset, int size);
+            //String disabilityFacilityYn,
+            String open24hYn, int offset, int size);
     
     /**
      * 카테고리 조건으로 공중 화장실 개수 조회
      */
-    long countByCategoryConditions(String toiletName, String sidoCode, PoiPublicToiletType toiletType, 
-                                 String disabilityFacilityYn, String open24hYn);
+    long countByCategoryConditions(String toiletName, String sidoCode, PoiPublicToiletType toiletType,
+                                 //String disabilityFacilityYn,
+                                   String open24hYn);
     
     /**
      * 위치 기반 공중 화장실 검색 (페이징)

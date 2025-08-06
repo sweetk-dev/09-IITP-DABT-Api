@@ -1,9 +1,7 @@
 package com.sweetk.iitp.api.repository.poi.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sweetk.iitp.api.constant.poi.PoiPublicToiletType;
 import com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfo;
-import com.sweetk.iitp.api.dto.poi.converter.PoiPublicToiletInfoConverter;
 import com.sweetk.iitp.api.entity.poi.PoiPublicToiletInfoEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -18,14 +16,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Repository
 public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRepositoryCustom {
@@ -179,7 +172,8 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
 
     @Override
     public List<PoiPublicToiletInfo> findByCategoryConditions(String toiletName, String sidoCode, PoiPublicToiletType toiletType, 
-                                                             String disabilityFacilityYn, String open24hYn, 
+                                                             //String disabilityFacilityYn,
+                                                              String open24hYn,
                                                              int offset, int size) {
         StringBuilder sql = new StringBuilder("SELECT " +
             "toilet_id, sido_code, toilet_name, toilet_type, basis, addr_road, addr_jibun, " +
@@ -199,9 +193,9 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
         if (toiletName != null && !toiletName.trim().isEmpty()) {
             sql.append("AND toilet_name LIKE '%").append(toiletName.replace("'", "''")).append("%' ");
         }
-        if ("Y".equals(disabilityFacilityYn)) {
-            sql.append("AND (m_dis_toilet_count > 0 OR m_dis_urinal_count > 0 OR f_dis_toilet_count > 0) ");
-        }
+//        if ("Y".equals(disabilityFacilityYn)) {
+//            sql.append("AND (m_dis_toilet_count > 0 OR m_dis_urinal_count > 0 OR f_dis_toilet_count > 0) ");
+//        }
         if ("Y".equals(open24hYn)) {
             sql.append("AND open_time LIKE '%24시간%' ");
         }
@@ -264,7 +258,8 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
 
     @Override
     public long countByCategoryConditions(String toiletName, String sidoCode, PoiPublicToiletType toiletType, 
-                                        String disabilityFacilityYn, String open24hYn) {
+                                        //String disabilityFacilityYn,
+                                          String open24hYn) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM poi_public_toilet_info WHERE del_yn = 'N'");
         
         // 인덱스 활용을 위한 조건 순서 최적화
@@ -277,9 +272,9 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
         if (toiletName != null && !toiletName.trim().isEmpty()) {
             sql.append(" AND toilet_name LIKE '%").append(toiletName.replace("'", "''")).append("%'");
         }
-        if ("Y".equals(disabilityFacilityYn)) {
-            sql.append(" AND (m_dis_toilet_count > 0 OR m_dis_urinal_count > 0 OR f_dis_toilet_count > 0)");
-        }
+//        if ("Y".equals(disabilityFacilityYn)) {
+//            sql.append(" AND (m_dis_toilet_count > 0 OR m_dis_urinal_count > 0 OR f_dis_toilet_count > 0)");
+//        }
         if ("Y".equals(open24hYn)) {
             sql.append(" AND open_time LIKE '%24시간%'");
         }

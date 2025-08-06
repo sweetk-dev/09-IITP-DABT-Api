@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum SubwayNodeType {
+public enum PoiSubwayNodeType {
 
     STATION(0, "일반노드"),
     TRANSFER(1, "지하철 출입구"),
@@ -34,8 +34,8 @@ public enum SubwayNodeType {
     /**
      * 코드로 enum 찾기
      */
-    public static SubwayNodeType fromCode(Integer code) {
-        for (SubwayNodeType type : values()) {
+    public static PoiSubwayNodeType fromCode(Integer code) {
+        for (PoiSubwayNodeType type : values()) {
             if (type.getCode().equals(code)) {
                 return type;
             }
@@ -47,7 +47,7 @@ public enum SubwayNodeType {
      * 코드가 유효한지 검증
      */
     public static boolean isValidCode(Integer code) {
-        for (SubwayNodeType type : values()) {
+        for (PoiSubwayNodeType type : values()) {
             if (type.getCode().equals(code)) {
                 return true;
             }
