@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Tag(name = "편의시설 - 무장애 관광지 시설", description = "편의시설 -무장애(Barrier Free) 관광지 시설 관련 API")
 @Slf4j
 @RestController
@@ -62,10 +64,31 @@ public class PoiTourBfFacilityController {
 
     @GetMapping("/sido/{sidoCode}")
     @Operation(
-        summary = "시도별 무장애 관광지 시설 조회",
-        description = "시도 코드로 무장애 관광지 시설 목록 조회."
+        summary = "시도별 무장애 관광지 시설 조회 (전체 결과)",
+        description = "시도 코드로 무장애 관광지 시설 목록을 전체 조회합니다."
     )
-    public ResponseEntity<ApiResDto<PageRes<PoiTourBfFacility>>> getTourBfFacilitiesBySido(
+    public ResponseEntity<ApiResDto<List<PoiTourBfFacility>>> getTourBfFacilitiesBySido(
+            @Parameter(description = "시도 코드 (7자리)", required = true, example = "1100000")
+            @PathVariable String sidoCode,
+            HttpServletRequest request) {
+        
+        log.debug("[{}] : 시도 코드: {}", request.getRequestURI(), sidoCode);
+        
+        try {
+            List<PoiTourBfFacility> result = poiTourBfFacilityReadService.getTourBfFacilitiesBySido(sidoCode);
+            return ResponseEntity.ok(ApiResDto.success(result));
+        } catch (Exception e) {
+            log.error("[{}] : {}", request.getRequestURI(), e.getMessage());
+            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/sido/{sidoCode}/paging")
+    @Operation(
+        summary = "시도별 무장애 관광지 시설 조회 (페이징)",
+        description = "시도 코드로 무장애 관광지 시설 목록을 페이징하여 조회합니다."
+    )
+    public ResponseEntity<ApiResDto<PageRes<PoiTourBfFacility>>> getTourBfFacilitiesBySidoPaging(
             @Parameter(description = "시도 코드 (7자리)", required = true, example = "1100000")
             @PathVariable String sidoCode,
             @Valid @ParameterObject PageReq page,
@@ -74,7 +97,7 @@ public class PoiTourBfFacilityController {
         log.debug("[{}] : 시도 코드: {}, 페이지: {}", request.getRequestURI(), sidoCode, page);
         
         try {
-            PageRes<PoiTourBfFacility> result = poiTourBfFacilityReadService.getTourBfFacilitiesBySido(sidoCode, page);
+            PageRes<PoiTourBfFacility> result = poiTourBfFacilityReadService.getTourBfFacilitiesBySidoPaging(sidoCode, page);
             return ResponseEntity.ok(ApiResDto.success(result));
         } catch (Exception e) {
             log.error("[{}] : {}", request.getRequestURI(), e.getMessage());
@@ -84,21 +107,46 @@ public class PoiTourBfFacilityController {
 
     @GetMapping("/search")
     @Operation(
-        summary = "무장애 관광지 시설 카테고리 검색",
-        description = "시설명, 시도코드, 장애인시설로 무장애 관광지 시설을 검색합니다."
+        summary = "무장애 관광지 시설 카테고리 검색 (전체 결과)",
+        description = "시설명, 시도코드, 장애인시설로 무장애 관광지 시설을 검색합니다. 검색 조건이 없으면 빈 결과를 반환합니다."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "검색 성공",
+            content = @Content(schema = @Schema(implementation = List.class))),
+        @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public ResponseEntity<ApiResDto<List<PoiTourBfFacility>>> searchByCategory(
+            @Valid @ParameterObject PoiTourBfFacilitySearchCatReq searchKeys,
+            HttpServletRequest request) {
+        
+        try {
+            List<PoiTourBfFacility> searchRet = poiTourBfFacilityReadService.getTourBfFacilitiesByCategory(searchKeys);
+            
+            log.debug("[{}] : {}", request.getRequestURI(), searchKeys != null ? searchKeys.toString() : "null");
+            return ResponseEntity.ok(ApiResDto.success(searchRet));
+        } catch (Exception e) {
+            log.error("[{}] : {}", request.getRequestURI(), e.getMessage());
+            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/search/paging")
+    @Operation(
+        summary = "무장애 관광지 시설 카테고리 검색 (페이징)",
+        description = "시설명, 시도코드, 장애인시설로 무장애 관광지 시설을 페이징하여 검색합니다. 검색 조건이 없으면 빈 페이지를 반환합니다."
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "검색 성공",
             content = @Content(schema = @Schema(implementation = PageRes.class))),
         @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ApiResDto<PageRes<PoiTourBfFacility>>> searchByCategory(
+    public ResponseEntity<ApiResDto<PageRes<PoiTourBfFacility>>> searchByCategoryPaging(
             @Valid @ParameterObject PageReq page,
             @Valid @ParameterObject PoiTourBfFacilitySearchCatReq searchKeys,
             HttpServletRequest request) {
         
         try {
-            PageRes<PoiTourBfFacility> searchRet = poiTourBfFacilityReadService.getTourBfFacilitiesByCategory(searchKeys, page);
+            PageRes<PoiTourBfFacility> searchRet = poiTourBfFacilityReadService.getTourBfFacilitiesByCategoryPaging(searchKeys, page);
             
             log.debug("[{}] : {}", request.getRequestURI(), searchKeys != null ? searchKeys.toString() : "null");
             return ResponseEntity.ok(ApiResDto.success(searchRet));
@@ -110,23 +158,70 @@ public class PoiTourBfFacilityController {
 
     @GetMapping("/search/location")
     @Operation(
-        summary = "무장애 관광지 시설 위치 기반 검색",
+        summary = "무장애 관광지 시설 위치 기반 검색 (전체 결과)",
         description = "위치 기준 반경 내 무장애 관광지 시설을 검색합니다."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "검색 성공",
+            content = @Content(schema = @Schema(implementation = List.class))),
+        @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public ResponseEntity<ApiResDto<List<PoiTourBfFacility>>> searchByLocation(
+            @Valid @ParameterObject PoiTourBfFacilitySearchLocReq searchKeys,
+            HttpServletRequest request) {
+        
+        log.debug("[{}] : {}", request.getRequestURI(), searchKeys.toString());
+        
+        List<PoiTourBfFacility> searchRet = poiTourBfFacilityReadService.getTourBfFacilitiesByLocation(searchKeys);
+        
+        return ResponseEntity.ok(ApiResDto.success(searchRet));
+    }
+
+    @GetMapping("/search/location/paging")
+    @Operation(
+        summary = "무장애 관광지 시설 위치 기반 검색 (페이징)",
+        description = "위치 기준 반경 내 무장애 관광지 시설을 페이징하여 검색합니다."
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "검색 성공",
             content = @Content(schema = @Schema(implementation = PageRes.class))),
         @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ApiResDto<PageRes<PoiTourBfFacility>>> searchByLocation(
+    public ResponseEntity<ApiResDto<PageRes<PoiTourBfFacility>>> searchByLocationPaging(
             @Valid @ParameterObject PageReq page,
             @Valid @ParameterObject PoiTourBfFacilitySearchLocReq searchKeys,
             HttpServletRequest request) {
         
         log.debug("[{}] : {}", request.getRequestURI(), searchKeys.toString());
         
-        PageRes<PoiTourBfFacility> searchRet = poiTourBfFacilityReadService.getTourBfFacilitiesByLocation(searchKeys, page);
+        PageRes<PoiTourBfFacility> searchRet = poiTourBfFacilityReadService.getTourBfFacilitiesByLocationPaging(searchKeys, page);
         
         return ResponseEntity.ok(ApiResDto.success(searchRet));
+    }
+
+    @GetMapping("/all")
+    @Operation(
+        summary = "전체 무장애 관광지 시설 조회 (전체 결과)",
+        description = "모든 무장애 관광지 시설을 조회합니다."
+    )
+    public ResponseEntity<ApiResDto<List<PoiTourBfFacility>>> getAllTourBfFacilities(HttpServletRequest request) {
+        log.debug("[{}] : 전체 무장애 관광지 시설 조회", request.getRequestURI());
+        
+        List<PoiTourBfFacility> result = poiTourBfFacilityReadService.getAllTourBfFacilities();
+        return ResponseEntity.ok(ApiResDto.success(result));
+    }
+
+    @GetMapping("/all/paging")
+    @Operation(
+        summary = "전체 무장애 관광지 시설 조회 (페이징)",
+        description = "모든 무장애 관광지 시설을 페이징하여 조회합니다."
+    )
+    public ResponseEntity<ApiResDto<PageRes<PoiTourBfFacility>>> getAllTourBfFacilitiesPaging(
+            @Valid @ParameterObject PageReq page,
+            HttpServletRequest request) {
+        log.debug("[{}] : 전체 무장애 관광지 시설 조회 (페이징)", request.getRequestURI());
+        
+        PageRes<PoiTourBfFacility> result = poiTourBfFacilityReadService.getAllTourBfFacilitiesPaging(page);
+        return ResponseEntity.ok(ApiResDto.success(result));
     }
 } 
