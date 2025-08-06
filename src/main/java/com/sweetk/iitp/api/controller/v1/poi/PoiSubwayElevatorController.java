@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Tag(name = "편의시설 - 지하철 엘리베이터 POI", description = "편의시설 - 지하철 엘리베이터 POI 관련 API")
 @Slf4j
 @RestController
@@ -52,13 +54,67 @@ public class PoiSubwayElevatorController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/all")
+    @Operation(
+        summary = "전체 지하철 엘리베이터 조회 (전체 결과)",
+        description = "모든 지하철 엘리베이터 목록을 조회합니다. 전체 결과를 반환합니다."
+    )
+    public ResponseEntity<ApiResDto<List<PoiSubwayElevator>>> getAllSubwayElevators(
+            HttpServletRequest request) {
+        try {
+            List<PoiSubwayElevator> result = poiSubwayElevatorReadService.getAllSubwayElevators();
+            return ResponseEntity.ok(ApiResDto.success(result));
+        } catch (Exception e) {
+            log.error("[{}] : {}", request.getRequestURI(), e.getMessage());
+            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/all/paging")
+    @Operation(
+        summary = "전체 지하철 엘리베이터 조회 (페이징)",
+        description = "모든 지하철 엘리베이터 목록을 조회합니다. 페이징 처리된 결과를 반환합니다."
+    )
+    public ResponseEntity<ApiResDto<PageRes<PoiSubwayElevator>>> getAllSubwayElevatorsPaging(
+            @Valid @ParameterObject PageReq page,
+            HttpServletRequest request) {
+        try {
+            PageRes<PoiSubwayElevator> result = poiSubwayElevatorReadService.getAllSubwayElevators(page);
+            return ResponseEntity.ok(ApiResDto.success(result));
+        } catch (Exception e) {
+            log.error("[{}] : {}", request.getRequestURI(), e.getMessage());
+            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/sido/{sidoCode}")
     @Operation(
-        summary = "시도별 지하철 엘리베이터 조회",
-        description = "시도 코드로 지하철 엘리베이터 목록을 조회합니다."
+        summary = "시도별 지하철 엘리베이터 조회 (전체 결과)",
+        description = "시도 코드로 지하철 엘리베이터 목록을 조회합니다. 전체 결과를 반환합니다."
     )
-    public ResponseEntity<ApiResDto<PageRes<PoiSubwayElevator>>> getSubwayElevatorsBySido(
-            @Parameter(description = "시도 코드 (7자리)", required = true, example = "1100000")
+    public ResponseEntity<ApiResDto<List<PoiSubwayElevator>>> getSubwayElevatorsBySido(
+            @Parameter(description = "시도 코드 (7자리)", required = true, example = "91100000")
+            @PathVariable String sidoCode,
+            HttpServletRequest request) {
+        
+        log.debug("[{}] : 시도 코드: {}", request.getRequestURI(), sidoCode);
+        
+        try {
+            List<PoiSubwayElevator> result = poiSubwayElevatorReadService.getSubwayElevatorsBySido(sidoCode);
+            return ResponseEntity.ok(ApiResDto.success(result));
+        } catch (Exception e) {
+            log.error("[{}] : {}", request.getRequestURI(), e.getMessage());
+            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/sido/{sidoCode}/paging")
+    @Operation(
+        summary = "시도별 지하철 엘리베이터 조회 (페이징)",
+        description = "시도 코드로 지하철 엘리베이터 목록을 조회합니다. 페이징 처리된 결과를 반환합니다."
+    )
+    public ResponseEntity<ApiResDto<PageRes<PoiSubwayElevator>>> getSubwayElevatorsBySidoPaging(
+            @Parameter(description = "시도 코드 (7자리)", required = true, example = "91100000")
             @PathVariable String sidoCode,
             @Valid @ParameterObject PageReq page,
             HttpServletRequest request) {
@@ -66,7 +122,7 @@ public class PoiSubwayElevatorController {
         log.debug("[{}] : 시도 코드: {}, 페이지: {}", request.getRequestURI(), sidoCode, page);
         
         try {
-            PageRes<PoiSubwayElevator> result = poiSubwayElevatorReadService.getSubwayElevatorsBySido(sidoCode, page);
+            PageRes<PoiSubwayElevator> result = poiSubwayElevatorReadService.getSubwayElevatorsBySidoPaging(sidoCode, page);
             return ResponseEntity.ok(ApiResDto.success(result));
         } catch (Exception e) {
             log.error("[{}] : {}", request.getRequestURI(), e.getMessage());
@@ -76,8 +132,36 @@ public class PoiSubwayElevatorController {
 
     @GetMapping("/sido/{sidoCode}/{sigunguCode}")
     @Operation(
-        summary = "시군구별 지하철 엘리베이터 조회",
-        description = "시도 코드와 시군구 코드로 지하철 엘리베이터 목록을 조회합니다."
+        summary = "시군구별 지하철 엘리베이터 조회 (전체 결과)",
+        description = "시도 코드와 시군구 코드로 지하철 엘리베이터 목록을 조회합니다. 전체 결과를 반환합니다."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "조회 성공"),
+        @ApiResponse(responseCode = "400", description = "잘못된 시도/시군구 코드"),
+        @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public ResponseEntity<ApiResDto<List<PoiSubwayElevator>>> getSubwayElevatorsBySigungu(
+            @Parameter(description = "시도 코드 (7자리)", required = true, example = "1100000")
+            @PathVariable String sidoCode,
+            @Parameter(description = "시군구 코드 (5자리)", required = true, example = "11110")
+            @PathVariable String sigunguCode,
+            HttpServletRequest request) {
+        
+        log.debug("[{}] : 시도 코드: {}, 시군구 코드: {}", request.getRequestURI(), sidoCode, sigunguCode);
+        
+        try {
+            List<PoiSubwayElevator> result = poiSubwayElevatorReadService.getSubwayElevatorsBySigungu(sidoCode, sigunguCode);
+            return ResponseEntity.ok(ApiResDto.success(result));
+        } catch (Exception e) {
+            log.error("[{}] : {}", request.getRequestURI(), e.getMessage());
+            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/sido/{sidoCode}/{sigunguCode}/paging")
+    @Operation(
+        summary = "시군구별 지하철 엘리베이터 조회 (페이징)",
+        description = "시도 코드와 시군구 코드로 지하철 엘리베이터 목록을 조회합니다. 페이징 처리된 결과를 반환합니다."
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "조회 성공",
@@ -85,7 +169,7 @@ public class PoiSubwayElevatorController {
         @ApiResponse(responseCode = "400", description = "잘못된 시도/시군구 코드"),
         @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ApiResDto<PageRes<PoiSubwayElevator>>> getSubwayElevatorsBySigungu(
+    public ResponseEntity<ApiResDto<PageRes<PoiSubwayElevator>>> getSubwayElevatorsBySigunguPaging(
             @Parameter(description = "시도 코드 (7자리)", required = true, example = "1100000")
             @PathVariable String sidoCode,
             @Parameter(description = "시군구 코드 (5자리)", required = true, example = "11110")
@@ -96,7 +180,7 @@ public class PoiSubwayElevatorController {
         log.debug("[{}] : 시도 코드: {}, 시군구 코드: {}, 페이지: {}", request.getRequestURI(), sidoCode, sigunguCode, page);
         
         try {
-            PageRes<PoiSubwayElevator> result = poiSubwayElevatorReadService.getSubwayElevatorsBySigungu(sidoCode, sigunguCode, page);
+            PageRes<PoiSubwayElevator> result = poiSubwayElevatorReadService.getSubwayElevatorsBySigunguPaging(sidoCode, sigunguCode, page);
             return ResponseEntity.ok(ApiResDto.success(result));
         } catch (Exception e) {
             log.error("[{}] : {}", request.getRequestURI(), e.getMessage());
@@ -106,21 +190,45 @@ public class PoiSubwayElevatorController {
 
     @GetMapping("/search")
     @Operation(
-        summary = "지하철 엘리베이터 카테고리 검색",
-        description = "지하철역명, 시도코드, 노드유형으로 지하철 엘리베이터를 검색합니다."
+        summary = "지하철 엘리베이터 카테고리 검색 (전체 결과)",
+        description = "지하철역명, 시도코드, 노드유형으로 지하철 엘리베이터를 검색합니다. 검색 조건이 있어야 합니다. 전체 결과를 반환합니다."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "검색 성공"),
+        @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public ResponseEntity<ApiResDto<List<PoiSubwayElevator>>> searchByCategory(
+            @Valid @ParameterObject PoiSubwayElevatorSearchCatReq searchKeys,
+            HttpServletRequest request) {
+        
+        try {
+            List<PoiSubwayElevator> searchRet = poiSubwayElevatorReadService.getSubwayElevatorsByCategory(searchKeys);
+            
+            log.debug("[{}] : {}", request.getRequestURI(), searchKeys != null ? searchKeys.toString() : "null");
+            return ResponseEntity.ok(ApiResDto.success(searchRet));
+        } catch (Exception e) {
+            log.error("[{}] : {}", request.getRequestURI(), e.getMessage());
+            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/search/paging")
+    @Operation(
+        summary = "지하철 엘리베이터 카테고리 검색 (페이징)",
+        description = "지하철역명, 시도코드, 노드유형으로 지하철 엘리베이터를 검색합니다. 검색 조건이 있어야 합니다. 페이징 처리된 결과를 반환합니다."
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "검색 성공",
             content = @Content(schema = @Schema(implementation = PageRes.class))),
         @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ApiResDto<PageRes<PoiSubwayElevator>>> searchByCategory(
+    public ResponseEntity<ApiResDto<PageRes<PoiSubwayElevator>>> searchByCategoryPaging(
             @Valid @ParameterObject PageReq page,
             @Valid @ParameterObject PoiSubwayElevatorSearchCatReq searchKeys,
             HttpServletRequest request) {
         
         try {
-            PageRes<PoiSubwayElevator> searchRet = poiSubwayElevatorReadService.getSubwayElevatorsByCategory(searchKeys, page);
+            PageRes<PoiSubwayElevator> searchRet = poiSubwayElevatorReadService.getSubwayElevatorsByCategoryPaging(searchKeys, page);
             
             log.debug("[{}] : {}", request.getRequestURI(), searchKeys != null ? searchKeys.toString() : "null");
             return ResponseEntity.ok(ApiResDto.success(searchRet));
@@ -132,22 +240,42 @@ public class PoiSubwayElevatorController {
 
     @GetMapping("/search/location")
     @Operation(
-        summary = "지하철 엘리베이터 위치 기반 검색",
-        description = "위치 기준 반경 내 지하철 엘리베이터를 검색합니다."
+        summary = "지하철 엘리베이터 위치 기반 검색 (전체 결과)",
+        description = "위치 기준 반경 내 지하철 엘리베이터를 검색합니다. 전체 결과를 반환합니다."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "검색 성공"),
+        @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public ResponseEntity<ApiResDto<List<PoiSubwayElevator>>> searchByLocation(
+            @Valid @ParameterObject PoiSubwayElevatorSearchLocReq searchKeys,
+            HttpServletRequest request) {
+        
+        log.debug("[{}] : {}", request.getRequestURI(), searchKeys.toString());
+        
+        List<PoiSubwayElevator> searchRet = poiSubwayElevatorReadService.getSubwayElevatorByLocation(searchKeys);
+        
+        return ResponseEntity.ok(ApiResDto.success(searchRet));
+    }
+
+    @GetMapping("/search/location/paging")
+    @Operation(
+        summary = "지하철 엘리베이터 위치 기반 검색 (페이징)",
+        description = "위치 기준 반경 내 지하철 엘리베이터를 검색합니다. 페이징 처리된 결과를 반환합니다."
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "검색 성공",
             content = @Content(schema = @Schema(implementation = PageRes.class))),
         @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ApiResDto<PageRes<PoiSubwayElevator>>> searchByLocation(
+    public ResponseEntity<ApiResDto<PageRes<PoiSubwayElevator>>> searchByLocationPaging(
             @Valid @ParameterObject PageReq page,
             @Valid @ParameterObject PoiSubwayElevatorSearchLocReq searchKeys,
             HttpServletRequest request) {
         
         log.debug("[{}] : {}", request.getRequestURI(), searchKeys.toString());
         
-        PageRes<PoiSubwayElevator> searchRet = poiSubwayElevatorReadService.getSubwayElevatorsByLocation(searchKeys, page);
+        PageRes<PoiSubwayElevator> searchRet = poiSubwayElevatorReadService.getSubwayElevatorsByLocationPaging(searchKeys, page);
         
         return ResponseEntity.ok(ApiResDto.success(searchRet));
     }
