@@ -1,6 +1,6 @@
 package com.sweetk.iitp.api.dto.poi;
 
-import com.sweetk.iitp.api.constant.poi.SubwayNodeType;
+import com.sweetk.iitp.api.constant.poi.PoiSubwayNodeType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -25,7 +25,7 @@ public class PoiSubwayElevatorSearchCatReq {
     @Schema(description = "노드 유형 코드 (0: 일반노드, 1: 지하철 출입구, 2: 버스 정류장, 3: 지하보도 출입구)", 
             example = "1", 
             allowableValues = {"0", "1", "2", "3"})
-    private SubwayNodeType nodeTypeCode;
+    private PoiSubwayNodeType nodeTypeCode;
     
     public void setStationName(String stationName) {
         this.stationName = (stationName != null && stationName.trim().isEmpty()) ? null : stationName;
