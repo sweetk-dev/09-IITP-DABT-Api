@@ -1,4 +1,4 @@
-package com.sweetk.iitp.api.repository;
+package com.sweetk.iitp.api.util;
 
 public class RepositoryUtils {
     public static String escapeSql(String input) {
