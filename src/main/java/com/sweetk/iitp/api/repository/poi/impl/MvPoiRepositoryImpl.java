@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sweetk.iitp.api.dto.internal.PoiPageResult;
 import com.sweetk.iitp.api.dto.poi.MvPoi;
+import com.sweetk.iitp.api.repository.RepositoryUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +36,10 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     private DataSource dataSource;
 
 
-    private static final String mvPoiCategoryColumn = "search_filter_json->'search_filter'";
-    private static final String mvPoiOrderByCondition = "ORDER BY title";
+    private static final String SqlMvCategoryCol = "search_filter_json->'search_filter'";
+    private static final String SqlMvOrderBy = "ORDER BY title";
 
-    private static final String mvPoiDtoQuery = "SELECT " +
+    private static final String SqlMvDtoQuery = "SELECT " +
             "poi_id, " +
             "language_code, " +
             "title, summary, basic_info, address_code, address_road, address_detail, latitude, longitude, detail_json, search_filter_json " +
@@ -52,12 +53,12 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
 
     public Optional<MvPoi> findByIdWithPublished(Long poiId) {
-        String mvPoiDtoQueryById = mvPoiDtoQuery  + " AND poi_id = ? ";
+        StringBuilder sql = new StringBuilder(SqlMvDtoQuery).append(" AND poi_id = ? ");
 
-        log.debug("[MvPoi] ID별 조회 쿼리: {}", mvPoiDtoQueryById);
+        log.debug("[MvPoi] ID별 조회 쿼리: {}", sql);
 
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement(mvPoiDtoQueryById)) {
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
 
             ps.setLong(1, poiId);
 
@@ -76,19 +77,17 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
 
     public List<MvPoi> findAllPublished() {
-        StringBuilder sql = new StringBuilder(mvPoiDtoQuery)
-                .append(mvPoiOrderByCondition);
-
+        StringBuilder sql = new StringBuilder(SqlMvDtoQuery).append(SqlMvOrderBy);
         log.debug("[MvPoi] 전체 조회 쿼리: {}", sql);
 
         List<MvPoi> entityList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-
-            while (rs.next()) {
-                MvPoi poi = setMvPoi(rs);
-                entityList.add(poi);
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    MvPoi poi = setMvPoi(rs);
+                    entityList.add(poi);
+                }
             }
         } catch (SQLException e) {
             log.error("[MvPoi] 전체 조회 쿼리 실행 중 오류 발생", e);
@@ -98,25 +97,23 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     }
 
     public PoiPageResult findAllWithPagingCount(int offset, int size) {
-        StringBuilder sql = new StringBuilder(mvPoiDtoQuery)
-                .append(mvPoiOrderByCondition)
-                .append(" OFFSET ").append(offset).append(" LIMIT ").append(size);
-
+        StringBuilder sql = new StringBuilder(SqlMvDtoQuery).append(SqlMvOrderBy);
+        sql = RepositoryUtils.addQueryOffset(sql, offset, size);
         log.debug("[MvPoi] 전체 조회 쿼리(with count): {}", sql);
 
         long totalCount = 0L;
         List<MvPoi> entityList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    if (totalCount == 0) {
+                        totalCount = rs.getLong("total_count");
+                    }
 
-            while (rs.next()) {
-                if (totalCount == 0) {
-                    totalCount = rs.getLong("total_count");
+                    MvPoi poi = setMvPoi(rs);
+                    entityList.add(poi);
                 }
-
-                MvPoi poi = setMvPoi(rs);
-                entityList.add(poi);
             }
         } catch (SQLException e) {
             log.error("[MvPoi] 전체 조회 쿼리(with count) 실행 중 오류 발생", e);
@@ -127,22 +124,25 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
 
     public List<MvPoi> findByCategoryType(String categoryType) {
-
-        String conditionCategory = "AND (" + mvPoiCategoryColumn + " ? '" + categoryType + "') ";
-        StringBuilder sql = new StringBuilder(mvPoiDtoQuery)
-                .append(conditionCategory)
-                .append(mvPoiOrderByCondition);
+        StringBuilder sql = new StringBuilder(SqlMvDtoQuery)
+                .append(" AND (")
+                .append(SqlMvOrderBy)
+                .append(" ? '")
+                .append(RepositoryUtils.escapeSql(categoryType))
+                .append("')")
+                .append(SqlMvOrderBy);
 
         log.debug("[MvPoi] 카테고리별 조회 쿼리: {}", sql);
 
         List<MvPoi> entityList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
 
-            while (rs.next()) {
-                MvPoi poi = setMvPoi(rs);
-                entityList.add(poi);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    MvPoi poi = setMvPoi(rs);
+                    entityList.add(poi);
+                }
             }
         } catch (SQLException e) {
             log.error("[MvPoi] 카테고리별 조회 쿼리 실행 중 오류 발생", e);
@@ -154,25 +154,29 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
 
     public PoiPageResult findByCategoryTypeWithPagingCount(String categoryType, int offset, int size) {
-        String conditionCategory = "AND (" + mvPoiCategoryColumn + " ? '" + categoryType + "') ";
-        StringBuilder sql = new StringBuilder(addCountToQuery(mvPoiDtoQuery))
-                .append(conditionCategory)
-                .append(mvPoiOrderByCondition)
-                .append(" OFFSET ").append(offset).append(" LIMIT ").append(size);
+        StringBuilder sql = new StringBuilder(SqlMvDtoQuery)
+                .append(" AND (")
+                .append(SqlMvOrderBy)
+                .append(" ? '")
+                .append(RepositoryUtils.escapeSql(categoryType))
+                .append("')")
+                .append(SqlMvOrderBy);
+        sql = RepositoryUtils.addQueryOffset(sql, offset, size);
 
         log.debug("[MvPoi] 카테고리별(with count) 조회 쿼리: {}", sql);
 
         List<MvPoi> entityList = new ArrayList<>();
         long totalCount = 0L;
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            while (rs.next()) {
-                if (totalCount == 0) {
-                    totalCount = rs.getLong("total_count");
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    if (totalCount == 0) {
+                        totalCount = rs.getLong("total_count");
+                    }
+                    MvPoi poi = setMvPoi(rs);
+                    entityList.add(poi);
                 }
-                MvPoi poi = setMvPoi(rs);
-                entityList.add(poi);
             }
         } catch (SQLException e) {
             log.error("[MvPoi] 카테고리별(with count) 조회 쿼리 실행 중 오류 발생", e);
@@ -186,17 +190,18 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     public List<MvPoi> findByCategoryAndSubCate(
             String category, String subCate, String name
     ) {
-        StringBuilder sql = setFindByCategorySubCateSql(addCountToQuery(mvPoiDtoQuery),category, subCate, name);
+        StringBuilder sql = getQueryFindByCategorySubCate(addCountToQuery(SqlMvDtoQuery),category, subCate, name);
 
         log.debug("[MvPoi] 카테고리 검색 실행 쿼리: {}", sql);
 
         List<MvPoi> entityList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            while (rs.next()) {
-                MvPoi poi = setMvPoi(rs);
-                entityList.add(poi);
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    MvPoi poi = setMvPoi(rs);
+                    entityList.add(poi);
+                }
             }
         } catch (SQLException e) {
             log.error("[MvPoi] 카테고리 검색 쿼리 실행 중 오류 발생", e);
@@ -209,22 +214,23 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     public PoiPageResult findByCategoryAndSubCateWithPagingCount(
             String category, String subCate, String name, int offset, int size
     ) {
-        StringBuilder sql = setFindByCategorySubCateSql(addCountToQuery(mvPoiDtoQuery),category, subCate, name)
-                                .append(" OFFSET ").append(offset).append(" LIMIT ").append(size);
+        StringBuilder sql = getQueryFindByCategorySubCate(addCountToQuery(SqlMvDtoQuery),category, subCate, name);
+        sql = RepositoryUtils.addQueryOffset(sql, offset, size);
 
         log.debug("[MvPoi] 카테고리 검색(with count) 실행 쿼리: {}", sql);
 
         List<MvPoi> entityList = new ArrayList<>();
         long totalCount = 0L;
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            while (rs.next()) {
-                if (totalCount == 0) {
-                    totalCount = rs.getLong("total_count");
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    if (totalCount == 0) {
+                        totalCount = rs.getLong("total_count");
+                    }
+                    MvPoi poi = setMvPoi(rs);
+                    entityList.add(poi);
                 }
-                MvPoi poi = setMvPoi(rs);
-                entityList.add(poi);
             }
         } catch (SQLException e) {
             log.error("[MvPoi] 카테고리 검색(with count) 쿼리 실행 중 오류 발생", e);
@@ -238,7 +244,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     public List<MvPoi> findByLocation( String category, String name,
                                                     BigDecimal latitude, BigDecimal longitude, BigDecimal radius) {
 
-        StringBuilder sql = setFindByLocationCategorySql(mvPoiDtoQuery, category, name, latitude, longitude, radius);
+        StringBuilder sql = setFindByLocationCategorySql(SqlMvDtoQuery, category, name, latitude, longitude, radius);
 
         log.debug("[MvPoi] 위치 기반 검색 실행 쿼리: {}", sql);
         
@@ -246,14 +252,15 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
         long totalCount = 0;
 
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            while (rs.next()) {
-                if (totalCount == 0) {
-                    totalCount = rs.getLong("total_count");
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    if (totalCount == 0) {
+                        totalCount = rs.getLong("total_count");
+                    }
+                    MvPoi poi = setMvPoi(rs);
+                    entityList.add(poi);
                 }
-                MvPoi poi = setMvPoi(rs);
-                entityList.add(poi);
             }
         } catch (SQLException e) {
             log.error("[MvPoi]  위치 기반 쿼리 실행 중 오류 발생", e);
@@ -269,7 +276,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     public PoiPageResult findByLocationWithPagingCount(String category, String name,
                                                        BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size) {
 
-        StringBuilder sql = setFindByLocationCategorySql(addCountToQuery(mvPoiDtoQuery), category, name, latitude, longitude, radius)
+        StringBuilder sql = setFindByLocationCategorySql(addCountToQuery(SqlMvDtoQuery), category, name, latitude, longitude, radius)
                 .append(" OFFSET ").append(offset).append(" LIMIT ").append(size);
 
         log.debug("[MvPoi] 위치 기반 검색(with count) 실행 쿼리: {}", sql);
@@ -278,14 +285,15 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
         long totalCount = 0;
 
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            while (rs.next()) {
-                if (totalCount == 0) {
-                    totalCount = rs.getLong("total_count");
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    if (totalCount == 0) {
+                        totalCount = rs.getLong("total_count");
+                    }
+                    MvPoi poi = setMvPoi(rs);
+                    entityList.add(poi);
                 }
-                MvPoi poi = setMvPoi(rs);
-                entityList.add(poi);
             }
         } catch (SQLException e) {
             log.error("[MvPoi] 위치 기반(with count) 쿼리 실행 중 오류 발생", e);
@@ -304,46 +312,56 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
         boolean hasName = name != null && !name.isEmpty();
 
         if (hasCategory) {
-            sql.append("AND ("+ mvPoiCategoryColumn +" ? '").append(category).append("') ");
+            category = RepositoryUtils.escapeSql(category);
+            sql.append("AND ("+ SqlMvCategoryCol +" ? '").append(category).append("') ");
         }
         if (hasName) {
-            sql.append("AND title LIKE '%").append(name.replace("'", "''")).append("%' ");
+            name = RepositoryUtils.escapeSql(name);
+            sql.append("AND title LIKE '%").append(name).append("%' ");
         }
 
-        sql.append("AND ST_DWithin(geom, ST_GeomFromText('POINT(").append(longitude).append(" ").append(latitude).append(")'), ").append(radius.multiply(new java.math.BigDecimal(1000))).append(") ");
-        sql.append(mvPoiOrderByCondition);
+        sql.append("AND ST_DWithin(geom, ST_GeomFromText('POINT(")
+                .append(longitude).append(" ")
+                .append(latitude).append(")'), ")
+                .append(radius.multiply(new BigDecimal(1000))).append(") ");
+        sql.append(SqlMvOrderBy);
 
         return sql;
     }
 
 
 
-    private StringBuilder setFindByCategorySubCateSql(String baseQuery, String category, String subCate, String name) {
+    private StringBuilder getQueryFindByCategorySubCate(String baseQuery, String category, String subCate, String name) {
         StringBuilder sql = new StringBuilder(baseQuery);
         boolean hasCategory = category != null && !category.isEmpty();
         boolean hasSubCate = subCate != null && !subCate.isEmpty();
         boolean hasName = name != null && !name.isEmpty();
 
         if (hasCategory) {
-            sql.append("AND ("+ mvPoiCategoryColumn +" ? '").append(category).append("') ");
+            category = RepositoryUtils.escapeSql(category);
+            sql.append("AND ("+ SqlMvCategoryCol +" ? '").append(category).append("') ");
             if (hasSubCate) {
+                String subItem = "";
                 if (subCate.contains(",")) {
                     String[] subCates = subCate.split(",");
                     sql.append("AND (");
                     for (int i = 0; i < subCates.length; i++) {
                         if (i > 0) sql.append(" OR ");
-                        sql.append(mvPoiCategoryColumn + "->>'").append(category).append("' = '").append(subCates[i].trim().replace("'", "''")).append("' ");
+                        subItem = RepositoryUtils.escapeSql(subCates[i].trim());
+                        sql.append(SqlMvCategoryCol + "->>'").append(category).append("' = '").append(subItem).append("' ");
                     }
                     sql.append(") ");
                 } else {
-                    sql.append("AND "+ mvPoiCategoryColumn +"->>'").append(category).append("' LIKE '%").append(subCate.replace("'", "''")).append("%' ");
+                    subItem = RepositoryUtils.escapeSql(subCate.trim());
+                    sql.append("AND "+ SqlMvCategoryCol +"->>'").append(category).append("' LIKE '%").append(subItem).append("%' ");
                 }
             }
         }
         if (hasName) {
-            sql.append("AND title LIKE '%").append(name.replace("'", "''")).append("%' ");
+            name =  RepositoryUtils.escapeSql(name);
+            sql.append("AND title LIKE '%").append(name).append("%' ");
         }
-        sql.append(mvPoiOrderByCondition);
+        sql.append(SqlMvOrderBy);
 
         return sql;
     }
