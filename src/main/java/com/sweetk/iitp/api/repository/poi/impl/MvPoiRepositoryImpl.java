@@ -2,7 +2,7 @@ package com.sweetk.iitp.api.repository.poi.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sweetk.iitp.api.dto.internal.MvPoiPageResult;
+import com.sweetk.iitp.api.dto.internal.PoiPageResult;
 import com.sweetk.iitp.api.dto.poi.MvPoi;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -97,7 +97,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
         return entityList;
     }
 
-    public MvPoiPageResult findAllWithPagingCount(int offset, int size) {
+    public PoiPageResult findAllWithPagingCount(int offset, int size) {
         StringBuilder sql = new StringBuilder(mvPoiDtoQuery)
                 .append(mvPoiOrderByCondition)
                 .append(" OFFSET ").append(offset).append(" LIMIT ").append(size);
@@ -122,7 +122,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
             log.error("[MvPoi] 전체 조회 쿼리(with count) 실행 중 오류 발생", e);
             throw new RuntimeException("Database query failed", e);
         }
-        return new MvPoiPageResult(entityList, totalCount);
+        return new PoiPageResult(entityList, totalCount);
     }
 
 
@@ -153,7 +153,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
 
 
-    public MvPoiPageResult findByCategoryTypeWithPagingCount(String categoryType, int offset, int size) {
+    public PoiPageResult findByCategoryTypeWithPagingCount(String categoryType, int offset, int size) {
         String conditionCategory = "AND (" + mvPoiCategoryColumn + " ? '" + categoryType + "') ";
         StringBuilder sql = new StringBuilder(addCountToQuery(mvPoiDtoQuery))
                 .append(conditionCategory)
@@ -178,7 +178,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
             log.error("[MvPoi] 카테고리별(with count) 조회 쿼리 실행 중 오류 발생", e);
             throw new RuntimeException("Database query failed", e);
         }
-        return new MvPoiPageResult(entityList, totalCount);
+        return new PoiPageResult(entityList, totalCount);
     }
 
 
@@ -206,7 +206,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     }
 
 
-    public MvPoiPageResult findByCategoryAndSubCateWithPagingCount(
+    public PoiPageResult findByCategoryAndSubCateWithPagingCount(
             String category, String subCate, String name, int offset, int size
     ) {
         StringBuilder sql = setFindByCategorySubCateSql(addCountToQuery(mvPoiDtoQuery),category, subCate, name)
@@ -230,7 +230,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
             log.error("[MvPoi] 카테고리 검색(with count) 쿼리 실행 중 오류 발생", e);
             throw new RuntimeException("Database query failed", e);
         }
-        return new MvPoiPageResult(entityList, totalCount);
+        return new PoiPageResult(entityList, totalCount);
     }
 
 
@@ -266,8 +266,8 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
 
 
-    public MvPoiPageResult findByLocationWithPagingCount( String category, String name,
-            BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size) {
+    public PoiPageResult findByLocationWithPagingCount(String category, String name,
+                                                       BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size) {
 
         StringBuilder sql = setFindByLocationCategorySql(addCountToQuery(mvPoiDtoQuery), category, name, latitude, longitude, radius)
                 .append(" OFFSET ").append(offset).append(" LIMIT ").append(size);
@@ -292,7 +292,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
             throw new RuntimeException("Database query failed", e);
         }
 
-        return new MvPoiPageResult(entityList, totalCount);
+        return new PoiPageResult(entityList, totalCount);
     }
 
 

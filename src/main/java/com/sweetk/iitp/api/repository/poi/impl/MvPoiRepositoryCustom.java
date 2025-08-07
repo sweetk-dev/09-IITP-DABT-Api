@@ -1,6 +1,6 @@
 package com.sweetk.iitp.api.repository.poi.impl;
 
-import com.sweetk.iitp.api.dto.internal.MvPoiPageResult;
+import com.sweetk.iitp.api.dto.internal.PoiPageResult;
 import com.sweetk.iitp.api.dto.poi.MvPoi;
 import org.springframework.stereotype.Repository;
 
@@ -18,22 +18,22 @@ public interface MvPoiRepositoryCustom {
 
 
     List<MvPoi> findAllPublished();
-    MvPoiPageResult findAllWithPagingCount(int offset, int size);
+    PoiPageResult findAllWithPagingCount(int offset, int size);
 
 
     List<MvPoi> findByCategoryType(String categoryType);
-    MvPoiPageResult findByCategoryTypeWithPagingCount( String categoryType, int offset, int size);
+    PoiPageResult findByCategoryTypeWithPagingCount(String categoryType, int offset, int size);
 
 
     List<MvPoi> findByCategoryAndSubCate(String category, String subCate, String name);
-    MvPoiPageResult findByCategoryAndSubCateWithPagingCount(
+    PoiPageResult findByCategoryAndSubCateWithPagingCount(
         String category, String subCate, String name, int offset, int size
     );
 
     List<MvPoi> findByLocation(
             String category, String name,  BigDecimal latitude, BigDecimal longitude, BigDecimal radius
     );
-    MvPoiPageResult findByLocationWithPagingCount(
+    PoiPageResult findByLocationWithPagingCount(
             String category, String name, BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size
     );
 
