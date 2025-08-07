@@ -1,5 +1,6 @@
 package com.sweetk.iitp.api.repository.poi.impl;
 
+import com.sweetk.iitp.api.dto.internal.PoiPageResult;
 import com.sweetk.iitp.api.dto.poi.PoiSubwayElevator;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -14,7 +15,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,13 +100,14 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
         sql.append("AND subway_id = ").append(subwayId).append(" ");
         
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql.toString());
-             ResultSet rs = stmt.executeQuery()) {
-            
-            if (rs.next()) {
-                return java.util.Optional.of(setPoiSubwayElevator(rs));
-            } else {
-                return java.util.Optional.empty();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return java.util.Optional.of(setPoiSubwayElevator(rs));
+                } else {
+                    return java.util.Optional.empty();
+                }
             }
         } catch (SQLException e) {
             log.error("지하철 엘리베이터 ID 조회 중 오류 발생: {}", e.getMessage());
@@ -124,14 +125,15 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
 
         List<PoiSubwayElevator> entityList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            
-            while (rs.next()) {
-                PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
-                entityList.add(elevator);
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
+                    entityList.add(elevator);
+                }
+                log.debug("[PoiSubwayElevator] 시도별 조회 완료 - 결과 개수: {}", entityList.size());
             }
-            log.debug("[PoiSubwayElevator] 시도별 조회 완료 - 결과 개수: {}", entityList.size());
         } catch (SQLException e) {
             log.error("[PoiSubwayElevator] 시도별 조회 쿼리 실행 중 오류 발생", e);
             throw new RuntimeException("Database sido query failed", e);
@@ -151,14 +153,15 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
 
         List<PoiSubwayElevator> entityList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            
-            while (rs.next()) {
-                PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
-                entityList.add(elevator);
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
+                    entityList.add(elevator);
+                }
+                log.debug("[PoiSubwayElevator] 카테고리 검색 완료 (전체) - 결과 개수: {}", entityList.size());
             }
-            log.debug("[PoiSubwayElevator] 카테고리 검색 완료 (전체) - 결과 개수: {}", entityList.size());
         } catch (SQLException e) {
             log.error("[PoiSubwayElevator] 카테고리 검색 쿼리 실행 중 오류 발생 (전체)", e);
             throw new RuntimeException("Database query failed", e);
@@ -168,7 +171,7 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
     }
 
     @Override
-    public com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiSubwayElevator> findByCategoryConditionsWithPaging(
+    public PoiPageResult<PoiSubwayElevator> findByCategoryConditionsWithPagingCount(
             String stationName, String sidoCode, Integer nodeTypeCode, int offset, int size) {
         StringBuilder sql = new StringBuilder(ELEVATOR_BASE_QUERY_WITH_COUNT);
         sql.append(buildCategoryConditionsSql(stationName, sidoCode, nodeTypeCode));
@@ -180,24 +183,25 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
         List<PoiSubwayElevator> entityList = new ArrayList<>();
         long totalCount = 0;
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            
-            while (rs.next()) {
-                PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
-                entityList.add(elevator);
-                // 첫 번째 행에서 total_count 가져오기
-                if (totalCount == 0) {
-                    totalCount = rs.getLong("total_count");
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
+                    entityList.add(elevator);
+                    // 첫 번째 행에서 total_count 가져오기
+                    if (totalCount == 0) {
+                        totalCount = rs.getLong("total_count");
+                    }
                 }
+                log.debug("[PoiSubwayElevator] 카테고리 검색 완료 (페이징 + 카운트) - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
             }
-            log.debug("[PoiSubwayElevator] 카테고리 검색 완료 (페이징 + 카운트) - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
         } catch (SQLException e) {
             log.error("[PoiSubwayElevator] 카테고리 검색 쿼리 실행 중 오류 발생 (페이징 + 카운트)", e);
             throw new RuntimeException("Database query failed", e);
         }
         
-        return new com.sweetk.iitp.api.dto.internal.MvPoiPageResult<>(entityList, totalCount);
+        return new PoiPageResult<>(entityList, totalCount);
     }
 
 
@@ -213,14 +217,15 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
 
         List<PoiSubwayElevator> entityList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            
-            while (rs.next()) {
-                PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
-                entityList.add(elevator);
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
+                    entityList.add(elevator);
+                }
+                log.debug("[PoiSubwayElevator] 시군구 검색 완료 - 결과 개수: {}", entityList.size());
             }
-            log.debug("[PoiSubwayElevator] 시군구 검색 완료 - 결과 개수: {}", entityList.size());
         } catch (SQLException e) {
             log.error("[PoiSubwayElevator] 시군구 검색 쿼리 실행 중 오류 발생", e);
             throw new RuntimeException("Database query failed", e);
@@ -230,8 +235,8 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
     }
 
     @Override
-    public com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiSubwayElevator> findBySigunguConditionsWithPaging(String sidoCode, String sigunguCode, 
-                                                                     int offset, int size) {
+    public PoiPageResult<PoiSubwayElevator> findBySigunguConditionsWithPagingCount(String sidoCode, String sigunguCode,
+                                                                                   int offset, int size) {
         StringBuilder sql = new StringBuilder(ELEVATOR_BASE_QUERY_WITH_COUNT);
         sql.append("AND sido_code = '").append(sidoCode.replace("'", "''")).append("' ");
         sql.append("AND sigungu_code = '").append(sigunguCode.replace("'", "''")).append("' ");
@@ -243,24 +248,25 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
         List<PoiSubwayElevator> entityList = new ArrayList<>();
         long totalCount = 0;
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            
-            while (rs.next()) {
-                PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
-                entityList.add(elevator);
-                // 첫 번째 행에서 total_count 가져오기
-                if (totalCount == 0) {
-                    totalCount = rs.getLong("total_count");
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
+                    entityList.add(elevator);
+                    // 첫 번째 행에서 total_count 가져오기
+                    if (totalCount == 0) {
+                        totalCount = rs.getLong("total_count");
+                    }
                 }
+                log.debug("[PoiSubwayElevator] 시군구 검색 완료 - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
             }
-            log.debug("[PoiSubwayElevator] 시군구 검색 완료 - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
         } catch (SQLException e) {
             log.error("[PoiSubwayElevator] 시군구 검색 쿼리 실행 중 오류 발생", e);
             throw new RuntimeException("Database query failed", e);
         }
         
-        return new com.sweetk.iitp.api.dto.internal.MvPoiPageResult<>(entityList, totalCount);
+        return new PoiPageResult<>(entityList, totalCount);
     }
 
 
@@ -278,14 +284,15 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
 
         List<PoiSubwayElevator> entityList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            
-            while (rs.next()) {
-                PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
-                entityList.add(elevator);
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
+                    entityList.add(elevator);
+                }
+                log.debug("[PoiSubwayElevator] 위치 검색 완료 - 결과 개수: {}", entityList.size());
             }
-            log.debug("[PoiSubwayElevator] 위치 검색 완료 - 결과 개수: {}", entityList.size());
         } catch (SQLException e) {
             log.error("[PoiSubwayElevator] 위치 검색 쿼리 실행 중 오류 발생", e);
             throw new RuntimeException("Database query failed", e);
@@ -295,8 +302,8 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
     }
 
     @Override
-    public com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiSubwayElevator> findByLocationWithPaging(BigDecimal latitude, BigDecimal longitude, 
-                                                            BigDecimal radius, int offset, int size) {
+    public PoiPageResult<PoiSubwayElevator> findByLocationWithPagingCount(BigDecimal latitude, BigDecimal longitude,
+                                                                          BigDecimal radius, int offset, int size) {
         StringBuilder sql = new StringBuilder(ELEVATOR_BASE_QUERY_WITH_COUNT);
         sql.append("AND ST_DWithin(ST_SetSRID(ST_MakePoint(longitude, latitude), 4326), ");
         sql.append("ST_SetSRID(ST_MakePoint(").append(longitude).append(", ").append(latitude).append("), 4326), ");
@@ -309,30 +316,31 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
         List<PoiSubwayElevator> entityList = new ArrayList<>();
         long totalCount = 0;
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            
-            while (rs.next()) {
-                PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
-                entityList.add(elevator);
-                // 첫 번째 행에서 total_count 가져오기
-                if (totalCount == 0) {
-                    totalCount = rs.getLong("total_count");
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
+                    entityList.add(elevator);
+                    // 첫 번째 행에서 total_count 가져오기
+                    if (totalCount == 0) {
+                        totalCount = rs.getLong("total_count");
+                    }
                 }
+                log.debug("[PoiSubwayElevator] 위치 검색 완료 - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
             }
-            log.debug("[PoiSubwayElevator] 위치 검색 완료 - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
         } catch (SQLException e) {
             log.error("[PoiSubwayElevator] 위치 검색 쿼리 실행 중 오류 발생", e);
             throw new RuntimeException("Database query failed", e);
         }
         
-        return new com.sweetk.iitp.api.dto.internal.MvPoiPageResult<>(entityList, totalCount);
+        return new PoiPageResult<>(entityList, totalCount);
     }
 
 
 
     @Override
-    public com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiSubwayElevator> findBySidoCodeWithPaging(String sidoCode, int offset, int size) {
+    public PoiPageResult<PoiSubwayElevator> findBySidoCodeWithPagingCount(String sidoCode, int offset, int size) {
         StringBuilder sql = new StringBuilder(ELEVATOR_BASE_QUERY_WITH_COUNT);
         sql.append("AND sido_code = '").append(sidoCode.replace("'", "''")).append("' ");
         sql.append(ELEVATOR_ORDER_BY);
@@ -343,24 +351,25 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
         List<PoiSubwayElevator> entityList = new ArrayList<>();
         long totalCount = 0;
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            
-            while (rs.next()) {
-                PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
-                entityList.add(elevator);
-                // 첫 번째 행에서 total_count 가져오기
-                if (totalCount == 0) {
-                    totalCount = rs.getLong("total_count");
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
+                    entityList.add(elevator);
+                    // 첫 번째 행에서 total_count 가져오기
+                    if (totalCount == 0) {
+                        totalCount = rs.getLong("total_count");
+                    }
                 }
+                log.debug("[PoiSubwayElevator] 시도 검색 완료 - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
             }
-            log.debug("[PoiSubwayElevator] 시도 검색 완료 - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
         } catch (SQLException e) {
             log.error("[PoiSubwayElevator] 시도 검색 쿼리 실행 중 오류 발생", e);
             throw new RuntimeException("Database query failed", e);
         }
         
-        return new com.sweetk.iitp.api.dto.internal.MvPoiPageResult<>(entityList, totalCount);
+        return new PoiPageResult<>(entityList, totalCount);
     }
 
 
@@ -374,14 +383,15 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
 
         List<PoiSubwayElevator> entityList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            
-            while (rs.next()) {
-                PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
-                entityList.add(elevator);
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
+                    entityList.add(elevator);
+                }
+                log.debug("[PoiSubwayElevator] 전체 조회 완료 - 결과 개수: {}", entityList.size());
             }
-            log.debug("[PoiSubwayElevator] 전체 조회 완료 - 결과 개수: {}", entityList.size());
         } catch (SQLException e) {
             log.error("[PoiSubwayElevator] 전체 조회 쿼리 실행 중 오류 발생", e);
             throw new RuntimeException("Database query failed", e);
@@ -391,7 +401,7 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
     }
 
     @Override
-    public com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiSubwayElevator> findAllWithPaging(int offset, int size) {
+    public PoiPageResult<PoiSubwayElevator> findAllWithPagingCount(int offset, int size) {
         StringBuilder sql = new StringBuilder(ELEVATOR_BASE_QUERY_WITH_COUNT);
         sql.append(ELEVATOR_ORDER_BY);
         sql = new StringBuilder(addPagingToQuery(sql.toString(), offset, size));
@@ -401,24 +411,25 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
         List<PoiSubwayElevator> entityList = new ArrayList<>();
         long totalCount = 0;
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            
-            while (rs.next()) {
-                PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
-                entityList.add(elevator);
-                // 첫 번째 행에서 total_count 가져오기
-                if (totalCount == 0) {
-                    totalCount = rs.getLong("total_count");
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
+                    entityList.add(elevator);
+                    // 첫 번째 행에서 total_count 가져오기
+                    if (totalCount == 0) {
+                        totalCount = rs.getLong("total_count");
+                    }
                 }
+                log.debug("[PoiSubwayElevator] 전체 조회 완료 - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
             }
-            log.debug("[PoiSubwayElevator] 전체 조회 완료 - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
         } catch (SQLException e) {
             log.error("[PoiSubwayElevator] 전체 조회 쿼리 실행 중 오류 발생", e);
             throw new RuntimeException("Database query failed", e);
         }
         
-        return new com.sweetk.iitp.api.dto.internal.MvPoiPageResult<>(entityList, totalCount);
+        return new PoiPageResult<>(entityList, totalCount);
     }
 
 

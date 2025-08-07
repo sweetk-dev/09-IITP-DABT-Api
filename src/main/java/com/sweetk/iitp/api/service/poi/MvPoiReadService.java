@@ -107,4 +107,33 @@ public class MvPoiReadService extends PoiService {
                         );
         return new PageRes<>(result.content, pageReq.toPageable(), result.totalCount);
     }
+
+    // 거리 정보를 포함한 위치 기반 검색
+    public List<MvPoiLoc> getPoiByLocationWithDistance(MvPoiSearchLocReq searchReq) {
+        String category = searchReq.getCategory() != null ? searchReq.getCategory().getCode() : null;
+        return mvPoiRepos.findByLocationWithDistance(
+                category,
+                searchReq.getName(),
+                searchReq.getLatitude(),
+                searchReq.getLongitude(),
+                searchReq.getRadius()
+        );
+    }
+
+    public PageRes<MvPoiLoc> getPoiByLocationWithDistancePaging(MvPoiSearchLocReq searchReq, PageReq pageReq) {
+        DbOffSet dbOffSet = setDbOffset(pageReq);
+
+        String category = searchReq.getCategory() != null ? searchReq.getCategory().getCode() : null;
+
+        PoiPageResult<MvPoiLoc> result = mvPoiRepos.findByLocationWithDistanceAndPagingCount(
+                            category,
+                            searchReq.getName(),
+                            searchReq.getLatitude(),
+                            searchReq.getLongitude(),
+                            searchReq.getRadius(),
+                            dbOffSet.offset(),
+                            dbOffSet.size()
+                        );
+        return new PageRes<>(result.content, pageReq.toPageable(), result.totalCount);
+    }
 }

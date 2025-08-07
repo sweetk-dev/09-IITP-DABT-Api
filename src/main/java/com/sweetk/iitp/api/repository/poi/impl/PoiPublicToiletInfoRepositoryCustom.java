@@ -1,83 +1,112 @@
 package com.sweetk.iitp.api.repository.poi.impl;
 
 import com.sweetk.iitp.api.constant.poi.PoiPublicToiletType;
-import com.sweetk.iitp.api.dto.internal.MvPoiPageResult;
+import com.sweetk.iitp.api.dto.internal.PoiPageResult;
 import com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfo;
+import com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfoLocation;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PoiPublicToiletInfoRepositoryCustom {
-    
-    /**
-     * ID로 공중 화장실 조회 (DTO 반환, del_yn = 'N' 조건 포함)
-     */
-    java.util.Optional<PoiPublicToiletInfo> findByIdToDto(Integer toiletId);
-    
-    /**
-     * 시도 코드로 공중 화장실 조회 (DTO 반환)
-     */
+
+    /*******************************
+     ** ID로 공중 화장실 조회 (DTO 반환, del_yn = 'N' 조건 포함)
+     *******************************/
+    Optional<PoiPublicToiletInfo> findByIdToDto(Integer toiletId);
+
+
+    /*******************************
+     ** 전체 공중 화장실 조회
+     *******************************/
+    //전체 공중 화장실 조회 (전체 결과)
+    List<PoiPublicToiletInfo> findAllToilets();
+
+     // 전체 공중 화장실 조회 (페이징)
+    PoiPageResult<PoiPublicToiletInfo> findAllWithPagingCount(int offset, int size);
+
+
+
+    /*******************************
+     ** 시도별 공중 화장실 조회
+     *******************************/
+    //시도 코드로 공중 화장실 조회 (DTO 반환)
     List<PoiPublicToiletInfo> findBySidoCodeToDto(String sidoCode);
-    
-    /**
-     * 카테고리 조건으로 공중 화장실 검색 (페이징)
-     */
+
+    //시도 코드로 공중 화장실 조회 (페이징)
+    PoiPageResult<PoiPublicToiletInfo> findBySidoCodeWithPagingCount(String sidoCode, int offset, int size);
+
+
+    /*******************************
+     **  카테고리 기반 검색 공중 화장실 조회
+     *******************************/
+
+    //카테고리 조건으로 공중 화장실 검색 (페이징)
+
     List<PoiPublicToiletInfo> findByCategoryConditions(
             String toiletName, String sidoCode, PoiPublicToiletType toiletType, 
             String open24hYn, int offset, int size);
 
-    /**
-     * 카테고리 조건으로 공중 화장실 검색 (전체 결과)
-     */
+
+    //카테고리 조건으로 공중 화장실 검색 (전체 결과)
+
     List<PoiPublicToiletInfo> findByCategoryConditions(
             String toiletName, String sidoCode, PoiPublicToiletType toiletType, 
             String open24hYn);
     
-    /**
-     * 카테고리 조건으로 공중 화장실 검색 (페이징 + 총 개수)
-     */
-    MvPoiPageResult<PoiPublicToiletInfo> findByCategoryConditionsWithPaging(
+
+    //카테고리 조건으로 공중 화장실 검색 (페이징 + 총 개수)
+
+    PoiPageResult<PoiPublicToiletInfo> findByCategoryConditionsWithPagingCount(
             String toiletName, String sidoCode, PoiPublicToiletType toiletType,
             String open24hYn, int offset, int size);
 
-    /**
-     * 위치 기반 공중 화장실 검색 (기본 - 위치만)
-     */
+
+
+    /*******************************
+     **  위치 기반 검색 공중 화장실 조회
+     *******************************/
+
+
+    //위치 기반 공중 화장실 검색 (기본 - 위치만)
+
     List<PoiPublicToiletInfo> findByLocation(
             java.math.BigDecimal latitude, java.math.BigDecimal longitude,
             java.math.BigDecimal radius);
 
-    /**
-     * 위치 기반 공중 화장실 검색 (추가 조건 포함)
-     */
+
+    //위치 기반 공중 화장실 검색 (추가 조건 포함)
+
     List<PoiPublicToiletInfo> findByLocationWithConditions(
             java.math.BigDecimal latitude, java.math.BigDecimal longitude,
             java.math.BigDecimal radius, String toiletName, PoiPublicToiletType toiletType, String open24hYn);
 
-    /**
-     * 위치 기반 공중 화장실 검색 (페이징 - 통합)
-     */
-    MvPoiPageResult<PoiPublicToiletInfo> findByLocationWithPaging(
+
+    //위치 기반 공중 화장실 검색 (페이징 - 통합)
+
+    PoiPageResult<PoiPublicToiletInfo> findByLocationWithPagingCount(
             java.math.BigDecimal latitude, java.math.BigDecimal longitude, 
             java.math.BigDecimal radius, String toiletName, PoiPublicToiletType toiletType, 
             String open24hYn, int offset, int size);
     
+    /*******************************
+     **  거리 정보 포함 위치 기반 검색 공중 화장실 조회
+     *******************************/
 
-    
-    /**
-     * 시도 코드로 공중 화장실 조회 (페이징)
-     */
-    MvPoiPageResult<PoiPublicToiletInfo> findBySidoCodeWithPaging(String sidoCode, int offset, int size);
-    
-    /**
-     * 전체 공중 화장실 조회 (페이징)
-     */
-    MvPoiPageResult<PoiPublicToiletInfo> findAllWithPaging(int offset, int size);
-    
-    /**
-     * 전체 공중 화장실 조회 (전체 결과)
-     */
-    List<PoiPublicToiletInfo> findAllToilets();
+    //거리 정보 포함 위치 기반 공중 화장실 검색 (전체 결과)
+    List<PoiPublicToiletInfoLocation> findByLocationWithDistance(
+            java.math.BigDecimal latitude, java.math.BigDecimal longitude,
+            java.math.BigDecimal radius);
 
-    
+    //거리 정보 포함 위치 기반 공중 화장실 검색 (추가 조건 포함)
+    List<PoiPublicToiletInfoLocation> findByLocationWithDistanceAndConditions(
+            java.math.BigDecimal latitude, java.math.BigDecimal longitude,
+            java.math.BigDecimal radius, String toiletName, PoiPublicToiletType toiletType, String open24hYn);
+
+    //거리 정보 포함 위치 기반 공중 화장실 검색 (페이징)
+    PoiPageResult<PoiPublicToiletInfoLocation> findByLocationWithDistanceAndPagingCount(
+            java.math.BigDecimal latitude, java.math.BigDecimal longitude, 
+            java.math.BigDecimal radius, String toiletName, PoiPublicToiletType toiletType, 
+            String open24hYn, int offset, int size);
 
 } 

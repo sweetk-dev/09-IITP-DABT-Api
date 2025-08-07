@@ -1,8 +1,9 @@
 package com.sweetk.iitp.api.repository.poi.impl;
 
 
-import com.sweetk.iitp.api.dto.internal.MvPoiPageResult;
+import com.sweetk.iitp.api.dto.internal.PoiPageResult;
 import com.sweetk.iitp.api.dto.poi.PoiSubwayElevator;
+import com.sweetk.iitp.api.dto.poi.PoiSubwayElevatorLocation;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -28,8 +29,8 @@ public interface PoiSubwayElevatorRepositoryCustom {
     /**
      * 카테고리 조건으로 지하철 엘리베이터 검색 (페이징 + 총 개수)
      */
-    MvPoiPageResult<PoiSubwayElevator> findByCategoryConditionsWithPaging(String stationName, String sidoCode, 
-                                                                          Integer nodeTypeCode, int offset, int size);
+    PoiPageResult<PoiSubwayElevator> findByCategoryConditionsWithPagingCount(String stationName, String sidoCode,
+                                                                             Integer nodeTypeCode, int offset, int size);
 
     /**
      * 시군구 조건으로 지하철 엘리베이터 검색 (전체 결과)
@@ -39,34 +40,40 @@ public interface PoiSubwayElevatorRepositoryCustom {
     /**
      * 시군구 조건으로 지하철 엘리베이터 검색 (페이징)
      */
-    MvPoiPageResult<PoiSubwayElevator> findBySigunguConditionsWithPaging(
+    PoiPageResult<PoiSubwayElevator> findBySigunguConditionsWithPagingCount(
             String sidoCode, String sigunguCode, int offset, int size);
 
     /**
      * 위치 기반 지하철 엘리베이터 검색 (전체 결과)
      */
     List<PoiSubwayElevator> findByLocation(BigDecimal latitude, BigDecimal longitude, 
-                                           BigDecimal radius);
+                                          BigDecimal radius);
 
     /**
      * 위치 기반 지하철 엘리베이터 검색 (페이징)
      */
-    MvPoiPageResult<PoiSubwayElevator> findByLocationWithPaging(
-            BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size);
-    
-    /**
-     * 시도 코드로 지하철 엘리베이터 조회 (페이징)
-     */
-    MvPoiPageResult<PoiSubwayElevator> findBySidoCodeWithPaging(
-            String sidoCode, int offset, int size);
-    
+    PoiPageResult<PoiSubwayElevator> findByLocationWithPagingCount(BigDecimal latitude, BigDecimal longitude,
+                                                                   BigDecimal radius, int offset, int size);
+
     /**
      * 전체 지하철 엘리베이터 조회 (전체 결과)
      */
     List<PoiSubwayElevator> findAllToDto();
-    
+
     /**
      * 전체 지하철 엘리베이터 조회 (페이징)
      */
-    MvPoiPageResult<PoiSubwayElevator> findAllWithPaging(int offset, int size);
+    PoiPageResult<PoiSubwayElevator> findAllWithPagingCount(int offset, int size);
+
+    /**
+     * 거리 정보 포함 위치 기반 지하철 엘리베이터 검색 (전체 결과)
+     */
+    List<PoiSubwayElevatorLocation> findByLocationWithDistance(BigDecimal latitude, BigDecimal longitude, 
+                                                              BigDecimal radius);
+
+    /**
+     * 거리 정보 포함 위치 기반 지하철 엘리베이터 검색 (페이징)
+     */
+    PoiPageResult<PoiSubwayElevatorLocation> findByLocationWithDistanceAndPagingCount(BigDecimal latitude, BigDecimal longitude,
+                                                                                       BigDecimal radius, int offset, int size);
 } 
