@@ -3,6 +3,7 @@ package com.sweetk.iitp.api.service.poi;
 import com.sweetk.iitp.api.constant.CommonCodeConstants;
 import com.sweetk.iitp.api.dto.common.PageReq;
 import com.sweetk.iitp.api.dto.common.PageRes;
+import com.sweetk.iitp.api.dto.internal.PoiPageResult;
 import com.sweetk.iitp.api.dto.poi.PoiSubwayElevator;
 import com.sweetk.iitp.api.dto.poi.PoiSubwayElevatorSearchCatReq;
 import com.sweetk.iitp.api.dto.poi.PoiSubwayElevatorSearchLocReq;
@@ -23,7 +24,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class PoiSubwayElevatorReadService {
+public class PoiSubwayElevatorReadService extends PoiService{
 
     private final PoiSubwayElevatorRepository poiSubwayElevatorRepository;
     private final SysCommonCodeService commonCodeService;
@@ -58,15 +59,14 @@ public class PoiSubwayElevatorReadService {
         }
 
         log.debug("시도별 지하철 엘리베이터 조회 요청 - 시도 코드: {}, 페이지: {}", sidoCode, pageReq);
-        
-        int offset = pageReq.getPage() * pageReq.getSize();
-        int size = pageReq.getSize();
+
+        PoiService.DbOffSet dbOffSet = setDbOffset(pageReq);
         
         // COUNT(*) OVER() 사용하여 단일 쿼리로 데이터와 총 개수 조회
-        com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiSubwayElevator> pageResult =
-            poiSubwayElevatorRepository.findBySidoCodeWithPaging(sidoCode, offset, size);
+        PoiPageResult<PoiSubwayElevator> pageResult =
+            poiSubwayElevatorRepository.findBySidoCodeWithPagingCount(sidoCode, dbOffSet.offset(), dbOffSet.size());
         
-        return new PageRes<>(pageResult.getResults(), pageReq.toPageable(), pageResult.getTotalCount());
+        return new PageRes<>(pageResult.getContent(), pageReq.toPageable(), pageResult.getTotalCount());
     }
 
     /**
@@ -83,15 +83,14 @@ public class PoiSubwayElevatorReadService {
      */
     public PageRes<PoiSubwayElevator> getSubwayElevatorsBySigunguPaging(String sidoCode, String sigunguCode, PageReq pageReq) {
         log.debug("시군구별 지하철 엘리베이터 조회 요청 - 시도 코드: {}, 시군구 코드: {}, 페이지: {}", sidoCode, sigunguCode, pageReq);
-        
-        int offset = pageReq.getPage() * pageReq.getSize();
-        int size = pageReq.getSize();
+
+        PoiService.DbOffSet dbOffSet = setDbOffset(pageReq);
         
         // COUNT(*) OVER() 사용하여 단일 쿼리로 데이터와 총 개수 조회
-        com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiSubwayElevator> pageResult =
-            poiSubwayElevatorRepository.findBySigunguConditionsWithPaging(sidoCode, sigunguCode, offset, size);
+        PoiPageResult<PoiSubwayElevator> pageResult =
+            poiSubwayElevatorRepository.findBySigunguConditionsWithPagingCount(sidoCode, sigunguCode, dbOffSet.offset(), dbOffSet.size());
         
-        return new PageRes<>(pageResult.getResults(), pageReq.toPageable(), pageResult.getTotalCount());
+        return new PageRes<>(pageResult.getContent(), pageReq.toPageable(), pageResult.getTotalCount());
     }
 
     /**
@@ -146,21 +145,20 @@ public class PoiSubwayElevatorReadService {
      */
     private PageRes<PoiSubwayElevator> searchSubwayElevatorsByConditionsPaging(PoiSubwayElevatorSearchCatReq searchReq, PageReq pageReq) {
         log.debug("조건 검색으로 지하철 엘리베이터 조회 (페이징)");
-        
-        int offset = pageReq.getPage() * pageReq.getSize();
-        int size = pageReq.getSize();
+
+        PoiService.DbOffSet dbOffSet = setDbOffset(pageReq);
         
         // COUNT(*) OVER() 사용하여 단일 쿼리로 데이터와 총 개수 조회
-        com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiSubwayElevator> pageResult =
-            poiSubwayElevatorRepository.findByCategoryConditionsWithPaging(
+        PoiPageResult<PoiSubwayElevator> pageResult =
+            poiSubwayElevatorRepository.findByCategoryConditionsWithPagingCount(
                 searchReq.getStationName(),
                 searchReq.getSidoCode(),
                 searchReq.getNodeTypeCodeValue(), // Integer 값으로 변환
-                offset,
-                size
+                dbOffSet.offset(),
+                dbOffSet.size()
             );
         
-        return new PageRes<>(pageResult.getResults(), pageReq.toPageable(), pageResult.getTotalCount());
+        return new PageRes<>(pageResult.getContent(), pageReq.toPageable(), pageResult.getTotalCount());
     }
 
     /**
@@ -183,21 +181,20 @@ public class PoiSubwayElevatorReadService {
     public PageRes<PoiSubwayElevator> getSubwayElevatorsByLocationPaging(PoiSubwayElevatorSearchLocReq searchReq, PageReq pageReq) {
         log.debug("지하철 엘리베이터 위치 기반 검색 요청 - 위도: {}, 경도: {}, 반경: {}m, 페이지: {}", 
                 searchReq.getLatitude(), searchReq.getLongitude(), searchReq.getRadius(), pageReq);
-        
-        int offset = pageReq.getPage() * pageReq.getSize();
-        int size = pageReq.getSize();
+
+        PoiService.DbOffSet dbOffSet = setDbOffset(pageReq);
         
         // COUNT(*) OVER() 사용하여 단일 쿼리로 데이터와 총 개수 조회
-        com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiSubwayElevator> pageResult =
-            poiSubwayElevatorRepository.findByLocationWithPaging(
+        PoiPageResult<PoiSubwayElevator> pageResult =
+            poiSubwayElevatorRepository.findByLocationWithPagingCount(
                 searchReq.getLatitude(),
                 searchReq.getLongitude(),
                 searchReq.getRadius(),
-                offset,
-                size
+                dbOffSet.offset(),
+                dbOffSet.size()
             );
         
-        return new PageRes<>(pageResult.getResults(), pageReq.toPageable(), pageResult.getTotalCount());
+        return new PageRes<>(pageResult.getContent(), pageReq.toPageable(), pageResult.getTotalCount());
     }
 
     /**
@@ -214,14 +211,13 @@ public class PoiSubwayElevatorReadService {
      */
     public PageRes<PoiSubwayElevator> getAllSubwayElevators(PageReq pageReq) {
         log.debug("전체 지하철 엘리베이터 조회 (페이징)");
-        
-        int offset = pageReq.getPage() * pageReq.getSize();
-        int size = pageReq.getSize();
+
+        PoiService.DbOffSet dbOffSet = setDbOffset(pageReq);
         
         // COUNT(*) OVER() 사용하여 단일 쿼리로 데이터와 총 개수 조회
-        com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiSubwayElevator> pageResult =
-            poiSubwayElevatorRepository.findAllWithPaging(offset, size);
+        PoiPageResult<PoiSubwayElevator> pageResult =
+            poiSubwayElevatorRepository.findAllWithPagingCount(dbOffSet.offset(), dbOffSet.size());
         
-        return new PageRes<>(pageResult.getResults(), pageReq.toPageable(), pageResult.getTotalCount());
+        return new PageRes<>(pageResult.getContent(), pageReq.toPageable(), pageResult.getTotalCount());
     }
 } 

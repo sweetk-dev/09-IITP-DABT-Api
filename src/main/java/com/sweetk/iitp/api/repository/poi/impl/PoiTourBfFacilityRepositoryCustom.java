@@ -1,6 +1,8 @@
 package com.sweetk.iitp.api.repository.poi.impl;
 
+import com.sweetk.iitp.api.dto.internal.PoiPageResult;
 import com.sweetk.iitp.api.dto.poi.PoiTourBfFacility;
+import com.sweetk.iitp.api.dto.poi.PoiTourBfFacilityLocation;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,7 +32,7 @@ public interface PoiTourBfFacilityRepositoryCustom {
     /**
      * 카테고리 조건으로 무장애 관광지 시설 검색 (페이징 + 총 개수)
      */
-    com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiTourBfFacility> findByCategoryConditionsWithCount(
+    PoiPageResult<PoiTourBfFacility> findByCategoryConditionsWithCount(
             String fcltName, String sidoCode, String toiletYn, String elevatorYn, 
             String parkingYn, String wheelchairRentYn, String tactileMapYn, String audioGuideYn, 
             int offset, int size);
@@ -38,20 +40,13 @@ public interface PoiTourBfFacilityRepositoryCustom {
     /**
      * 위치 기반 무장애 관광지 시설 검색 (페이징)
      */
-    com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiTourBfFacility> findByLocationWithPaging(
+    PoiPageResult<PoiTourBfFacility> findByLocationWithPagingCount(
             BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size);
 
     /**
      * 위치 기반 무장애 관광지 시설 검색 (전체 결과)
      */
-    List<PoiTourBfFacility> findByLocation(BigDecimal latitude, BigDecimal longitude, 
-                                           BigDecimal radius);
-
-    /**
-     * 시도 코드로 무장애 관광지 시설 조회 (페이징)
-     */
-    com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiTourBfFacility> findBySidoCodeWithPaging(
-            String sidoCode, int offset, int size);
+    List<PoiTourBfFacility> findByLocation(BigDecimal latitude, BigDecimal longitude, BigDecimal radius);
 
     /**
      * 전체 무장애 관광지 시설 조회 (전체 결과)
@@ -61,7 +56,16 @@ public interface PoiTourBfFacilityRepositoryCustom {
     /**
      * 전체 무장애 관광지 시설 조회 (페이징)
      */
-    com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiTourBfFacility> findAllWithPaging(int offset, int size);
+    PoiPageResult<PoiTourBfFacility> findAllWithPagingCount(int offset, int size);
 
+    /**
+     * 거리 정보 포함 위치 기반 무장애 관광지 시설 검색 (전체 결과)
+     */
+    List<PoiTourBfFacilityLocation> findByLocationWithDistance(BigDecimal latitude, BigDecimal longitude, BigDecimal radius);
 
+    /**
+     * 거리 정보 포함 위치 기반 무장애 관광지 시설 검색 (페이징)
+     */
+    PoiPageResult<PoiTourBfFacilityLocation> findByLocationWithDistanceAndPagingCount(
+            BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size);
 } 

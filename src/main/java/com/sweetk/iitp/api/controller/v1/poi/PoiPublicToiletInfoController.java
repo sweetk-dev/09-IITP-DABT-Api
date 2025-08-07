@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @Tag(name = "편의시설 - 공중 화장실 정보", description = "편의시설 - 공중 화장실 위치 및 시설 정보 관련 API")
 @Slf4j
@@ -42,15 +43,27 @@ public class PoiPublicToiletInfoController {
     )
     public ResponseEntity<ApiResDto<PoiPublicToiletInfo>> getPublicToiletById(
             @Parameter(description = "공중 화장실 ID", required = true)
-            @PathVariable Integer toiletId) {
+            @PathVariable Integer toiletId,
+            HttpServletRequest request) {
 
         log.info("공중 화장실 상세 조회 요청 - ID: {}", toiletId);
 
-        return poiPublicToiletInfoReadService.findById(toiletId)
-                .map(toilet -> ResponseEntity.ok(ApiResDto.success(toilet)))
-                .orElseThrow(()->new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+        try {
+            Optional<PoiPublicToiletInfo> toiletInfo = poiPublicToiletInfoReadService.findById(toiletId);
+            if (toiletInfo.isPresent()) {
+                return ResponseEntity.ok(ApiResDto.success(toiletInfo.get()));
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            log.error("[{}] : {}", request.getRequestURI(), e.getMessage());
+            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
     }
 
+    /*******************************
+     * 전체 공중 화장실 조회
+     *******************************/
     @GetMapping("/all")
     @Operation(
             summary = "전체 공중 화장실 조회 (전체 결과)",
@@ -84,6 +97,10 @@ public class PoiPublicToiletInfoController {
         }
     }
 
+
+    /*******************************
+     * 시도별 공중 화장실 조회
+     *******************************/
     @GetMapping("/sido/{sidoCode}")
     @Operation(
             summary = "시도별 공중 화장실 조회 (전체 결과)",
@@ -121,6 +138,10 @@ public class PoiPublicToiletInfoController {
         }
     }
 
+
+    /*******************************
+     *  카테고리 기반 검색 공중 화장실 조회
+     *******************************/
     @GetMapping("/search")
     @Operation(
             summary = "공중 화장실 카테고리 검색 (전체 결과)",
@@ -161,6 +182,11 @@ public class PoiPublicToiletInfoController {
             throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    /*******************************
+     *  위치 기반 검색 공중 화장실 조회
+     *******************************/
 
     @GetMapping("/search/location")
     @Operation(

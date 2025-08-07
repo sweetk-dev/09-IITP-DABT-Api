@@ -1,5 +1,6 @@
 package com.sweetk.iitp.api.repository.poi.impl;
 
+import com.sweetk.iitp.api.dto.internal.PoiPageResult;
 import com.sweetk.iitp.api.dto.poi.PoiTourBfFacility;
 import com.sweetk.iitp.api.entity.poi.PoiTourBfFacilityEntity;
 import jakarta.persistence.EntityManager;
@@ -20,7 +21,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,7 +80,7 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
     }
 
     // Helper method to build category conditions SQL
-    private StringBuilder buildCategoryConditionsSql(String baseQuery, String fcltName, String sidoCode, 
+    private StringBuilder buildCategoryConditionsSql(StringBuilder baseQuery, String fcltName, String sidoCode,
                                                    String toiletYn, String elevatorYn, String parkingYn, 
                                                    String wheelchairRentYn, String tactileMapYn, String audioGuideYn) {
         StringBuilder sql = new StringBuilder(baseQuery);
@@ -125,13 +125,14 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
         sql.append("AND fclt_id = ").append(fcltId).append(" ");
         
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql.toString());
-             ResultSet rs = stmt.executeQuery()) {
-            
-            if (rs.next()) {
-                return java.util.Optional.of(setPoiTourBfFacility(rs));
-            } else {
-                return java.util.Optional.empty();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return java.util.Optional.of(setPoiTourBfFacility(rs));
+                } else {
+                    return java.util.Optional.empty();
+                }
             }
         } catch (SQLException e) {
             log.error("무장애 관광지 시설 ID 조회 중 오류 발생: {}", e.getMessage());
@@ -149,14 +150,15 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
 
         List<PoiTourBfFacility> entityList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            
-            while (rs.next()) {
-                PoiTourBfFacility facility = setPoiTourBfFacility(rs);
-                entityList.add(facility);
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiTourBfFacility facility = setPoiTourBfFacility(rs);
+                    entityList.add(facility);
+                }
+                log.debug("[PoiTourBfFacility] 시도별 조회 완료 - 결과 개수: {}", entityList.size());
             }
-            log.debug("[PoiTourBfFacility] 시도별 조회 완료 - 결과 개수: {}", entityList.size());
         } catch (SQLException e) {
             log.error("[PoiTourBfFacility] 시도별 조회 쿼리 실행 중 오류 발생", e);
             throw new RuntimeException("Database sido query failed", e);
@@ -184,14 +186,15 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
 
         List<PoiTourBfFacility> entityList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            
-            while (rs.next()) {
-                PoiTourBfFacility facility = setPoiTourBfFacility(rs);
-                entityList.add(facility);
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiTourBfFacility facility = setPoiTourBfFacility(rs);
+                    entityList.add(facility);
+                }
+                log.debug("[PoiTourBfFacility] 카테고리 검색 완료 - 결과 개수: {}", entityList.size());
             }
-            log.debug("[PoiTourBfFacility] 카테고리 검색 완료 - 결과 개수: {}", entityList.size());
         } catch (SQLException e) {
             log.error("[PoiTourBfFacility] 카테고리 검색 쿼리 실행 중 오류 발생", e);
             throw new RuntimeException("Database category query failed", e);
@@ -201,7 +204,7 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
     }
 
     @Override
-    public com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiTourBfFacility> findByCategoryConditionsWithCount(
+    public PoiPageResult<PoiTourBfFacility> findByCategoryConditionsWithCount(
             String fcltName, String sidoCode, String toiletYn, String elevatorYn, 
             String parkingYn, String wheelchairRentYn, String tactileMapYn, String audioGuideYn, 
             int offset, int size) {
@@ -216,24 +219,25 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
         List<PoiTourBfFacility> entityList = new ArrayList<>();
         long totalCount = 0;
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            
-            while (rs.next()) {
-                PoiTourBfFacility facility = setPoiTourBfFacility(rs);
-                entityList.add(facility);
-                // 첫 번째 행에서 total_count 가져오기
-                if (totalCount == 0) {
-                    totalCount = rs.getLong("total_count");
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiTourBfFacility facility = setPoiTourBfFacility(rs);
+                    entityList.add(facility);
+                    // 첫 번째 행에서 total_count 가져오기
+                    if (totalCount == 0) {
+                        totalCount = rs.getLong("total_count");
+                    }
                 }
+                log.debug("[PoiTourBfFacility] 카테고리 검색 완료 (페이징 + 카운트) - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
             }
-            log.debug("[PoiTourBfFacility] 카테고리 검색 완료 (페이징 + 카운트) - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
         } catch (SQLException e) {
             log.error("[PoiTourBfFacility] 카테고리 검색 쿼리 실행 중 오류 발생 (페이징 + 카운트)", e);
             throw new RuntimeException("Database category query failed", e);
         }
         
-        return new com.sweetk.iitp.api.dto.internal.MvPoiPageResult<>(entityList, totalCount);
+        return new PoiPageResult<>(entityList, totalCount);
     }
 
     @Override
@@ -249,11 +253,11 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
         List<PoiTourBfFacility> entityList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+
             ps.setBigDecimal(1, longitude);
             ps.setBigDecimal(2, latitude);
             ps.setBigDecimal(3, radius.multiply(new BigDecimal(1000))); // 미터 단위로 변환
-            
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     PoiTourBfFacility facility = setPoiTourBfFacility(rs);
@@ -270,8 +274,8 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
     }
 
     @Override
-    public com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiTourBfFacility> findByLocationWithPaging(BigDecimal latitude, BigDecimal longitude, 
-                                                            BigDecimal radius, int offset, int size) {
+    public PoiPageResult<PoiTourBfFacility> findByLocationWithPagingCount(BigDecimal latitude, BigDecimal longitude,
+                                                                          BigDecimal radius, int offset, int size) {
         String sql = FACILITY_BASE_QUERY_WITH_COUNT + 
             "AND ST_DWithin(" +
             "ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)::geography, " +
@@ -307,7 +311,7 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
             throw new RuntimeException("Database location query failed", e);
         }
         
-        return new com.sweetk.iitp.api.dto.internal.MvPoiPageResult<>(entityList, totalCount);
+        return new PoiPageResult<>(entityList, totalCount);
     }
 
 
@@ -418,7 +422,7 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
     }
 
     @Override
-    public com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiTourBfFacility> findBySidoCodeWithPaging(String sidoCode, int offset, int size) {
+    public PoiPageResult<PoiTourBfFacility> findBySidoCodeWithPagingCount(String sidoCode, int offset, int size) {
         String sql = FACILITY_BASE_QUERY_WITH_COUNT + 
             "AND sido_code = ? " + FACILITY_ORDER_BY + " OFFSET ? LIMIT ?";
 
@@ -449,12 +453,12 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
             throw new RuntimeException("Database sido query failed", e);
         }
         
-        return new com.sweetk.iitp.api.dto.internal.MvPoiPageResult<>(entityList, totalCount);
+        return new PoiPageResult<>(entityList, totalCount);
     }
 
 
     @Override
-    public com.sweetk.iitp.api.dto.internal.MvPoiPageResult<PoiTourBfFacility> findAllWithPaging(int offset, int size) {
+    public PoiPageResult<PoiTourBfFacility> findAllWithPagingCount(int offset, int size) {
         String sql = FACILITY_BASE_QUERY_WITH_COUNT + FACILITY_ORDER_BY + " OFFSET " + offset + " LIMIT " + size;
 
         log.debug("[PoiTourBfFacility] 전체 조회 쿼리 (페이징): {}", sql);
@@ -462,24 +466,25 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
         List<PoiTourBfFacility> entityList = new ArrayList<>();
         long totalCount = 0;
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            
-            while (rs.next()) {
-                PoiTourBfFacility facility = setPoiTourBfFacility(rs);
-                entityList.add(facility);
-                // 첫 번째 행에서 total_count 가져오기
-                if (totalCount == 0) {
-                    totalCount = rs.getLong("total_count");
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiTourBfFacility facility = setPoiTourBfFacility(rs);
+                    entityList.add(facility);
+                    // 첫 번째 행에서 total_count 가져오기
+                    if (totalCount == 0) {
+                        totalCount = rs.getLong("total_count");
+                    }
                 }
+                log.debug("[PoiTourBfFacility] 전체 조회 완료 (페이징) - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
             }
-            log.debug("[PoiTourBfFacility] 전체 조회 완료 (페이징) - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
         } catch (SQLException e) {
             log.error("[PoiTourBfFacility] 전체 조회 쿼리 실행 중 오류 발생 (페이징)", e);
             throw new RuntimeException("Database all query failed", e);
         }
         
-        return new com.sweetk.iitp.api.dto.internal.MvPoiPageResult<>(entityList, totalCount);
+        return new PoiPageResult<>(entityList, totalCount);
     }
 
     @Override
@@ -490,14 +495,15 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
 
         List<PoiTourBfFacility> entityList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            
-            while (rs.next()) {
-                PoiTourBfFacility facility = setPoiTourBfFacility(rs);
-                entityList.add(facility);
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiTourBfFacility facility = setPoiTourBfFacility(rs);
+                    entityList.add(facility);
+                }
+                log.debug("[PoiTourBfFacility] 전체 조회 완료 - 결과 개수: {}", entityList.size());
             }
-            log.debug("[PoiTourBfFacility] 전체 조회 완료 - 결과 개수: {}", entityList.size());
         } catch (SQLException e) {
             log.error("[PoiTourBfFacility] 전체 조회 쿼리 실행 중 오류 발생", e);
             throw new RuntimeException("Database findAll query failed", e);
