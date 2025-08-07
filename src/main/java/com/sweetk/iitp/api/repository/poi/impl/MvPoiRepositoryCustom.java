@@ -18,22 +18,22 @@ public interface MvPoiRepositoryCustom {
 
 
     List<MvPoi> findAllPublished();
-    MvPoiPageResult findAllWithCount(int offset, int size);
+    MvPoiPageResult findAllWithPagingCount(int offset, int size);
 
 
     List<MvPoi> findByCategoryType(String categoryType);
-    MvPoiPageResult findByCategoryTypeWithCount( String categoryType, int offset, int size);
+    MvPoiPageResult findByCategoryTypeWithPagingCount( String categoryType, int offset, int size);
 
 
     List<MvPoi> findByCategoryAndSubCate(String category, String subCate, String name);
-    MvPoiPageResult findByCategoryAndSubCateWithCount(
+    MvPoiPageResult findByCategoryAndSubCateWithPagingCount(
         String category, String subCate, String name, int offset, int size
     );
 
     List<MvPoi> findByLocation(
             String category, String name,  BigDecimal latitude, BigDecimal longitude, BigDecimal radius
     );
-    MvPoiPageResult findByLocationWithCount(
+    MvPoiPageResult findByLocationWithPagingCount(
             String category, String name, BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size
     );
 

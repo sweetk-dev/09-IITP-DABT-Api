@@ -97,7 +97,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
         return entityList;
     }
 
-    public MvPoiPageResult findAllWithCount(int offset, int size) {
+    public MvPoiPageResult findAllWithPagingCount(int offset, int size) {
         StringBuilder sql = new StringBuilder(mvPoiDtoQuery)
                 .append(mvPoiOrderByCondition)
                 .append(" OFFSET ").append(offset).append(" LIMIT ").append(size);
@@ -153,7 +153,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
 
 
-    public MvPoiPageResult findByCategoryTypeWithCount(String categoryType, int offset, int size) {
+    public MvPoiPageResult findByCategoryTypeWithPagingCount(String categoryType, int offset, int size) {
         String conditionCategory = "AND (" + mvPoiCategoryColumn + " ? '" + categoryType + "') ";
         StringBuilder sql = new StringBuilder(addCountToQuery(mvPoiDtoQuery))
                 .append(conditionCategory)
@@ -206,7 +206,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     }
 
 
-    public MvPoiPageResult findByCategoryAndSubCateWithCount(
+    public MvPoiPageResult findByCategoryAndSubCateWithPagingCount(
             String category, String subCate, String name, int offset, int size
     ) {
         StringBuilder sql = setFindByCategorySubCateSql(addCountToQuery(mvPoiDtoQuery),category, subCate, name)
@@ -266,7 +266,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
 
 
-    public MvPoiPageResult findByLocationWithCount( String category, String name,
+    public MvPoiPageResult findByLocationWithPagingCount( String category, String name,
             BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size) {
 
         StringBuilder sql = setFindByLocationCategorySql(addCountToQuery(mvPoiDtoQuery), category, name, latitude, longitude, radius)
