@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sweetk.iitp.api.dto.internal.PoiPageResult;
 import com.sweetk.iitp.api.dto.poi.MvPoi;
-import com.sweetk.iitp.api.repository.RepositoryUtils;
+import com.sweetk.iitp.api.util.RepositoryUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
