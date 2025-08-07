@@ -2,7 +2,7 @@ package com.sweetk.iitp.api.service.poi;
 
 import com.sweetk.iitp.api.dto.common.PageReq;
 import com.sweetk.iitp.api.dto.common.PageRes;
-import com.sweetk.iitp.api.dto.internal.MvPoiPageResult;
+import com.sweetk.iitp.api.dto.internal.PoiPageResult;
 import com.sweetk.iitp.api.dto.poi.MvPoi;
 import com.sweetk.iitp.api.dto.poi.MvPoiSearchCatReq;
 import com.sweetk.iitp.api.dto.poi.MvPoiSearchLocReq;
@@ -36,7 +36,7 @@ public class MvPoiReadService extends PoiService {
 
         DbOffSet dbOffSet = setDbOffset(pageReq);
 
-        MvPoiPageResult result = mvPoiRepos.findByCategoryTypeWithPagingCount(categoryType, dbOffSet.offset(), dbOffSet.size());
+        PoiPageResult<MvPoi> result = mvPoiRepos.findByCategoryTypeWithPagingCount(categoryType, dbOffSet.offset(), dbOffSet.size());
         return new PageRes<>(result.content, pageReq.toPageable(), result.totalCount);
     }
 
@@ -47,7 +47,7 @@ public class MvPoiReadService extends PoiService {
 
     public PageRes<MvPoi> getAllPoiPaging(PageReq pageReq) {
         DbOffSet dbOffSet = setDbOffset(pageReq);
-        MvPoiPageResult result = mvPoiRepos.findAllWithPagingCount(dbOffSet.offset(), dbOffSet.size());
+        PoiPageResult<MvPoi> result = mvPoiRepos.findAllWithPagingCount(dbOffSet.offset(), dbOffSet.size());
         return new PageRes<>(result.content, pageReq.toPageable(), result.totalCount);
     }
 
@@ -71,7 +71,7 @@ public class MvPoiReadService extends PoiService {
         DbOffSet dbOffSet = setDbOffset(pageReq);
 
         // Impl의 네이티브 쿼리 메서드 호출
-        MvPoiPageResult result = mvPoiRepos.findByCategoryAndSubCateWithPagingCount(
+        PoiPageResult<MvPoi> result = mvPoiRepos.findByCategoryAndSubCateWithPagingCount(
                                         category, subCate, name, dbOffSet.offset(), dbOffSet.size());
 
         return new PageRes<>(result.content, pageReq.toPageable(), result.totalCount);
@@ -96,7 +96,7 @@ public class MvPoiReadService extends PoiService {
 
         String category = searchReq.getCategory() != null ? searchReq.getCategory().getCode() : null;
 
-        MvPoiPageResult result = mvPoiRepos.findByLocationWithPagingCount(
+        PoiPageResult<MvPoi> result = mvPoiRepos.findByLocationWithPagingCount(
                             category,
                             searchReq.getName(),
                             searchReq.getLatitude(),
