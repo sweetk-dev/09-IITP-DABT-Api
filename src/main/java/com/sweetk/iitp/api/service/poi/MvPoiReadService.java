@@ -19,7 +19,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class MvPoiReadService {
+public class MvPoiReadService extends PoiService {
     private final MvPoiRepository mvPoiRepos;
 
     public Optional<MvPoi> findById(Long poiId) {
@@ -33,10 +33,10 @@ public class MvPoiReadService {
 
 
     public PageRes<MvPoi> getPoiByCategoryTypePaging(String categoryType, PageReq pageReq) {
-        int offset = pageReq.getPage() * pageReq.getSize();
-        int size = pageReq.getSize();
-        
-        MvPoiPageResult result = mvPoiRepos.findByCategoryTypeWithCount(categoryType, offset, size);
+
+        DbOffSet dbOffSet = setDbOffset(pageReq);
+
+        MvPoiPageResult result = mvPoiRepos.findByCategoryTypeWithPagingCount(categoryType, dbOffSet.offset(), dbOffSet.size());
         return new PageRes<>(result.content, pageReq.toPageable(), result.totalCount);
     }
 
@@ -46,9 +46,8 @@ public class MvPoiReadService {
 
 
     public PageRes<MvPoi> getAllPoiPaging(PageReq pageReq) {
-        int offset = pageReq.getPage() * pageReq.getSize();
-        int size = pageReq.getSize();
-        MvPoiPageResult result = mvPoiRepos.findAllWithCount(offset, size);
+        DbOffSet dbOffSet = setDbOffset(pageReq);
+        MvPoiPageResult result = mvPoiRepos.findAllWithPagingCount(dbOffSet.offset(), dbOffSet.size());
         return new PageRes<>(result.content, pageReq.toPageable(), result.totalCount);
     }
 
@@ -68,12 +67,12 @@ public class MvPoiReadService {
         String category = searchReq.getCategory() != null ? searchReq.getCategory().getCode() : null;
         String subCate = searchReq.getSubCate();
         String name = searchReq.getName();
-        int offset = pageReq.getPage() * pageReq.getSize();
-        int size = pageReq.getSize();
+
+        DbOffSet dbOffSet = setDbOffset(pageReq);
 
         // Impl의 네이티브 쿼리 메서드 호출
-        MvPoiPageResult result = mvPoiRepos.findByCategoryAndSubCateWithCount(
-                                        category, subCate, name, offset, size);
+        MvPoiPageResult result = mvPoiRepos.findByCategoryAndSubCateWithPagingCount(
+                                        category, subCate, name, dbOffSet.offset(), dbOffSet.size());
 
         return new PageRes<>(result.content, pageReq.toPageable(), result.totalCount);
     }
@@ -93,18 +92,18 @@ public class MvPoiReadService {
 
 
     public PageRes<MvPoi> getPoiByLocationPaging(MvPoiSearchLocReq searchReq, PageReq pageReq) {
-        int offset = pageReq.getPage() * pageReq.getSize();
-        int size = pageReq.getSize();
+        DbOffSet dbOffSet = setDbOffset(pageReq);
+
         String category = searchReq.getCategory() != null ? searchReq.getCategory().getCode() : null;
 
-        MvPoiPageResult result = mvPoiRepos.findByLocationWithCount(
+        MvPoiPageResult result = mvPoiRepos.findByLocationWithPagingCount(
                             category,
                             searchReq.getName(),
                             searchReq.getLatitude(),
                             searchReq.getLongitude(),
                             searchReq.getRadius(),
-                            offset,
-                            size
+                            dbOffSet.offset(),
+                            dbOffSet.size()
                         );
         return new PageRes<>(result.content, pageReq.toPageable(), result.totalCount);
     }
