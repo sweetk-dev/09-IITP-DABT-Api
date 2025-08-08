@@ -36,22 +36,22 @@ public class PoiSubwayElevatorConverter {
         }
 
         PoiSubwayElevatorEntity entity = new PoiSubwayElevatorEntity();
-        entity.setSubwayId(dto.subwayId());
-        entity.setSidoCode(dto.sidoCode());
-        entity.setNodeLinkType(dto.nodeLinkType());
-        entity.setNodeWkt(dto.nodeWkt());
-        entity.setNodeId(dto.nodeId());
-        entity.setNodeTypeCode(dto.nodeTypeCode());
-        entity.setNodeTypeName(dto.nodeTypeName());
-        entity.setSigunguCode(dto.sigunguCode());
-        entity.setSigunguName(dto.sigunguName());
-        entity.setEupmyeondongCode(dto.eupmyeondongCode());
-        entity.setEupmyeondongName(dto.eupmyeondongName());
-        entity.setStationCode(dto.stationCode());
-        entity.setStationName(dto.stationName());
-        entity.setLatitude(dto.latitude());
-        entity.setLongitude(dto.longitude());
-        entity.setBaseDt(dto.baseDt());
+        entity.setSubwayId(dto.getSubwayId());
+        entity.setSidoCode(dto.getSidoCode());
+        entity.setNodeLinkType(dto.getNodeLinkType());
+        entity.setNodeWkt(dto.getNodeWkt());
+        entity.setNodeId(dto.getNodeId());
+        entity.setNodeTypeCode(dto.getNodeTypeCode());
+        entity.setNodeTypeName(dto.getNodeTypeName());
+        entity.setSigunguCode(dto.getSigunguCode());
+        entity.setSigunguName(dto.getSigunguName());
+        entity.setEupmyeondongCode(dto.getEupmyeondongCode());
+        entity.setEupmyeondongName(dto.getEupmyeondongName());
+        entity.setStationCode(dto.getStationCode());
+        entity.setStationName(dto.getStationName());
+        entity.setLatitude(dto.getLatitude());
+        entity.setLongitude(dto.getLongitude());
+        entity.setBaseDt(dto.getBaseDt());
 
         return entity;
     }

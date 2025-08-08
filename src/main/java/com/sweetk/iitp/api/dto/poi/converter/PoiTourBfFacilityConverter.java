@@ -40,26 +40,26 @@ public class PoiTourBfFacilityConverter {
         }
 
         PoiTourBfFacilityEntity entity = new PoiTourBfFacilityEntity();
-        entity.setFcltId(dto.fcltId());
-        entity.setSidoCode(dto.sidoCode());
-        entity.setFcltName(dto.fcltName());
-        entity.setToiletYn(dto.toiletYn());
-        entity.setElevatorYn(dto.elevatorYn());
-        entity.setParkingYn(dto.parkingYn());
-        entity.setSlopeYn(dto.slopeYn());
-        entity.setSubwayYn(dto.subwayYn());
-        entity.setBusStopYn(dto.busStopYn());
-        entity.setWheelchairRentYn(dto.wheelchairRentYn());
-        entity.setTactileMapYn(dto.tactileMapYn());
-        entity.setAudioGuideYn(dto.audioGuideYn());
-        entity.setNursingRoomYn(dto.nursingRoomYn());
-        entity.setAccessibleRoomYn(dto.accessibleRoomYn());
-        entity.setStrollerRentYn(dto.strollerRentYn());
-        entity.setAddrRoad(dto.addrRoad());
-        entity.setAddrJibun(dto.addrJibun());
-        entity.setLatitude(dto.latitude());
-        entity.setLongitude(dto.longitude());
-        entity.setBaseDt(dto.baseDt());
+        entity.setFcltId(dto.getFcltId());
+        entity.setSidoCode(dto.getSidoCode());
+        entity.setFcltName(dto.getFcltName());
+        entity.setToiletYn(dto.getToiletYn());
+        entity.setElevatorYn(dto.getElevatorYn());
+        entity.setParkingYn(dto.getParkingYn());
+        entity.setSlopeYn(dto.getSlopeYn());
+        entity.setSubwayYn(dto.getSubwayYn());
+        entity.setBusStopYn(dto.getBusStopYn());
+        entity.setWheelchairRentYn(dto.getWheelchairRentYn());
+        entity.setTactileMapYn(dto.getTactileMapYn());
+        entity.setAudioGuideYn(dto.getAudioGuideYn());
+        entity.setNursingRoomYn(dto.getNursingRoomYn());
+        entity.setAccessibleRoomYn(dto.getAccessibleRoomYn());
+        entity.setStrollerRentYn(dto.getStrollerRentYn());
+        entity.setAddrRoad(dto.getAddrRoad());
+        entity.setAddrJibun(dto.getAddrJibun());
+        entity.setLatitude(dto.getLatitude());
+        entity.setLongitude(dto.getLongitude());
+        entity.setBaseDt(dto.getBaseDt());
 
         return entity;
     }
