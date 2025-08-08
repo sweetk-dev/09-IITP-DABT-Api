@@ -39,6 +39,11 @@ public class PoiSubwayElevatorController {
 
     private final PoiSubwayElevatorReadService poiSubwayElevatorReadService;
 
+
+
+    /*******************************
+     ** 지하철 엘리베이터 ID로 조회
+     *******************************/
     @GetMapping("/{subwayId}")
     @Operation(
         summary = "지하철 엘리베이터 상세 조회",
@@ -54,6 +59,10 @@ public class PoiSubwayElevatorController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+
+    /*******************************
+     * 전체 지하철 엘리베이터 조회
+     *******************************/
     @GetMapping("/all")
     @Operation(
         summary = "전체 지하철 엘리베이터 조회 (전체 결과)",
@@ -87,6 +96,10 @@ public class PoiSubwayElevatorController {
         }
     }
 
+
+    /*******************************
+     ** 시도별 지하철 엘리베이터 조회
+     *******************************/
     @GetMapping("/sido/{sidoCode}")
     @Operation(
         summary = "시도별 지하철 엘리베이터 조회 (전체 결과)",
@@ -130,6 +143,11 @@ public class PoiSubwayElevatorController {
         }
     }
 
+
+
+    /*******************************
+     ** 시군구별 지하철 엘리베이터 조회
+     *******************************/
     @GetMapping("/sido/{sidoCode}/{sigunguCode}")
     @Operation(
         summary = "시군구별 지하철 엘리베이터 조회 (전체 결과)",
@@ -188,6 +206,11 @@ public class PoiSubwayElevatorController {
         }
     }
 
+
+
+    /*******************************
+     ** 카테고리 기반 지하철 엘리베이터 조회
+     *******************************/
     @GetMapping("/search")
     @Operation(
         summary = "지하철 엘리베이터 카테고리 검색 (전체 결과)",
@@ -238,6 +261,10 @@ public class PoiSubwayElevatorController {
         }
     }
 
+
+    /*******************************
+     ** 위치 기반 기반 지하철 엘리베이터 조회
+     *******************************/
     @GetMapping("/search/location")
     @Operation(
         summary = "지하철 엘리베이터 위치 기반 검색 (전체 결과)",

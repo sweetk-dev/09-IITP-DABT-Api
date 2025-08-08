@@ -9,7 +9,7 @@ IITP API 서비스는 장애인 통계 및 POI 정보를 제공하는 RESTful AP
 - Java 21
 - Spring Boot 3.2.5
 - Spring Security, Spring Data JPA, QueryDSL 5.0.0
-- PostgreSQL
+- PostgreSQL (PostGIS 확장 지원)
 - Bucket4j 8.7.0 (Rate Limiting)
 - SpringDoc OpenAPI 2.3.0
 - Micrometer (Prometheus)
@@ -33,6 +33,7 @@ IITP API 서비스는 장애인 통계 및 POI 정보를 제공하는 RESTful AP
 
 ## 주요 기능
 - 통계 데이터/POI API, API Key 인증, Rate Limiting, 표준화된 에러/응답, API 버전 관리
+- 위치 기반 검색 및 거리 계산 (PostGIS/PostgreSQL 지원)
 
 ## 프로젝트 구조
 ### Java 소스
@@ -69,6 +70,36 @@ src/main/resources/
    cd iitp-api
    ```
 3. **DB/환경설정**: PostgreSQL 설치 및 환경별 yml 파일 확인
+
+### 거리 계산 설정
+프로젝트는 위치 기반 검색을 위한 거리 계산 방식을 설정으로 선택할 수 있습니다.
+
+#### 설정 옵션 (application.yml)
+```yaml
+app:
+  distance-calculation:
+    # 거리 계산 방식
+    method: POSTGIS_SPHERE  # POSTGIS_SPHERE, POSTGIS_PLANAR, POSTGRESQL_EARTH
+```
+
+#### 거리 계산 방식 비교
+
+| 방식 | 함수 | 정확도 | 성능 | 요구사항 |
+|------|------|--------|------|----------|
+| **POSTGIS_SPHERE** | `ST_Distance_Sphere` | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | PostGIS 확장 |
+| **POSTGIS_PLANAR** | `ST_Distance` | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | PostGIS 확장 |
+| **POSTGRESQL_EARTH** | `earth_distance` | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | PostgreSQL 기본 |
+
+#### 권장 설정
+- **개발 환경**: `POSTGRESQL_EARTH` (PostGIS 설치 없이 사용 가능)
+- **운영 환경**: `POSTGIS_SPHERE` (가장 정확한 거리 계산)
+
+#### PostGIS 확장 설치 (운영 환경)
+```sql
+-- PostgreSQL에서 PostGIS 확장 설치
+CREATE EXTENSION postgis;
+CREATE EXTENSION postgis_topology;
+```
 
 ---
 
@@ -132,6 +163,25 @@ pip install pyyaml
 ## API 문서
 - OpenAPI: `/v3/api-docs`, `/docs/latest.yaml`
 - Stoplight Studio 등에서 yaml 파일 활용 가능
+
+### 위치 기반 검색 API
+프로젝트는 다음과 같은 위치 기반 검색 API를 제공합니다:
+
+#### POI 검색 API
+- **일반 검색**: `/api/v1/poi/search` - 카테고리, 키워드 기반 검색
+- **위치 검색**: `/api/v1/poi/search/location` - 위도/경도 기반 반경 검색 (거리 정보 포함)
+- **상세 조회**: `/api/v1/poi/{poiId}` - 개별 POI 상세 정보
+
+#### 특화 POI API
+- **지하철 엘리베이터**: `/api/v1/poi/subway-elevator/search`
+- **무장애 관광지**: `/api/v1/poi/tour-bf-facility/search`
+- **공중화장실**: `/api/v1/poi/public-toilet/search`
+
+#### 거리 계산 방식
+위치 검색 API는 설정에 따라 다음 방식으로 거리를 계산합니다:
+- **PostGIS Sphere**: 지구 곡률을 고려한 정확한 구면 거리 (미터 단위)
+- **PostGIS Planar**: 단순 유클리드 거리 (빠른 계산)
+- **PostgreSQL Earth**: PostgreSQL 기본 함수 (확장 불필요)
 
 ---
 
