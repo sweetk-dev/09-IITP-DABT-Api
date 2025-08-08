@@ -7,18 +7,30 @@ import com.sweetk.iitp.api.dto.poi.PoiSubwayElevatorLocation;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public interface PoiSubwayElevatorRepositoryCustom {
-    
+
+
+    /*******************************
+     ** 지하철 엘리베이터 ID로 조회
+     *******************************/
+
+
     /**
      * ID로 지하철 엘리베이터 조회 (DTO 반환, del_yn = 'N' 조건 포함)
      */
-    java.util.Optional<PoiSubwayElevator> findByIdToDto(Integer subwayId);
+    Optional<PoiSubwayElevator> findByIdToDto(Integer subwayId);
     
     /**
      * 시도 코드로 지하철 엘리베이터 조회 (DTO 반환)
      */
     List<PoiSubwayElevator> findBySidoCodeToDto(String sidoCode);
+
+    /**
+     * 시도 코드로 지하철 엘리베이터 조회 (페이징)
+     */
+    PoiPageResult<PoiSubwayElevator> findBySidoCodeWithPagingCount(String sidoCode, int offset, int size);
     
     /**
      * 카테고리 조건으로 지하철 엘리베이터 검색 (전체 결과)

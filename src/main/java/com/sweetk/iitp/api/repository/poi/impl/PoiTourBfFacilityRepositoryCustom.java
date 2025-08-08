@@ -3,10 +3,13 @@ package com.sweetk.iitp.api.repository.poi.impl;
 import com.sweetk.iitp.api.dto.internal.PoiPageResult;
 import com.sweetk.iitp.api.dto.poi.PoiTourBfFacility;
 import com.sweetk.iitp.api.dto.poi.PoiTourBfFacilityLocation;
+import com.sweetk.iitp.api.entity.poi.PoiTourBfFacilityEntity;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface PoiTourBfFacilityRepositoryCustom {
     
@@ -68,4 +71,41 @@ public interface PoiTourBfFacilityRepositoryCustom {
      */
     PoiPageResult<PoiTourBfFacilityLocation> findByLocationWithDistanceAndPagingCount(
             BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size);
+
+    /**
+     * 시도 코드로 무장애 관광지 시설 조회 (페이징)
+     */
+    PoiPageResult<PoiTourBfFacility> findBySidoCodeWithPagingCount(String sidoCode, int offset, int size);
+
+    /**
+     * 시도 코드로 무장애 관광지 시설 조회 (Entity 반환)
+     */
+    List<PoiTourBfFacilityEntity> findBySidoCode(String sidoCode);
+
+    /**
+     * 시설명으로 무장애 관광지 시설 조회 (Entity 반환)
+     */
+    List<PoiTourBfFacilityEntity> findByFcltNameContaining(String fcltName);
+
+    /**
+     * 위치 범위로 무장애 관광지 시설 조회 (Entity 반환)
+     */
+    List<PoiTourBfFacilityEntity> findByLocationRange(Double minLat, Double maxLat, Double minLng, Double maxLng);
+
+    /**
+     * 시설 타입으로 무장애 관광지 시설 조회 (Entity 반환)
+     */
+    List<PoiTourBfFacilityEntity> findByFacilityType(String facilityType, String ynValue);
+
+    /**
+     * 전체 무장애 관광지 시설 조회 (페이징, Entity 반환)
+     */
+    Page<PoiTourBfFacilityEntity> findAllWithPagination(Pageable pageable);
+
+    /**
+     * 복합 조건으로 무장애 관광지 시설 조회 (Entity 반환)
+     */
+    List<PoiTourBfFacilityEntity> findByMultipleConditions(String sidoCode, String fcltName, 
+                                                          String toiletYn, String elevatorYn, 
+                                                          String parkingYn, String slopeYn);
 } 
