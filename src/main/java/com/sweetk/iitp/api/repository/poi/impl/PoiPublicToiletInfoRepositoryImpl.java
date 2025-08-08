@@ -1,14 +1,15 @@
 package com.sweetk.iitp.api.repository.poi.impl;
 
+import com.sweetk.iitp.api.config.DistanceCalculationConfig;
 import com.sweetk.iitp.api.constant.poi.PoiPublicToiletType;
 import com.sweetk.iitp.api.dto.internal.PoiPageResult;
-import com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfo;
-import com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfoLocation;
+import com.sweetk.iitp.api.dto.poi.PoiPublicToilet;
+import com.sweetk.iitp.api.dto.poi.PoiPublicToiletLocation;
+import com.sweetk.iitp.api.util.RepositoryUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,45 +19,47 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRepositoryCustom {
-
-    private static final Logger log = LoggerFactory.getLogger(PoiPublicToiletInfoRepositoryImpl.class);
-
     @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired
     private DataSource dataSource;
 
-    // Common SQL constants
-    private static final String toiletBaseQuery = "SELECT toilet_id, sido_code, toilet_name, toilet_type, basis, addr_road, addr_jibun, " +
+    private final DistanceCalculationConfig distanceConfig;
+
+    // 공통 컬럼 정의
+    private static final String TOILET_COMMON_COLUMNS = 
+            "toilet_id, sido_code, toilet_name, toilet_type, basis, addr_road, addr_jibun, " +
             "m_toilet_count, m_urinal_count, m_dis_toilet_count, m_dis_urinal_count, m_child_toilet_count, m_child_urinal_count, " +
-            "f_toilet_count, f_urinal_count, f_dis_toilet_count, f_child_toilet_count, " +
+            "f_toilet_count, f_dis_toilet_count, f_child_toilet_count, " +
             "managing_org, phone_number, open_time, open_time_detail, install_dt, " +
             "latitude, longitude, owner_type, waste_process_type, safety_target_yn, " +
             "emg_bell_yn, emg_bell_location, cctv_yn, diaper_table_yn, diaper_table_location, " +
-            "remodeled_dt, base_dt " +
+            "remodeled_dt, base_dt";
+
+    private final String TOILET_LOCATION_FULL_QUERY;
+
+    public PoiPublicToiletInfoRepositoryImpl(DistanceCalculationConfig distanceConfig) {
+        this.distanceConfig = distanceConfig;
+        this.TOILET_LOCATION_FULL_QUERY = "SELECT " + TOILET_COMMON_COLUMNS + ", " +
+                distanceConfig.getDistanceCalculationSql() + " AS distance " +
+                "FROM poi_public_toilet_info WHERE del_yn = 'N' ";
+    }
+
+    private static final String TOILET_BASE_QUERY = "SELECT " + TOILET_COMMON_COLUMNS + " " +
             "FROM poi_public_toilet_info WHERE del_yn = 'N' ";
 
-    private static final String toiletBaseQueryWithDistance = 
-            "SELECT toilet_id, sido_code, toilet_name, toilet_type, basis, addr_road, addr_jibun, " +
-            "m_toilet_count, m_urinal_count, m_dis_toilet_count, m_dis_urinal_count, m_child_toilet_count, m_child_urinal_count, " +
-            "f_toilet_count, f_urinal_count, f_dis_toilet_count, f_child_toilet_count, " +
-            "managing_org, phone_number, open_time, open_time_detail, install_dt, " +
-            "latitude, longitude, owner_type, waste_process_type, safety_target_yn, " +
-            "emg_bell_yn, emg_bell_location, cctv_yn, diaper_table_yn, diaper_table_location, " +
-            "remodeled_dt, base_dt, " +
-            "ST_Distance_Sphere(POINT(longitude, latitude), POINT(?, ?)) AS distance " +
-            "FROM poi_public_toilet_info WHERE del_yn = 'N' ";
+    private static final String TOILET_ORDER_BY_NAME = "ORDER BY toilet_name";
+    private static final String TOILET_ORDER_BY_DISTANCE = "ORDER BY distance";
 
-    private static final String toiletOrderBy = "ORDER BY toilet_name";
-    private static final String toiletOrderByDistance = "ORDER BY distance";
 
     // Helper method to add count to query
     private String addCountToQuery(String baseQuery) {
@@ -64,8 +67,8 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
     }
 
     @Override
-    public java.util.Optional<PoiPublicToiletInfo> findByIdToDto(Integer toiletId) {
-        StringBuilder sql = new StringBuilder(toiletBaseQuery);
+    public Optional<PoiPublicToilet> findByIdToDto(Integer toiletId) {
+        StringBuilder sql = new StringBuilder(TOILET_BASE_QUERY);
         sql.append("AND toilet_id = ").append(toiletId).append(" ");
         
         try (Connection conn = dataSource.getConnection();
@@ -73,9 +76,9 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
              ResultSet rs = stmt.executeQuery()) {
             
             if (rs.next()) {
-                return java.util.Optional.of(setPoiPublicToiletInfo(rs));
+                return Optional.of(setPoiPublicToiletInfo(rs));
             } else {
-                return java.util.Optional.empty();
+                return Optional.empty();
             }
         } catch (SQLException e) {
             log.error("공중 화장실 ID 조회 중 오류 발생: {}", e.getMessage());
@@ -83,474 +86,216 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
         }
     }
 
-    // Helper method to create PoiPublicToiletInfo from ResultSet
-    private PoiPublicToiletInfo setPoiPublicToiletInfo(ResultSet rs) throws SQLException {
-        return new PoiPublicToiletInfo(
-            rs.getInt("toilet_id"),
-            rs.getString("sido_code"),
-            rs.getString("toilet_name"),
-            rs.getString("toilet_type"),
-            rs.getString("basis"),
-            rs.getString("addr_road"),
-            rs.getString("addr_jibun"),
-            rs.getInt("m_toilet_count"),
-            rs.getInt("m_urinal_count"),
-            rs.getInt("m_dis_toilet_count"),
-            rs.getInt("m_dis_urinal_count"),
-            rs.getInt("m_child_toilet_count"),
-            rs.getInt("m_child_urinal_count"),
-            rs.getInt("f_toilet_count"),
-            rs.getInt("f_dis_toilet_count"),
-            rs.getInt("f_child_toilet_count"),
-            rs.getString("managing_org"),
-            rs.getString("phone_number"),
-            rs.getString("open_time"),
-            rs.getString("open_time_detail"),
-            rs.getString("install_dt"),
-            rs.getBigDecimal("latitude") != null ? rs.getBigDecimal("latitude").doubleValue() : null,
-            rs.getBigDecimal("longitude") != null ? rs.getBigDecimal("longitude").doubleValue() : null,
-            rs.getString("owner_type"),
-            rs.getString("waste_process_type"),
-            rs.getString("safety_target_yn"),
-            rs.getString("emg_bell_yn"),
-            rs.getString("emg_bell_location"),
-            rs.getString("cctv_yn"),
-            rs.getString("diaper_table_yn"),
-            rs.getString("diaper_table_location"),
-            rs.getString("remodeled_dt"),
-            rs.getDate("base_dt") != null ? rs.getDate("base_dt").toLocalDate() : null
-        );
-    }
 
-    // Helper method to create PoiPublicToiletInfoLocation from ResultSet
-    private PoiPublicToiletInfoLocation setPoiPublicToiletInfoLocation(ResultSet rs) throws SQLException {
-        return new PoiPublicToiletInfoLocation(
-            rs.getInt("toilet_id"),
-            rs.getString("sido_code"),
-            rs.getString("toilet_name"),
-            rs.getString("toilet_type"),
-            rs.getString("basis"),
-            rs.getString("addr_road"),
-            rs.getString("addr_jibun"),
-            rs.getInt("m_toilet_count"),
-            rs.getInt("m_urinal_count"),
-            rs.getInt("m_dis_toilet_count"),
-            rs.getInt("m_dis_urinal_count"),
-            rs.getInt("m_child_toilet_count"),
-            rs.getInt("m_child_urinal_count"),
-            rs.getInt("f_toilet_count"),
-            rs.getInt("f_dis_toilet_count"),
-            rs.getInt("f_child_toilet_count"),
-            rs.getString("managing_org"),
-            rs.getString("phone_number"),
-            rs.getString("open_time"),
-            rs.getString("open_time_detail"),
-            rs.getString("install_dt"),
-            rs.getBigDecimal("latitude") != null ? rs.getBigDecimal("latitude").doubleValue() : null,
-            rs.getBigDecimal("longitude") != null ? rs.getBigDecimal("longitude").doubleValue() : null,
-            rs.getString("owner_type"),
-            rs.getString("waste_process_type"),
-            rs.getString("safety_target_yn"),
-            rs.getString("emg_bell_yn"),
-            rs.getString("emg_bell_location"),
-            rs.getString("cctv_yn"),
-            rs.getString("diaper_table_yn"),
-            rs.getString("diaper_table_location"),
-            rs.getString("remodeled_dt"),
-            rs.getDate("base_dt") != null ? rs.getDate("base_dt").toLocalDate() : null,
-            rs.getInt("distance")
-        );
-    }
 
-    // Helper method to build category conditions SQL
-    private StringBuilder buildCategoryConditionsSql(StringBuilder sql, String toiletName, String sidoCode, 
-                                                  PoiPublicToiletType toiletType, String open24hYn) {
-        // 인덱스 활용을 위한 조건 순서 최적화
-        if (sidoCode != null && !sidoCode.trim().isEmpty()) {
-            sql.append("AND sido_code = '").append(sidoCode.replace("'", "''")).append("' ");
-        }
-        if (toiletType != null) {
-            sql.append("AND toilet_type = '").append(toiletType.getName().replace("'", "''")).append("' ");
-        }
-        if (toiletName != null && !toiletName.trim().isEmpty()) {
-            sql.append("AND toilet_name LIKE '%").append(toiletName.replace("'", "''")).append("%' ");
-        }
-        if ("Y".equals(open24hYn)) {
-            sql.append("AND open_time LIKE '%24시간%' ");
-        }
-        
-        return sql;
-    }
-
+    /*******************************
+     ** 전체 공중 화장실 조회
+     *******************************/
+    //전체 공중 화장실 조회 (전체 결과)
     @Override
-    public List<PoiPublicToiletInfo> findBySidoCodeToDto(String sidoCode) {
-        StringBuilder sql = new StringBuilder(toiletBaseQuery);
-        sql.append("AND sido_code = '").append(sidoCode.replace("'", "''")).append("' ");
-        sql.append(toiletOrderBy);
+    public List<PoiPublicToilet> findAllToilets() {
+        String sql = TOILET_BASE_QUERY + TOILET_ORDER_BY_NAME;
 
-        log.debug("[PoiPublicToiletInfo] 시도별 조회 쿼리: {}", sql);
+        log.debug("[PoiPublicToilet] 전체 조회 쿼리: {}", sql);
 
-        List<PoiPublicToiletInfo> entityList = new ArrayList<>();
+        List<PoiPublicToilet> entityList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                PoiPublicToiletInfo toilet = setPoiPublicToiletInfo(rs);
+                PoiPublicToilet toilet = setPoiPublicToiletInfo(rs);
                 entityList.add(toilet);
             }
-            log.debug("[PoiPublicToiletInfo] 시도별 조회 완료 - 결과 개수: {}", entityList.size());
+            log.debug("[PoiPublicToilet] 전체 조회 완료 - 결과 개수: {}", entityList.size());
         } catch (SQLException e) {
-            log.error("[PoiPublicToiletInfo] 시도별 조회 쿼리 실행 중 오류 발생", e);
-            throw new RuntimeException("Database sido query failed", e);
-        }
-        
-        return entityList;
-    }
-
-    @Override
-    public List<PoiPublicToiletInfo> findByCategoryConditions(String toiletName, String sidoCode, PoiPublicToiletType toiletType, 
-                                                             String open24hYn, int offset, int size) {
-        StringBuilder sql = new StringBuilder(toiletBaseQuery);
-        sql = buildCategoryConditionsSql(sql, toiletName, sidoCode, toiletType, open24hYn);
-        sql.append(toiletOrderBy);
-        sql = new StringBuilder(addCountToQuery(sql.toString()));
-
-        log.debug("[PoiPublicToiletInfo] 카테고리 조건 검색 쿼리: {}", sql);
-
-        List<PoiPublicToiletInfo> entityList = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            
-            while (rs.next()) {
-                PoiPublicToiletInfo toilet = setPoiPublicToiletInfo(rs);
-                entityList.add(toilet);
-            }
-            log.debug("[PoiPublicToiletInfo] 카테고리 조건 검색 완료 - 결과 개수: {}", entityList.size());
-        } catch (SQLException e) {
-            log.error("[PoiPublicToiletInfo] 카테고리 조건 검색 쿼리 실행 중 오류 발생", e);
-            throw new RuntimeException("Database category query failed", e);
-        }
-        
-        return entityList;
-    }
-
-    @Override
-    public PoiPageResult<PoiPublicToiletInfo> findByLocationWithPagingCount(BigDecimal latitude, BigDecimal longitude, 
-                                                             BigDecimal radius, String toiletName, PoiPublicToiletType toiletType, 
-                                                             String open24hYn, int offset, int size) {
-        StringBuilder sql = new StringBuilder(addCountToQuery(toiletBaseQuery));
-        sql.append("AND ST_DWithin(" +
-            "ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)::geography, " +
-            "ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography, ?) ");
-        
-        // 추가 검색 조건 처리
-        if (toiletName != null && !toiletName.trim().isEmpty()) {
-            sql.append("AND toilet_name LIKE ? ");
-        }
-        if (toiletType != null) {
-            sql.append("AND toilet_type = ? ");
-        }
-        if ("Y".equals(open24hYn)) {
-            sql.append("AND open_time LIKE '%24시간%' ");
-        }
-        
-        sql.append(toiletOrderBy).append(" OFFSET ? LIMIT ?");
-
-        log.debug("[PoiPublicToiletInfo] 위치 기반 검색 쿼리 (통합): {}", sql);
-
-        List<PoiPublicToiletInfo> entityList = new ArrayList<>();
-        long totalCount = 0;
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            
-            int paramIndex = 1;
-            ps.setBigDecimal(paramIndex++, longitude);
-            ps.setBigDecimal(paramIndex++, latitude);
-            ps.setBigDecimal(paramIndex++, radius.multiply(new BigDecimal(1000))); // 미터 단위로 변환
-            
-            if (toiletName != null && !toiletName.trim().isEmpty()) {
-                ps.setString(paramIndex++, "%" + toiletName + "%");
-            }
-            if (toiletType != null) {
-                ps.setString(paramIndex++, toiletType.getName());
-            }
-            
-            ps.setInt(paramIndex++, offset);
-            ps.setInt(paramIndex++, size);
-            
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    PoiPublicToiletInfo toilet = setPoiPublicToiletInfo(rs);
-                    entityList.add(toilet);
-                    // 첫 번째 행에서 total_count 가져오기
-                    if (totalCount == 0) {
-                        totalCount = rs.getLong("total_count");
-                    }
-                }
-            }
-            log.debug("[PoiPublicToiletInfo] 위치 기반 검색 완료 (통합) - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
-        } catch (SQLException e) {
-            log.error("[PoiPublicToiletInfo] 위치 기반 검색 쿼리 실행 중 오류 발생 (통합)", e);
-            throw new RuntimeException("Database location query failed", e);
-        }
-        
-        return new PoiPageResult<>(entityList, totalCount);
-    }
-
-    @Override
-    public PoiPageResult<PoiPublicToiletInfo> findBySidoCodeWithPagingCount(String sidoCode, int offset, int size) {
-        String sql = addCountToQuery(toiletBaseQuery) + "AND sido_code = ? " + toiletOrderBy + " OFFSET ? LIMIT ?";
-
-        log.debug("[PoiPublicToiletInfo] 시도별 조회 쿼리: {}", sql);
-
-        List<PoiPublicToiletInfo> entityList = new ArrayList<>();
-        long totalCount = 0;
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            
-            ps.setString(1, sidoCode);
-            ps.setInt(2, offset);
-            ps.setInt(3, size);
-            
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    PoiPublicToiletInfo toilet = setPoiPublicToiletInfo(rs);
-                    entityList.add(toilet);
-                    // 첫 번째 행에서 total_count 가져오기
-                    if (totalCount == 0) {
-                        totalCount = rs.getLong("total_count");
-                    }
-                }
-            }
-            log.debug("[PoiPublicToiletInfo] 시도별 조회 완료 - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
-        } catch (SQLException e) {
-            log.error("[PoiPublicToiletInfo] 시도별 조회 쿼리 실행 중 오류 발생", e);
-            throw new RuntimeException("Database sido query failed", e);
-        }
-        
-        return new PoiPageResult<>(entityList, totalCount);
-    }
-
-    @Override
-    public PoiPageResult<PoiPublicToiletInfo> findAllWithPagingCount(int offset, int size) {
-        String sql = addCountToQuery(toiletBaseQuery) + toiletOrderBy + " OFFSET " + offset + " LIMIT " + size;
-
-        log.debug("[PoiPublicToiletInfo] 전체 조회 쿼리 (페이징): {}", sql);
-
-        List<PoiPublicToiletInfo> entityList = new ArrayList<>();
-        long totalCount = 0;
-        try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            
-            while (rs.next()) {
-                PoiPublicToiletInfo toilet = setPoiPublicToiletInfo(rs);
-                entityList.add(toilet);
-                // 첫 번째 행에서 total_count 가져오기
-                if (totalCount == 0) {
-                    totalCount = rs.getLong("total_count");
-                }
-            }
-            log.debug("[PoiPublicToiletInfo] 전체 조회 완료 (페이징) - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
-        } catch (SQLException e) {
-            log.error("[PoiPublicToiletInfo] 전체 조회 쿼리 실행 중 오류 발생 (페이징)", e);
-            throw new RuntimeException("Database all query failed", e);
-        }
-        
-        return new PoiPageResult<>(entityList, totalCount);
-    }
-
-    @Override
-    public List<PoiPublicToiletInfo> findAllToilets() {
-        String sql = toiletBaseQuery + toiletOrderBy;
-
-        log.debug("[PoiPublicToiletInfo] 전체 조회 쿼리: {}", sql);
-
-        List<PoiPublicToiletInfo> entityList = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            
-            while (rs.next()) {
-                PoiPublicToiletInfo toilet = setPoiPublicToiletInfo(rs);
-                entityList.add(toilet);
-            }
-            log.debug("[PoiPublicToiletInfo] 전체 조회 완료 - 결과 개수: {}", entityList.size());
-        } catch (SQLException e) {
-            log.error("[PoiPublicToiletInfo] 전체 조회 쿼리 실행 중 오류 발생", e);
+            log.error("[PoiPublicToilet] 전체 조회 쿼리 실행 중 오류 발생", e);
             throw new RuntimeException("Database findAll query failed", e);
         }
-        
+
         return entityList;
     }
 
+    // 전체 공중 화장실 조회 (페이징)
     @Override
-    public List<PoiPublicToiletInfo> findByCategoryConditions(String toiletName, String sidoCode, PoiPublicToiletType toiletType, 
-                                                             String open24hYn) {
-        StringBuilder sql = new StringBuilder(toiletBaseQuery);
-        sql = buildCategoryConditionsSql(sql, toiletName, sidoCode, toiletType, open24hYn);
-        sql.append(toiletOrderBy);
+    public PoiPageResult<PoiPublicToilet> findAllWithPagingCount(int offset, int size) {
+        StringBuilder sql = new StringBuilder(addCountToQuery(TOILET_BASE_QUERY)).append(TOILET_ORDER_BY_NAME);
+        sql = RepositoryUtils.addQueryOffset(sql,offset, size);
 
-        log.debug("[PoiPublicToiletInfo] 카테고리 검색 쿼리 (비페이징): {}", sql);
+        log.debug("[PoiPublicToilet] 전체 조회 쿼리 (페이징): {}", sql);
 
-        List<PoiPublicToiletInfo> entityList = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
-            
-            while (rs.next()) {
-                PoiPublicToiletInfo toilet = setPoiPublicToiletInfo(rs);
-                entityList.add(toilet);
-            }
-            log.debug("[PoiPublicToiletInfo] 카테고리 검색 완료 (비페이징) - 결과 개수: {}", entityList.size());
-        } catch (SQLException e) {
-            log.error("[PoiPublicToiletInfo] 카테고리 검색 쿼리 실행 중 오류 발생 (비페이징)", e);
-            throw new RuntimeException("Database category search query failed", e);
-        }
-        
-        return entityList;
-    }
-
-    @Override
-    public List<PoiPublicToiletInfo> findByLocation(BigDecimal latitude, BigDecimal longitude, BigDecimal radius) {
-        // 단일 함수로 통합 - findByLocationWithConditions를 null 조건으로 호출
-        return findByLocationWithConditions(latitude, longitude, radius, null, null, null);
-    }
-
-    @Override
-    public List<PoiPublicToiletInfo> findByLocationWithConditions(BigDecimal latitude, BigDecimal longitude, 
-                                                                 BigDecimal radius, String toiletName, 
-                                                                 PoiPublicToiletType toiletType, String open24hYn) {
-        StringBuilder sql = new StringBuilder(toiletBaseQueryWithDistance);
-        sql.append("AND ST_Distance_Sphere(POINT(longitude, latitude), POINT(?, ?)) <= ? ");
-        
-        // 추가 검색 조건 처리
-        if (toiletName != null && !toiletName.trim().isEmpty()) {
-            sql.append("AND toilet_name LIKE ? ");
-        }
-        if (toiletType != null) {
-            sql.append("AND toilet_type = ? ");
-        }
-        if ("Y".equals(open24hYn)) {
-            sql.append("AND open_time LIKE '%24시간%' ");
-        }
-        
-        sql.append(toiletOrderByDistance);
-
-        log.debug("[PoiPublicToiletInfo] 위치 기반 검색 쿼리 (통합): {}", sql);
-
-        List<PoiPublicToiletInfo> entityList = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            
-            int paramIndex = 1;
-            ps.setBigDecimal(paramIndex++, longitude);
-            ps.setBigDecimal(paramIndex++, latitude);
-            ps.setBigDecimal(paramIndex++, radius);
-            
-            if (toiletName != null && !toiletName.trim().isEmpty()) {
-                ps.setString(paramIndex++, "%" + toiletName + "%");
-            }
-            if (toiletType != null) {
-                ps.setString(paramIndex++, toiletType.getName());
-            }
-            
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    PoiPublicToiletInfo toilet = setPoiPublicToiletInfo(rs);
-                    entityList.add(toilet);
-                }
-            }
-            log.debug("[PoiPublicToiletInfo] 위치 기반 검색 완료 (통합) - 결과 개수: {}", entityList.size());
-        } catch (SQLException e) {
-            log.error("[PoiPublicToiletInfo] 위치 기반 검색 쿼리 실행 중 오류 발생 (통합)", e);
-            throw new RuntimeException("Database location search query failed", e);
-        }
-        
-        return entityList;
-    }
-
-    @Override
-    public PoiPageResult<PoiPublicToiletInfo> findByCategoryConditionsWithPagingCount(
-            String toiletName, String sidoCode, PoiPublicToiletType toiletType,
-            String open24hYn, int offset, int size) {
-        StringBuilder sql = new StringBuilder(addCountToQuery(toiletBaseQuery));
-        sql = buildCategoryConditionsSql(sql, toiletName, sidoCode, toiletType, open24hYn);
-        sql.append(toiletOrderBy).append(" OFFSET ").append(offset).append(" LIMIT ").append(size);
-
-        log.debug("[PoiPublicToiletInfo] 카테고리 검색 쿼리 (페이징 + 카운트): {}", sql);
-
-        List<PoiPublicToiletInfo> entityList = new ArrayList<>();
+        List<PoiPublicToilet> entityList = new ArrayList<>();
         long totalCount = 0;
-
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
+             PreparedStatement ps = conn.prepareStatement(sql.toString());
+             ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                PoiPublicToiletInfo toilet = setPoiPublicToiletInfo(rs);
+                PoiPublicToilet toilet = setPoiPublicToiletInfo(rs);
                 entityList.add(toilet);
                 // 첫 번째 행에서 total_count 가져오기
                 if (totalCount == 0) {
                     totalCount = rs.getLong("total_count");
                 }
             }
-            log.debug("[PoiPublicToiletInfo] 카테고리 검색 완료 (페이징 + 카운트) - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
+            log.debug("[PoiPublicToilet] 전체 조회 완료 (페이징) - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
         } catch (SQLException e) {
-            log.error("[PoiPublicToiletInfo] 카테고리 검색 쿼리 실행 중 오류 발생 (페이징 + 카운트)", e);
+            log.error("[PoiPublicToilet] 전체 조회 쿼리 실행 중 오류 발생 (페이징)", e);
+            throw new RuntimeException("Database all query failed", e);
+        }
+
+        return new PoiPageResult<>(entityList, totalCount);
+    }
+
+
+
+    /*******************************
+     ** 시도별 공중 화장실 조회
+     *******************************/
+    //시도 코드로 공중 화장실 조회 (DTO 반환)
+    @Override
+    public List<PoiPublicToilet> findBySidoCodeToDto(String sidoCode) {
+        StringBuilder sql = new StringBuilder(TOILET_BASE_QUERY)
+                .append("AND sido_code = ? ")
+                .append(TOILET_ORDER_BY_NAME);
+
+        log.debug("[PoiPublicToilet] 시도별 조회 쿼리: {}", sql);
+
+        List<PoiPublicToilet> entityList = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            
+            ps.setString(1, sidoCode);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiPublicToilet toilet = setPoiPublicToiletInfo(rs);
+                    entityList.add(toilet);
+                }
+            }
+            log.debug("[PoiPublicToilet] 시도별 조회 완료 - 결과 개수: {}", entityList.size());
+        } catch (SQLException e) {
+            log.error("[PoiPublicToilet] 시도별 조회 쿼리 실행 중 오류 발생", e);
+            throw new RuntimeException("Database sido query failed", e);
+        }
+        
+        return entityList;
+    }
+
+    //시도 코드로 공중 화장실 조회 (페이징)
+    @Override
+    public PoiPageResult<PoiPublicToilet> findBySidoCodeWithPagingCount(String sidoCode, int offset, int size) {
+        StringBuilder sql = new StringBuilder(addCountToQuery(TOILET_BASE_QUERY))
+                .append("AND sido_code = ? ")
+                .append(TOILET_ORDER_BY_NAME);
+        sql = RepositoryUtils.addQueryOffset(sql, offset, size);
+
+        log.debug("[PoiPublicToilet] 시도별 조회 쿼리: {}", sql);
+
+        List<PoiPublicToilet> entityList = new ArrayList<>();
+        long totalCount = 0;
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            ps.setString(1, sidoCode);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiPublicToilet toilet = setPoiPublicToiletInfo(rs);
+                    entityList.add(toilet);
+                    // 첫 번째 행에서 total_count 가져오기
+                    if (totalCount == 0) {
+                        totalCount = rs.getLong("total_count");
+                    }
+                }
+            }
+            log.debug("[PoiPublicToilet] 시도별 조회 완료 - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
+        } catch (SQLException e) {
+            log.error("[PoiPublicToilet] 시도별 조회 쿼리 실행 중 오류 발생", e);
+            throw new RuntimeException("Database sido query failed", e);
+        }
+
+        return new PoiPageResult<>(entityList, totalCount);
+    }
+
+
+
+    /*******************************
+     **  카테고리 기반 검색 공중 화장실 조회
+     *******************************/
+    //카테고리 조건으로 공중 화장실 검색 (전체 결과)
+    @Override
+    public List<PoiPublicToilet> findByCategoryConditions(String toiletName, String sidoCode, PoiPublicToiletType toiletType,
+                                                          String open24hYn) {
+        StringBuilder sql = new StringBuilder(TOILET_BASE_QUERY);
+        sql = buildCategoryConditionsSql(sql, toiletName, sidoCode, toiletType, open24hYn);
+        sql.append(TOILET_ORDER_BY_NAME);
+
+        log.debug("[PoiPublicToilet] 카테고리 검색 쿼리 (비페이징): {}", sql);
+
+        List<PoiPublicToilet> entityList = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString());
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                PoiPublicToilet toilet = setPoiPublicToiletInfo(rs);
+                entityList.add(toilet);
+            }
+            log.debug("[PoiPublicToilet] 카테고리 검색 완료 (비페이징) - 결과 개수: {}", entityList.size());
+        } catch (SQLException e) {
+            log.error("[PoiPublicToilet] 카테고리 검색 쿼리 실행 중 오류 발생 (비페이징)", e);
+            throw new RuntimeException("Database category search query failed", e);
+        }
+
+        return entityList;
+    }
+
+    //카테고리 조건으로 공중 화장실 검색 (페이징 + 총 개수)
+    @Override
+    public PoiPageResult<PoiPublicToilet> findByCategoryConditionsWithPagingCount(
+            String toiletName, String sidoCode, PoiPublicToiletType toiletType,
+            String open24hYn, int offset, int size) {
+
+        StringBuilder sql = new StringBuilder(addCountToQuery(TOILET_BASE_QUERY));
+        sql = buildCategoryConditionsSql(sql, toiletName, sidoCode, toiletType, open24hYn);
+        sql.append(TOILET_ORDER_BY_NAME).append(" OFFSET ").append(offset).append(" LIMIT ").append(size);
+
+        log.debug("[PoiPublicToilet] 카테고리 검색 쿼리 (페이징 + 카운트): {}", sql);
+
+        List<PoiPublicToilet> entityList = new ArrayList<>();
+        long totalCount = 0;
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString());
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                PoiPublicToilet toilet = setPoiPublicToiletInfo(rs);
+                entityList.add(toilet);
+                // 첫 번째 행에서 total_count 가져오기
+                if (totalCount == 0) {
+                    totalCount = rs.getLong("total_count");
+                }
+            }
+            log.debug("[PoiPublicToilet] 카테고리 검색 완료 (페이징 + 카운트) - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
+        } catch (SQLException e) {
+            log.error("[PoiPublicToilet] 카테고리 검색 쿼리 실행 중 오류 발생 (페이징 + 카운트)", e);
             throw new RuntimeException("Database category search query failed", e);
         }
 
         return new PoiPageResult<>(entityList, totalCount);
     }
+
+
 
     /*******************************
      **  거리 정보 포함 위치 기반 검색 공중 화장실 조회
      *******************************/
-
     @Override
-    public List<PoiPublicToiletInfoLocation> findByLocationWithDistance(BigDecimal latitude, BigDecimal longitude, BigDecimal radius) {
-        String sql = toiletBaseQueryWithDistance + 
-            "AND ST_DWithin(" +
-            "ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)::geography, " +
-            "ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography, ?) " +
-            toiletOrderByDistance;
-
-        log.debug("[PoiPublicToiletInfo] 거리 정보 포함 위치 기반 검색 쿼리: {}", sql);
-
-        List<PoiPublicToiletInfoLocation> entityList = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            
-            ps.setBigDecimal(1, longitude);
-            ps.setBigDecimal(2, latitude);
-            ps.setBigDecimal(3, radius.multiply(new BigDecimal(1000))); // 미터 단위로 변환
-            
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    PoiPublicToiletInfoLocation toilet = setPoiPublicToiletInfoLocation(rs);
-                    entityList.add(toilet);
-                }
-            }
-            log.debug("[PoiPublicToiletInfo] 거리 정보 포함 위치 기반 검색 완료 - 결과 개수: {}", entityList.size());
-        } catch (SQLException e) {
-            log.error("[PoiPublicToiletInfo] 거리 정보 포함 위치 기반 검색 쿼리 실행 중 오류 발생", e);
-            throw new RuntimeException("Database location with distance query failed", e);
-        }
-        
-        return entityList;
-    }
-
-    @Override
-    public List<PoiPublicToiletInfoLocation> findByLocationWithDistanceAndConditions(BigDecimal latitude, BigDecimal longitude,
-                                                                                     BigDecimal radius, String toiletName, 
-                                                                                     PoiPublicToiletType toiletType, String open24hYn) {
-        StringBuilder sql = new StringBuilder(toiletBaseQueryWithDistance);
-        sql.append("AND ST_DWithin(" +
-            "ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)::geography, " +
-            "ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography, ?) ");
+    public List<PoiPublicToiletLocation> findByLocationWithDistanceAndConditions(BigDecimal latitude, BigDecimal longitude,
+                                                                                 BigDecimal radius, String toiletName,
+                                                                                 PoiPublicToiletType toiletType, String open24hYn) {
+        StringBuilder sql = new StringBuilder(TOILET_LOCATION_FULL_QUERY);
         
         // 추가 검색 조건 처리
         if (toiletName != null && !toiletName.trim().isEmpty()) {
@@ -563,18 +308,17 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
             sql.append("AND open_time LIKE '%24시간%' ");
         }
         
-        sql.append(toiletOrderByDistance);
+        // 거리 필터링 조건 추가
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
+        sql.append("ORDER BY distance");
 
-        log.debug("[PoiPublicToiletInfo] 거리 정보 포함 위치 기반 검색 쿼리 (조건 포함): {}", sql);
+        log.debug("[PoiPublicToilet] 거리 정보 포함 위치 기반 검색 쿼리 (조건 포함): {}", sql);
 
-        List<PoiPublicToiletInfoLocation> entityList = new ArrayList<>();
+        List<PoiPublicToiletLocation> entityList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             
             int paramIndex = 1;
-            ps.setBigDecimal(paramIndex++, longitude);
-            ps.setBigDecimal(paramIndex++, latitude);
-            ps.setBigDecimal(paramIndex++, radius.multiply(new BigDecimal(1000))); // 미터 단위로 변환
             
             if (toiletName != null && !toiletName.trim().isEmpty()) {
                 ps.setString(paramIndex++, "%" + toiletName + "%");
@@ -585,13 +329,13 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    PoiPublicToiletInfoLocation toilet = setPoiPublicToiletInfoLocation(rs);
+                    PoiPublicToiletLocation toilet = setPoiPublicToiletInfoLocation(rs);
                     entityList.add(toilet);
                 }
             }
-            log.debug("[PoiPublicToiletInfo] 거리 정보 포함 위치 기반 검색 완료 (조건 포함) - 결과 개수: {}", entityList.size());
+            log.debug("[PoiPublicToilet] 거리 정보 포함 위치 기반 검색 완료 (조건 포함) - 결과 개수: {}", entityList.size());
         } catch (SQLException e) {
-            log.error("[PoiPublicToiletInfo] 거리 정보 포함 위치 기반 검색 쿼리 실행 중 오류 발생 (조건 포함)", e);
+            log.error("[PoiPublicToilet] 거리 정보 포함 위치 기반 검색 쿼리 실행 중 오류 발생 (조건 포함)", e);
             throw new RuntimeException("Database location with distance and conditions query failed", e);
         }
         
@@ -599,14 +343,11 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
     }
 
     @Override
-    public PoiPageResult<PoiPublicToiletInfoLocation> findByLocationWithDistanceAndPagingCount(BigDecimal latitude, BigDecimal longitude,
-                                                                                               BigDecimal radius, String toiletName, 
-                                                                                               PoiPublicToiletType toiletType, String open24hYn,
-                                                                                               int offset, int size) {
-        StringBuilder sql = new StringBuilder(addCountToQuery(toiletBaseQueryWithDistance));
-        sql.append("AND ST_DWithin(" +
-            "ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)::geography, " +
-            "ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography, ?) ");
+    public PoiPageResult<PoiPublicToiletLocation> findByLocationWithDistanceAndPagingCount(BigDecimal latitude, BigDecimal longitude,
+                                                                                           BigDecimal radius, String toiletName,
+                                                                                           PoiPublicToiletType toiletType, String open24hYn,
+                                                                                           int offset, int size) {
+        StringBuilder sql = new StringBuilder(addCountToQuery(TOILET_LOCATION_FULL_QUERY));
         
         // 추가 검색 조건 처리
         if (toiletName != null && !toiletName.trim().isEmpty()) {
@@ -619,19 +360,19 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
             sql.append("AND open_time LIKE '%24시간%' ");
         }
         
-        sql.append(toiletOrderByDistance).append(" OFFSET ? LIMIT ?");
+        // 거리 필터링 조건 추가
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
+        sql.append(TOILET_ORDER_BY_DISTANCE);
+        sql = RepositoryUtils.addQueryOffset(sql, offset, size);
 
-        log.debug("[PoiPublicToiletInfo] 거리 정보 포함 위치 기반 검색 쿼리 (페이징): {}", sql);
+        log.debug("[PoiPublicToilet] 거리 정보 포함 위치 기반 검색 쿼리 (페이징): {}", sql);
 
-        List<PoiPublicToiletInfoLocation> entityList = new ArrayList<>();
+        List<PoiPublicToiletLocation> entityList = new ArrayList<>();
         long totalCount = 0;
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             
             int paramIndex = 1;
-            ps.setBigDecimal(paramIndex++, longitude);
-            ps.setBigDecimal(paramIndex++, latitude);
-            ps.setBigDecimal(paramIndex++, radius.multiply(new BigDecimal(1000))); // 미터 단위로 변환
             
             if (toiletName != null && !toiletName.trim().isEmpty()) {
                 ps.setString(paramIndex++, "%" + toiletName + "%");
@@ -640,12 +381,9 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
                 ps.setString(paramIndex++, toiletType.getName());
             }
             
-            ps.setInt(paramIndex++, offset);
-            ps.setInt(paramIndex++, size);
-            
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    PoiPublicToiletInfoLocation toilet = setPoiPublicToiletInfoLocation(rs);
+                    PoiPublicToiletLocation toilet = setPoiPublicToiletInfoLocation(rs);
                     entityList.add(toilet);
                     // 첫 번째 행에서 total_count 가져오기
                     if (totalCount == 0) {
@@ -653,12 +391,113 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
                     }
                 }
             }
-            log.debug("[PoiPublicToiletInfo] 거리 정보 포함 위치 기반 검색 완료 (페이징) - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
+            log.debug("[PoiPublicToilet] 거리 정보 포함 위치 기반 검색 완료 (페이징) - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
         } catch (SQLException e) {
-            log.error("[PoiPublicToiletInfo] 거리 정보 포함 위치 기반 검색 쿼리 실행 중 오류 발생 (페이징)", e);
+            log.error("[PoiPublicToilet] 거리 정보 포함 위치 기반 검색 쿼리 실행 중 오류 발생 (페이징)", e);
             throw new RuntimeException("Database location with distance and paging query failed", e);
         }
         
         return new PoiPageResult<>(entityList, totalCount);
+    }
+
+
+    // Helper method to create PoiPublicToilet from ResultSet
+    private PoiPublicToilet setPoiPublicToiletInfo(ResultSet rs) throws SQLException {
+        return new PoiPublicToilet(
+                rs.getInt("toilet_id"),
+                rs.getString("sido_code"),
+                rs.getString("toilet_name"),
+                rs.getString("toilet_type"),
+                rs.getString("basis"),
+                rs.getString("addr_road"),
+                rs.getString("addr_jibun"),
+                rs.getInt("m_toilet_count"),
+                rs.getInt("m_urinal_count"),
+                rs.getInt("m_dis_toilet_count"),
+                rs.getInt("m_dis_urinal_count"),
+                rs.getInt("m_child_toilet_count"),
+                rs.getInt("m_child_urinal_count"),
+                rs.getInt("f_toilet_count"),
+                rs.getInt("f_dis_toilet_count"),
+                rs.getInt("f_child_toilet_count"),
+                rs.getString("managing_org"),
+                rs.getString("phone_number"),
+                rs.getString("open_time"),
+                rs.getString("open_time_detail"),
+                rs.getString("install_dt"),
+                rs.getBigDecimal("latitude") != null ? rs.getBigDecimal("latitude").doubleValue() : null,
+                rs.getBigDecimal("longitude") != null ? rs.getBigDecimal("longitude").doubleValue() : null,
+                rs.getString("owner_type"),
+                rs.getString("waste_process_type"),
+                rs.getString("safety_target_yn"),
+                rs.getString("emg_bell_yn"),
+                rs.getString("emg_bell_location"),
+                rs.getString("cctv_yn"),
+                rs.getString("diaper_table_yn"),
+                rs.getString("diaper_table_location"),
+                rs.getString("remodeled_dt"),
+                rs.getDate("base_dt") != null ? rs.getDate("base_dt").toLocalDate() : null
+        );
+    }
+
+    // Helper method to create PoiPublicToiletLocation from ResultSet
+    private PoiPublicToiletLocation setPoiPublicToiletInfoLocation(ResultSet rs) throws SQLException {
+        // 직접 Location 객체 생성 (메모리 효율성)
+        return new PoiPublicToiletLocation(
+                rs.getInt("toilet_id"),
+                rs.getString("sido_code"),
+                rs.getString("toilet_name"),
+                rs.getString("toilet_type"),
+                rs.getString("basis"),
+                rs.getString("addr_road"),
+                rs.getString("addr_jibun"),
+                rs.getObject("m_toilet_count", Integer.class),
+                rs.getObject("m_urinal_count", Integer.class),
+                rs.getObject("m_dis_toilet_count", Integer.class),
+                rs.getObject("m_dis_urinal_count", Integer.class),
+                rs.getObject("m_child_toilet_count", Integer.class),
+                rs.getObject("m_child_urinal_count", Integer.class),
+                rs.getObject("f_toilet_count", Integer.class),
+                rs.getObject("f_dis_toilet_count", Integer.class),
+                rs.getObject("f_child_toilet_count", Integer.class),
+                rs.getString("managing_org"),
+                rs.getString("phone_number"),
+                rs.getString("open_time"),
+                rs.getString("open_time_detail"),
+                rs.getString("install_dt"),
+                rs.getObject("latitude", Double.class),
+                rs.getObject("longitude", Double.class),
+                rs.getString("owner_type"),
+                rs.getString("waste_process_type"),
+                rs.getString("safety_target_yn"),
+                rs.getString("emg_bell_yn"),
+                rs.getString("emg_bell_location"),
+                rs.getString("cctv_yn"),
+                rs.getString("diaper_table_yn"),
+                rs.getString("diaper_table_location"),
+                rs.getString("remodeled_dt"),
+                rs.getDate("base_dt") != null ? rs.getDate("base_dt").toLocalDate() : null,
+                rs.getInt("distance")
+        );
+    }
+
+    // Helper method to build category conditions SQL
+    private StringBuilder buildCategoryConditionsSql(StringBuilder sql, String toiletName, String sidoCode,
+                                                     PoiPublicToiletType toiletType, String open24hYn) {
+        // 인덱스 활용을 위한 조건 순서 최적화
+        if (sidoCode != null && !sidoCode.trim().isEmpty()) {
+            sql.append("AND sido_code = '").append(RepositoryUtils.escapeSql(sidoCode)).append("' ");
+        }
+        if (toiletType != null) {
+            sql.append("AND toilet_type = '").append(RepositoryUtils.escapeSql(toiletType.getName())).append("' ");
+        }
+        if (toiletName != null && !toiletName.trim().isEmpty()) {
+            sql.append("AND toilet_name LIKE '%").append(RepositoryUtils.escapeSql(toiletName)).append("%' ");
+        }
+        if ("Y".equals(open24hYn)) {
+            sql.append("AND open_time LIKE '%24시간%' ");
+        }
+
+        return sql;
     }
 } 
