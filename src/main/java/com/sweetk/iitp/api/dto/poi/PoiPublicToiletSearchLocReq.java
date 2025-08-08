@@ -11,7 +11,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Schema(description = "공중 화장실 위치 기반 검색 요청")
-public class PoiPublicToiletInfoSearchLocReq extends PoiBaseSearchLocReq {
+public class PoiPublicToiletSearchLocReq extends PoiBaseSearchLocReq {
 
     @Schema(description = "화장실명 검색 (최소 2글자)", example = "서울역")
     @Size(min = 2, message = "화장실명은 최소 2글자 이상이어야 합니다")

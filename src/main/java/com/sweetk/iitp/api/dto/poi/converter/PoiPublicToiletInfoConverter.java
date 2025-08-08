@@ -1,16 +1,16 @@
 package com.sweetk.iitp.api.dto.poi.converter;
 
-import com.sweetk.iitp.api.dto.poi.PoiPublicToiletInfo;
+import com.sweetk.iitp.api.dto.poi.PoiPublicToilet;
 import com.sweetk.iitp.api.entity.poi.PoiPublicToiletInfoEntity;
 
 public class PoiPublicToiletInfoConverter {
 
-    public static PoiPublicToiletInfo toDto(PoiPublicToiletInfoEntity entity) {
+    public static PoiPublicToilet toDto(PoiPublicToiletInfoEntity entity) {
         if (entity == null) {
             return null;
         }
 
-        return new PoiPublicToiletInfo(
+        return new PoiPublicToilet(
             entity.getToiletId(),
             entity.getSidoCode(),
             entity.getToiletName(),
@@ -47,7 +47,7 @@ public class PoiPublicToiletInfoConverter {
         );
     }
 
-    public static PoiPublicToiletInfoEntity toEntity(PoiPublicToiletInfo dto) {
+    public static PoiPublicToiletInfoEntity toEntity(PoiPublicToilet dto) {
         if (dto == null) {
             return null;
         }
