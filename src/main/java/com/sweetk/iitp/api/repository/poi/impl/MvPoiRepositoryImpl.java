@@ -48,12 +48,14 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
             "address_code, address_road, address_detail, latitude, longitude, " +
             "detail_json, search_filter_json";
 
+    private static final String SQL_MV_TOT_CNT_COLUMN =  "COUNT(*) OVER() AS total_count ";
+
     private static final String SQL_MV_DTO_QUERY = "SELECT " + SQL_MV_BASE_COLUMNS + " " +
             "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' ";
 
 
     private static final String SQL_MV_DTO_QUERY_WITH_COUNT = "SELECT " + SQL_MV_BASE_COLUMNS + ", " +
-            "COUNT(*) OVER() AS total_count " +
+            SQL_MV_TOT_CNT_COLUMN +
             "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' ";
 
 
@@ -73,7 +75,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
         this.SQL_MV_LOCATION_QUERY_WITH_COUNT = "SELECT " + SQL_MV_BASE_COLUMNS + ", " +
                         distanceConfig.getDistanceCalculationSql() + " AS distance, " +
-                        "COUNT(*) OVER() AS total_count " +
+                        SQL_MV_TOT_CNT_COLUMN +
                         "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' ";
     }
 
