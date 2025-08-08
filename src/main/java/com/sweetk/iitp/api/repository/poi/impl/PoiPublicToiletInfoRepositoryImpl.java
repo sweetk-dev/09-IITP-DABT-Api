@@ -45,31 +45,39 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
             "emg_bell_yn, emg_bell_location, cctv_yn, diaper_table_yn, diaper_table_location, " +
             "remodeled_dt, base_dt";
 
-    private final String TOILET_LOCATION_FULL_QUERY;
+    private final String TOILET_LOCATION_QUERY;
+    private final String TOILET_LOCATION_QUERY_WITH_COUNT;
+
 
     public PoiPublicToiletInfoRepositoryImpl(DistanceCalculationConfig distanceConfig) {
         this.distanceConfig = distanceConfig;
-        this.TOILET_LOCATION_FULL_QUERY = "SELECT " + TOILET_COMMON_COLUMNS + ", " +
+        this.TOILET_LOCATION_QUERY = "SELECT " + TOILET_COMMON_COLUMNS + ", " +
                 distanceConfig.getDistanceCalculationSql() + " AS distance " +
                 "FROM poi_public_toilet_info WHERE del_yn = 'N' ";
+
+        this.TOILET_LOCATION_QUERY_WITH_COUNT = "SELECT " + TOILET_COMMON_COLUMNS + ", " +
+                distanceConfig.getDistanceCalculationSql() + " AS distance, " +
+                "COUNT(*) OVER() AS total_count " +
+                "FROM poi_public_toilet_info WHERE del_yn = 'N' ";
+
     }
 
     private static final String TOILET_BASE_QUERY = "SELECT " + TOILET_COMMON_COLUMNS + " " +
+            "FROM poi_public_toilet_info WHERE del_yn = 'N' ";
+
+    private static final String TOILET_BASE_QUERY_WITH_COUNT = "SELECT " + TOILET_COMMON_COLUMNS + ", " +
+            "COUNT(*) OVER() AS total_count " +
             "FROM poi_public_toilet_info WHERE del_yn = 'N' ";
 
     private static final String TOILET_ORDER_BY_NAME = "ORDER BY toilet_name";
     private static final String TOILET_ORDER_BY_DISTANCE = "ORDER BY distance";
 
 
-    // Helper method to add count to query
-    private String addCountToQuery(String baseQuery) {
-        return baseQuery.replace("SELECT ", "SELECT COUNT(*) OVER() AS total_count, ");
-    }
-
     @Override
     public Optional<PoiPublicToilet> findByIdToDto(Integer toiletId) {
         StringBuilder sql = new StringBuilder(TOILET_BASE_QUERY);
         sql.append("AND toilet_id = ").append(toiletId).append(" ");
+
         
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql.toString());
@@ -118,7 +126,7 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
     // 전체 공중 화장실 조회 (페이징)
     @Override
     public PoiPageResult<PoiPublicToilet> findAllWithPagingCount(int offset, int size) {
-        StringBuilder sql = new StringBuilder(addCountToQuery(TOILET_BASE_QUERY)).append(TOILET_ORDER_BY_NAME);
+        StringBuilder sql = new StringBuilder(TOILET_BASE_QUERY_WITH_COUNT).append(TOILET_ORDER_BY_NAME);
         sql = RepositoryUtils.addQueryOffset(sql,offset, size);
 
         log.debug("[PoiPublicToilet] 전체 조회 쿼리 (페이징): {}", sql);
@@ -184,7 +192,7 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
     //시도 코드로 공중 화장실 조회 (페이징)
     @Override
     public PoiPageResult<PoiPublicToilet> findBySidoCodeWithPagingCount(String sidoCode, int offset, int size) {
-        StringBuilder sql = new StringBuilder(addCountToQuery(TOILET_BASE_QUERY))
+        StringBuilder sql = new StringBuilder(TOILET_BASE_QUERY_WITH_COUNT)
                 .append("AND sido_code = ? ")
                 .append(TOILET_ORDER_BY_NAME);
         sql = RepositoryUtils.addQueryOffset(sql, offset, size);
@@ -256,9 +264,10 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
             String toiletName, String sidoCode, PoiPublicToiletType toiletType,
             String open24hYn, int offset, int size) {
 
-        StringBuilder sql = new StringBuilder(addCountToQuery(TOILET_BASE_QUERY));
+        StringBuilder sql = new StringBuilder(TOILET_BASE_QUERY_WITH_COUNT);
         sql = buildCategoryConditionsSql(sql, toiletName, sidoCode, toiletType, open24hYn);
-        sql.append(TOILET_ORDER_BY_NAME).append(" OFFSET ").append(offset).append(" LIMIT ").append(size);
+        sql.append(TOILET_ORDER_BY_NAME);
+        sql = RepositoryUtils.addQueryOffset(sql, offset, size);
 
         log.debug("[PoiPublicToilet] 카테고리 검색 쿼리 (페이징 + 카운트): {}", sql);
 
@@ -295,7 +304,7 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
     public List<PoiPublicToiletLocation> findByLocationWithDistanceAndConditions(BigDecimal latitude, BigDecimal longitude,
                                                                                  BigDecimal radius, String toiletName,
                                                                                  PoiPublicToiletType toiletType, String open24hYn) {
-        StringBuilder sql = new StringBuilder(TOILET_LOCATION_FULL_QUERY);
+        StringBuilder sql = new StringBuilder(TOILET_LOCATION_QUERY);
         
         // 추가 검색 조건 처리
         if (toiletName != null && !toiletName.trim().isEmpty()) {
@@ -347,7 +356,8 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
                                                                                            BigDecimal radius, String toiletName,
                                                                                            PoiPublicToiletType toiletType, String open24hYn,
                                                                                            int offset, int size) {
-        StringBuilder sql = new StringBuilder(addCountToQuery(TOILET_LOCATION_FULL_QUERY));
+        StringBuilder sql = new StringBuilder(TOILET_LOCATION_QUERY_WITH_COUNT);
+        sql.append(TOILET_ORDER_BY_DISTANCE);
         
         // 추가 검색 조건 처리
         if (toiletName != null && !toiletName.trim().isEmpty()) {
