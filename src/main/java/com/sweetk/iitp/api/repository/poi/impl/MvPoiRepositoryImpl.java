@@ -39,17 +39,27 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     @Autowired
     private DataSource dataSource;
 
-    private static final String SqlMvCategoryCol = "search_filter_json->'search_filter'";
-    private static final String SqlMvOrderBy = "ORDER BY title";
 
-    private static final String SqlMvDtoQuery = "SELECT " +
-            "poi_id, " +
-            "language_code, " +
-            "title, summary, basic_info, address_code, address_road, address_detail, latitude, longitude, detail_json, search_filter_json " +
+    private static final String SQL_MV_CATEGORY_COL = "search_filter_json->'search_filter'";
+    private static final String SQL_MV_ORDER_BY = "ORDER BY title";
+    private static final String SQL_ORDER_BY_DISTANCE = "ORDER BY distance";
+
+    private static final String SQL_MV_BASE_COLUMNS = "poi_id, language_code, title, summary, basic_info, " +
+            "address_code, address_road, address_detail, latitude, longitude, " +
+            "detail_json, search_filter_json";
+
+    private static final String SQL_MV_DTO_QUERY = "SELECT " + SQL_MV_BASE_COLUMNS + " " +
             "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' ";
 
+
+    private static final String SQL_MV_DTO_QUERY_WITH_COUNT = "SELECT " + SQL_MV_BASE_COLUMNS + ", " +
+            "COUNT(*) OVER() AS total_count " +
+            "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' ";
+
+
     // 위치 검색용 기본 쿼리 (거리 계산 포함)
-    private final String SqlMvLocationFullQuery;
+    private final String SQL_MV_LOCATION_QUERY;
+    private final String SQL_MV_LOCATION_QUERY_WITH_COUNT;
 
     public MvPoiRepositoryImpl(JPAQueryFactory queryFactory, DistanceCalculationConfig distanceConfig) {
         this.queryFactory = queryFactory;
@@ -57,22 +67,18 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
         this.objectMapper = new ObjectMapper();
         
         // 기본 위치 검색 쿼리 생성
-        this.SqlMvLocationFullQuery = "SELECT " +
-                "poi_id, language_code, title, summary, basic_info, " +
-                "address_code, address_road, address_detail, latitude, longitude, " +
-                "detail_json, search_filter_json, " +
+        this.SQL_MV_LOCATION_QUERY = "SELECT " + SQL_MV_BASE_COLUMNS + ", " +
                 distanceConfig.getDistanceCalculationSql() + " AS distance " +
                 "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' ";
-    }
 
-    //For Paging Query (total_count)
-    private String addCountToQuery(String baseQuery) {
-        return baseQuery.replace("SELECT ", "SELECT COUNT(*) OVER() AS total_count, ");
+        this.SQL_MV_LOCATION_QUERY_WITH_COUNT = "SELECT " + SQL_MV_BASE_COLUMNS + ", " +
+                        distanceConfig.getDistanceCalculationSql() + " AS distance, " +
+                        "COUNT(*) OVER() AS total_count " +
+                        "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' ";
     }
-
 
     public Optional<MvPoi> findByIdWithPublished(Long poiId) {
-        StringBuilder sql = new StringBuilder(SqlMvDtoQuery).append(" AND poi_id = ? ");
+        StringBuilder sql = new StringBuilder(SQL_MV_DTO_QUERY).append(" AND poi_id = ? ");
 
         log.debug("[MvPoi] ID별 조회 쿼리: {}", sql);
 
@@ -96,7 +102,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
 
     public List<MvPoi> findAllPublished() {
-        StringBuilder sql = new StringBuilder(SqlMvDtoQuery).append(SqlMvOrderBy);
+        StringBuilder sql = new StringBuilder(SQL_MV_DTO_QUERY).append(SQL_MV_ORDER_BY);
         log.debug("[MvPoi] 전체 조회 쿼리: {}", sql);
 
         List<MvPoi> entityList = new ArrayList<>();
@@ -116,7 +122,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     }
 
     public PoiPageResult findAllWithPagingCount(int offset, int size) {
-        StringBuilder sql = new StringBuilder(SqlMvDtoQuery).append(SqlMvOrderBy);
+        StringBuilder sql = new StringBuilder(SQL_MV_DTO_QUERY).append(SQL_MV_ORDER_BY);
         sql = RepositoryUtils.addQueryOffset(sql, offset, size);
         log.debug("[MvPoi] 전체 조회 쿼리(with count): {}", sql);
 
@@ -143,13 +149,13 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
 
     public List<MvPoi> findByCategoryType(String categoryType) {
-        StringBuilder sql = new StringBuilder(SqlMvDtoQuery)
+        StringBuilder sql = new StringBuilder(SQL_MV_DTO_QUERY)
                 .append(" AND (")
-                .append(SqlMvOrderBy)
+                .append(SQL_MV_ORDER_BY)
                 .append(" ? '")
                 .append(RepositoryUtils.escapeSql(categoryType))
                 .append("')")
-                .append(SqlMvOrderBy);
+                .append(SQL_MV_ORDER_BY);
 
         log.debug("[MvPoi] 카테고리별 조회 쿼리: {}", sql);
 
@@ -173,13 +179,13 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
 
     public PoiPageResult findByCategoryTypeWithPagingCount(String categoryType, int offset, int size) {
-        StringBuilder sql = new StringBuilder(SqlMvDtoQuery)
+        StringBuilder sql = new StringBuilder(SQL_MV_DTO_QUERY)
                 .append(" AND (")
-                .append(SqlMvOrderBy)
+                .append(SQL_MV_ORDER_BY)
                 .append(" ? '")
                 .append(RepositoryUtils.escapeSql(categoryType))
                 .append("')")
-                .append(SqlMvOrderBy);
+                .append(SQL_MV_ORDER_BY);
         sql = RepositoryUtils.addQueryOffset(sql, offset, size);
 
         log.debug("[MvPoi] 카테고리별(with count) 조회 쿼리: {}", sql);
@@ -209,7 +215,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     public List<MvPoi> findByCategoryAndSubCate(
             String category, String subCate, String name
     ) {
-        StringBuilder sql = getQueryFindByCategorySubCate(addCountToQuery(SqlMvDtoQuery),category, subCate, name);
+        StringBuilder sql = getQueryFindByCategorySubCate(SQL_MV_DTO_QUERY_WITH_COUNT,category, subCate, name);
 
         log.debug("[MvPoi] 카테고리 검색 실행 쿼리: {}", sql);
 
@@ -233,7 +239,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     public PoiPageResult findByCategoryAndSubCateWithPagingCount(
             String category, String subCate, String name, int offset, int size
     ) {
-        StringBuilder sql = getQueryFindByCategorySubCate(addCountToQuery(SqlMvDtoQuery),category, subCate, name);
+        StringBuilder sql = getQueryFindByCategorySubCate(SQL_MV_DTO_QUERY_WITH_COUNT,category, subCate, name);
         sql = RepositoryUtils.addQueryOffset(sql, offset, size);
 
         log.debug("[MvPoi] 카테고리 검색(with count) 실행 쿼리: {}", sql);
@@ -266,12 +272,12 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     public List<MvPoiLocation> findByLocationWithDistance(String category, String name,
                                                     BigDecimal latitude, BigDecimal longitude, BigDecimal radius) {
 
-        StringBuilder sql = new StringBuilder(SqlMvLocationFullQuery);
+        StringBuilder sql = new StringBuilder(SQL_MV_LOCATION_QUERY);
         
         // 동적 조건 추가
         if (category != null && !category.isEmpty()) {
             category = RepositoryUtils.escapeSql(category);
-            sql.append("AND (").append(SqlMvCategoryCol).append(" ? '").append(category).append("') ");
+            sql.append("AND (").append(SQL_MV_CATEGORY_COL).append(" ? '").append(category).append("') ");
         }
         if (name != null && !name.isEmpty()) {
             name = RepositoryUtils.escapeSql(name);
@@ -280,7 +286,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
         
         // 거리 필터링 조건 추가
         sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
-        sql.append("ORDER BY distance");
+        sql.append(SQL_ORDER_BY_DISTANCE);
 
         log.debug("[MvPoi] 거리 정보 포함 위치 기반 검색 실행 쿼리: {}", sql);
         
@@ -310,12 +316,12 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     public PoiPageResult<MvPoiLocation> findByLocationWithDistanceAndPagingCount(String category, String name,
                                                                            BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size) {
 
-        StringBuilder sql = new StringBuilder(SqlMvLocationFullQuery);
+        StringBuilder sql = new StringBuilder(SQL_MV_LOCATION_QUERY_WITH_COUNT);
         
         // 동적 조건 추가
         if (category != null && !category.isEmpty()) {
             category = RepositoryUtils.escapeSql(category);
-            sql.append("AND (").append(SqlMvCategoryCol).append(" ? '").append(category).append("') ");
+            sql.append("AND (").append(SQL_MV_CATEGORY_COL).append(" ? '").append(category).append("') ");
         }
         if (name != null && !name.isEmpty()) {
             name = RepositoryUtils.escapeSql(name);
@@ -324,10 +330,8 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
         
         // 거리 필터링 조건 추가
         sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
-        sql.append("ORDER BY distance");
-        
-        // 페이징 추가
-        sql = new StringBuilder(addCountToQuery(sql.toString()) + " OFFSET " + offset + " LIMIT " + size);
+        sql.append(SQL_ORDER_BY_DISTANCE);
+        sql = RepositoryUtils.addQueryOffset(sql, offset, size);
 
         log.debug("[MvPoi] 거리 정보 포함 위치 기반 검색(with count) 실행 쿼리: {}", sql);
 
@@ -368,7 +372,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
         if (hasCategory) {
             category = RepositoryUtils.escapeSql(category);
-            sql.append("AND ("+ SqlMvCategoryCol +" ? '").append(category).append("') ");
+            sql.append("AND ("+ SQL_MV_CATEGORY_COL +" ? '").append(category).append("') ");
             if (hasSubCate) {
                 String subItem = "";
                 if (subCate.contains(",")) {
@@ -377,12 +381,12 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
                     for (int i = 0; i < subCates.length; i++) {
                         if (i > 0) sql.append(" OR ");
                         subItem = RepositoryUtils.escapeSql(subCates[i].trim());
-                        sql.append(SqlMvCategoryCol + "->>'").append(category).append("' = '").append(subItem).append("' ");
+                        sql.append(SQL_MV_CATEGORY_COL + "->>'").append(category).append("' = '").append(subItem).append("' ");
                     }
                     sql.append(") ");
                 } else {
                     subItem = RepositoryUtils.escapeSql(subCate.trim());
-                    sql.append("AND "+ SqlMvCategoryCol +"->>'").append(category).append("' LIKE '%").append(subItem).append("%' ");
+                    sql.append("AND "+ SQL_MV_CATEGORY_COL +"->>'").append(category).append("' LIKE '%").append(subItem).append("%' ");
                 }
             }
         }
@@ -390,7 +394,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
             name =  RepositoryUtils.escapeSql(name);
             sql.append("AND title LIKE '%").append(name).append("%' ");
         }
-        sql.append(SqlMvOrderBy);
+        sql.append(SQL_MV_ORDER_BY);
 
         return sql;
     }
