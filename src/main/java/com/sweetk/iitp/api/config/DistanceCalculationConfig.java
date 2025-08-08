@@ -24,7 +24,7 @@ public class DistanceCalculationConfig {
     /**
      * PostGIS 확장 사용 여부
      */
-    private boolean usePostgis = true;
+    //private boolean usePostgis = true;
     
     public enum DistanceMethod {
         POSTGIS_SPHERE,

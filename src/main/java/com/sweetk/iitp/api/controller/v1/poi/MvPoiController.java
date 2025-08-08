@@ -6,6 +6,7 @@ import com.sweetk.iitp.api.dto.common.ApiResDto;
 import com.sweetk.iitp.api.dto.common.PageReq;
 import com.sweetk.iitp.api.dto.common.PageRes;
 import com.sweetk.iitp.api.dto.poi.MvPoi;
+import com.sweetk.iitp.api.dto.poi.MvPoiLocation;
 import com.sweetk.iitp.api.dto.poi.MvPoiSearchCatReq;
 import com.sweetk.iitp.api.dto.poi.MvPoiSearchLocReq;
 import com.sweetk.iitp.api.exception.BusinessException;
@@ -157,13 +158,13 @@ public class MvPoiController {
             summary = "이동형 POI 위치기반 검색 조회(all)",
             description = "이동형 POI 위치기반 검색 조회(all):"
     )
-    public ResponseEntity<ApiResDto<List<MvPoi>>> searchByLocation(
+    public ResponseEntity<ApiResDto<List<MvPoiLocation>>> searchByLocation(
             @Valid @ParameterObject MvPoiSearchLocReq searchKeys,
             HttpServletRequest request ) {
 
         log.debug("[{}] : {}", request.getRequestURI(), searchKeys.toString() );
 
-        List<MvPoi> searchRet = mvPoiReadService.getPoiByLocation( searchKeys );
+        List<MvPoiLocation> searchRet = mvPoiReadService.getPoiByLocation( searchKeys );
 
         return ResponseEntity.ok(ApiResDto.success(searchRet));
     }
@@ -174,14 +175,14 @@ public class MvPoiController {
             summary = "이동형 POI 위치기반 검색 조회(paging)",
             description = "이동형 POI 위치기반 검색 조회 (paging)"
     )
-    public ResponseEntity<ApiResDto<PageRes<MvPoi>>> searchByLocationPaging(
+    public ResponseEntity<ApiResDto<PageRes<MvPoiLocation>>> searchByLocationPaging(
             @Valid @ParameterObject PageReq page,
             @Valid @ParameterObject MvPoiSearchLocReq searchKeys,
             HttpServletRequest request ) {
 
         log.debug("[{}] : {}", request.getRequestURI(), searchKeys.toString() );
 
-        PageRes<MvPoi> searchRet = mvPoiReadService.getPoiByLocationPaging( searchKeys, page );
+        PageRes<MvPoiLocation> searchRet = mvPoiReadService.getPoiByLocationPaging( searchKeys, page );
 
         return ResponseEntity.ok(ApiResDto.success(searchRet));
     }

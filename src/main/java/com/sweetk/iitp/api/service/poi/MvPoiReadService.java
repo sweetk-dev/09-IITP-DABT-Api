@@ -4,6 +4,7 @@ import com.sweetk.iitp.api.dto.common.PageReq;
 import com.sweetk.iitp.api.dto.common.PageRes;
 import com.sweetk.iitp.api.dto.internal.PoiPageResult;
 import com.sweetk.iitp.api.dto.poi.MvPoi;
+import com.sweetk.iitp.api.dto.poi.MvPoiLocation;
 import com.sweetk.iitp.api.dto.poi.MvPoiSearchCatReq;
 import com.sweetk.iitp.api.dto.poi.MvPoiSearchLocReq;
 import com.sweetk.iitp.api.repository.poi.MvPoiRepository;
@@ -78,38 +79,8 @@ public class MvPoiReadService extends PoiService {
     }
 
 
-    public List<MvPoi> getPoiByLocation(MvPoiSearchLocReq searchReq) {
-
-        String category = searchReq.getCategory() != null ? searchReq.getCategory().getCode() : null;
-        return mvPoiRepos.findByLocation(
-                category,
-                searchReq.getName(),
-                searchReq.getLatitude(),
-                searchReq.getLongitude(),
-                searchReq.getRadius()
-        );
-    }
-
-
-    public PageRes<MvPoi> getPoiByLocationPaging(MvPoiSearchLocReq searchReq, PageReq pageReq) {
-        DbOffSet dbOffSet = setDbOffset(pageReq);
-
-        String category = searchReq.getCategory() != null ? searchReq.getCategory().getCode() : null;
-
-        PoiPageResult<MvPoi> result = mvPoiRepos.findByLocationWithPagingCount(
-                            category,
-                            searchReq.getName(),
-                            searchReq.getLatitude(),
-                            searchReq.getLongitude(),
-                            searchReq.getRadius(),
-                            dbOffSet.offset(),
-                            dbOffSet.size()
-                        );
-        return new PageRes<>(result.content, pageReq.toPageable(), result.totalCount);
-    }
-
     // 거리 정보를 포함한 위치 기반 검색
-    public List<MvPoiLoc> getPoiByLocationWithDistance(MvPoiSearchLocReq searchReq) {
+    public List<MvPoiLocation> getPoiByLocation(MvPoiSearchLocReq searchReq) {
         String category = searchReq.getCategory() != null ? searchReq.getCategory().getCode() : null;
         return mvPoiRepos.findByLocationWithDistance(
                 category,
@@ -120,12 +91,12 @@ public class MvPoiReadService extends PoiService {
         );
     }
 
-    public PageRes<MvPoiLoc> getPoiByLocationWithDistancePaging(MvPoiSearchLocReq searchReq, PageReq pageReq) {
+    public PageRes<MvPoiLocation> getPoiByLocationPaging(MvPoiSearchLocReq searchReq, PageReq pageReq) {
         DbOffSet dbOffSet = setDbOffset(pageReq);
 
         String category = searchReq.getCategory() != null ? searchReq.getCategory().getCode() : null;
 
-        PoiPageResult<MvPoiLoc> result = mvPoiRepos.findByLocationWithDistanceAndPagingCount(
+        PoiPageResult<MvPoiLocation> result = mvPoiRepos.findByLocationWithDistanceAndPagingCount(
                             category,
                             searchReq.getName(),
                             searchReq.getLatitude(),
