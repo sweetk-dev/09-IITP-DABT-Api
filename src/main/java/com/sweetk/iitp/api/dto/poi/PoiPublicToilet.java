@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PoiPublicToiletInfo {
+public class PoiPublicToilet {
     @Schema(description = "공중 화장실 고유 식별자", example = "1")
     @JsonProperty("toilet_id")
     private Integer toiletId;

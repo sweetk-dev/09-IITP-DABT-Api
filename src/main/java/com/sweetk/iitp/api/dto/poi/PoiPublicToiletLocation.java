@@ -9,27 +9,27 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PoiPublicToiletInfoLocation extends PoiPublicToiletInfo {
+public class PoiPublicToiletLocation extends PoiPublicToilet {
     @Schema(description = "요청한 위치로부터 거리", example = "100")
     @JsonProperty("distance")
     private Integer distance;
 
     // 전체 필드 생성자
-    public PoiPublicToiletInfoLocation(Integer toiletId, String sidoCode, String toiletName,
-                                      String toiletType, String basis, String addrRoad,
-                                      String addrJibun, Integer mToiletCount, Integer mUrinalCount,
-                                      Integer mDisToiletCount, Integer mDisUrinalCount,
-                                      Integer mChildToiletCount, Integer mChildUrinalCount,
-                                      Integer fToiletCount, Integer fDisToiletCount,
-                                      Integer fChildToiletCount, String managingOrg,
-                                      String phoneNumber, String openTime, String openTimeDetail,
-                                      String installDt, Double latitude, Double longitude,
-                                      String ownerType, String wasteProcessType,
-                                      String safetyTargetYn, String emgBellYn,
-                                      String emgBellLocation, String cctvYn,
-                                      String diaperTableYn, String diaperTableLocation,
-                                      String remodeledDt, java.time.LocalDate baseDt,
-                                      Integer distance) {
+    public PoiPublicToiletLocation(Integer toiletId, String sidoCode, String toiletName,
+                                   String toiletType, String basis, String addrRoad,
+                                   String addrJibun, Integer mToiletCount, Integer mUrinalCount,
+                                   Integer mDisToiletCount, Integer mDisUrinalCount,
+                                   Integer mChildToiletCount, Integer mChildUrinalCount,
+                                   Integer fToiletCount, Integer fDisToiletCount,
+                                   Integer fChildToiletCount, String managingOrg,
+                                   String phoneNumber, String openTime, String openTimeDetail,
+                                   String installDt, Double latitude, Double longitude,
+                                   String ownerType, String wasteProcessType,
+                                   String safetyTargetYn, String emgBellYn,
+                                   String emgBellLocation, String cctvYn,
+                                   String diaperTableYn, String diaperTableLocation,
+                                   String remodeledDt, java.time.LocalDate baseDt,
+                                   Integer distance) {
         super(toiletId, sidoCode, toiletName, toiletType, basis, addrRoad, addrJibun,
               mToiletCount, mUrinalCount, mDisToiletCount, mDisUrinalCount,
               mChildToiletCount, mChildUrinalCount, fToiletCount, fDisToiletCount,
@@ -40,8 +40,8 @@ public class PoiPublicToiletInfoLocation extends PoiPublicToiletInfo {
         this.distance = distance;
     }
 
-    // PoiPublicToiletInfo 객체와 distance를 받는 생성자
-    public PoiPublicToiletInfoLocation(PoiPublicToiletInfo toiletInfo, Integer distance) {
+    // PoiPublicToilet 객체와 distance를 받는 생성자
+    public PoiPublicToiletLocation(PoiPublicToilet toiletInfo, Integer distance) {
         super(toiletInfo.getToiletId(), toiletInfo.getSidoCode(), toiletInfo.getToiletName(),
               toiletInfo.getToiletType(), toiletInfo.getBasis(), toiletInfo.getAddrRoad(),
               toiletInfo.getAddrJibun(), toiletInfo.getMToiletCount(), toiletInfo.getMUrinalCount(),
