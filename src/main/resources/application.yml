@@ -1,3 +1,14 @@
+# IITP API 설정 파일
+# 공통 설정을 포함합니다.
+
+# 거리 계산 방식 설정
+app:
+  distance-calculation:
+    # 거리 계산 방식: POSTGIS_SPHERE (ST_Distance_Sphere), POSTGIS_PLANAR (ST_Distance), POSTGRESQL_EARTH (earth_distance)
+    method: POSTGIS_SPHERE
+    # PostGIS 확장 사용 여부
+    #use-postgis: true
+
 # IITP API 환경 설정 파일
 # 공통 설정만 포함
 spring:
