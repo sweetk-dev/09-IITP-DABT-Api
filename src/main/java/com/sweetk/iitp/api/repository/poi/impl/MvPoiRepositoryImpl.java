@@ -2,13 +2,13 @@ package com.sweetk.iitp.api.repository.poi.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sweetk.iitp.api.config.DistanceCalculationConfig;
 import com.sweetk.iitp.api.dto.internal.PoiPageResult;
 import com.sweetk.iitp.api.dto.poi.MvPoi;
 import com.sweetk.iitp.api.dto.poi.MvPoiLocation;
 import com.sweetk.iitp.api.util.RepositoryUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,26 +16,28 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor
 public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
     private static final Logger log = LoggerFactory.getLogger(MvPoiRepositoryImpl.class);
 
     private final JPAQueryFactory queryFactory;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
+    private final DistanceCalculationConfig distanceConfig;
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired
     private DataSource dataSource;
-
 
     private static final String SqlMvCategoryCol = "search_filter_json->'search_filter'";
     private static final String SqlMvOrderBy = "ORDER BY title";
@@ -46,13 +48,22 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
             "title, summary, basic_info, address_code, address_road, address_detail, latitude, longitude, detail_json, search_filter_json " +
             "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' ";
 
-    private static final String SqlMvDtoQueryWithDistance = "SELECT " +
-            "poi_id, " +
-            "language_code, " +
-            "title, summary, basic_info, address_code, address_road, address_detail, latitude, longitude, detail_json, search_filter_json, " +
-            "ST_Distance(geom, ST_GeomFromText('POINT(' || ? || ' ' || ? || ')')) AS distance " +
-            "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' ";
+    // 위치 검색용 기본 쿼리 (거리 계산 포함)
+    private final String SqlMvLocationFullQuery;
 
+    public MvPoiRepositoryImpl(JPAQueryFactory queryFactory, DistanceCalculationConfig distanceConfig) {
+        this.queryFactory = queryFactory;
+        this.distanceConfig = distanceConfig;
+        this.objectMapper = new ObjectMapper();
+        
+        // 기본 위치 검색 쿼리 생성
+        this.SqlMvLocationFullQuery = "SELECT " +
+                "poi_id, language_code, title, summary, basic_info, " +
+                "address_code, address_road, address_detail, latitude, longitude, " +
+                "detail_json, search_filter_json, " +
+                distanceConfig.getDistanceCalculationSql() + " AS distance " +
+                "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' ";
+    }
 
     //For Paging Query (total_count)
     private String addCountToQuery(String baseQuery) {
@@ -249,73 +260,27 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
 
 
-    public List<MvPoi> findByLocation( String category, String name,
-                                                    BigDecimal latitude, BigDecimal longitude, BigDecimal radius) {
 
-        StringBuilder sql = setFindByLocationCategorySql(SqlMvDtoQuery, category, name, latitude, longitude, radius);
-
-        log.debug("[MvPoi] 위치 기반 검색 실행 쿼리: {}", sql);
-        
-        List<MvPoi> entityList = new ArrayList<>();
-        long totalCount = 0;
-
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    if (totalCount == 0) {
-                        totalCount = rs.getLong("total_count");
-                    }
-                    MvPoi poi = setMvPoi(rs);
-                    entityList.add(poi);
-                }
-            }
-        } catch (SQLException e) {
-            log.error("[MvPoi]  위치 기반 쿼리 실행 중 오류 발생", e);
-            throw new RuntimeException("Database query failed", e);
-        }
-
-        return entityList;
-    }
-
-
-
-
-    public PoiPageResult findByLocationWithPagingCount(String category, String name,
-                                                       BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size) {
-
-        StringBuilder sql = setFindByLocationCategorySql(addCountToQuery(SqlMvDtoQuery), category, name, latitude, longitude, radius)
-                .append(" OFFSET ").append(offset).append(" LIMIT ").append(size);
-
-        log.debug("[MvPoi] 위치 기반 검색(with count) 실행 쿼리: {}", sql);
-
-        List<MvPoi> entityList = new ArrayList<>();
-        long totalCount = 0;
-
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    if (totalCount == 0) {
-                        totalCount = rs.getLong("total_count");
-                    }
-                    MvPoi poi = setMvPoi(rs);
-                    entityList.add(poi);
-                }
-            }
-        } catch (SQLException e) {
-            log.error("[MvPoi] 위치 기반(with count) 쿼리 실행 중 오류 발생", e);
-            throw new RuntimeException("Database query failed", e);
-        }
-
-        return new PoiPageResult(entityList, totalCount);
-    }
 
     // 거리 정보를 포함한 위치 기반 검색
     public List<MvPoiLocation> findByLocationWithDistance(String category, String name,
                                                     BigDecimal latitude, BigDecimal longitude, BigDecimal radius) {
 
-        StringBuilder sql = setFindByLocationCategorySqlWithDistance(SqlMvDtoQueryWithDistance, category, name, latitude, longitude, radius);
+        StringBuilder sql = new StringBuilder(SqlMvLocationFullQuery);
+        
+        // 동적 조건 추가
+        if (category != null && !category.isEmpty()) {
+            category = RepositoryUtils.escapeSql(category);
+            sql.append("AND (").append(SqlMvCategoryCol).append(" ? '").append(category).append("') ");
+        }
+        if (name != null && !name.isEmpty()) {
+            name = RepositoryUtils.escapeSql(name);
+            sql.append("AND title LIKE '%").append(name).append("%' ");
+        }
+        
+        // 거리 필터링 조건 추가
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
+        sql.append("ORDER BY distance");
 
         log.debug("[MvPoi] 거리 정보 포함 위치 기반 검색 실행 쿼리: {}", sql);
         
@@ -324,7 +289,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             
-            // 거리 계산을 위한 파라미터 설정
+            // 거리 계산을 위한 파라미터 설정 (longitude, latitude)
             ps.setBigDecimal(1, longitude);
             ps.setBigDecimal(2, latitude);
             
@@ -345,8 +310,24 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     public PoiPageResult<MvPoiLocation> findByLocationWithDistanceAndPagingCount(String category, String name,
                                                                            BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size) {
 
-        StringBuilder sql = setFindByLocationCategorySqlWithDistance(addCountToQuery(SqlMvDtoQueryWithDistance), category, name, latitude, longitude, radius)
-                .append(" OFFSET ").append(offset).append(" LIMIT ").append(size);
+        StringBuilder sql = new StringBuilder(SqlMvLocationFullQuery);
+        
+        // 동적 조건 추가
+        if (category != null && !category.isEmpty()) {
+            category = RepositoryUtils.escapeSql(category);
+            sql.append("AND (").append(SqlMvCategoryCol).append(" ? '").append(category).append("') ");
+        }
+        if (name != null && !name.isEmpty()) {
+            name = RepositoryUtils.escapeSql(name);
+            sql.append("AND title LIKE '%").append(name).append("%' ");
+        }
+        
+        // 거리 필터링 조건 추가
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
+        sql.append("ORDER BY distance");
+        
+        // 페이징 추가
+        sql = new StringBuilder(addCountToQuery(sql.toString()) + " OFFSET " + offset + " LIMIT " + size);
 
         log.debug("[MvPoi] 거리 정보 포함 위치 기반 검색(with count) 실행 쿼리: {}", sql);
 
@@ -356,7 +337,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             
-            // 거리 계산을 위한 파라미터 설정
+            // 거리 계산을 위한 파라미터 설정 (longitude, latitude)
             ps.setBigDecimal(1, longitude);
             ps.setBigDecimal(2, latitude);
             
@@ -377,53 +358,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
         return new PoiPageResult<>(entityList, totalCount);
     }
 
-    private StringBuilder setFindByLocationCategorySql(String baseQuery, String category, String name, BigDecimal latitude, BigDecimal longitude, BigDecimal radius) {
-        StringBuilder sql = new StringBuilder(baseQuery);
 
-        boolean hasCategory = category != null && !category.isEmpty();
-        boolean hasName = name != null && !name.isEmpty();
-
-        if (hasCategory) {
-            category = RepositoryUtils.escapeSql(category);
-            sql.append("AND ("+ SqlMvCategoryCol +" ? '").append(category).append("') ");
-        }
-        if (hasName) {
-            name = RepositoryUtils.escapeSql(name);
-            sql.append("AND title LIKE '%").append(name).append("%' ");
-        }
-
-        sql.append("AND ST_DWithin(geom, ST_GeomFromText('POINT(")
-                .append(longitude).append(" ")
-                .append(latitude).append(")'), ")
-                .append(radius.multiply(new BigDecimal(1000))).append(") ");
-        sql.append(SqlMvOrderBy);
-
-        return sql;
-    }
-
-    private StringBuilder setFindByLocationCategorySqlWithDistance(String baseQuery, String category, String name, BigDecimal latitude, BigDecimal longitude, BigDecimal radius) {
-        StringBuilder sql = new StringBuilder(baseQuery);
-
-        boolean hasCategory = category != null && !category.isEmpty();
-        boolean hasName = name != null && !name.isEmpty();
-
-        if (hasCategory) {
-            category = RepositoryUtils.escapeSql(category);
-            sql.append("AND ("+ SqlMvCategoryCol +" ? '").append(category).append("') ");
-        }
-        if (hasName) {
-            name = RepositoryUtils.escapeSql(name);
-            sql.append("AND title LIKE '%").append(name).append("%' ");
-        }
-
-        sql.append("AND ST_DWithin(geom, ST_GeomFromText('POINT(")
-                .append(longitude).append(" ")
-                .append(latitude).append(")'), ")
-                .append(radius.multiply(new BigDecimal(1000))).append(") ");
-        sql.append("ORDER BY distance"); // 거리순으로 정렬
-
-        return sql;
-    }
 
     private StringBuilder getQueryFindByCategorySubCate(String baseQuery, String category, String subCate, String name) {
         StringBuilder sql = new StringBuilder(baseQuery);
@@ -480,21 +415,22 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
         return poi;
     }
 
-    private MvPoiLocation setMvPoiLocation(ResultSet rs) throws SQLException {
+        private MvPoiLocation setMvPoiLocation(ResultSet rs) throws SQLException {
+        // 직접 Location 객체 생성 (메모리 효율성)
         return new MvPoiLocation(
-                rs.getLong("poi_id"),
-                rs.getString("language_code"),
-                rs.getString("title"),
-                rs.getString("summary"),
-                rs.getString("basic_info"),
-                rs.getString("address_code"),
-                rs.getString("address_road"),
-                rs.getString("address_detail"),
-                rs.getBigDecimal("latitude"),
-                rs.getBigDecimal("longitude"),
-                rs.getString("detail_json"),
-                rs.getString("search_filter_json"),
-                rs.getInt("distance")
+            rs.getLong("poi_id"),
+            rs.getString("language_code"),
+            rs.getString("title"),
+            rs.getString("summary"),
+            rs.getString("basic_info"),
+            rs.getString("address_code"),
+            rs.getString("address_road"),
+            rs.getString("address_detail"),
+            rs.getBigDecimal("latitude"),
+            rs.getBigDecimal("longitude"),
+            rs.getString("detail_json"),
+            rs.getString("search_filter_json"),
+            rs.getInt("distance")
         );
     }
 }

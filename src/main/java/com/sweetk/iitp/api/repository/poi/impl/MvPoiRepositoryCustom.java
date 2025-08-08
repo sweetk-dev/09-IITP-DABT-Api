@@ -31,12 +31,7 @@ public interface MvPoiRepositoryCustom {
         String category, String subCate, String name, int offset, int size
     );
 
-    List<MvPoi> findByLocation(
-            String category, String name,  BigDecimal latitude, BigDecimal longitude, BigDecimal radius
-    );
-    PoiPageResult findByLocationWithPagingCount(
-            String category, String name, BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size
-    );
+
 
     // 거리 정보를 포함한 위치 기반 검색
     List<MvPoiLocation> findByLocationWithDistance(
