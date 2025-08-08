@@ -45,6 +45,7 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
             "emg_bell_yn, emg_bell_location, cctv_yn, diaper_table_yn, diaper_table_location, " +
             "remodeled_dt, base_dt";
 
+    private static final String TOILET_TOT_CNT_COLUMN =  "COUNT(*) OVER() AS total_count ";
     private final String TOILET_LOCATION_QUERY;
     private final String TOILET_LOCATION_QUERY_WITH_COUNT;
 
@@ -57,7 +58,7 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
 
         this.TOILET_LOCATION_QUERY_WITH_COUNT = "SELECT " + TOILET_COMMON_COLUMNS + ", " +
                 distanceConfig.getDistanceCalculationSql() + " AS distance, " +
-                "COUNT(*) OVER() AS total_count " +
+                TOILET_TOT_CNT_COLUMN +
                 "FROM poi_public_toilet_info WHERE del_yn = 'N' ";
 
     }
@@ -66,7 +67,7 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
             "FROM poi_public_toilet_info WHERE del_yn = 'N' ";
 
     private static final String TOILET_BASE_QUERY_WITH_COUNT = "SELECT " + TOILET_COMMON_COLUMNS + ", " +
-            "COUNT(*) OVER() AS total_count " +
+            TOILET_TOT_CNT_COLUMN  +
             "FROM poi_public_toilet_info WHERE del_yn = 'N' ";
 
     private static final String TOILET_ORDER_BY_NAME = "ORDER BY toilet_name";
