@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 
-@Tag(name = "편의시설 - 공중 화장실 정보", description = "편의시설 - 공중 화장실 위치 및 시설 정보 관련 API")
+@Tag(name = "이동형 - 편의시설 - 공중 화장실 POI API V1", description = "이동형 - 편의시설 - 공중 화장실 위치 및 시설 정보 관련 API")
 @Slf4j
 @RestController
 @RequestMapping(ApiConstants.ApiPath.API_V1_POI_PUBLIC_PUBLIC_TOILET)
