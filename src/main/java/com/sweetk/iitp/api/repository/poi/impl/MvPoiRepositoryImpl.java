@@ -45,18 +45,20 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     private static final String SQL_ORDER_BY_DISTANCE = "ORDER BY distance";
 
     private static final String SQL_MV_BASE_COLUMNS = "poi_id, language_code, title, summary, basic_info, " +
-            "address_code, address_road, address_detail, latitude, longitude, " +
-            "detail_json, search_filter_json";
+                                                        "address_code, address_road, address_detail, latitude, longitude, " +
+                                                        "detail_json, search_filter_json";
 
     private static final String SQL_MV_TOT_CNT_COLUMN =  "COUNT(*) OVER() AS total_count ";
 
+    private static final String SQL_MV_BASE_FROM = "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' ";
+
     private static final String SQL_MV_DTO_QUERY = "SELECT " + SQL_MV_BASE_COLUMNS + " " +
-            "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' ";
+                                SQL_MV_BASE_FROM;
 
 
     private static final String SQL_MV_DTO_QUERY_WITH_COUNT = "SELECT " + SQL_MV_BASE_COLUMNS + ", " +
-            SQL_MV_TOT_CNT_COLUMN +
-            "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' ";
+                                SQL_MV_TOT_CNT_COLUMN +
+                                SQL_MV_BASE_FROM;
 
 
     // 위치 검색용 기본 쿼리 (거리 계산 포함)
@@ -70,13 +72,13 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
         
         // 기본 위치 검색 쿼리 생성
         this.SQL_MV_LOCATION_QUERY = "SELECT " + SQL_MV_BASE_COLUMNS + ", " +
-                distanceConfig.getDistanceCalculationSql() + " AS distance " +
-                "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' ";
+                            distanceConfig.getDistanceCalculationSql() + " AS distance " +
+                            SQL_MV_BASE_FROM;
 
         this.SQL_MV_LOCATION_QUERY_WITH_COUNT = "SELECT " + SQL_MV_BASE_COLUMNS + ", " +
                         distanceConfig.getDistanceCalculationSql() + " AS distance, " +
                         SQL_MV_TOT_CNT_COLUMN +
-                        "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' ";
+                        SQL_MV_BASE_FROM;
     }
 
     public Optional<MvPoi> findByIdWithPublished(Long poiId) {

@@ -39,6 +39,20 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
             "latitude, longitude, base_dt";
 
     private static final String ELEVATOR_TOT_CNT_COLUMN =  "COUNT(*) OVER() AS total_count ";
+    private static final String ELEVATOR_BASE_FROM = "FROM poi_subway_elevator WHERE del_yn = 'N' ";
+
+    private static final String ELEVATOR_ORDER_BY = "ORDER BY station_name ";
+    private static final String ELEVATOR_ORDER_BY_DISTANCE = "ORDER BY distance";
+
+
+    // SQL 상수 정의
+    private static final String ELEVATOR_BASE_QUERY = "SELECT " + ELEVATOR_COMMON_COLUMNS + " " +
+                                                        ELEVATOR_BASE_FROM;
+
+    private static final String ELEVATOR_BASE_QUERY_WITH_COUNT = "SELECT " + ELEVATOR_COMMON_COLUMNS + ", " +
+                                                                    ELEVATOR_TOT_CNT_COLUMN +
+                                                                    ELEVATOR_BASE_FROM;
+
 
     // 위치 검색용 기본 쿼리 (거리 계산 포함)
     private final String ELEVATOR_LOCATION_QUERY;
@@ -50,24 +64,16 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
         // 기본 위치 검색 쿼리 생성
         this.ELEVATOR_LOCATION_QUERY = "SELECT " + ELEVATOR_COMMON_COLUMNS + ", " +
                 distanceConfig.getDistanceCalculationSql() + " AS distance " +
-                "FROM poi_subway_elevator WHERE del_yn = 'N' ";
+                ELEVATOR_BASE_FROM;
 
         this.ELEVATOR_LOCATION_QUERY_WITH_COUNT = "SELECT " + ELEVATOR_COMMON_COLUMNS + ", " +
                 distanceConfig.getDistanceCalculationSql() + " AS distance, " +
                 ELEVATOR_TOT_CNT_COLUMN +
-                "FROM poi_subway_elevator WHERE del_yn = 'N' ";
+                ELEVATOR_BASE_FROM;
     }
 
-    // SQL 상수 정의
-    private static final String ELEVATOR_BASE_QUERY = "SELECT " + ELEVATOR_COMMON_COLUMNS + " " +
-            "FROM poi_subway_elevator WHERE del_yn = 'N' ";
 
-    private static final String ELEVATOR_BASE_QUERY_WITH_COUNT = "SELECT " + ELEVATOR_COMMON_COLUMNS + ", " +
-            ELEVATOR_TOT_CNT_COLUMN +
-            "FROM poi_subway_elevator WHERE del_yn = 'N' ";
 
-    private static final String ELEVATOR_ORDER_BY = "ORDER BY station_name ";
-    private static final String ELEVATOR_ORDER_BY_DISTANCE = "ORDER BY distance";
 
 
 
@@ -586,10 +592,4 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
 
         return sql.toString();
     }
-
-    // Helper method to add paging to query
-    private String addPagingToQuery(String baseQuery, int offset, int size) {
-        return baseQuery + " OFFSET " + offset + " LIMIT " + size;
-    }
-
 } 
