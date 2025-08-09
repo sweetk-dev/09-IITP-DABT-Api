@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "편의시설 - 지하철 엘리베이터 POI", description = "편의시설 - 지하철 엘리베이터 POI 관련 API")
+@Tag(name = "이동형 - 편의시설 - 지하철 엘리베이터 POI API V1", description = "이동형 - 편의시설 - 지하철 엘리베이터 POI 관련 API")
 @Slf4j
 @RestController
 @RequestMapping(ApiConstants.ApiPath.API_V1_POI_ELEVATOR + "/subway")

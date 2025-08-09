@@ -33,7 +33,10 @@ tag_groups = [
     {
         "name": "POI API",
         "tags": [
-            "이동형 POI API V1"
+            "이동형 - 관광 POI API V1",
+            "이동형 - 편의시설 - 공중 화장실 POI API V1",
+            "이동형 - 편의시설 - 지하철 엘리베이터 POI API V1",
+            "이동형 - 편의시설 - 무장애 관광지 시설 POI API V1"
         ]
     },
     {

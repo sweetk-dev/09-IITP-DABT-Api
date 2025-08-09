@@ -33,7 +33,7 @@ import java.util.List;
 @RestController
 @RequestMapping(ApiConstants.ApiPath.API_V1_POI)
 @RequiredArgsConstructor
-@Tag(name = "이동형 POI API V1", description = "이동형 API ")
+@Tag(name = "이동형 - 관광 POI API V1", description = "이동형 - 관광 POI API ")
 public class MvPoiController {
 
     private final MvPoiReadService mvPoiReadService;
