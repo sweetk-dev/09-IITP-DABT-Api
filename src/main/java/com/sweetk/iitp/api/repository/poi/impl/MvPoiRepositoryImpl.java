@@ -41,16 +41,16 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
 
     private static final String SQL_MV_CATEGORY_COL = "search_filter_json->'search_filter'";
-    private static final String SQL_MV_ORDER_BY = "ORDER BY title";
-    private static final String SQL_ORDER_BY_DISTANCE = "ORDER BY distance";
+    private static final String SQL_MV_ORDER_BY = " ORDER BY title ";
+    private static final String SQL_ORDER_BY_DISTANCE = " ORDER BY distance ";
 
     private static final String SQL_MV_BASE_COLUMNS = "poi_id, language_code, title, summary, basic_info, " +
                                                         "address_code, address_road, address_detail, latitude, longitude, " +
                                                         "detail_json, search_filter_json";
 
-    private static final String SQL_MV_TOT_CNT_COLUMN =  "COUNT(*) OVER() AS total_count ";
+    private static final String SQL_MV_TOT_CNT_COLUMN =  " COUNT(*) OVER() AS total_count ";
 
-    private static final String SQL_MV_BASE_FROM = "FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' ";
+    private static final String SQL_MV_BASE_FROM = " FROM mv_poi WHERE is_published = 'Y' AND is_deleted = 'N' ";
 
     private static final String SQL_MV_DTO_QUERY = "SELECT " + SQL_MV_BASE_COLUMNS + " " +
                                 SQL_MV_BASE_FROM;

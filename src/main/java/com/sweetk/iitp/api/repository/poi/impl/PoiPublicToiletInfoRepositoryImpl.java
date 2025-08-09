@@ -45,12 +45,12 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
             "emg_bell_yn, emg_bell_location, cctv_yn, diaper_table_yn, diaper_table_location, " +
             "remodeled_dt, base_dt";
 
-    private static final String TOILET_TOT_CNT_COLUMN =  "COUNT(*) OVER() AS total_count ";
-    private static final String TOILET_BASE_FROM = "FROM poi_public_toilet_info WHERE del_yn = 'N' ";
+    private static final String TOILET_TOT_CNT_COLUMN = " COUNT(*) OVER() AS total_count ";
+    private static final String TOILET_BASE_FROM = " FROM poi_public_toilet_info WHERE del_yn = 'N' ";
 
 
-    private static final String TOILET_ORDER_BY_NAME = "ORDER BY toilet_name";
-    private static final String TOILET_ORDER_BY_DISTANCE = "ORDER BY distance";
+    private static final String TOILET_ORDER_BY_NAME = " ORDER BY toilet_name";
+    private static final String TOILET_ORDER_BY_DISTANCE = " ORDER BY distance";
 
     private static final String TOILET_QUERY = "SELECT " + TOILET_COMMON_COLUMNS + " " +
                                                 TOILET_BASE_FROM;

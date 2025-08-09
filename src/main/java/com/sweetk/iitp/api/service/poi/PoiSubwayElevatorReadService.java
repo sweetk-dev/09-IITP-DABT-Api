@@ -69,10 +69,7 @@ public class PoiSubwayElevatorReadService extends PoiService{
     /*******************************
      ** 시도별 지하철 엘리베이터 조회
      *******************************/
-
-
      // 시도별 지하철 엘리베이터 조회 (전체 결과)
-
     public List<PoiSubwayElevator> getSubwayElevatorsBySido(String sidoCode) {
         if(!commonCodeService.isValidCode(CommonCodeConstants.SysCodeGroup.SIDO_CODE, sidoCode)) {
             throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE,"sidoCode(%s) not valid".formatted(sidoCode) );
@@ -83,9 +80,7 @@ public class PoiSubwayElevatorReadService extends PoiService{
         return poiSubwayElevatorRepository.findBySidoCodeToDto(sidoCode);
     }
 
-
      // 시도별 지하철 엘리베이터 조회 (페이징)
-
     public PageRes<PoiSubwayElevator> getSubwayElevatorsBySidoPaging(String sidoCode, PageReq pageReq) {
         if(!commonCodeService.isValidCode(CommonCodeConstants.SysCodeGroup.SIDO_CODE, sidoCode)) {
             throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE,"sidoCode(%s) not valid".formatted(sidoCode) );

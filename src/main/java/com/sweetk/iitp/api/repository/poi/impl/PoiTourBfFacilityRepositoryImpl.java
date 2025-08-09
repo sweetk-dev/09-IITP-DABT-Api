@@ -47,10 +47,10 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
             "latitude, longitude, base_dt";
 
     private static final String FACILITY_TOT_CNT_COLUMN =  "COUNT(*) OVER() AS total_count ";
-    private static final String FACILITY_BASE_FROM = "FROM poi_tour_bf_facility WHERE del_yn = 'N' ";
+    private static final String FACILITY_BASE_FROM = " FROM poi_tour_bf_facility WHERE del_yn = 'N' ";
 
-    private static final String FACILITY_ORDER_BY = "ORDER BY fclt_name ";
-    private static final String FACILITY_ORDER_BY_DISTANCE = "ORDER BY distance";
+    private static final String FACILITY_ORDER_BY = " ORDER BY fclt_name ";
+    private static final String FACILITY_ORDER_BY_DISTANCE = " ORDER BY distance ";
 
     // Common SQL constants
     private static final String FACILITY_QUERY = "SELECT " + FACILITY_COMMON_COLUMNS + " " +
@@ -72,7 +72,7 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
         // 기본 위치 검색 쿼리 생성
         this.FACILITY_LOCATION_QUERY = "SELECT " + FACILITY_COMMON_COLUMNS + ", " +
                 distanceConfig.getDistanceCalculationSql() + " AS distance " +
-                "FROM poi_tour_bf_facility WHERE del_yn = 'N' ";
+                FACILITY_BASE_FROM;
 
         this.FACILITY_LOCATION_QUERY_WITH_COUNT = "SELECT " + FACILITY_COMMON_COLUMNS + ", " +
                 distanceConfig.getDistanceCalculationSql() + " AS distance, " +
