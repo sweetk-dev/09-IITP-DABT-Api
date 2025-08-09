@@ -163,7 +163,7 @@ public class PoiTourBfFacilityReadService extends PoiService{
         log.debug("무장애 관광지 시설 위치 기반 검색 요청 - 위도: {}, 경도: {}, 반경: {}m",
                 searchReq.getLatitude(), searchReq.getLongitude(), searchReq.getRadius());
 
-        return tourBfFacilityRepository.findByLocationWithDistance(
+        return tourBfFacilityRepository.findByLocationWithConditions(
                 searchReq.getLatitude(),
                 searchReq.getLongitude(),
                 searchReq.getRadius(),
@@ -187,7 +187,7 @@ public class PoiTourBfFacilityReadService extends PoiService{
 
         // COUNT(*) OVER() 사용하여 단일 쿼리로 데이터와 총 개수 조회
         PoiPageResult<PoiTourBfFacilityLocation> pageResult =
-            tourBfFacilityRepository.findByLocationWithDistanceAndPagingCount(
+            tourBfFacilityRepository.findByLocationWithConditionsAndPagingCount(
                 searchReq.getLatitude(),
                 searchReq.getLongitude(),
                 searchReq.getRadius(),

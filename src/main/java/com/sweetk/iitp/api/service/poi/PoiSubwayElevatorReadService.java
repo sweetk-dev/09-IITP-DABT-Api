@@ -177,7 +177,7 @@ public class PoiSubwayElevatorReadService extends PoiService{
         log.debug("지하철 엘리베이터 위치 기반 검색 요청 - 위도: {}, 경도: {}, 반경: {}m", 
                 searchReq.getLatitude(), searchReq.getLongitude(), searchReq.getRadius());
         
-        return subwayElevatorRepository.findByLocationWithDistance(
+        return subwayElevatorRepository.findByLocationWithConditions(
                 searchReq.getLatitude(),
                 searchReq.getLongitude(),
                 searchReq.getRadius(),
@@ -195,7 +195,7 @@ public class PoiSubwayElevatorReadService extends PoiService{
         
         // COUNT(*) OVER() 사용하여 단일 쿼리로 데이터와 총 개수 조회
         PoiPageResult<PoiSubwayElevatorLocation> pageResult =
-            subwayElevatorRepository.findByLocationWithDistanceAndPagingCount(
+            subwayElevatorRepository.findByLocationWithConditionsAndPagingCount(
                 searchReq.getLatitude(),
                 searchReq.getLongitude(),
                 searchReq.getRadius(),

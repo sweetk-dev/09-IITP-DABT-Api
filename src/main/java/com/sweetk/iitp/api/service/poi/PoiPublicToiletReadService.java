@@ -151,7 +151,7 @@ public class PoiPublicToiletReadService extends PoiService {
                 searchReq.getLatitude(), searchReq.getLongitude(), searchReq.getRadius());
 
         // 단일 함수로 통합 - 조건이 있든 없든 동일한 함수 사용
-        return toiletRepository.findByLocationWithDistanceAndConditions(
+        return toiletRepository.findByLocationWithConditions(
                 searchReq.getLatitude(),
                 searchReq.getLongitude(),
                 searchReq.getRadius(),
@@ -171,7 +171,7 @@ public class PoiPublicToiletReadService extends PoiService {
 
         // 단일 함수로 통합 - 조건이 있든 없든 동일한 함수 사용
         PoiPageResult<PoiPublicToiletLocation> pageResult =
-            toiletRepository.findByLocationWithDistanceAndPagingCount(
+            toiletRepository.findByLocationWithConditionsAndPagingCount(
                     searchReq.getLatitude(),
                     searchReq.getLongitude(),
                     searchReq.getRadius(),

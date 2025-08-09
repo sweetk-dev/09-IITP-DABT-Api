@@ -310,7 +310,7 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
      **  거리 정보 포함 위치 기반 검색 공중 화장실 조회
      *******************************/
     @Override
-    public List<PoiPublicToiletLocation> findByLocationWithDistanceAndConditions(BigDecimal latitude, BigDecimal longitude,
+    public List<PoiPublicToiletLocation> findByLocationWithConditions(BigDecimal latitude, BigDecimal longitude,
                                                                                  BigDecimal radius, String toiletName,
                                                                                  PoiPublicToiletType toiletType, String open24hYn) {
         StringBuilder sql = new StringBuilder(TOILET_LOCATION_QUERY);
@@ -344,7 +344,7 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
     }
 
     @Override
-    public PoiPageResult<PoiPublicToiletLocation> findByLocationWithDistanceAndPagingCount(BigDecimal latitude, BigDecimal longitude,
+    public PoiPageResult<PoiPublicToiletLocation> findByLocationWithConditionsAndPagingCount(BigDecimal latitude, BigDecimal longitude,
                                                                                            BigDecimal radius, String toiletName,
                                                                                            PoiPublicToiletType toiletType, String open24hYn,
                                                                                            int offset, int size) {

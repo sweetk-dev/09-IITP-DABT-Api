@@ -84,7 +84,7 @@ public class MvPoiReadService extends PoiService {
     // 거리 정보를 포함한 위치 기반 검색
     public List<MvPoiLocation> getPoiByLocation(MvPoiSearchLocReq searchReq) {
         String category = searchReq.getCategory() != null ? searchReq.getCategory().getCode() : null;
-        return mvPoiRepos.findByLocationWithDistance(
+        return mvPoiRepos.findByLocationWithConditions(
                 category,
                 searchReq.getName(),
                 searchReq.getLatitude(),
@@ -98,7 +98,7 @@ public class MvPoiReadService extends PoiService {
 
         String category = searchReq.getCategory() != null ? searchReq.getCategory().getCode() : null;
 
-        PoiPageResult<MvPoiLocation> result = mvPoiRepos.findByLocationWithDistanceAndPagingCount(
+        PoiPageResult<MvPoiLocation> result = mvPoiRepos.findByLocationWithConditionsAndPagingCount(
                             category,
                             searchReq.getName(),
                             searchReq.getLatitude(),
