@@ -78,7 +78,9 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
 
 
 
-
+    /*******************************
+     ** 공중 화장실 ID로 조회
+     *******************************/
 
     @Override
     public Optional<PoiPublicToilet> findByIdToDto(Integer toiletId) {
@@ -312,36 +314,19 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
                                                                                  BigDecimal radius, String toiletName,
                                                                                  PoiPublicToiletType toiletType, String open24hYn) {
         StringBuilder sql = new StringBuilder(TOILET_LOCATION_QUERY);
-        
-        // 추가 검색 조건 처리
-        if (toiletName != null && !toiletName.trim().isEmpty()) {
-            sql.append("AND toilet_name LIKE ? ");
-        }
-        if (toiletType != null) {
-            sql.append("AND toilet_type = ? ");
-        }
-        if ("Y".equals(open24hYn)) {
-            sql.append("AND open_time LIKE '%24시간%' ");
-        }
-        
-        // 거리 필터링 조건 추가
+        sql = buildCategoryConditionsSql(sql, toiletName, null, toiletType, open24hYn);
         sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
-        sql.append("ORDER BY distance");
+        sql.append(TOILET_ORDER_BY_DISTANCE);
 
         log.debug("[PoiPublicToilet] 거리 정보 포함 위치 기반 검색 쿼리 (조건 포함): {}", sql);
 
         List<PoiPublicToiletLocation> entityList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            
-            int paramIndex = 1;
-            
-            if (toiletName != null && !toiletName.trim().isEmpty()) {
-                ps.setString(paramIndex++, "%" + toiletName + "%");
-            }
-            if (toiletType != null) {
-                ps.setString(paramIndex++, toiletType.getName());
-            }
+
+            // 거리 계산을 위한 파라미터 설정 (longitude, latitude)
+            ps.setBigDecimal(1, longitude);
+            ps.setBigDecimal(2, latitude);
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -364,20 +349,7 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
                                                                                            PoiPublicToiletType toiletType, String open24hYn,
                                                                                            int offset, int size) {
         StringBuilder sql = new StringBuilder(TOILET_LOCATION_QUERY_WITH_COUNT);
-        sql.append(TOILET_ORDER_BY_DISTANCE);
-        
-        // 추가 검색 조건 처리
-        if (toiletName != null && !toiletName.trim().isEmpty()) {
-            sql.append("AND toilet_name LIKE ? ");
-        }
-        if (toiletType != null) {
-            sql.append("AND toilet_type = ? ");
-        }
-        if ("Y".equals(open24hYn)) {
-            sql.append("AND open_time LIKE '%24시간%' ");
-        }
-        
-        // 거리 필터링 조건 추가
+        sql = buildCategoryConditionsSql(sql, toiletName, null, toiletType, open24hYn);
         sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
         sql.append(TOILET_ORDER_BY_DISTANCE);
         sql = RepositoryUtils.addQueryOffset(sql, offset, size);
@@ -388,15 +360,10 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
         long totalCount = 0;
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            
-            int paramIndex = 1;
-            
-            if (toiletName != null && !toiletName.trim().isEmpty()) {
-                ps.setString(paramIndex++, "%" + toiletName + "%");
-            }
-            if (toiletType != null) {
-                ps.setString(paramIndex++, toiletType.getName());
-            }
+
+            // 거리 계산을 위한 파라미터 설정 (longitude, latitude)
+            ps.setBigDecimal(1, longitude);
+            ps.setBigDecimal(2, latitude);
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {

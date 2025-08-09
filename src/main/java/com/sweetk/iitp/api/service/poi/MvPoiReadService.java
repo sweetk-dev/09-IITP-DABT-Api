@@ -8,6 +8,7 @@ import com.sweetk.iitp.api.dto.poi.MvPoiLocation;
 import com.sweetk.iitp.api.dto.poi.MvPoiSearchCatReq;
 import com.sweetk.iitp.api.dto.poi.MvPoiSearchLocReq;
 import com.sweetk.iitp.api.repository.poi.MvPoiRepository;
+import com.sweetk.iitp.api.service.sys.SysCommonCodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class MvPoiReadService extends PoiService {
     private final MvPoiRepository mvPoiRepos;
+    private final SysCommonCodeService commonCodeService;
 
     public Optional<MvPoi> findById(Long poiId) {
         return mvPoiRepos.findByIdWithPublished(poiId);

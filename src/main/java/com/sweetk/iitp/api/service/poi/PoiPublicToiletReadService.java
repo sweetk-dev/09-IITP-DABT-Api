@@ -57,7 +57,7 @@ public class PoiPublicToiletReadService extends PoiService {
     public PageRes<PoiPublicToilet> getAllPublicToilets(PageReq pageReq) {
         log.debug("전체 공중 화장실 조회 (페이징)");
 
-        PoiService.DbOffSet dbOffSet = setDbOffset(pageReq);
+        DbOffSet dbOffSet = setDbOffset(pageReq);
         PoiPageResult<PoiPublicToilet> pageResult =
                 toiletRepository.findAllWithPagingCount(dbOffSet.offset(), dbOffSet.size());
 

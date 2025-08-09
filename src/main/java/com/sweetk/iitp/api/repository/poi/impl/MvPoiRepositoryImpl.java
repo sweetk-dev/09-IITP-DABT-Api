@@ -277,18 +277,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
                                                     BigDecimal latitude, BigDecimal longitude, BigDecimal radius) {
 
         StringBuilder sql = new StringBuilder(SQL_MV_LOCATION_QUERY);
-        
-        // 동적 조건 추가
-        if (category != null && !category.isEmpty()) {
-            category = RepositoryUtils.escapeSql(category);
-            sql.append("AND (").append(SQL_MV_CATEGORY_COL).append(" ? '").append(category).append("') ");
-        }
-        if (name != null && !name.isEmpty()) {
-            name = RepositoryUtils.escapeSql(name);
-            sql.append("AND title LIKE '%").append(name).append("%' ");
-        }
-        
-        // 거리 필터링 조건 추가
+        sql = getQueryFindByLocCategory(sql, category, name);
         sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
         sql.append(SQL_ORDER_BY_DISTANCE);
 
@@ -321,18 +310,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
                                                                            BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size) {
 
         StringBuilder sql = new StringBuilder(SQL_MV_LOCATION_QUERY_WITH_COUNT);
-        
-        // 동적 조건 추가
-        if (category != null && !category.isEmpty()) {
-            category = RepositoryUtils.escapeSql(category);
-            sql.append("AND (").append(SQL_MV_CATEGORY_COL).append(" ? '").append(category).append("') ");
-        }
-        if (name != null && !name.isEmpty()) {
-            name = RepositoryUtils.escapeSql(name);
-            sql.append("AND title LIKE '%").append(name).append("%' ");
-        }
-        
-        // 거리 필터링 조건 추가
+        sql = getQueryFindByLocCategory(sql, category, name);
         sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
         sql.append(SQL_ORDER_BY_DISTANCE);
         sql = RepositoryUtils.addQueryOffset(sql, offset, size);
@@ -402,6 +380,20 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
         return sql;
     }
+
+
+    private StringBuilder getQueryFindByLocCategory(StringBuilder sql, String category, String name) {
+        if (category != null && !category.isEmpty()) {
+            category = RepositoryUtils.escapeSql(category);
+            sql.append("AND (").append(SQL_MV_CATEGORY_COL).append(" ? '").append(category).append("') ");
+        }
+        if (name != null && !name.isEmpty()) {
+            name = RepositoryUtils.escapeSql(name);
+            sql.append("AND title LIKE '%").append(name).append("%' ");
+        }
+        return sql;
+    }
+
 
 
 
