@@ -104,6 +104,7 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
     /*******************************
      ** 전체 지하철 엘리베이터 조회
      *******************************/
+    // 전체 지하철 엘리베이터 조회 (전체 결과)
     @Override
     public List<PoiSubwayElevator> findAllToDto() {
         String sql = ELEVATOR_QUERY + ELEVATOR_ORDER_BY;
@@ -129,6 +130,7 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
         return entityList;
     }
 
+    // 전체 지하철 엘리베이터 조회 (페이징)
     @Override
     public PoiPageResult<PoiSubwayElevator> findAllWithPagingCount(int offset, int size) {
         StringBuilder sql = new StringBuilder(ELEVATOR_QUERY_WITH_COUNT).append(ELEVATOR_ORDER_BY);
@@ -161,18 +163,20 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
 
 
 
-
-
-
+    /*******************************
+     ** 시도별 지하철 엘리베이터 조회
+     *******************************/
+    // 시도 코드로 지하철 엘리베이터 조회 (DTO 반환)
     @Override
-    public List<PoiSubwayElevator> findBySidoCodeToDto(String sidoCode) {
-        String sql = ELEVATOR_QUERY + "AND sido_code = ? " + ELEVATOR_ORDER_BY;
-
+    public List<PoiSubwayElevator> findBySidoCode(String sidoCode) {
+        StringBuilder sql = new StringBuilder(ELEVATOR_QUERY);
+        sql.append("AND sido_code = ? ");
+        sql.append(ELEVATOR_ORDER_BY);
         log.debug("[PoiSubwayElevator] 시도별 조회 쿼리: {}", sql);
 
         List<PoiSubwayElevator> entityList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             ps.setString(1, sidoCode);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -189,11 +193,132 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
         return entityList;
     }
 
+    // 시도 코드로 지하철 엘리베이터 조회 (페이징)
+    @Override
+    public PoiPageResult<PoiSubwayElevator> findBySidoCodeWithPagingCount(String sidoCode, int offset, int size) {
+        StringBuilder sql = new StringBuilder(ELEVATOR_QUERY_WITH_COUNT);
+        sql.append("AND sido_code = ? ");
+        sql.append(ELEVATOR_ORDER_BY);
+        sql = RepositoryUtils.addQueryOffset(sql, offset, size);
+
+        log.debug("[PoiSubwayElevator] 시도 검색 쿼리: {}", sql);
+
+        List<PoiSubwayElevator> entityList = new ArrayList<>();
+        long totalCount = 0;
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            ps.setString(1, sidoCode);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
+                    entityList.add(elevator);
+                    // 첫 번째 행에서 total_count 가져오기
+                    if (totalCount == 0) {
+                        totalCount = rs.getLong("total_count");
+                    }
+                }
+                log.debug("[PoiSubwayElevator] 시도 검색 완료 - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
+            }
+        } catch (SQLException e) {
+            log.error("[PoiSubwayElevator] 시도 검색 쿼리 실행 중 오류 발생", e);
+            throw new RuntimeException("Database query failed", e);
+        }
+
+        return new PoiPageResult<>(entityList, totalCount);
+    }
+
+
+
+
+    /*******************************
+     ** 시군구별 지하철 엘리베이터 조회
+     *******************************/
+    // 시군구 조건으로 지하철 엘리베이터 검색 (전체 결과)
+    @Override
+    public List<PoiSubwayElevator> findBySigungu(String sidoCode, String sigunguCode) {
+
+        StringBuilder sql = new StringBuilder(ELEVATOR_QUERY);
+        sql.append("AND sido_code = ? ");
+        sql.append("AND sigungu_code = ? ");
+        sql.append(ELEVATOR_ORDER_BY);
+
+        log.debug("[PoiSubwayElevator] 시군구별 조회 쿼리: {}", sql);
+
+        List<PoiSubwayElevator> entityList = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            ps.setString(1, sidoCode);
+            ps.setString(2, sigunguCode);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
+                    entityList.add(elevator);
+                }
+            }
+            log.debug("[PoiSubwayElevator] 시군구별 조회 완료 - 결과 개수: {}", entityList.size());
+        } catch (SQLException e) {
+            log.error("[PoiSubwayElevator] 시군구별 조회 쿼리 실행 중 오류 발생", e);
+            throw new RuntimeException("Database query failed", e);
+        }
+
+        return entityList;
+    }
+
+    // 시군구 조건으로 지하철 엘리베이터 검색 (페이징)
+    @Override
+    public PoiPageResult<PoiSubwayElevator> findBySigunguWithPagingCount(String sidoCode, String sigunguCode,
+                                                                                   int offset, int size) {
+        StringBuilder sql = new StringBuilder(ELEVATOR_QUERY_WITH_COUNT);
+        sql.append("AND sido_code = ? ");
+        sql.append("AND sigungu_code = ? ");
+        sql.append(ELEVATOR_ORDER_BY);
+        sql = RepositoryUtils.addQueryOffset(sql, offset, size);
+
+        log.debug("[PoiSubwayElevator] 시군구별 조회 쿼리 (페이징): {}", sql);
+
+        List<PoiSubwayElevator> entityList = new ArrayList<>();
+        long totalCount = 0;
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            ps.setString(1, sidoCode);
+            ps.setString(2, sigunguCode);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
+                    entityList.add(elevator);
+                    // 첫 번째 행에서 total_count 가져오기
+                    if (totalCount == 0) {
+                        totalCount = rs.getLong("total_count");
+                    }
+                }
+            }
+            log.debug("[PoiSubwayElevator] 시군구별 조회 완료 (페이징) - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
+        } catch (SQLException e) {
+            log.error("[PoiSubwayElevator] 시군구별 조회 쿼리 실행 중 오류 발생 (페이징)", e);
+            throw new RuntimeException("Database query failed", e);
+        }
+
+        return new PoiPageResult<>(entityList, totalCount);
+    }
+
+
+
+
+    /*******************************
+     ** 카테고리 기반 지하철 엘리베이터 조회
+     *******************************/
+
     @Override
     public List<PoiSubwayElevator> findByCategoryConditions(String stationName, String sidoCode, 
                                                           Integer nodeTypeCode) {
         StringBuilder sql = new StringBuilder(ELEVATOR_QUERY);
-        sql.append(buildCategoryConditionsSql(stationName, sidoCode, nodeTypeCode));
+        sql = buildCategoryConditionsSql(sql, stationName, sidoCode, nodeTypeCode);
         sql.append(ELEVATOR_ORDER_BY);
 
         log.debug("[PoiSubwayElevator] 카테고리 조건 검색 쿼리: {}", sql);
@@ -201,17 +326,6 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
         List<PoiSubwayElevator> entityList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-
-            int paramIndex = 1;
-            if (sidoCode != null && !sidoCode.trim().isEmpty()) {
-                ps.setString(paramIndex++, sidoCode);
-            }
-            if (nodeTypeCode != null) {
-                ps.setInt(paramIndex++, nodeTypeCode);
-            }
-            if (stationName != null && !stationName.trim().isEmpty()) {
-                ps.setString(paramIndex++, "%" + stationName + "%");
-            }
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -232,9 +346,9 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
     public PoiPageResult<PoiSubwayElevator> findByCategoryConditionsWithPagingCount(
             String stationName, String sidoCode, Integer nodeTypeCode, int offset, int size) {
         StringBuilder sql = new StringBuilder(ELEVATOR_QUERY_WITH_COUNT);
-        sql.append(buildCategoryConditionsSql(stationName, sidoCode, nodeTypeCode));
+        sql = buildCategoryConditionsSql(sql, stationName, sidoCode, nodeTypeCode);
         sql.append(ELEVATOR_ORDER_BY);
-        sql = new StringBuilder(addPagingToQuery(sql.toString(), offset, size));
+        sql = RepositoryUtils.addQueryOffset(sql, offset, size);
 
         log.debug("[PoiSubwayElevator] 카테고리 조건 검색 쿼리 (페이징): {}", sql);
 
@@ -242,17 +356,6 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
         long totalCount = 0;
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-
-            int paramIndex = 1;
-            if (sidoCode != null && !sidoCode.trim().isEmpty()) {
-                ps.setString(paramIndex++, sidoCode);
-            }
-            if (nodeTypeCode != null) {
-                ps.setInt(paramIndex++, nodeTypeCode);
-            }
-            if (stationName != null && !stationName.trim().isEmpty()) {
-                ps.setString(paramIndex++, "%" + stationName + "%");
-            }
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -273,185 +376,19 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
         return new PoiPageResult<>(entityList, totalCount);
     }
 
-    @Override
-    public List<PoiSubwayElevator> findBySigunguConditions(String sidoCode, String sigunguCode) {
-        String sql = ELEVATOR_QUERY + "AND sido_code = ? AND sigungu_code = ? " + ELEVATOR_ORDER_BY;
-
-        log.debug("[PoiSubwayElevator] 시군구별 조회 쿼리: {}", sql);
-
-        List<PoiSubwayElevator> entityList = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, sidoCode);
-            ps.setString(2, sigunguCode);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
-                    entityList.add(elevator);
-                }
-            }
-            log.debug("[PoiSubwayElevator] 시군구별 조회 완료 - 결과 개수: {}", entityList.size());
-        } catch (SQLException e) {
-            log.error("[PoiSubwayElevator] 시군구별 조회 쿼리 실행 중 오류 발생", e);
-            throw new RuntimeException("Database query failed", e);
-        }
-        
-        return entityList;
-    }
-
-    @Override
-    public PoiPageResult<PoiSubwayElevator> findBySigunguConditionsWithPagingCount(String sidoCode, String sigunguCode,
-                                                                                  int offset, int size) {
-        String sql = ELEVATOR_QUERY_WITH_COUNT + "AND sido_code = ? AND sigungu_code = ? " +
-                    ELEVATOR_ORDER_BY + " OFFSET " + offset + " LIMIT " + size;
-
-        log.debug("[PoiSubwayElevator] 시군구별 조회 쿼리 (페이징): {}", sql);
-
-        List<PoiSubwayElevator> entityList = new ArrayList<>();
-        long totalCount = 0;
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, sidoCode);
-            ps.setString(2, sigunguCode);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
-                    entityList.add(elevator);
-                    // 첫 번째 행에서 total_count 가져오기
-                    if (totalCount == 0) {
-                        totalCount = rs.getLong("total_count");
-                    }
-                }
-            }
-            log.debug("[PoiSubwayElevator] 시군구별 조회 완료 (페이징) - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
-        } catch (SQLException e) {
-            log.error("[PoiSubwayElevator] 시군구별 조회 쿼리 실행 중 오류 발생 (페이징)", e);
-            throw new RuntimeException("Database query failed", e);
-        }
-        
-        return new PoiPageResult<>(entityList, totalCount);
-    }
-
-    @Override
-    public List<PoiSubwayElevator> findByLocation(BigDecimal latitude, BigDecimal longitude, 
-                                                 BigDecimal radius) {
-        String sql = ELEVATOR_QUERY +
-                    "AND ST_DWithin(ST_SetSRID(ST_MakePoint(longitude, latitude), 4326), " +
-                    "ST_SetSRID(ST_MakePoint(?, ?), 4326), ?) " +
-                    ELEVATOR_ORDER_BY;
-
-        log.debug("[PoiSubwayElevator] 위치 검색 쿼리: {}", sql);
-
-        List<PoiSubwayElevator> entityList = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setBigDecimal(1, longitude);
-            ps.setBigDecimal(2, latitude);
-            ps.setBigDecimal(3, radius);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
-                    entityList.add(elevator);
-                }
-                log.debug("[PoiSubwayElevator] 위치 검색 완료 - 결과 개수: {}", entityList.size());
-            }
-        } catch (SQLException e) {
-            log.error("[PoiSubwayElevator] 위치 검색 쿼리 실행 중 오류 발생", e);
-            throw new RuntimeException("Database query failed", e);
-        }
-        
-        return entityList;
-    }
-
-    @Override
-    public PoiPageResult<PoiSubwayElevator> findByLocationWithPagingCount(BigDecimal latitude, BigDecimal longitude,
-                                                                         BigDecimal radius, int offset, int size) {
-        String sql = ELEVATOR_QUERY_WITH_COUNT +
-                    "AND ST_DWithin(ST_SetSRID(ST_MakePoint(longitude, latitude), 4326), " +
-                    "ST_SetSRID(ST_MakePoint(?, ?), 4326), ?) " +
-                    ELEVATOR_ORDER_BY + " OFFSET " + offset + " LIMIT " + size;
-
-        log.debug("[PoiSubwayElevator] 위치 검색 쿼리: {}", sql);
-
-        List<PoiSubwayElevator> entityList = new ArrayList<>();
-        long totalCount = 0;
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setBigDecimal(1, longitude);
-            ps.setBigDecimal(2, latitude);
-            ps.setBigDecimal(3, radius);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
-                    entityList.add(elevator);
-                    // 첫 번째 행에서 total_count 가져오기
-                    if (totalCount == 0) {
-                        totalCount = rs.getLong("total_count");
-                    }
-                }
-                log.debug("[PoiSubwayElevator] 위치 검색 완료 - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
-            }
-        } catch (SQLException e) {
-            log.error("[PoiSubwayElevator] 위치 검색 쿼리 실행 중 오류 발생", e);
-            throw new RuntimeException("Database query failed", e);
-        }
-        
-        return new PoiPageResult<>(entityList, totalCount);
-    }
-
-    @Override
-    public PoiPageResult<PoiSubwayElevator> findBySidoCodeWithPagingCount(String sidoCode, int offset, int size) {
-        String sql = ELEVATOR_QUERY_WITH_COUNT + "AND sido_code = ? " +
-                    ELEVATOR_ORDER_BY + " OFFSET " + offset + " LIMIT " + size;
-
-        log.debug("[PoiSubwayElevator] 시도 검색 쿼리: {}", sql);
-
-        List<PoiSubwayElevator> entityList = new ArrayList<>();
-        long totalCount = 0;
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, sidoCode);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    PoiSubwayElevator elevator = setPoiSubwayElevator(rs);
-                    entityList.add(elevator);
-                    // 첫 번째 행에서 total_count 가져오기
-                    if (totalCount == 0) {
-                        totalCount = rs.getLong("total_count");
-                    }
-                }
-                log.debug("[PoiSubwayElevator] 시도 검색 완료 - 결과 개수: {}, 총 개수: {}", entityList.size(), totalCount);
-            }
-        } catch (SQLException e) {
-            log.error("[PoiSubwayElevator] 시도 검색 쿼리 실행 중 오류 발생", e);
-            throw new RuntimeException("Database query failed", e);
-        }
-        
-        return new PoiPageResult<>(entityList, totalCount);
-    }
 
 
 
     /*******************************
-     **  거리 정보 포함 위치 기반 검색 지하철 엘리베이터 조회
+     ** 위치 기반 기반 지하철 엘리베이터 조회
      *******************************/
-
+    // 거리 정보 포함 위치 기반 지하철 엘리베이터 검색 (전체 결과)
     @Override
     public List<PoiSubwayElevatorLocation> findByLocationWithDistance(BigDecimal latitude, BigDecimal longitude, 
-                                                                     BigDecimal radius) {
+                                                                      BigDecimal radius,
+                                                                      String stationName, Integer nodeTypeCode) {
         StringBuilder sql = new StringBuilder(ELEVATOR_LOCATION_QUERY);
-        
-        // 거리 필터링 조건 추가
+        sql = buildCategoryConditionsSql(sql, stationName, null, nodeTypeCode);
         sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
         sql.append(ELEVATOR_ORDER_BY_DISTANCE);
 
@@ -480,16 +417,16 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
         return entityList;
     }
 
+    // 거리 정보 포함 위치 기반 지하철 엘리베이터 검색 (페이징)
     @Override
     public PoiPageResult<PoiSubwayElevatorLocation> findByLocationWithDistanceAndPagingCount(BigDecimal latitude, BigDecimal longitude,
-                                                                                             BigDecimal radius, int offset, int size) {
+                                                                                             BigDecimal radius,
+                                                                                             String stationName, Integer nodeTypeCode,
+                                                                                             int offset, int size) {
         StringBuilder sql = new StringBuilder(ELEVATOR_LOCATION_QUERY_WITH_COUNT);
-        
-        // 거리 필터링 조건 추가
+        sql = buildCategoryConditionsSql(sql, stationName, null, nodeTypeCode);
         sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
         sql.append(ELEVATOR_ORDER_BY_DISTANCE);
-        
-        // 페이징 추가
         sql = RepositoryUtils.addQueryOffset(sql, offset, size);
 
         log.debug("[PoiSubwayElevator] 거리 정보 포함 위치 기반 검색 쿼리 (페이징): {}", sql);
@@ -575,20 +512,21 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
     /**
      * 카테고리 조건 SQL 생성 (PreparedStatement용)
      */
-    private String buildCategoryConditionsSql(String stationName, String sidoCode, Integer nodeTypeCode) {
-        StringBuilder sql = new StringBuilder();
+    private StringBuilder buildCategoryConditionsSql(StringBuilder sql, String stationName, String sidoCode, Integer nodeTypeCode) {
 
+        if (stationName != null && !stationName.trim().isEmpty()) {
+            sql.append("AND station_name LIKE '%").append(RepositoryUtils.escapeSql(stationName)).append("%' ");
+        }
         // 인덱스 활용을 위한 조건 순서 최적화
         if (sidoCode != null && !sidoCode.trim().isEmpty()) {
-            sql.append("AND sido_code = ? ");
+            sql.append("AND sido_code = '").append(RepositoryUtils.escapeSql(sidoCode)).append("' ");
         }
         if (nodeTypeCode != null) {
-            sql.append("AND node_type_code = ? ");
-        }
-        if (stationName != null && !stationName.trim().isEmpty()) {
-            sql.append("AND station_name LIKE ? ");
+            sql.append("AND node_type_code = ").append(nodeTypeCode).append(" ");
         }
 
-        return sql.toString();
+        return sql;
     }
+
+
 } 
