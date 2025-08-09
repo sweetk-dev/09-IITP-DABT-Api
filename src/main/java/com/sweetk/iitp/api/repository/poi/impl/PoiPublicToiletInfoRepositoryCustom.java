@@ -56,12 +56,12 @@ public interface PoiPublicToiletInfoRepositoryCustom {
      **  거리 정보 포함 위치 기반 검색 공중 화장실 조회
      *******************************/
     //거리 정보 포함 위치 기반 공중 화장실 검색 (추가 조건 포함)
-    List<PoiPublicToiletLocation> findByLocationWithDistanceAndConditions(
+    List<PoiPublicToiletLocation> findByLocationWithConditions(
             java.math.BigDecimal latitude, java.math.BigDecimal longitude,
             java.math.BigDecimal radius, String toiletName, PoiPublicToiletType toiletType, String open24hYn);
 
     //거리 정보 포함 위치 기반 공중 화장실 검색 (페이징)
-    PoiPageResult<PoiPublicToiletLocation> findByLocationWithDistanceAndPagingCount(
+    PoiPageResult<PoiPublicToiletLocation> findByLocationWithConditionsAndPagingCount(
             java.math.BigDecimal latitude, java.math.BigDecimal longitude, 
             java.math.BigDecimal radius, String toiletName, PoiPublicToiletType toiletType, 
             String open24hYn, int offset, int size);

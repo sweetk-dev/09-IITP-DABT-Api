@@ -71,12 +71,12 @@ public interface PoiSubwayElevatorRepositoryCustom {
      ** 위치 기반 기반 지하철 엘리베이터 조회
      *******************************/
      // 거리 정보 포함 위치 기반 지하철 엘리베이터 검색 (전체 결과)
-    List<PoiSubwayElevatorLocation> findByLocationWithDistance(BigDecimal latitude, BigDecimal longitude, 
+    List<PoiSubwayElevatorLocation> findByLocationWithConditions(BigDecimal latitude, BigDecimal longitude,
                                                               BigDecimal radius,
                                                               String stationName, Integer nodeTypeCode);
 
      // 거리 정보 포함 위치 기반 지하철 엘리베이터 검색 (페이징)
-    PoiPageResult<PoiSubwayElevatorLocation> findByLocationWithDistanceAndPagingCount(BigDecimal latitude, BigDecimal longitude,
+    PoiPageResult<PoiSubwayElevatorLocation> findByLocationWithConditionsAndPagingCount(BigDecimal latitude, BigDecimal longitude,
                                                                                        BigDecimal radius,
                                                                                        String stationName, Integer nodeTypeCode,
                                                                                        int offset, int size);

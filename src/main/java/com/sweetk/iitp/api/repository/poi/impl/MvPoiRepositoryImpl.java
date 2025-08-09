@@ -273,7 +273,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
 
     // 거리 정보를 포함한 위치 기반 검색
-    public List<MvPoiLocation> findByLocationWithDistance(String category, String name,
+    public List<MvPoiLocation> findByLocationWithConditions(String category, String name,
                                                     BigDecimal latitude, BigDecimal longitude, BigDecimal radius) {
 
         StringBuilder sql = new StringBuilder(SQL_MV_LOCATION_QUERY);
@@ -306,7 +306,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
         return entityList;
     }
 
-    public PoiPageResult<MvPoiLocation> findByLocationWithDistanceAndPagingCount(String category, String name,
+    public PoiPageResult<MvPoiLocation> findByLocationWithConditionsAndPagingCount(String category, String name,
                                                                            BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size) {
 
         StringBuilder sql = new StringBuilder(SQL_MV_LOCATION_QUERY_WITH_COUNT);

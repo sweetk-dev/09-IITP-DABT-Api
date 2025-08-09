@@ -384,7 +384,7 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
      *******************************/
     // 거리 정보 포함 위치 기반 지하철 엘리베이터 검색 (전체 결과)
     @Override
-    public List<PoiSubwayElevatorLocation> findByLocationWithDistance(BigDecimal latitude, BigDecimal longitude, 
+    public List<PoiSubwayElevatorLocation> findByLocationWithConditions(BigDecimal latitude, BigDecimal longitude,
                                                                       BigDecimal radius,
                                                                       String stationName, Integer nodeTypeCode) {
         StringBuilder sql = new StringBuilder(ELEVATOR_LOCATION_QUERY);
@@ -419,7 +419,7 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
 
     // 거리 정보 포함 위치 기반 지하철 엘리베이터 검색 (페이징)
     @Override
-    public PoiPageResult<PoiSubwayElevatorLocation> findByLocationWithDistanceAndPagingCount(BigDecimal latitude, BigDecimal longitude,
+    public PoiPageResult<PoiSubwayElevatorLocation> findByLocationWithConditionsAndPagingCount(BigDecimal latitude, BigDecimal longitude,
                                                                                              BigDecimal radius,
                                                                                              String stationName, Integer nodeTypeCode,
                                                                                              int offset, int size) {

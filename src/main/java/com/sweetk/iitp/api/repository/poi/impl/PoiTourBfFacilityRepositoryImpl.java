@@ -325,7 +325,7 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
      *******************************/
     // 거리 정보 포함 위치 기반 무장애 관광지 시설 검색 (전체 결과)
     @Override
-    public List<PoiTourBfFacilityLocation> findByLocationWithDistance(BigDecimal latitude, BigDecimal longitude, 
+    public List<PoiTourBfFacilityLocation> findByLocationWithConditions(BigDecimal latitude, BigDecimal longitude,
                                                                      BigDecimal radius,
                                                                       String fcltName, //String sidoCode,
                                                                       String toiletYn, String elevatorYn,
@@ -364,7 +364,7 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
 
     // 거리 정보 포함 위치 기반 무장애 관광지 시설 검색 (페이징)
     @Override
-    public PoiPageResult<PoiTourBfFacilityLocation> findByLocationWithDistanceAndPagingCount(BigDecimal latitude, BigDecimal longitude,
+    public PoiPageResult<PoiTourBfFacilityLocation> findByLocationWithConditionsAndPagingCount(BigDecimal latitude, BigDecimal longitude,
                                                                                              BigDecimal radius,
                                                                                              String fcltName, //String sidoCode,
                                                                                              String toiletYn, String elevatorYn,
