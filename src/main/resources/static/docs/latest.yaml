@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: IITP Open API Documentation
   description: IITP Open API 문서입니다.
-  version: v0.0.2
+  version: v0.0.3
 tags:
 - name: 장애인 고용 관련 데이터 API V1
   description: 장애인 고용 관련 데이터 OpenApi V1
@@ -10,18 +10,24 @@ tags:
   description: 기초-사회망 현황 OpenApi V1
 - name: 기초-편의 시설 제공 현황 API V1
   description: 기초-편의 시설 제공 현황 OpenApi V1
-- name: 이동형 POI API V1
-  description: '이동형 API '
 - name: 기초-건강 관리 현황 API V1
   description: 기초-건강 관리 현황 OpenApi V1
 - name: 기초-주거 자립 현황 API V1
   description: 기초-주거 자립 현황 OpenApi V1
+- name: 이동형 - 관광 POI API V1
+  description: '이동형 - 관광 POI API '
 - name: 기초-진로 교육 현황 API V1
   description: 기초-진로 교육 현황 OpenApi V1
 - name: 기초-보조기기 사용 현황 API V1
   description: 기초-보조기기 사용 현황 OpenApi V1
+- name: 이동형 - 편의시설 - 무장애 관광지 시설 POI API V1
+  description: 이동형 - 편의시설 -무장애(Barrier Free) 관광지 시설 관련 API
 - name: 기초-고용 현황 API V1
   description: 기초-고용 현황 OpenApi V1
+- name: 이동형 - 편의시설 - 공중 화장실 POI API V1
+  description: 이동형 - 편의시설 - 공중 화장실 위치 및 시설 정보 관련 API
+- name: 이동형 - 편의시설 - 지하철 엘리베이터 POI API V1
+  description: 이동형 - 편의시설 - 지하철 엘리베이터 POI 관련 API
 x-tagGroups:
 - name: 기초 데이터
   tags:
@@ -34,7 +40,10 @@ x-tagGroups:
   - 기초-고용 현황 API V1
 - name: POI API
   tags:
-  - 이동형 POI API V1
+  - 이동형 - 관광 POI API V1
+  - 이동형 - 편의시설 - 공중 화장실 POI API V1
+  - 이동형 - 편의시설 - 지하철 엘리베이터 POI API V1
+  - 이동형 - 편의시설 - 무장애 관광지 시설 POI API V1
 - name: 고용 관련 API
   tags:
   - 장애인 고용 관련 데이터 API V1
@@ -44,12 +53,34 @@ servers:
 security:
 - ApiKeyAuth: []
 paths:
+  /api/v1/poi/{poiId}:
+    get:
+      tags:
+      - 이동형 - 관광 POI API V1
+      summary: 이동형 POI 상세 조회
+      description: 이동형 POI ID로 상세 정보 조회
+      operationId: getPoiById
+      parameters:
+      - name: poiId
+        in: path
+        description: POI ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoMvPoi'
   /api/v1/poi/search:
     get:
       tags:
-      - 이동형 POI API V1
-      summary: 이동형 POI 카테고리 검색 조회
-      description: '이동형 POI 카테고리 검색 조회 (paging):'
+      - 이동형 - 관광 POI API V1
+      summary: 이동형 POI 카테고리 검색 조회(all)
+      description: 이동형 POI 카테고리 검색 조회(all)
       operationId: searchByCategory
       parameters:
       - name: page
@@ -62,12 +93,79 @@ paths:
           description: 페이지 번호, 0 이상.
       - name: size
         in: query
-        description: 페이지 사이즈 , 0 이상.
+        description: 페이지 사이즈 , 20 이상.
         required: true
         schema:
-          minimum: 10
+          minimum: 20
           type: string
-          description: 페이지 사이즈 , 0 이상.
+          description: 페이지 사이즈 , 20 이상.
+      - name: category
+        in: query
+        description: 카테고리 타입(옵션)
+        required: false
+        schema:
+          type: string
+          description: 카테고리 타입(옵션)
+          example: restaurant
+          enum:
+          - tourist_spot
+          - restaurant
+          - shopping
+          - accommodation
+        example: restaurant
+      - name: subCate
+        in: query
+        description: catType의 서브 카테고리 타입(옵션), 여러개 카테고리 설정 가능 (','로 구분) 최소 2글자 이상
+        required: false
+        schema:
+          maxLength: 2147483647
+          minLength: 2
+          type: string
+          description: catType의 서브 카테고리 타입(옵션), 여러개 카테고리 설정 가능 (','로 구분) 최소 2글자 이상
+          example: 한식, 카페
+        example: 한식, 카페
+      - name: name
+        in: query
+        description: 검색어 (옵션) (단독 세팅도 가능), 최소 2글자 이상
+        required: false
+        schema:
+          maxLength: 2147483647
+          minLength: 2
+          type: string
+          description: 검색어 (옵션) (단독 세팅도 가능), 최소 2글자 이상
+          example: 서대문형무소역사관
+        example: 서대문형무소역사관
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoListMvPoi'
+  /api/v1/poi/search/paging:
+    get:
+      tags:
+      - 이동형 - 관광 POI API V1
+      summary: 이동형 POI 카테고리 검색 조회 (paging)
+      description: 이동형 POI 카테고리 검색 조회 (paging)
+      operationId: searchByCategoryPaging
+      parameters:
+      - name: page
+        in: query
+        description: 페이지 번호, 0 이상.
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 페이지 번호, 0 이상.
+      - name: size
+        in: query
+        description: 페이지 사이즈 , 20 이상.
+        required: true
+        schema:
+          minimum: 20
+          type: string
+          description: 페이지 사이즈 , 20 이상.
       - name: category
         in: query
         description: 카테고리 타입(옵션)
@@ -114,10 +212,82 @@ paths:
   /api/v1/poi/search/location:
     get:
       tags:
-      - 이동형 POI API V1
-      summary: 이동형 POI 위치기반 검색 조회
-      description: '이동형 POI 위치기반 검색 조회 (paging):'
+      - 이동형 - 관광 POI API V1
+      summary: 이동형 POI 위치기반 검색 조회(all)
+      description: '이동형 POI 위치기반 검색 조회(all):'
       operationId: searchByLocation
+      parameters:
+      - name: category
+        in: query
+        description: 카테고리
+        required: false
+        schema:
+          type: string
+          description: 카테고리
+          example: restaurant
+          enum:
+          - tourist_spot
+          - restaurant
+          - shopping
+          - accommodation
+        example: restaurant
+      - name: name
+        in: query
+        description: 이름, 최소 2글자 이상
+        required: false
+        schema:
+          maxLength: 2147483647
+          minLength: 2
+          type: string
+          description: 이름, 최소 2글자 이상
+          example: 서대문형무소역사관
+        example: 서대문형무소역사관
+      - name: latitude
+        in: query
+        description: 위도
+        required: true
+        schema:
+          maximum: 90
+          minimum: -90
+          type: string
+          description: 위도
+          example: 37.5665
+        example: 37.5665
+      - name: longitude
+        in: query
+        description: 경도
+        required: true
+        schema:
+          maximum: 180
+          minimum: -180
+          type: string
+          description: 경도
+          example: 126.978
+        example: 126.978
+      - name: radius
+        in: query
+        description: 검색 반경(미터)
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 검색 반경(미터)
+          example: 1000
+        example: 1000
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoListMvPoiLocation'
+  /api/v1/poi/search/location/paging:
+    get:
+      tags:
+      - 이동형 - 관광 POI API V1
+      summary: 이동형 POI 위치기반 검색 조회(paging)
+      description: 이동형 POI 위치기반 검색 조회 (paging)
+      operationId: searchByLocationPaging
       parameters:
       - name: page
         in: query
@@ -129,42 +299,67 @@ paths:
           description: 페이지 번호, 0 이상.
       - name: size
         in: query
-        description: 페이지 사이즈 , 0 이상.
+        description: 페이지 사이즈 , 20 이상.
         required: true
         schema:
-          minimum: 10
+          minimum: 20
           type: string
-          description: 페이지 사이즈 , 0 이상.
+          description: 페이지 사이즈 , 20 이상.
+      - name: category
+        in: query
+        description: 카테고리
+        required: false
+        schema:
+          type: string
+          description: 카테고리
+          example: restaurant
+          enum:
+          - tourist_spot
+          - restaurant
+          - shopping
+          - accommodation
+        example: restaurant
+      - name: name
+        in: query
+        description: 이름, 최소 2글자 이상
+        required: false
+        schema:
+          maxLength: 2147483647
+          minLength: 2
+          type: string
+          description: 이름, 최소 2글자 이상
+          example: 서대문형무소역사관
+        example: 서대문형무소역사관
       - name: latitude
         in: query
-        description: 위도 (searchType이 location일 때만 사용)
-        required: false
+        description: 위도
+        required: true
         schema:
           maximum: 90
           minimum: -90
           type: string
-          description: 위도 (searchType이 location일 때만 사용)
+          description: 위도
           example: 37.5665
         example: 37.5665
       - name: longitude
         in: query
-        description: 경도 (searchType이 location일 때만 사용)
-        required: false
+        description: 경도
+        required: true
         schema:
           maximum: 180
           minimum: -180
           type: string
-          description: 경도 (searchType이 location일 때만 사용)
+          description: 경도
           example: 126.978
         example: 126.978
       - name: radius
         in: query
-        description: 검색 반경(미터) (searchType이 location일 때만 사용)
-        required: false
+        description: 검색 반경(미터)
+        required: true
         schema:
           minimum: 0
           type: string
-          description: 검색 반경(미터) (searchType이 location일 때만 사용)
+          description: 검색 반경(미터)
           example: 1000
         example: 1000
       responses:
@@ -173,7 +368,1694 @@ paths:
           content:
             '*/*':
               schema:
+                $ref: '#/components/schemas/ApiResDtoPageResMvPoiLocation'
+  /api/v1/poi/public-toilet/{toiletId}:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 공중 화장실 POI API V1
+      summary: 공중 화장실 상세 조회
+      description: 공중 화장실 ID로 상세 정보 조회.
+      operationId: getPublicToiletById
+      parameters:
+      - name: toiletId
+        in: path
+        description: 공중 화장실 ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoPoiPublicToilet'
+  /api/v1/poi/public-toilet/sido/{sidoCode}:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 공중 화장실 POI API V1
+      summary: 시도별 공중 화장실 조회 (전체 결과)
+      description: 시도 코드로 공중 화장실 목록을 조회합니다. 전체 결과를 반환합니다.
+      operationId: getPublicToiletsBySido
+      parameters:
+      - name: sidoCode
+        in: path
+        description: 시도 코드 (7자리)
+        required: true
+        schema:
+          type: string
+        example: 9110000
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoListPoiPublicToilet'
+  /api/v1/poi/public-toilet/sido/{sidoCode}/paging:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 공중 화장실 POI API V1
+      summary: 시도별 공중 화장실 조회 (페이징)
+      description: 시도 코드로 공중 화장실 목록을 조회합니다. 페이징 처리된 결과를 반환합니다.
+      operationId: getPublicToiletsBySidoPaging
+      parameters:
+      - name: sidoCode
+        in: path
+        description: 시도 코드 (7자리)
+        required: true
+        schema:
+          type: string
+        example: 9110000
+      - name: page
+        in: query
+        description: 페이지 번호, 0 이상.
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 페이지 번호, 0 이상.
+      - name: size
+        in: query
+        description: 페이지 사이즈 , 20 이상.
+        required: true
+        schema:
+          minimum: 20
+          type: string
+          description: 페이지 사이즈 , 20 이상.
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoPageResPoiPublicToilet'
+  /api/v1/poi/public-toilet/search:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 공중 화장실 POI API V1
+      summary: 공중 화장실 카테고리 검색 (전체 결과)
+      description: 이름, 시도코드, 유형, 24시간개방으로 공중 화장실을 검색합니다. 검색 조건이 있어야 합니다. 전체 결과를 반환합니다.
+      operationId: searchByCategory_1
+      parameters:
+      - name: toiletName
+        in: query
+        description: 화장실명 검색 (최소 2글자)
+        required: false
+        schema:
+          maxLength: 2147483647
+          minLength: 2
+          type: string
+          description: 화장실명 검색 (최소 2글자)
+          example: 서울역
+        example: 서울역
+      - name: sidoCode
+        in: query
+        description: 시도 코드 (7자리)
+        required: false
+        schema:
+          pattern: ^\d{7}$
+          type: string
+          description: 시도 코드 (7자리)
+          example: 91100000
+          enum:
+          - '9110000'
+          - '9260000'
+          - '9270000'
+          - '9280000'
+          - '9290000'
+          - '9300000'
+          - '9310000'
+          - '9360000'
+          - '9410000'
+          - '9510000'
+          - '9430000'
+          - '9440000'
+          - '9520000'
+          - '9460000'
+          - '9470000'
+          - '9480000'
+          - '9500000'
+        example: 91100000
+      - name: toiletType
+        in: query
+        description: 화장실 유형 [ PUBLIC:공중화장실, SIMPLE:간이화장실, OPEN:개방화장실, MOBILE:이동화장실]
+        required: false
+        schema:
+          type: string
+          description: 화장실 유형 [ PUBLIC:공중화장실, SIMPLE:간이화장실, OPEN:개방화장실, MOBILE:이동화장실]
+          example: PUBLIC
+          enum:
+          - PUBLIC
+          - SIMPLE
+          - OPEN
+          - MOBILE
+        example: PUBLIC
+      - name: open24hYn
+        in: query
+        description: 24시간 개방 여부
+        required: false
+        schema:
+          type: string
+          description: 24시간 개방 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoListPoiPublicToilet'
+  /api/v1/poi/public-toilet/search/paging:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 공중 화장실 POI API V1
+      summary: 공중 화장실 카테고리 검색 (페이징)
+      description: 이름, 시도코드, 유형, 24시간개방으로 공중 화장실을 검색합니다. 검색 조건이 있어야 합니다. 페이징 처리된 결과를
+        반환합니다.
+      operationId: searchByCategoryPaging_1
+      parameters:
+      - name: page
+        in: query
+        description: 페이지 번호, 0 이상.
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 페이지 번호, 0 이상.
+      - name: size
+        in: query
+        description: 페이지 사이즈 , 20 이상.
+        required: true
+        schema:
+          minimum: 20
+          type: string
+          description: 페이지 사이즈 , 20 이상.
+      - name: toiletName
+        in: query
+        description: 화장실명 검색 (최소 2글자)
+        required: false
+        schema:
+          maxLength: 2147483647
+          minLength: 2
+          type: string
+          description: 화장실명 검색 (최소 2글자)
+          example: 서울역
+        example: 서울역
+      - name: sidoCode
+        in: query
+        description: 시도 코드 (7자리)
+        required: false
+        schema:
+          pattern: ^\d{7}$
+          type: string
+          description: 시도 코드 (7자리)
+          example: 91100000
+          enum:
+          - '9110000'
+          - '9260000'
+          - '9270000'
+          - '9280000'
+          - '9290000'
+          - '9300000'
+          - '9310000'
+          - '9360000'
+          - '9410000'
+          - '9510000'
+          - '9430000'
+          - '9440000'
+          - '9520000'
+          - '9460000'
+          - '9470000'
+          - '9480000'
+          - '9500000'
+        example: 91100000
+      - name: toiletType
+        in: query
+        description: 화장실 유형 [ PUBLIC:공중화장실, SIMPLE:간이화장실, OPEN:개방화장실, MOBILE:이동화장실]
+        required: false
+        schema:
+          type: string
+          description: 화장실 유형 [ PUBLIC:공중화장실, SIMPLE:간이화장실, OPEN:개방화장실, MOBILE:이동화장실]
+          example: PUBLIC
+          enum:
+          - PUBLIC
+          - SIMPLE
+          - OPEN
+          - MOBILE
+        example: PUBLIC
+      - name: open24hYn
+        in: query
+        description: 24시간 개방 여부
+        required: false
+        schema:
+          type: string
+          description: 24시간 개방 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoPageResPoiPublicToilet'
+  /api/v1/poi/public-toilet/search/location:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 공중 화장실 POI API V1
+      summary: 공중 화장실 위치 기반 검색 (전체 결과)
+      description: 위치 기준 반경 내 공중 화장실을 검색합니다. 전체 결과를 반환합니다.
+      operationId: searchByLocation_1
+      parameters:
+      - name: toiletName
+        in: query
+        description: 화장실명 검색 (최소 2글자)
+        required: false
+        schema:
+          maxLength: 2147483647
+          minLength: 2
+          type: string
+          description: 화장실명 검색 (최소 2글자)
+          example: 서울역
+        example: 서울역
+      - name: toiletType
+        in: query
+        description: 화장실 유형 [ PUBLIC:공중화장실, SIMPLE:간이화장실, OPEN:개방화장실, MOBILE:이동화장실]
+        required: false
+        schema:
+          type: string
+          description: 화장실 유형 [ PUBLIC:공중화장실, SIMPLE:간이화장실, OPEN:개방화장실, MOBILE:이동화장실]
+          example: PUBLIC
+          enum:
+          - PUBLIC
+          - SIMPLE
+          - OPEN
+          - MOBILE
+        example: PUBLIC
+      - name: open24hYn
+        in: query
+        description: 24시간 개방 여부
+        required: false
+        schema:
+          type: string
+          description: 24시간 개방 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: latitude
+        in: query
+        description: 위도
+        required: true
+        schema:
+          maximum: 90
+          minimum: -90
+          type: string
+          description: 위도
+          example: 37.5665
+        example: 37.5665
+      - name: longitude
+        in: query
+        description: 경도
+        required: true
+        schema:
+          maximum: 180
+          minimum: -180
+          type: string
+          description: 경도
+          example: 126.978
+        example: 126.978
+      - name: radius
+        in: query
+        description: 검색 반경(미터)
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 검색 반경(미터)
+          example: 1000
+        example: 1000
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoListPoiPublicToiletLocation'
+  /api/v1/poi/public-toilet/search/location/paging:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 공중 화장실 POI API V1
+      summary: 공중 화장실 위치 기반 검색 (페이징)
+      description: 위치 기준 반경 내 공중 화장실을 검색합니다. 페이징 처리된 결과를 반환합니다.
+      operationId: searchByLocationPaging_1
+      parameters:
+      - name: page
+        in: query
+        description: 페이지 번호, 0 이상.
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 페이지 번호, 0 이상.
+      - name: size
+        in: query
+        description: 페이지 사이즈 , 20 이상.
+        required: true
+        schema:
+          minimum: 20
+          type: string
+          description: 페이지 사이즈 , 20 이상.
+      - name: toiletName
+        in: query
+        description: 화장실명 검색 (최소 2글자)
+        required: false
+        schema:
+          maxLength: 2147483647
+          minLength: 2
+          type: string
+          description: 화장실명 검색 (최소 2글자)
+          example: 서울역
+        example: 서울역
+      - name: toiletType
+        in: query
+        description: 화장실 유형 [ PUBLIC:공중화장실, SIMPLE:간이화장실, OPEN:개방화장실, MOBILE:이동화장실]
+        required: false
+        schema:
+          type: string
+          description: 화장실 유형 [ PUBLIC:공중화장실, SIMPLE:간이화장실, OPEN:개방화장실, MOBILE:이동화장실]
+          example: PUBLIC
+          enum:
+          - PUBLIC
+          - SIMPLE
+          - OPEN
+          - MOBILE
+        example: PUBLIC
+      - name: open24hYn
+        in: query
+        description: 24시간 개방 여부
+        required: false
+        schema:
+          type: string
+          description: 24시간 개방 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: latitude
+        in: query
+        description: 위도
+        required: true
+        schema:
+          maximum: 90
+          minimum: -90
+          type: string
+          description: 위도
+          example: 37.5665
+        example: 37.5665
+      - name: longitude
+        in: query
+        description: 경도
+        required: true
+        schema:
+          maximum: 180
+          minimum: -180
+          type: string
+          description: 경도
+          example: 126.978
+        example: 126.978
+      - name: radius
+        in: query
+        description: 검색 반경(미터)
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 검색 반경(미터)
+          example: 1000
+        example: 1000
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoPageResPoiPublicToiletLocation'
+  /api/v1/poi/public-toilet/all:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 공중 화장실 POI API V1
+      summary: 전체 공중 화장실 조회 (전체 결과)
+      description: 모든 공중 화장실 목록을 조회합니다. 전체 결과를 반환합니다.
+      operationId: getAllPublicToilets
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoListPoiPublicToilet'
+  /api/v1/poi/public-toilet/all/paging:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 공중 화장실 POI API V1
+      summary: 전체 공중 화장실 조회 (페이징)
+      description: 모든 공중 화장실 목록을 조회합니다. 페이징 처리된 결과를 반환합니다.
+      operationId: getAllPublicToiletsPaging
+      parameters:
+      - name: page
+        in: query
+        description: 페이지 번호, 0 이상.
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 페이지 번호, 0 이상.
+      - name: size
+        in: query
+        description: 페이지 사이즈 , 20 이상.
+        required: true
+        schema:
+          minimum: 20
+          type: string
+          description: 페이지 사이즈 , 20 이상.
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoPageResPoiPublicToilet'
+  /api/v1/poi/elevator/subway/{subwayId}:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 지하철 엘리베이터 POI API V1
+      summary: 지하철 엘리베이터 상세 조회
+      description: 지하철 엘리베이터 ID로 상세 정보 조회
+      operationId: getSubwayElevatorById
+      parameters:
+      - name: subwayId
+        in: path
+        description: 지하철 엘리베이터 ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoPoiSubwayElevator'
+  /api/v1/poi/elevator/subway/sido/{sidoCode}:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 지하철 엘리베이터 POI API V1
+      summary: 시도별 지하철 엘리베이터 조회 (전체 결과)
+      description: 시도 코드로 지하철 엘리베이터 목록을 조회합니다. 전체 결과를 반환합니다.
+      operationId: getSubwayElevatorsBySido
+      parameters:
+      - name: sidoCode
+        in: path
+        description: 시도 코드 (7자리)
+        required: true
+        schema:
+          type: string
+        example: 91100000
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoListPoiSubwayElevator'
+  /api/v1/poi/elevator/subway/sido/{sidoCode}/{sigunguCode}:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 지하철 엘리베이터 POI API V1
+      summary: 시군구별 지하철 엘리베이터 조회 (전체 결과)
+      description: 시도 코드와 시군구 코드로 지하철 엘리베이터 목록을 조회합니다. 전체 결과를 반환합니다.
+      operationId: getSubwayElevatorsBySigungu
+      parameters:
+      - name: sidoCode
+        in: path
+        description: 시도 코드 (7자리)
+        required: true
+        schema:
+          type: string
+        example: 91100000
+      - name: sigunguCode
+        in: path
+        description: 시군구 코드 (11자리)
+        required: true
+        schema:
+          type: string
+        example: 1111000000
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoListPoiSubwayElevator'
+  /api/v1/poi/elevator/subway/sido/{sidoCode}/{sigunguCode}/paging:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 지하철 엘리베이터 POI API V1
+      summary: 시군구별 지하철 엘리베이터 조회 (페이징)
+      description: 시도 코드와 시군구 코드로 지하철 엘리베이터 목록을 조회합니다. 페이징 처리된 결과를 반환합니다.
+      operationId: getSubwayElevatorsBySigunguPaging
+      parameters:
+      - name: sidoCode
+        in: path
+        description: 시도 코드 (7자리)
+        required: true
+        schema:
+          type: string
+        example: 91100000
+      - name: sigunguCode
+        in: path
+        description: 시군구 코드 (11자리)
+        required: true
+        schema:
+          type: string
+        example: 1111000000
+      - name: page
+        in: query
+        description: 페이지 번호, 0 이상.
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 페이지 번호, 0 이상.
+      - name: size
+        in: query
+        description: 페이지 사이즈 , 20 이상.
+        required: true
+        schema:
+          minimum: 20
+          type: string
+          description: 페이지 사이즈 , 20 이상.
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoPageResPoiSubwayElevator'
+  /api/v1/poi/elevator/subway/sido/{sidoCode}/paging:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 지하철 엘리베이터 POI API V1
+      summary: 시도별 지하철 엘리베이터 조회 (페이징)
+      description: 시도 코드로 지하철 엘리베이터 목록을 조회합니다. 페이징 처리된 결과를 반환합니다.
+      operationId: getSubwayElevatorsBySidoPaging
+      parameters:
+      - name: sidoCode
+        in: path
+        description: 시도 코드 (7자리)
+        required: true
+        schema:
+          type: string
+        example: 91100000
+      - name: page
+        in: query
+        description: 페이지 번호, 0 이상.
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 페이지 번호, 0 이상.
+      - name: size
+        in: query
+        description: 페이지 사이즈 , 20 이상.
+        required: true
+        schema:
+          minimum: 20
+          type: string
+          description: 페이지 사이즈 , 20 이상.
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoPageResPoiSubwayElevator'
+  /api/v1/poi/elevator/subway/search:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 지하철 엘리베이터 POI API V1
+      summary: 지하철 엘리베이터 카테고리 검색 (전체 결과)
+      description: 지하철역명, 시도코드, 노드유형으로 지하철 엘리베이터를 검색합니다. 검색 조건이 있어야 합니다. 전체 결과를 반환합니다.
+      operationId: searchByCategory_2
+      parameters:
+      - name: stationName
+        in: query
+        description: 지하철역명 검색 (최소 2글자)
+        required: false
+        schema:
+          maxLength: 2147483647
+          minLength: 2
+          type: string
+          description: 지하철역명 검색 (최소 2글자)
+          example: 혜화
+        example: 혜화
+      - name: sidoCode
+        in: query
+        description: 시도 코드 (7자리)
+        required: false
+        schema:
+          pattern: ^\d{7}$
+          type: string
+          description: 시도 코드 (7자리)
+          example: 9110000
+        example: 9110000
+      - name: nodeTypeCode
+        in: query
+        description: '노드 유형 코드 (0: 일반노드, 1: 지하철 출입구, 2: 버스 정류장, 3: 지하보도 출입구)'
+        required: false
+        schema:
+          type: string
+          description: '노드 유형 코드 (0: 일반노드, 1: 지하철 출입구, 2: 버스 정류장, 3: 지하보도 출입구)'
+          example: 1
+          enum:
+          - '0'
+          - '1'
+          - '2'
+          - '3'
+        example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoListPoiSubwayElevator'
+  /api/v1/poi/elevator/subway/search/paging:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 지하철 엘리베이터 POI API V1
+      summary: 지하철 엘리베이터 카테고리 검색 (페이징)
+      description: 지하철역명, 시도코드, 노드유형으로 지하철 엘리베이터를 검색합니다. 검색 조건이 있어야 합니다. 페이징 처리된 결과를
+        반환합니다.
+      operationId: searchByCategoryPaging_2
+      parameters:
+      - name: page
+        in: query
+        description: 페이지 번호, 0 이상.
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 페이지 번호, 0 이상.
+      - name: size
+        in: query
+        description: 페이지 사이즈 , 20 이상.
+        required: true
+        schema:
+          minimum: 20
+          type: string
+          description: 페이지 사이즈 , 20 이상.
+      - name: stationName
+        in: query
+        description: 지하철역명 검색 (최소 2글자)
+        required: false
+        schema:
+          maxLength: 2147483647
+          minLength: 2
+          type: string
+          description: 지하철역명 검색 (최소 2글자)
+          example: 혜화
+        example: 혜화
+      - name: sidoCode
+        in: query
+        description: 시도 코드 (7자리)
+        required: false
+        schema:
+          pattern: ^\d{7}$
+          type: string
+          description: 시도 코드 (7자리)
+          example: 9110000
+        example: 9110000
+      - name: nodeTypeCode
+        in: query
+        description: '노드 유형 코드 (0: 일반노드, 1: 지하철 출입구, 2: 버스 정류장, 3: 지하보도 출입구)'
+        required: false
+        schema:
+          type: string
+          description: '노드 유형 코드 (0: 일반노드, 1: 지하철 출입구, 2: 버스 정류장, 3: 지하보도 출입구)'
+          example: 1
+          enum:
+          - '0'
+          - '1'
+          - '2'
+          - '3'
+        example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoPageResPoiSubwayElevator'
+  /api/v1/poi/elevator/subway/search/location:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 지하철 엘리베이터 POI API V1
+      summary: 지하철 엘리베이터 위치 기반 검색 (전체 결과)
+      description: 위치 기준 반경 내 지하철 엘리베이터를 검색합니다. 전체 결과를 반환합니다.
+      operationId: searchByLocation_2
+      parameters:
+      - name: stationName
+        in: query
+        description: 지하철역명 검색 (최소 2글자)
+        required: false
+        schema:
+          maxLength: 2147483647
+          minLength: 2
+          type: string
+          description: 지하철역명 검색 (최소 2글자)
+          example: 혜화
+        example: 혜화
+      - name: nodeTypeCode
+        in: query
+        description: '노드 유형 코드 (0: 일반노드, 1: 지하철 출입구, 2: 버스 정류장, 3: 지하보도 출입구)'
+        required: false
+        schema:
+          type: string
+          description: '노드 유형 코드 (0: 일반노드, 1: 지하철 출입구, 2: 버스 정류장, 3: 지하보도 출입구)'
+          example: 1
+          enum:
+          - '0'
+          - '1'
+          - '2'
+          - '3'
+        example: 1
+      - name: latitude
+        in: query
+        description: 위도
+        required: true
+        schema:
+          maximum: 90
+          minimum: -90
+          type: string
+          description: 위도
+          example: 37.5665
+        example: 37.5665
+      - name: longitude
+        in: query
+        description: 경도
+        required: true
+        schema:
+          maximum: 180
+          minimum: -180
+          type: string
+          description: 경도
+          example: 126.978
+        example: 126.978
+      - name: radius
+        in: query
+        description: 검색 반경(미터)
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 검색 반경(미터)
+          example: 1000
+        example: 1000
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoListPoiSubwayElevatorLocation'
+  /api/v1/poi/elevator/subway/search/location/paging:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 지하철 엘리베이터 POI API V1
+      summary: 지하철 엘리베이터 위치 기반 검색 (페이징)
+      description: 위치 기준 반경 내 지하철 엘리베이터를 검색합니다. 페이징 처리된 결과를 반환합니다.
+      operationId: searchByLocationPaging_2
+      parameters:
+      - name: page
+        in: query
+        description: 페이지 번호, 0 이상.
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 페이지 번호, 0 이상.
+      - name: size
+        in: query
+        description: 페이지 사이즈 , 20 이상.
+        required: true
+        schema:
+          minimum: 20
+          type: string
+          description: 페이지 사이즈 , 20 이상.
+      - name: stationName
+        in: query
+        description: 지하철역명 검색 (최소 2글자)
+        required: false
+        schema:
+          maxLength: 2147483647
+          minLength: 2
+          type: string
+          description: 지하철역명 검색 (최소 2글자)
+          example: 혜화
+        example: 혜화
+      - name: nodeTypeCode
+        in: query
+        description: '노드 유형 코드 (0: 일반노드, 1: 지하철 출입구, 2: 버스 정류장, 3: 지하보도 출입구)'
+        required: false
+        schema:
+          type: string
+          description: '노드 유형 코드 (0: 일반노드, 1: 지하철 출입구, 2: 버스 정류장, 3: 지하보도 출입구)'
+          example: 1
+          enum:
+          - '0'
+          - '1'
+          - '2'
+          - '3'
+        example: 1
+      - name: latitude
+        in: query
+        description: 위도
+        required: true
+        schema:
+          maximum: 90
+          minimum: -90
+          type: string
+          description: 위도
+          example: 37.5665
+        example: 37.5665
+      - name: longitude
+        in: query
+        description: 경도
+        required: true
+        schema:
+          maximum: 180
+          minimum: -180
+          type: string
+          description: 경도
+          example: 126.978
+        example: 126.978
+      - name: radius
+        in: query
+        description: 검색 반경(미터)
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 검색 반경(미터)
+          example: 1000
+        example: 1000
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoPageResPoiSubwayElevatorLocation'
+  /api/v1/poi/elevator/subway/all:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 지하철 엘리베이터 POI API V1
+      summary: 전체 지하철 엘리베이터 조회 (전체 결과)
+      description: 모든 지하철 엘리베이터 목록을 조회합니다. 전체 결과를 반환합니다.
+      operationId: getAllSubwayElevators
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoListPoiSubwayElevator'
+  /api/v1/poi/elevator/subway/all/paging:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 지하철 엘리베이터 POI API V1
+      summary: 전체 지하철 엘리베이터 조회 (페이징)
+      description: 모든 지하철 엘리베이터 목록을 조회합니다. 페이징 처리된 결과를 반환합니다.
+      operationId: getAllSubwayElevatorsPaging
+      parameters:
+      - name: page
+        in: query
+        description: 페이지 번호, 0 이상.
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 페이지 번호, 0 이상.
+      - name: size
+        in: query
+        description: 페이지 사이즈 , 20 이상.
+        required: true
+        schema:
+          minimum: 20
+          type: string
+          description: 페이지 사이즈 , 20 이상.
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoPageResPoiSubwayElevator'
+  /api/v1/poi/category/{categoryType}:
+    get:
+      tags:
+      - 이동형 - 관광 POI API V1
+      summary: 이동형 POI 카테고리별 조회(all)
+      description: 카테고리 유형별로 이동형 POI를 조회(all)
+      operationId: getPoiByCategory
+      parameters:
+      - name: categoryType
+        in: path
+        description: 카테고리 유형
+        required: true
+        schema:
+          type: string
+          enum:
+          - tourist_spot
+          - restaurant
+          - shopping
+          - accommodation
+        example: tourist_spot
+      - name: page
+        in: query
+        description: 페이지 번호, 0 이상.
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 페이지 번호, 0 이상.
+      - name: size
+        in: query
+        description: 페이지 사이즈 , 20 이상.
+        required: true
+        schema:
+          minimum: 20
+          type: string
+          description: 페이지 사이즈 , 20 이상.
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoListMvPoi'
+  /api/v1/poi/category/{categoryType}/paging:
+    get:
+      tags:
+      - 이동형 - 관광 POI API V1
+      summary: 이동형 POI 카테고리별 조회(paging)
+      description: 카테고리 유형별로 이동형 POI를 조회(paging)
+      operationId: getPoiByCategoryPaging
+      parameters:
+      - name: categoryType
+        in: path
+        description: 카테고리 유형
+        required: true
+        schema:
+          type: string
+          enum:
+          - tourist_spot
+          - restaurant
+          - shopping
+          - accommodation
+        example: tourist_spot
+      - name: page
+        in: query
+        description: 페이지 번호, 0 이상.
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 페이지 번호, 0 이상.
+      - name: size
+        in: query
+        description: 페이지 사이즈 , 20 이상.
+        required: true
+        schema:
+          minimum: 20
+          type: string
+          description: 페이지 사이즈 , 20 이상.
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
                 $ref: '#/components/schemas/ApiResDtoPageResMvPoi'
+  /api/v1/poi/barrier-free/tour/{fcltId}:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 무장애 관광지 시설 POI API V1
+      summary: 무장애 관광지 시설 상세 조회
+      description: 무장애 관광지 시설 ID로 상세 정보를 조회합니다.
+      operationId: getTourBfFacilityById
+      parameters:
+      - name: fcltId
+        in: path
+        description: 무장애 관광지 시설 ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoPoiTourBfFacility'
+  /api/v1/poi/barrier-free/tour/sido/{sidoCode}:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 무장애 관광지 시설 POI API V1
+      summary: 시도별 무장애 관광지 시설 조회 (전체 결과)
+      description: 시도 코드로 무장애 관광지 시설 목록을 전체 조회합니다.
+      operationId: getTourBfFacilitiesBySido
+      parameters:
+      - name: sidoCode
+        in: path
+        description: 시도 코드 (7자리)
+        required: true
+        schema:
+          type: string
+        example: 91100000
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoListPoiTourBfFacility'
+  /api/v1/poi/barrier-free/tour/sido/{sidoCode}/paging:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 무장애 관광지 시설 POI API V1
+      summary: 시도별 무장애 관광지 시설 조회 (페이징)
+      description: 시도 코드로 무장애 관광지 시설 목록을 페이징하여 조회합니다.
+      operationId: getTourBfFacilitiesBySidoPaging
+      parameters:
+      - name: sidoCode
+        in: path
+        description: 시도 코드 (7자리)
+        required: true
+        schema:
+          type: string
+        example: 91100000
+      - name: page
+        in: query
+        description: 페이지 번호, 0 이상.
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 페이지 번호, 0 이상.
+      - name: size
+        in: query
+        description: 페이지 사이즈 , 20 이상.
+        required: true
+        schema:
+          minimum: 20
+          type: string
+          description: 페이지 사이즈 , 20 이상.
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoPageResPoiTourBfFacility'
+  /api/v1/poi/barrier-free/tour/search:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 무장애 관광지 시설 POI API V1
+      summary: 무장애 관광지 시설 카테고리 검색 (전체 결과)
+      description: 시설명, 시도코드, 장애인시설로 무장애 관광지 시설을 검색합니다. 검색 조건이 없으면 빈 결과를 반환합니다.
+      operationId: searchByCategory_3
+      parameters:
+      - name: fcltName
+        in: query
+        description: 시설명 검색 (최소 2글자)
+        required: false
+        schema:
+          maxLength: 2147483647
+          minLength: 2
+          type: string
+          description: 시설명 검색 (최소 2글자)
+          example: 서울타워
+        example: 서울타워
+      - name: sidoCode
+        in: query
+        description: 시도 코드 (7자리)
+        required: false
+        schema:
+          pattern: ^\d{7}$
+          type: string
+          description: 시도 코드 (7자리)
+          example: 9110000
+        example: 9110000
+      - name: toiletYn
+        in: query
+        description: 장애인 화장실 여부
+        required: false
+        schema:
+          type: string
+          description: 장애인 화장실 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: elevatorYn
+        in: query
+        description: 엘리베이터 여부
+        required: false
+        schema:
+          type: string
+          description: 엘리베이터 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: parkingYn
+        in: query
+        description: 장애인 주차장 여부
+        required: false
+        schema:
+          type: string
+          description: 장애인 주차장 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: wheelchairRentYn
+        in: query
+        description: 휠체어 대여 여부
+        required: false
+        schema:
+          type: string
+          description: 휠체어 대여 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: tactileMapYn
+        in: query
+        description: 촉지도식 안내판 설치 여부
+        required: false
+        schema:
+          type: string
+          description: 촉지도식 안내판 설치 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: audioGuideYn
+        in: query
+        description: 오디오 가이드 제공 여부
+        required: false
+        schema:
+          type: string
+          description: 오디오 가이드 제공 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoListPoiTourBfFacility'
+  /api/v1/poi/barrier-free/tour/search/paging:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 무장애 관광지 시설 POI API V1
+      summary: 무장애 관광지 시설 카테고리 검색 (페이징)
+      description: 시설명, 시도코드, 장애인시설로 무장애 관광지 시설을 페이징하여 검색합니다. 검색 조건이 없으면 빈 페이지를 반환합니다.
+      operationId: searchByCategoryPaging_3
+      parameters:
+      - name: page
+        in: query
+        description: 페이지 번호, 0 이상.
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 페이지 번호, 0 이상.
+      - name: size
+        in: query
+        description: 페이지 사이즈 , 20 이상.
+        required: true
+        schema:
+          minimum: 20
+          type: string
+          description: 페이지 사이즈 , 20 이상.
+      - name: fcltName
+        in: query
+        description: 시설명 검색 (최소 2글자)
+        required: false
+        schema:
+          maxLength: 2147483647
+          minLength: 2
+          type: string
+          description: 시설명 검색 (최소 2글자)
+          example: 서울타워
+        example: 서울타워
+      - name: sidoCode
+        in: query
+        description: 시도 코드 (7자리)
+        required: false
+        schema:
+          pattern: ^\d{7}$
+          type: string
+          description: 시도 코드 (7자리)
+          example: 9110000
+        example: 9110000
+      - name: toiletYn
+        in: query
+        description: 장애인 화장실 여부
+        required: false
+        schema:
+          type: string
+          description: 장애인 화장실 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: elevatorYn
+        in: query
+        description: 엘리베이터 여부
+        required: false
+        schema:
+          type: string
+          description: 엘리베이터 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: parkingYn
+        in: query
+        description: 장애인 주차장 여부
+        required: false
+        schema:
+          type: string
+          description: 장애인 주차장 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: wheelchairRentYn
+        in: query
+        description: 휠체어 대여 여부
+        required: false
+        schema:
+          type: string
+          description: 휠체어 대여 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: tactileMapYn
+        in: query
+        description: 촉지도식 안내판 설치 여부
+        required: false
+        schema:
+          type: string
+          description: 촉지도식 안내판 설치 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: audioGuideYn
+        in: query
+        description: 오디오 가이드 제공 여부
+        required: false
+        schema:
+          type: string
+          description: 오디오 가이드 제공 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoPageResPoiTourBfFacility'
+  /api/v1/poi/barrier-free/tour/search/location:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 무장애 관광지 시설 POI API V1
+      summary: 무장애 관광지 시설 위치 기반 검색 (전체 결과)
+      description: 위치 기준 반경 내 무장애 관광지 시설을 검색합니다.
+      operationId: searchByLocation_3
+      parameters:
+      - name: fcltName
+        in: query
+        description: 시설명 검색 (최소 2글자)
+        required: false
+        schema:
+          maxLength: 2147483647
+          minLength: 2
+          type: string
+          description: 시설명 검색 (최소 2글자)
+          example: 서울타워
+        example: 서울타워
+      - name: toiletYn
+        in: query
+        description: 장애인 화장실 여부
+        required: false
+        schema:
+          type: string
+          description: 장애인 화장실 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: elevatorYn
+        in: query
+        description: 엘리베이터 여부
+        required: false
+        schema:
+          type: string
+          description: 엘리베이터 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: parkingYn
+        in: query
+        description: 장애인 주차장 여부
+        required: false
+        schema:
+          type: string
+          description: 장애인 주차장 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: wheelchairRentYn
+        in: query
+        description: 휠체어 대여 여부
+        required: false
+        schema:
+          type: string
+          description: 휠체어 대여 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: tactileMapYn
+        in: query
+        description: 촉지도식 안내판 설치 여부
+        required: false
+        schema:
+          type: string
+          description: 촉지도식 안내판 설치 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: audioGuideYn
+        in: query
+        description: 오디오 가이드 제공 여부
+        required: false
+        schema:
+          type: string
+          description: 오디오 가이드 제공 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: latitude
+        in: query
+        description: 위도
+        required: true
+        schema:
+          maximum: 90
+          minimum: -90
+          type: string
+          description: 위도
+          example: 37.5665
+        example: 37.5665
+      - name: longitude
+        in: query
+        description: 경도
+        required: true
+        schema:
+          maximum: 180
+          minimum: -180
+          type: string
+          description: 경도
+          example: 126.978
+        example: 126.978
+      - name: radius
+        in: query
+        description: 검색 반경(미터)
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 검색 반경(미터)
+          example: 1000
+        example: 1000
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoListPoiTourBfFacilityLocation'
+  /api/v1/poi/barrier-free/tour/search/location/paging:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 무장애 관광지 시설 POI API V1
+      summary: 무장애 관광지 시설 위치 기반 검색 (페이징)
+      description: 위치 기준 반경 내 무장애 관광지 시설을 페이징하여 검색합니다.
+      operationId: searchByLocationPaging_3
+      parameters:
+      - name: page
+        in: query
+        description: 페이지 번호, 0 이상.
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 페이지 번호, 0 이상.
+      - name: size
+        in: query
+        description: 페이지 사이즈 , 20 이상.
+        required: true
+        schema:
+          minimum: 20
+          type: string
+          description: 페이지 사이즈 , 20 이상.
+      - name: fcltName
+        in: query
+        description: 시설명 검색 (최소 2글자)
+        required: false
+        schema:
+          maxLength: 2147483647
+          minLength: 2
+          type: string
+          description: 시설명 검색 (최소 2글자)
+          example: 서울타워
+        example: 서울타워
+      - name: toiletYn
+        in: query
+        description: 장애인 화장실 여부
+        required: false
+        schema:
+          type: string
+          description: 장애인 화장실 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: elevatorYn
+        in: query
+        description: 엘리베이터 여부
+        required: false
+        schema:
+          type: string
+          description: 엘리베이터 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: parkingYn
+        in: query
+        description: 장애인 주차장 여부
+        required: false
+        schema:
+          type: string
+          description: 장애인 주차장 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: wheelchairRentYn
+        in: query
+        description: 휠체어 대여 여부
+        required: false
+        schema:
+          type: string
+          description: 휠체어 대여 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: tactileMapYn
+        in: query
+        description: 촉지도식 안내판 설치 여부
+        required: false
+        schema:
+          type: string
+          description: 촉지도식 안내판 설치 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: audioGuideYn
+        in: query
+        description: 오디오 가이드 제공 여부
+        required: false
+        schema:
+          type: string
+          description: 오디오 가이드 제공 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        example: Y
+      - name: latitude
+        in: query
+        description: 위도
+        required: true
+        schema:
+          maximum: 90
+          minimum: -90
+          type: string
+          description: 위도
+          example: 37.5665
+        example: 37.5665
+      - name: longitude
+        in: query
+        description: 경도
+        required: true
+        schema:
+          maximum: 180
+          minimum: -180
+          type: string
+          description: 경도
+          example: 126.978
+        example: 126.978
+      - name: radius
+        in: query
+        description: 검색 반경(미터)
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 검색 반경(미터)
+          example: 1000
+        example: 1000
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoPageResPoiTourBfFacilityLocation'
+  /api/v1/poi/barrier-free/tour/all:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 무장애 관광지 시설 POI API V1
+      summary: 전체 무장애 관광지 시설 조회 (전체 결과)
+      description: 모든 무장애 관광지 시설을 조회합니다.
+      operationId: getAllTourBfFacilities
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoListPoiTourBfFacility'
+  /api/v1/poi/barrier-free/tour/all/paging:
+    get:
+      tags:
+      - 이동형 - 편의시설 - 무장애 관광지 시설 POI API V1
+      summary: 전체 무장애 관광지 시설 조회 (페이징)
+      description: 모든 무장애 관광지 시설을 페이징하여 조회합니다.
+      operationId: getAllTourBfFacilitiesPaging
+      parameters:
+      - name: page
+        in: query
+        description: 페이지 번호, 0 이상.
+        required: true
+        schema:
+          minimum: 0
+          type: string
+          description: 페이지 번호, 0 이상.
+      - name: size
+        in: query
+        description: 페이지 사이즈 , 20 이상.
+        required: true
+        schema:
+          minimum: 20
+          type: string
+          description: 페이지 사이즈 , 20 이상.
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResDtoPageResPoiTourBfFacility'
   /api/v1/emp/workplace/standard:
     get:
       tags:
@@ -276,12 +2158,12 @@ paths:
           description: 페이지 번호, 0 이상.
       - name: size
         in: query
-        description: 페이지 사이즈 , 0 이상.
+        description: 페이지 사이즈 , 20 이상.
         required: true
         schema:
-          minimum: 10
+          minimum: 20
           type: string
-          description: 페이지 사이즈 , 0 이상.
+          description: 페이지 사이즈 , 20 이상.
       - name: salaryType
         in: query
         description: 급여 형태(옵션)
@@ -341,12 +2223,12 @@ paths:
           description: 페이지 번호, 0 이상.
       - name: size
         in: query
-        description: 페이지 사이즈 , 0 이상.
+        description: 페이지 사이즈 , 20 이상.
         required: true
         schema:
-          minimum: 10
+          minimum: 20
           type: string
-          description: 페이지 사이즈 , 0 이상.
+          description: 페이지 사이즈 , 20 이상.
       - name: empType
         in: query
         description: 고용 형태(옵션)
@@ -2140,7 +4022,7 @@ paths:
                 $ref: '#/components/schemas/ApiResDtoObject'
 components:
   schemas:
-    ApiResDtoPageResMvPoi:
+    ApiResDtoMvPoi:
       type: object
       properties:
         success:
@@ -2148,7 +4030,7 @@ components:
           description: 성공 여부
           example: true
         data:
-          $ref: '#/components/schemas/PageResMvPoi'
+          $ref: '#/components/schemas/MvPoi'
         status:
           type: string
           description: 응답 코드
@@ -2270,23 +4152,15 @@ components:
     MvPoi:
       type: object
       properties:
+        poi_id:
+          type: integer
+          description: POI 고유 식별자
+          format: int64
+          example: 1
         language_code:
           type: string
           description: 언어 코드
           example: ko
-        category:
-          type: string
-          description: 카테고리
-          example: tourist_spot
-          enum:
-          - tourist_spot
-          - restaurant
-          - shopping
-          - accommodation
-        sub_category:
-          type: string
-          description: 서브 카테고리
-          example: 역사 · 고궁 · 문화재
         title:
           type: string
           description: POI 제목
@@ -2329,7 +4203,182 @@ components:
           type: string
           description: 검색 필터 JSON
           example: '{}'
-      description: 현재 페이지의 데이터 목록
+      description: 응답 데이터
+    ApiResDtoListMvPoi:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          type: array
+          description: 응답 데이터
+          items:
+            $ref: '#/components/schemas/MvPoi'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
+    ApiResDtoPageResMvPoi:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          $ref: '#/components/schemas/PageResMvPoi'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
     PageResMvPoi:
       type: object
       properties:
@@ -2338,6 +4387,2456 @@ components:
           description: 현재 페이지의 데이터 목록
           items:
             $ref: '#/components/schemas/MvPoi'
+        page:
+          type: integer
+          description: 현재 페이지 번호
+          format: int32
+          example: 1
+        size:
+          type: integer
+          description: 페이지당 항목 수
+          format: int32
+          example: 10
+        total:
+          type: integer
+          description: 전체 항목 수
+          format: int64
+          example: 100
+      description: 페이징 처리된 응답 데이터
+    ApiResDtoListMvPoiLocation:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          type: array
+          description: 응답 데이터
+          items:
+            $ref: '#/components/schemas/MvPoiLocation'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
+    MvPoiLocation:
+      type: object
+      properties:
+        poi_id:
+          type: integer
+          description: POI 고유 식별자
+          format: int64
+          example: 1
+        language_code:
+          type: string
+          description: 언어 코드
+          example: ko
+        title:
+          type: string
+          description: POI 제목
+          example: 서대문형무소역사관
+        summary:
+          type: string
+          description: POI 요약 정보
+          example: '[2021 유니버설 관광시설 인증] <br>
+
+            잔혹한 근대사가 역사가 고스란히 남아 있는 역사관'
+        basic_info:
+          type: string
+          description: POI 기본 정보
+          example: '[2021 유니버설 관광시설 인증][개 요]서대문형무소역사관은 구 서울구치소 시설을 개조하여 과거 경성감옥과서대문감옥을
+            복원한 독립운동 및 민주화운동 관련 역사관이다....'
+        address_code:
+          type: string
+          description: 주소 코드
+          example: '03732'
+        address_road:
+          type: string
+          description: 도로명 주소
+          example: 서울 서대문구 통일로 251 (현저동, 독립공원)
+        address_detail:
+          type: string
+          description: 상세 주소
+        latitude:
+          type: number
+          description: 위도
+          example: 37.57460779
+        longitude:
+          type: number
+          description: 경도
+          example: 126.9572029
+        detail_json:
+          type: string
+          description: 상세 정보 JSON
+          example: '{}'
+        search_filter_json:
+          type: string
+          description: 검색 필터 JSON
+          example: '{}'
+        distance:
+          type: integer
+          format: int32
+      description: 응답 데이터
+    ApiResDtoPageResMvPoiLocation:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          $ref: '#/components/schemas/PageResMvPoiLocation'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
+    PageResMvPoiLocation:
+      type: object
+      properties:
+        content:
+          type: array
+          description: 현재 페이지의 데이터 목록
+          items:
+            $ref: '#/components/schemas/MvPoiLocation'
+        page:
+          type: integer
+          description: 현재 페이지 번호
+          format: int32
+          example: 1
+        size:
+          type: integer
+          description: 페이지당 항목 수
+          format: int32
+          example: 10
+        total:
+          type: integer
+          description: 전체 항목 수
+          format: int64
+          example: 100
+      description: 페이징 처리된 응답 데이터
+    ApiResDtoPoiPublicToilet:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          $ref: '#/components/schemas/PoiPublicToilet'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
+    PoiPublicToilet:
+      type: object
+      properties:
+        toilet_id:
+          type: integer
+          description: 공중 화장실 고유 식별자
+          format: int32
+          example: 1
+        sido_code:
+          type: string
+          description: 시도 코드
+          example: '11'
+        toilet_name:
+          type: string
+          description: 화장실명
+          example: 서울역 공중화장실
+        toilet_type:
+          type: string
+          description: 구분
+          example: 공중화장실
+        basis:
+          type: string
+          description: 설치 근거
+          example: 공중화장실 등에 관한 법률
+        addr_road:
+          type: string
+          description: 소재지 도로명 주소
+          example: 서울특별시 용산구 한강대로 405
+        addr_jibun:
+          type: string
+          description: 소재지 지번 주소
+          example: 서울특별시 용산구 한강로3가 40-999
+        m_toilet_count:
+          type: integer
+          description: 남성용 대변기 수
+          format: int32
+          example: 3
+        m_urinal_count:
+          type: integer
+          description: 남성용 소변기 수
+          format: int32
+          example: 2
+        m_dis_toilet_count:
+          type: integer
+          description: 남성용 장애인 대변기 수
+          format: int32
+          example: 1
+        m_dis_urinal_count:
+          type: integer
+          description: 남성용 장애인 소변기 수
+          format: int32
+          example: 1
+        m_child_toilet_count:
+          type: integer
+          description: 남성용 어린이 대변기 수
+          format: int32
+          example: 1
+        m_child_urinal_count:
+          type: integer
+          description: 남성용 어린이 소변기 수
+          format: int32
+          example: 1
+        f_toilet_count:
+          type: integer
+          description: 여성용 대변기 수
+          format: int32
+          example: 4
+        f_dis_toilet_count:
+          type: integer
+          description: 여성용 장애인 대변기 수
+          format: int32
+          example: 1
+        f_child_toilet_count:
+          type: integer
+          description: 여성용 어린이 대변기 수
+          format: int32
+          example: 1
+        managing_org:
+          type: string
+          description: 관리기관명
+          example: 서울특별시 용산구청
+        phone_number:
+          type: string
+          description: 전화번호
+          example: 02-2199-6114
+        open_time:
+          type: string
+          description: 개방시간
+          example: 24시간
+        open_time_detail:
+          type: string
+          description: 개방시간 상세
+          example: 연중무휴 24시간 개방
+        install_dt:
+          type: string
+          description: 설치 연월
+          example: 2020-01
+        latitude:
+          type: number
+          description: 위도
+          format: double
+          example: 37.554678
+        longitude:
+          type: number
+          description: 경도
+          format: double
+          example: 126.970606
+        owner_type:
+          type: string
+          description: 화장실 소유 구분
+          example: 공공기관-지방자치단체
+        waste_process_type:
+          type: string
+          description: 오물 처리 방식
+          example: 수거식
+        safety_target_yn:
+          type: string
+          description: 안전관리시설설치대상여부
+          example: Y
+          enum:
+          - Y
+          - N
+        emg_bell_yn:
+          type: string
+          description: 비상벨 설치 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        emg_bell_location:
+          type: string
+          description: 비상벨 설치 장소
+          example: 화장실 내부
+        cctv_yn:
+          type: string
+          description: 화장실 입구 CCTV 설치 유무
+          example: Y
+          enum:
+          - Y
+          - N
+        diaper_table_yn:
+          type: string
+          description: 기저귀 교환대 유무
+          example: Y
+          enum:
+          - Y
+          - N
+        diaper_table_location:
+          type: string
+          description: 기저귀 교환대 장소
+          example: 여성 화장실 내부
+        remodeled_dt:
+          type: string
+          description: 리모델링 연월
+          example: '2023-06-15'
+        base_dt:
+          type: string
+          description: 데이터 기준 일자
+          format: date
+          example: '2023-12-01'
+      description: 응답 데이터
+    ApiResDtoListPoiPublicToilet:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          type: array
+          description: 응답 데이터
+          items:
+            $ref: '#/components/schemas/PoiPublicToilet'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
+    ApiResDtoPageResPoiPublicToilet:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          $ref: '#/components/schemas/PageResPoiPublicToilet'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
+    PageResPoiPublicToilet:
+      type: object
+      properties:
+        content:
+          type: array
+          description: 현재 페이지의 데이터 목록
+          items:
+            $ref: '#/components/schemas/PoiPublicToilet'
+        page:
+          type: integer
+          description: 현재 페이지 번호
+          format: int32
+          example: 1
+        size:
+          type: integer
+          description: 페이지당 항목 수
+          format: int32
+          example: 10
+        total:
+          type: integer
+          description: 전체 항목 수
+          format: int64
+          example: 100
+      description: 페이징 처리된 응답 데이터
+    ApiResDtoListPoiPublicToiletLocation:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          type: array
+          description: 응답 데이터
+          items:
+            $ref: '#/components/schemas/PoiPublicToiletLocation'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
+    PoiPublicToiletLocation:
+      type: object
+      properties:
+        toilet_id:
+          type: integer
+          description: 공중 화장실 고유 식별자
+          format: int32
+          example: 1
+        sido_code:
+          type: string
+          description: 시도 코드
+          example: '11'
+        toilet_name:
+          type: string
+          description: 화장실명
+          example: 서울역 공중화장실
+        toilet_type:
+          type: string
+          description: 구분
+          example: 공중화장실
+        basis:
+          type: string
+          description: 설치 근거
+          example: 공중화장실 등에 관한 법률
+        addr_road:
+          type: string
+          description: 소재지 도로명 주소
+          example: 서울특별시 용산구 한강대로 405
+        addr_jibun:
+          type: string
+          description: 소재지 지번 주소
+          example: 서울특별시 용산구 한강로3가 40-999
+        m_toilet_count:
+          type: integer
+          description: 남성용 대변기 수
+          format: int32
+          example: 3
+        m_urinal_count:
+          type: integer
+          description: 남성용 소변기 수
+          format: int32
+          example: 2
+        m_dis_toilet_count:
+          type: integer
+          description: 남성용 장애인 대변기 수
+          format: int32
+          example: 1
+        m_dis_urinal_count:
+          type: integer
+          description: 남성용 장애인 소변기 수
+          format: int32
+          example: 1
+        m_child_toilet_count:
+          type: integer
+          description: 남성용 어린이 대변기 수
+          format: int32
+          example: 1
+        m_child_urinal_count:
+          type: integer
+          description: 남성용 어린이 소변기 수
+          format: int32
+          example: 1
+        f_toilet_count:
+          type: integer
+          description: 여성용 대변기 수
+          format: int32
+          example: 4
+        f_dis_toilet_count:
+          type: integer
+          description: 여성용 장애인 대변기 수
+          format: int32
+          example: 1
+        f_child_toilet_count:
+          type: integer
+          description: 여성용 어린이 대변기 수
+          format: int32
+          example: 1
+        managing_org:
+          type: string
+          description: 관리기관명
+          example: 서울특별시 용산구청
+        phone_number:
+          type: string
+          description: 전화번호
+          example: 02-2199-6114
+        open_time:
+          type: string
+          description: 개방시간
+          example: 24시간
+        open_time_detail:
+          type: string
+          description: 개방시간 상세
+          example: 연중무휴 24시간 개방
+        install_dt:
+          type: string
+          description: 설치 연월
+          example: 2020-01
+        latitude:
+          type: number
+          description: 위도
+          format: double
+          example: 37.554678
+        longitude:
+          type: number
+          description: 경도
+          format: double
+          example: 126.970606
+        owner_type:
+          type: string
+          description: 화장실 소유 구분
+          example: 공공기관-지방자치단체
+        waste_process_type:
+          type: string
+          description: 오물 처리 방식
+          example: 수거식
+        safety_target_yn:
+          type: string
+          description: 안전관리시설설치대상여부
+          example: Y
+          enum:
+          - Y
+          - N
+        emg_bell_yn:
+          type: string
+          description: 비상벨 설치 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        emg_bell_location:
+          type: string
+          description: 비상벨 설치 장소
+          example: 화장실 내부
+        cctv_yn:
+          type: string
+          description: 화장실 입구 CCTV 설치 유무
+          example: Y
+          enum:
+          - Y
+          - N
+        diaper_table_yn:
+          type: string
+          description: 기저귀 교환대 유무
+          example: Y
+          enum:
+          - Y
+          - N
+        diaper_table_location:
+          type: string
+          description: 기저귀 교환대 장소
+          example: 여성 화장실 내부
+        remodeled_dt:
+          type: string
+          description: 리모델링 연월
+          example: '2023-06-15'
+        base_dt:
+          type: string
+          description: 데이터 기준 일자
+          format: date
+          example: '2023-12-01'
+        distance:
+          type: integer
+          description: 요청한 위치로부터 거리
+          format: int32
+          example: 100
+      description: 응답 데이터
+    ApiResDtoPageResPoiPublicToiletLocation:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          $ref: '#/components/schemas/PageResPoiPublicToiletLocation'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
+    PageResPoiPublicToiletLocation:
+      type: object
+      properties:
+        content:
+          type: array
+          description: 현재 페이지의 데이터 목록
+          items:
+            $ref: '#/components/schemas/PoiPublicToiletLocation'
+        page:
+          type: integer
+          description: 현재 페이지 번호
+          format: int32
+          example: 1
+        size:
+          type: integer
+          description: 페이지당 항목 수
+          format: int32
+          example: 10
+        total:
+          type: integer
+          description: 전체 항목 수
+          format: int64
+          example: 100
+      description: 페이징 처리된 응답 데이터
+    ApiResDtoPoiSubwayElevator:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          $ref: '#/components/schemas/PoiSubwayElevator'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
+    PoiSubwayElevator:
+      type: object
+      properties:
+        subway_id:
+          type: integer
+          description: 지하철 엘리베이터 고유 식별자
+          format: int32
+          example: 1
+        sido_code:
+          type: string
+          description: 시도 코드
+          example: '11'
+        node_link_type:
+          type: string
+          description: 노드링크 유형
+          example: NODE
+        node_wkt:
+          type: string
+          description: WKT 기반 위치정보
+          example: POINT(126.9572029 37.57460779)
+        node_id:
+          type: integer
+          description: 노드 ID
+          format: int64
+          example: 123456789
+        node_type_code:
+          type: integer
+          description: 노드 유형 코드
+          format: int32
+          example: 1
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
+        node_type_name:
+          type: string
+          description: 노드 유형 이름
+          example: 지하철 출입구
+        sigungu_code:
+          type: string
+          description: 시군구 코드
+          example: '11110'
+        sigungu_name:
+          type: string
+          description: 시군구 명
+          example: 종로구
+        eupmyeondong_code:
+          type: string
+          description: 읍면동 코드
+          example: '1111010100'
+        eupmyeondong_name:
+          type: string
+          description: 읍면동 명
+          example: 종로2가
+        station_code:
+          type: string
+          description: 지하철역 코드
+          example: '267'
+        station_name:
+          type: string
+          description: 지하철역 명
+          example: 혜화
+        latitude:
+          type: number
+          description: 위도
+          format: double
+          example: 37.57460779
+        longitude:
+          type: number
+          description: 경도
+          format: double
+          example: 126.9572029
+        base_dt:
+          type: string
+          description: 데이터 기준 일자
+          example: '20231201'
+      description: 응답 데이터
+    ApiResDtoListPoiSubwayElevator:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          type: array
+          description: 응답 데이터
+          items:
+            $ref: '#/components/schemas/PoiSubwayElevator'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
+    ApiResDtoPageResPoiSubwayElevator:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          $ref: '#/components/schemas/PageResPoiSubwayElevator'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
+    PageResPoiSubwayElevator:
+      type: object
+      properties:
+        content:
+          type: array
+          description: 현재 페이지의 데이터 목록
+          items:
+            $ref: '#/components/schemas/PoiSubwayElevator'
+        page:
+          type: integer
+          description: 현재 페이지 번호
+          format: int32
+          example: 1
+        size:
+          type: integer
+          description: 페이지당 항목 수
+          format: int32
+          example: 10
+        total:
+          type: integer
+          description: 전체 항목 수
+          format: int64
+          example: 100
+      description: 페이징 처리된 응답 데이터
+    ApiResDtoListPoiSubwayElevatorLocation:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          type: array
+          description: 응답 데이터
+          items:
+            $ref: '#/components/schemas/PoiSubwayElevatorLocation'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
+    PoiSubwayElevatorLocation:
+      type: object
+      properties:
+        subway_id:
+          type: integer
+          description: 지하철 엘리베이터 고유 식별자
+          format: int32
+          example: 1
+        sido_code:
+          type: string
+          description: 시도 코드
+          example: '11'
+        node_link_type:
+          type: string
+          description: 노드링크 유형
+          example: NODE
+        node_wkt:
+          type: string
+          description: WKT 기반 위치정보
+          example: POINT(126.9572029 37.57460779)
+        node_id:
+          type: integer
+          description: 노드 ID
+          format: int64
+          example: 123456789
+        node_type_code:
+          type: integer
+          description: 노드 유형 코드
+          format: int32
+          example: 1
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
+        node_type_name:
+          type: string
+          description: 노드 유형 이름
+          example: 지하철 출입구
+        sigungu_code:
+          type: string
+          description: 시군구 코드
+          example: '11110'
+        sigungu_name:
+          type: string
+          description: 시군구 명
+          example: 종로구
+        eupmyeondong_code:
+          type: string
+          description: 읍면동 코드
+          example: '1111010100'
+        eupmyeondong_name:
+          type: string
+          description: 읍면동 명
+          example: 종로2가
+        station_code:
+          type: string
+          description: 지하철역 코드
+          example: '267'
+        station_name:
+          type: string
+          description: 지하철역 명
+          example: 혜화
+        latitude:
+          type: number
+          description: 위도
+          format: double
+          example: 37.57460779
+        longitude:
+          type: number
+          description: 경도
+          format: double
+          example: 126.9572029
+        base_dt:
+          type: string
+          description: 데이터 기준 일자
+          example: '20231201'
+        distance:
+          type: integer
+          description: 요청한 위치로부터 거리
+          format: int32
+          example: 100
+      description: 응답 데이터
+    ApiResDtoPageResPoiSubwayElevatorLocation:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          $ref: '#/components/schemas/PageResPoiSubwayElevatorLocation'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
+    PageResPoiSubwayElevatorLocation:
+      type: object
+      properties:
+        content:
+          type: array
+          description: 현재 페이지의 데이터 목록
+          items:
+            $ref: '#/components/schemas/PoiSubwayElevatorLocation'
+        page:
+          type: integer
+          description: 현재 페이지 번호
+          format: int32
+          example: 1
+        size:
+          type: integer
+          description: 페이지당 항목 수
+          format: int32
+          example: 10
+        total:
+          type: integer
+          description: 전체 항목 수
+          format: int64
+          example: 100
+      description: 페이징 처리된 응답 데이터
+    ApiResDtoPoiTourBfFacility:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          $ref: '#/components/schemas/PoiTourBfFacility'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
+    PoiTourBfFacility:
+      type: object
+      properties:
+        fclt_id:
+          type: integer
+          description: 무장애 관광지 시설 고유 식별자
+          format: int32
+          example: 1
+        sido_code:
+          type: string
+          description: 시도 코드
+          example: '11'
+        fclt_name:
+          type: string
+          description: 무장애 관광지명
+          example: 서울타워
+        toilet_yn:
+          type: string
+          description: 장애인 화장실 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        elevator_yn:
+          type: string
+          description: 엘리베이터 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        parking_yn:
+          type: string
+          description: 장애인 주차장 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        slope_yn:
+          type: string
+          description: 경사로 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        subway_yn:
+          type: string
+          description: 지하철 접근성 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        bus_stop_yn:
+          type: string
+          description: 버스 정류장 접근성 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        wheelchair_rent_yn:
+          type: string
+          description: 휠체어 대여 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        tactile_map_yn:
+          type: string
+          description: 촉지도식 안내판 설치 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        audio_guide_yn:
+          type: string
+          description: 오디오 가이드 제공 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        nursing_room_yn:
+          type: string
+          description: 아기 돌봄/수유실 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        accessible_room_yn:
+          type: string
+          description: 무장애 객실 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        stroller_rent_yn:
+          type: string
+          description: 유아차 대여 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        addr_road:
+          type: string
+          description: 소재지 도로명 주소
+          example: 서울특별시 용산구 남산공원길 105
+        addr_jibun:
+          type: string
+          description: 소재지 지번 주소
+          example: 서울특별시 용산구 용산동2가 산1-3
+        latitude:
+          type: number
+          description: 위도
+          format: double
+          example: 37.551169
+        longitude:
+          type: number
+          description: 경도
+          format: double
+          example: 126.988226
+        base_dt:
+          type: string
+          description: 데이터 기준 일자
+          format: date
+          example: '2023-12-01'
+      description: 응답 데이터
+    ApiResDtoListPoiTourBfFacility:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          type: array
+          description: 응답 데이터
+          items:
+            $ref: '#/components/schemas/PoiTourBfFacility'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
+    ApiResDtoPageResPoiTourBfFacility:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          $ref: '#/components/schemas/PageResPoiTourBfFacility'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
+    PageResPoiTourBfFacility:
+      type: object
+      properties:
+        content:
+          type: array
+          description: 현재 페이지의 데이터 목록
+          items:
+            $ref: '#/components/schemas/PoiTourBfFacility'
+        page:
+          type: integer
+          description: 현재 페이지 번호
+          format: int32
+          example: 1
+        size:
+          type: integer
+          description: 페이지당 항목 수
+          format: int32
+          example: 10
+        total:
+          type: integer
+          description: 전체 항목 수
+          format: int64
+          example: 100
+      description: 페이징 처리된 응답 데이터
+    ApiResDtoListPoiTourBfFacilityLocation:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          type: array
+          description: 응답 데이터
+          items:
+            $ref: '#/components/schemas/PoiTourBfFacilityLocation'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
+    PoiTourBfFacilityLocation:
+      type: object
+      properties:
+        fclt_id:
+          type: integer
+          description: 무장애 관광지 시설 고유 식별자
+          format: int32
+          example: 1
+        sido_code:
+          type: string
+          description: 시도 코드
+          example: '11'
+        fclt_name:
+          type: string
+          description: 무장애 관광지명
+          example: 서울타워
+        toilet_yn:
+          type: string
+          description: 장애인 화장실 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        elevator_yn:
+          type: string
+          description: 엘리베이터 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        parking_yn:
+          type: string
+          description: 장애인 주차장 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        slope_yn:
+          type: string
+          description: 경사로 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        subway_yn:
+          type: string
+          description: 지하철 접근성 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        bus_stop_yn:
+          type: string
+          description: 버스 정류장 접근성 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        wheelchair_rent_yn:
+          type: string
+          description: 휠체어 대여 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        tactile_map_yn:
+          type: string
+          description: 촉지도식 안내판 설치 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        audio_guide_yn:
+          type: string
+          description: 오디오 가이드 제공 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        nursing_room_yn:
+          type: string
+          description: 아기 돌봄/수유실 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        accessible_room_yn:
+          type: string
+          description: 무장애 객실 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        stroller_rent_yn:
+          type: string
+          description: 유아차 대여 여부
+          example: Y
+          enum:
+          - Y
+          - N
+        addr_road:
+          type: string
+          description: 소재지 도로명 주소
+          example: 서울특별시 용산구 남산공원길 105
+        addr_jibun:
+          type: string
+          description: 소재지 지번 주소
+          example: 서울특별시 용산구 용산동2가 산1-3
+        latitude:
+          type: number
+          description: 위도
+          format: double
+          example: 37.551169
+        longitude:
+          type: number
+          description: 경도
+          format: double
+          example: 126.988226
+        base_dt:
+          type: string
+          description: 데이터 기준 일자
+          format: date
+          example: '2023-12-01'
+        distance:
+          type: integer
+          description: 요청한 위치로부터 거리
+          format: int32
+          example: 100
+      description: 응답 데이터
+    ApiResDtoPageResPoiTourBfFacilityLocation:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+          example: true
+        data:
+          $ref: '#/components/schemas/PageResPoiTourBfFacilityLocation'
+        status:
+          type: string
+          description: 응답 코드
+          example: '200'
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+        error:
+          $ref: '#/components/schemas/ErrInfoDto'
+      description: 공통 응답 포맷
+    PageResPoiTourBfFacilityLocation:
+      type: object
+      properties:
+        content:
+          type: array
+          description: 현재 페이지의 데이터 목록
+          items:
+            $ref: '#/components/schemas/PoiTourBfFacilityLocation'
         page:
           type: integer
           description: 현재 페이지 번호

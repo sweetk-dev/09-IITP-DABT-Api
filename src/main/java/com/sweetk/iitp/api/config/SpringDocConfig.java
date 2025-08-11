@@ -105,6 +105,38 @@ public class SpringDocConfig {
                 .collect(Collectors.joining("\n"));
         errorCodeSchema.setDescription("에러 코드 목록:\n" + errorCodeDesc);
 
+        // x-tagGroups 설정 추가
+        Map<String, Object> tagGroups = new HashMap<>();
+        tagGroups.put("x-tagGroups", Arrays.asList(
+            Map.of(
+                "name", "기초 데이터",
+                "tags", Arrays.asList(
+                    "기초-건강 관리 현황 API V1",
+                    "기초-주거 자립 현황 API V1",
+                    "기초-보조기기 사용 현황 API V1",
+                    "기초-사회망 현황 API V1",
+                    "기초-편의 시설 제공 현황 API V1",
+                    "기초-진로 교육 현황 API V1",
+                    "기초-고용 현황 API V1"
+                )
+            ),
+            Map.of(
+                "name", "POI API",
+                "tags", Arrays.asList(
+                    "이동형 - 관광 POI API V1",
+                    "이동형 - 편의시설 - 공중 화장실 POI API V1",
+                    "이동형 - 편의시설 - 지하철 엘리베이터 POI API V1",
+                    "이동형 - 편의시설 - 무장애 관광지 시설 POI API V1"
+                )
+            ),
+            Map.of(
+                "name", "고용 관련 API",
+                "tags", Arrays.asList(
+                    "장애인 고용 관련 데이터 API V1"
+                )
+            )
+        ));
+
         OpenAPI openAPI = new OpenAPI()
                 .components(new Components()
                         .addSchemas("ErrorInfoDto", errorInfoSchema)
@@ -118,7 +150,8 @@ public class SpringDocConfig {
                                         new MediaType().schema(new Schema<>().$ref("#/components/schemas/ErrApiResDto"))
                                 ))
                         )
-                );
+                )
+                .extensions(tagGroups);
 
         return openAPI;
     }
