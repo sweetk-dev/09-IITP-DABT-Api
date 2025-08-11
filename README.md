@@ -137,12 +137,30 @@ build.bat [local|dev|stage|prod]
 ### 2.2. Stoplight Elements 그룹핑(x-tagGroups) 자동 추가
 - Stoplight Elements에서 API 그룹핑을 위해 OpenAPI 문서의 root에 `x-tagGroups`가 필요합니다.
 - 본 프로젝트는 빌드 후 파이썬 스크립트(`scripts/add-x-tagGroups.py`)로 자동 추가합니다.
-- **최초 1회만 아래 명령어로 PyYAML 패키지를 설치하세요:**
 
+#### 필수 사전 설치
+**최초 1회만 아래 명령어로 PyYAML 패키지를 설치하세요:**
 ```sh
 pip install pyyaml
 ```
-- 이후 `./gradlew copyDocsToResources` 또는 빌드 스크립트 실행 시 자동으로 그룹핑 정보가 추가됩니다.
+
+#### 자동 실행 (권장)
+- `./gradlew copyDocsToResources` 또는 빌드 스크립트 실행 시 자동으로 그룹핑 정보가 추가됩니다.
+- build.sh/build.bat 사용 시 자동 포함됩니다.
+
+#### 수동 실행
+빌드 후 수동으로 그룹핑을 추가하려면:
+```sh
+# OpenAPI 문서 생성 후
+./gradlew copyDocsToResources
+
+# 그룹핑 정보 추가
+python scripts/add-x-tagGroups.py
+```
+
+#### 그룹핑 확인
+- `src/main/resources/static/docs/latest.yaml` 파일에 `x-tagGroups` 섹션이 추가되었는지 확인
+- Stoplight Elements에서 `el.grouping = true` 속성 설정 필요
 
 ### 3. 서버 실행
 

@@ -64,7 +64,8 @@ for file in files:
     filtered_tag_groups = []
     for group in tag_groups:
         filtered_tags = [t for t in group['tags'] if t in valid_tags]
-        filtered_tag_groups.append({"name": group['name'], "tags": filtered_tags})
+        if filtered_tags:  # 빈 그룹은 제외
+            filtered_tag_groups.append({"name": group['name'], "tags": filtered_tags})
 
     new_data = OrderedDict()
     for key in ['openapi', 'info', 'tags', 'x-tagGroups', 'servers', 'security', 'paths', 'components']:
