@@ -4,6 +4,8 @@
 # 애플리케이션 정보
 app:
   version: @version@
+  build:
+    date: @build.time@
   distance-calculation:
     # 거리 계산 방식: POSTGIS_SPHERE (ST_Distance_Sphere), POSTGIS_PLANAR (ST_Distance), POSTGRESQL_EARTH (earth_distance)
     method: POSTGIS_SPHERE
@@ -51,6 +53,8 @@ logging:
     com.sweetk.iitp: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    # Jasypt 로그 레벨 조정
+    com.ulisesbocchio.jasyptspringboot: WARN
 
 springdoc:
   version: @springdoc.version@
