@@ -24,7 +24,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class PoiPublicToiletReadService extends PoiService {
+public class PoiPublicToiletInfoReadService extends PoiService {
 
     private final PoiPublicToiletInfoRepository toiletRepository;
     private final SysCommonCodeService commonCodeService;
