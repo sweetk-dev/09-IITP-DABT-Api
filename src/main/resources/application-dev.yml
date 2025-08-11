@@ -5,10 +5,19 @@
 # 암호화 키 : iitp
 spring:
   datasource:
-    url: jdbc:postgresql://192.168.60.146:5432/iitp_dev
-    username: iitp_dev
-    password: ENC(YYk4eNCtcM8dKoJRzrxfa2abus8I44In)
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/iitp
+    username: postgres
+    password: ENC(encrypted-postgres)
+    hikari:
+      pool-name: IITPHikariPool
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 300000
+      connection-timeout: 30000
+      max-lifetime: 1200000
+      # Spring Boot 3.x에서는 connection-test-query 대신 connection-test-query-timeout 사용
+      # connection-test-query: SELECT 1
 
 logging:
   config: classpath:log4j2-dev.xml
-# ... 기존 설정 ...

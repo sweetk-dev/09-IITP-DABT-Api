@@ -1,13 +1,16 @@
 # IITP API 설정 파일
 # 공통 설정을 포함합니다.
 
-# 거리 계산 방식 설정
+# 애플리케이션 정보
 app:
+  version: @version@
   distance-calculation:
     # 거리 계산 방식: POSTGIS_SPHERE (ST_Distance_Sphere), POSTGIS_PLANAR (ST_Distance), POSTGRESQL_EARTH (earth_distance)
     method: POSTGIS_SPHERE
     # PostGIS 확장 사용 여부
     #use-postgis: true
+
+
 
 # IITP API 환경 설정 파일
 # 공통 설정만 포함
@@ -18,19 +21,7 @@ spring:
     name: iitp-api
   config:
     import: optional:file:./application-${spring.profiles.active}.yml
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/iitp
-    username: postgres
-    password: postgres
-    hikari:
-      pool-name: IITPHikariPool
-      maximum-pool-size: 10
-      minimum-idle: 5
-      idle-timeout: 300000
-      connection-timeout: 30000
-      max-lifetime: 1200000
-      connection-test-query: SELECT 1
+  # datasource 설정은 각 환경별 설정 파일에서 관리
   jpa:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect

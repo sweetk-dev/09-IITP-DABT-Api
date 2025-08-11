@@ -212,10 +212,10 @@ jar {
 }
 
 bootRun {
-    systemProperty "spring.profiles.active", env
+    systemProperty "spring.profiles.active", project.hasProperty('env') ? env : 'local'
     systemProperty "app.version", jarVersion
     systemProperty "app.build.date", buildTime
-    systemProperty "jasypt.encryptor.password", System.getProperty("jasypt.encryptor.password", "dev-password")
+    systemProperty "jasypt.encryptor.password", System.getProperty("jasypt.encryptor.password", "iitp")
     systemProperty "API_DOC_URL", "${apiDocUrlBase}/docs/latest.yaml"
 }
 
@@ -262,7 +262,7 @@ tasks.named('build') {
 
 tasks.named('processResources') {
     doFirst {
-        def env = project.hasProperty('env') ? project.env : 'dev'
+        def env = project.hasProperty('env') ? project.env : 'local'
         // 환경별 파일만 포함
         filesMatching('application-*.yml') {
             if (!(name == 'application.yml' || name == "application-${env}.yml")) {
@@ -288,13 +288,12 @@ tasks.named('processResources') {
 task encrypt(type: JavaExec) {
     group = 'encryption'
     description = 'Jasypt로 평문을 암호화합니다. --plain-text, --password 인자 필요.'
-    mainClass = 'org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI'
-    classpath = configurations.runtimeClasspath
+    mainClass = 'com.sweetk.iitp.api.util.JasyptEncryptor'
+    classpath = sourceSets.main.runtimeClasspath
     jvmArgs = ['-Dfile.encoding=UTF-8']
     args = [
-        'input=' + (project.hasProperty('plain-text') ? project.property('plain-text') : ''),
-        'password=' + (project.hasProperty('password') ? project.property('password') : ''),
-        'algorithm=PBEWithMD5AndDES'
+        project.hasProperty('plain-text') ? project.property('plain-text') : '',
+        project.hasProperty('password') ? project.property('password') : ''
     ]
     doFirst {
         if (!project.hasProperty('plain-text') || !project.hasProperty('password')) {
@@ -305,7 +304,7 @@ task encrypt(type: JavaExec) {
 
 // 환경별 리소스 복사 및 정리
 processResources.doFirst {
-    def env = project.hasProperty('env') ? project.env : 'dev'
+    def env = project.hasProperty('env') ? project.env : 'local'
     delete {
         delete fileTree('build/resources/main') {
             include 'application-*.yml'
@@ -320,6 +319,11 @@ processResources.doFirst {
                 include 'log4j2-local.xml'
             }
             into('build/resources/main')
+            filter {
+                it.replace('@build.time@', buildTime)
+                  .replace('@version@', jarVersion)
+                  .replace('@springdoc.version@', apiDocVersion)
+            }
         }
     } else if (env == 'dev') {
         copy {
@@ -329,6 +333,11 @@ processResources.doFirst {
                 include 'log4j2-dev.xml'
             }
             into('build/resources/main')
+            filter {
+                it.replace('@build.time@', buildTime)
+                  .replace('@version@', jarVersion)
+                  .replace('@springdoc.version@', apiDocVersion)
+            }
         }
     } else if (env == 'stage') {
         copy {
@@ -338,6 +347,11 @@ processResources.doFirst {
                 include 'log4j2-stage.xml'
             }
             into('build/resources/main')
+            filter {
+                it.replace('@build.time@', buildTime)
+                  .replace('@version@', jarVersion)
+                  .replace('@springdoc.version@', apiDocVersion)
+            }
         }
     } else if (env == 'prod') {
         copy {
@@ -347,6 +361,11 @@ processResources.doFirst {
                 include 'log4j2-prod.xml'
             }
             into('build/resources/main')
+            filter {
+                it.replace('@build.time@', buildTime)
+                  .replace('@version@', jarVersion)
+                  .replace('@springdoc.version@', apiDocVersion)
+            }
         }
     }
 }
