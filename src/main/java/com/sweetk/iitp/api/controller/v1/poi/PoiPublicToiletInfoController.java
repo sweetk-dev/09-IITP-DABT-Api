@@ -10,7 +10,7 @@ import com.sweetk.iitp.api.dto.poi.PoiPublicToiletSearchCatReq;
 import com.sweetk.iitp.api.dto.poi.PoiPublicToiletSearchLocReq;
 import com.sweetk.iitp.api.exception.BusinessException;
 import com.sweetk.iitp.api.exception.ErrorCode;
-import com.sweetk.iitp.api.service.poi.PoiPublicToiletReadService;
+import com.sweetk.iitp.api.service.poi.PoiPublicToiletInfoReadService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,9 +33,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping(ApiConstants.ApiPath.API_V1_POI_PUBLIC_PUBLIC_TOILET)
 @RequiredArgsConstructor
-public class PoiPublicToiletController {
+public class PoiPublicToiletInfoController {
 
-    private final PoiPublicToiletReadService toiletReadService;
+    private final PoiPublicToiletInfoReadService toiletReadService;
 
     @GetMapping("/{toiletId}")
     @Operation(
