@@ -57,13 +57,13 @@ public interface PoiPublicToiletInfoRepositoryCustom {
      *******************************/
     //거리 정보 포함 위치 기반 공중 화장실 검색 (추가 조건 포함)
     List<PoiPublicToiletLocation> findByLocationWithConditions(
-            java.math.BigDecimal latitude, java.math.BigDecimal longitude,
-            java.math.BigDecimal radius, String toiletName, PoiPublicToiletType toiletType, String open24hYn);
+            Double latitude, Double longitude,
+            Double radius, String toiletName, PoiPublicToiletType toiletType, String open24hYn);
 
     //거리 정보 포함 위치 기반 공중 화장실 검색 (페이징)
     PoiPageResult<PoiPublicToiletLocation> findByLocationWithConditionsAndPagingCount(
-            java.math.BigDecimal latitude, java.math.BigDecimal longitude, 
-            java.math.BigDecimal radius, String toiletName, PoiPublicToiletType toiletType, 
+            Double latitude, Double longitude, 
+            Double radius, String toiletName, PoiPublicToiletType toiletType, 
             String open24hYn, int offset, int size);
 
 } 

@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -48,11 +47,11 @@ public class MvPoi {
 
     @Schema(description = "위도", example = "37.57460779")
     @JsonProperty("latitude")
-    private BigDecimal latitude;
+    private Double latitude;
 
     @Schema(description = "경도", example = "126.9572029")
     @JsonProperty("longitude")
-    private BigDecimal longitude;
+    private Double longitude;
 
     @Schema(description = "상세 정보 JSON", example = "{}")
     @JsonProperty("detail_json")

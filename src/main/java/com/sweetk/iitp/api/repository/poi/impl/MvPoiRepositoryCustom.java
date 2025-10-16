@@ -5,7 +5,6 @@ import com.sweetk.iitp.api.dto.poi.MvPoi;
 import com.sweetk.iitp.api.dto.poi.MvPoiLocation;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,10 +34,10 @@ public interface MvPoiRepositoryCustom {
 
     // 거리 정보를 포함한 위치 기반 검색
     List<MvPoiLocation> findByLocationWithConditions(
-            String category, String name, BigDecimal latitude, BigDecimal longitude, BigDecimal radius
+            String category, String name, Double latitude, Double longitude, Double radius
     );
     PoiPageResult<MvPoiLocation> findByLocationWithConditionsAndPagingCount(
-            String category, String name, BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size
+            String category, String name, Double latitude, Double longitude, Double radius, int offset, int size
     );
 
 } 

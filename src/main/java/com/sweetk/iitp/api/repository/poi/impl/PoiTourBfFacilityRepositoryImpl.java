@@ -325,8 +325,8 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
      *******************************/
     // 거리 정보 포함 위치 기반 무장애 관광지 시설 검색 (전체 결과)
     @Override
-    public List<PoiTourBfFacilityLocation> findByLocationWithConditions(BigDecimal latitude, BigDecimal longitude,
-                                                                     BigDecimal radius,
+    public List<PoiTourBfFacilityLocation> findByLocationWithConditions(Double latitude, Double longitude,
+                                                                     Double radius,
                                                                       String fcltName, //String sidoCode,
                                                                       String toiletYn, String elevatorYn,
                                                                       String parkingYn, String wheelchairRentYn,
@@ -334,7 +334,7 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
         StringBuilder sql = new StringBuilder(FACILITY_LOCATION_QUERY);
         sql = buildCategoryConditionsSql(sql, fcltName, null, toiletYn, elevatorYn, parkingYn,
                 wheelchairRentYn, tactileMapYn, audioGuideYn);
-        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius * 1000));
         sql.append(FACILITY_ORDER_BY_DISTANCE);
 
         log.debug("[PoiTourBfFacility] 거리 정보 포함 위치 기반 검색 쿼리: {}", sql);
@@ -344,8 +344,8 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             
             // 거리 계산을 위한 파라미터 설정 (longitude, latitude)
-            ps.setBigDecimal(1, longitude);
-            ps.setBigDecimal(2, latitude);
+            ps.setDouble(1, longitude);
+            ps.setDouble(2, latitude);
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -364,8 +364,8 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
 
     // 거리 정보 포함 위치 기반 무장애 관광지 시설 검색 (페이징)
     @Override
-    public PoiPageResult<PoiTourBfFacilityLocation> findByLocationWithConditionsAndPagingCount(BigDecimal latitude, BigDecimal longitude,
-                                                                                             BigDecimal radius,
+    public PoiPageResult<PoiTourBfFacilityLocation> findByLocationWithConditionsAndPagingCount(Double latitude, Double longitude,
+                                                                                             Double radius,
                                                                                              String fcltName, //String sidoCode,
                                                                                              String toiletYn, String elevatorYn,
                                                                                              String parkingYn, String wheelchairRentYn,
@@ -374,7 +374,7 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
         StringBuilder sql = new StringBuilder(FACILITY_LOCATION_QUERY_WITH_COUNT);
         sql = buildCategoryConditionsSql(sql, fcltName, null, toiletYn, elevatorYn, parkingYn,
                 wheelchairRentYn, tactileMapYn, audioGuideYn);
-        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius * 1000));
         sql.append(FACILITY_ORDER_BY_DISTANCE);
         
         // 페이징 추가
@@ -388,8 +388,8 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             
             // 거리 계산을 위한 파라미터 설정 (longitude, latitude)
-            ps.setBigDecimal(1, longitude);
-            ps.setBigDecimal(2, latitude);
+            ps.setDouble(1, longitude);
+            ps.setDouble(2, latitude);
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -432,8 +432,8 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
                 rs.getString("stroller_rent_yn"),
                 rs.getString("addr_road"),
                 rs.getString("addr_jibun"),
-                rs.getBigDecimal("latitude") != null ? rs.getBigDecimal("latitude").doubleValue() : null,
-                rs.getBigDecimal("longitude") != null ? rs.getBigDecimal("longitude").doubleValue() : null,
+                rs.getObject("latitude", Double.class),
+                rs.getObject("longitude", Double.class),
                 rs.getDate("base_dt") != null ? rs.getDate("base_dt").toLocalDate() : null
         );
     }

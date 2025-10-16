@@ -384,12 +384,12 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
      *******************************/
     // 거리 정보 포함 위치 기반 지하철 엘리베이터 검색 (전체 결과)
     @Override
-    public List<PoiSubwayElevatorLocation> findByLocationWithConditions(BigDecimal latitude, BigDecimal longitude,
-                                                                      BigDecimal radius,
+    public List<PoiSubwayElevatorLocation> findByLocationWithConditions(Double latitude, Double longitude,
+                                                                      Double radius,
                                                                       String stationName, Integer nodeTypeCode) {
         StringBuilder sql = new StringBuilder(ELEVATOR_LOCATION_QUERY);
         sql = buildCategoryConditionsSql(sql, stationName, null, nodeTypeCode);
-        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius * 1000));
         sql.append(ELEVATOR_ORDER_BY_DISTANCE);
 
         log.debug("[PoiSubwayElevator] 거리 정보 포함 위치 기반 검색 쿼리: {}", sql);
@@ -399,8 +399,8 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             
             // 거리 계산을 위한 파라미터 설정 (longitude, latitude)
-            ps.setBigDecimal(1, longitude);
-            ps.setBigDecimal(2, latitude);
+            ps.setDouble(1, longitude);
+            ps.setDouble(2, latitude);
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -419,13 +419,13 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
 
     // 거리 정보 포함 위치 기반 지하철 엘리베이터 검색 (페이징)
     @Override
-    public PoiPageResult<PoiSubwayElevatorLocation> findByLocationWithConditionsAndPagingCount(BigDecimal latitude, BigDecimal longitude,
-                                                                                             BigDecimal radius,
+    public PoiPageResult<PoiSubwayElevatorLocation> findByLocationWithConditionsAndPagingCount(Double latitude, Double longitude,
+                                                                                             Double radius,
                                                                                              String stationName, Integer nodeTypeCode,
                                                                                              int offset, int size) {
         StringBuilder sql = new StringBuilder(ELEVATOR_LOCATION_QUERY_WITH_COUNT);
         sql = buildCategoryConditionsSql(sql, stationName, null, nodeTypeCode);
-        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius * 1000));
         sql.append(ELEVATOR_ORDER_BY_DISTANCE);
         sql = RepositoryUtils.addQueryOffset(sql, offset, size);
 
@@ -437,8 +437,8 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             
             // 거리 계산을 위한 파라미터 설정 (longitude, latitude)
-            ps.setBigDecimal(1, longitude);
-            ps.setBigDecimal(2, latitude);
+            ps.setDouble(1, longitude);
+            ps.setDouble(2, latitude);
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -477,8 +477,8 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
                 rs.getString("eupmyeondong_name"),
                 rs.getString("station_code"),
                 rs.getString("station_name"),
-                rs.getBigDecimal("latitude") != null ? rs.getBigDecimal("latitude").doubleValue() : null,
-                rs.getBigDecimal("longitude") != null ? rs.getBigDecimal("longitude").doubleValue() : null,
+                rs.getObject("latitude", Double.class),
+                rs.getObject("longitude", Double.class),
                 rs.getString("base_dt")
         );
     }

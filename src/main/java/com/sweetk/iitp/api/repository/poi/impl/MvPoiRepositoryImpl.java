@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -274,11 +273,11 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
     // 거리 정보를 포함한 위치 기반 검색
     public List<MvPoiLocation> findByLocationWithConditions(String category, String name,
-                                                    BigDecimal latitude, BigDecimal longitude, BigDecimal radius) {
+                                                    Double latitude, Double longitude, Double radius) {
 
         StringBuilder sql = new StringBuilder(SQL_MV_LOCATION_QUERY);
         sql = getQueryFindByLocCategory(sql, category, name);
-        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius * 1000));
         sql.append(SQL_ORDER_BY_DISTANCE);
 
         log.debug("[MvPoi] 거리 정보 포함 위치 기반 검색 실행 쿼리: {}", sql);
@@ -289,8 +288,8 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             
             // 거리 계산을 위한 파라미터 설정 (longitude, latitude)
-            ps.setBigDecimal(1, longitude);
-            ps.setBigDecimal(2, latitude);
+            ps.setDouble(1, longitude);
+            ps.setDouble(2, latitude);
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -307,11 +306,11 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
     }
 
     public PoiPageResult<MvPoiLocation> findByLocationWithConditionsAndPagingCount(String category, String name,
-                                                                           BigDecimal latitude, BigDecimal longitude, BigDecimal radius, int offset, int size) {
+                                                                           Double latitude, Double longitude, Double radius, int offset, int size) {
 
         StringBuilder sql = new StringBuilder(SQL_MV_LOCATION_QUERY_WITH_COUNT);
         sql = getQueryFindByLocCategory(sql, category, name);
-        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius * 1000));
         sql.append(SQL_ORDER_BY_DISTANCE);
         sql = RepositoryUtils.addQueryOffset(sql, offset, size);
 
@@ -324,8 +323,8 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             
             // 거리 계산을 위한 파라미터 설정 (longitude, latitude)
-            ps.setBigDecimal(1, longitude);
-            ps.setBigDecimal(2, latitude);
+            ps.setDouble(1, longitude);
+            ps.setDouble(2, latitude);
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -408,8 +407,8 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
         poi.setAddressCode(rs.getString("address_code"));
         poi.setAddressRoad(rs.getString("address_road"));
         poi.setAddressDetail(rs.getString("address_detail"));
-        poi.setLatitude(rs.getBigDecimal("latitude"));
-        poi.setLongitude(rs.getBigDecimal("longitude"));
+        poi.setLatitude(rs.getObject("latitude", Double.class));
+        poi.setLongitude(rs.getObject("longitude", Double.class));
         poi.setDetailJson(rs.getString("detail_json"));
         poi.setSearchFilterJson(rs.getString("search_filter_json"));
         return poi;
@@ -426,8 +425,8 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
             rs.getString("address_code"),
             rs.getString("address_road"),
             rs.getString("address_detail"),
-            rs.getBigDecimal("latitude"),
-            rs.getBigDecimal("longitude"),
+            rs.getObject("latitude", Double.class),
+            rs.getObject("longitude", Double.class),
             rs.getString("detail_json"),
             rs.getString("search_filter_json"),
             rs.getInt("distance")

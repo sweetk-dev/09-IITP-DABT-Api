@@ -4,7 +4,6 @@ import com.sweetk.iitp.api.dto.internal.PoiPageResult;
 import com.sweetk.iitp.api.dto.poi.PoiTourBfFacility;
 import com.sweetk.iitp.api.dto.poi.PoiTourBfFacilityLocation;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,8 +63,8 @@ public interface PoiTourBfFacilityRepositoryCustom {
      ** 위치 기반 무장애 관광지 시설 조회
      *******************************/
      // 거리 정보 포함 위치 기반 무장애 관광지 시설 검색 (전체 결과)
-    List<PoiTourBfFacilityLocation> findByLocationWithConditions(BigDecimal latitude, BigDecimal longitude,
-                                                               BigDecimal radius,
+    List<PoiTourBfFacilityLocation> findByLocationWithConditions(Double latitude, Double longitude,
+                                                               Double radius,
                                                                String fcltName, //String sidoCode,
                                                                String toiletYn, String elevatorYn,
                                                                String parkingYn, String wheelchairRentYn,
@@ -73,8 +72,8 @@ public interface PoiTourBfFacilityRepositoryCustom {
 
 
      // 거리 정보 포함 위치 기반 무장애 관광지 시설 검색 (페이징)
-    PoiPageResult<PoiTourBfFacilityLocation> findByLocationWithConditionsAndPagingCount( BigDecimal latitude, BigDecimal longitude,
-                                                                                       BigDecimal radius,
+    PoiPageResult<PoiTourBfFacilityLocation> findByLocationWithConditionsAndPagingCount( Double latitude, Double longitude,
+                                                                                       Double radius,
                                                                                        String fcltName, //String sidoCode,
                                                                                        String toiletYn, String elevatorYn,
                                                                                        String parkingYn, String wheelchairRentYn,
