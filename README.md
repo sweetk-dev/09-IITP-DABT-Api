@@ -176,6 +176,52 @@ python scripts/add-x-tagGroups.py
   ```
 - 다른 profile로 실행하려면 스크립트 내의 `export SPRING_PROFILES_ACTIVE=dev` 부분을 수정하세요.
 
+### 4. 서버 자동 시작 설정 (systemd)
+
+서버 리부팅 후 API가 자동으로 시작되도록 systemd 서비스를 설정할 수 있습니다.
+
+#### 4.1. 서비스 파일 설정
+```bash
+# 1. 서비스 파일을 systemd 디렉토리에 복사
+sudo cp iitp-api.service /etc/systemd/system/
+
+# 2. 서비스 파일 수정 (실제 API 디렉토리 경로로 변경)
+sudo nano /etc/systemd/system/iitp-api.service
+```
+
+#### 4.2. 서비스 파일 내용 수정
+`WorkingDirectory` 부분을 실제 API 디렉토리 경로로 변경:
+```ini
+WorkingDirectory=/path/to/your/api/directory  # 실제 경로로 수정
+```
+
+#### 4.3. 서비스 활성화 및 시작
+```bash
+# systemd 데몬 리로드
+sudo systemctl daemon-reload
+
+# 서비스 활성화 (부팅시 자동 시작)
+sudo systemctl enable iitp-api
+
+# 서비스 시작
+sudo systemctl start iitp-api
+```
+
+#### 4.4. 서비스 관리 명령어
+```bash
+sudo systemctl start iitp-api     # 시작
+sudo systemctl stop iitp-api      # 중지
+sudo systemctl restart iitp-api   # 재시작
+sudo systemctl status iitp-api    # 상태 확인
+sudo journalctl -u iitp-api -f    # 실시간 로그 보기
+```
+
+#### 4.5. 기존 api_run.sh와의 관계
+- systemd 서비스와 `api_run.sh`는 독립적으로 작동합니다
+- 둘 다 같은 JAR 파일을 실행하므로 동시 실행 시 포트 충돌이 발생할 수 있습니다
+- 한 번에 하나만 실행하세요
+- systemd는 리부팅 후 자동으로 시작되며, `api_run.sh`는 수동 실행용입니다
+
 ---
 
 ## API 문서
