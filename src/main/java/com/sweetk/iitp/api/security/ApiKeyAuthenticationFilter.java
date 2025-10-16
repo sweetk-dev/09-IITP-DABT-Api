@@ -58,33 +58,34 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
         try {
             // Find active client Key by API key
             OpenApiClientKeyEntity apiClientKey = clientRepository.findActiveKeyByApiKey(apiKey)
-                                                    .orElse(null);
+                    .orElseThrow(() -> {
+                        log.warn("API Key not found in database: {}", apiKey);
+                        return new ApiException(ErrorCode.UNAUTHORIZED, "유효하지 않은 API Key 입니다.");
+                    });
 
-            if (apiClientKey != null) {
-                OpenApiClientEntity apiClient = getAtiveOpenApiByKeyInfo(apiClientKey);
-                if (apiClient != null) {
-                    // Update latest access time for the API key
-                    clientRepository.updateLatestAccessTime(apiClientKey, OffsetDateTime.now());
-
-                    // Update the latest login time for the client
-                    clientRepository.updateLatestLoginTime(apiClient, OffsetDateTime.now());
-
-                    // Create authentication token
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            apiClient,
-                            null,
-                            Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + apiClient.getRole()))
-                    );
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                    log.debug("API Key authentication successful for client: {}", apiClient.getClientId());
-
-                }else {
-                    log.warn("Invalid or inactive API key provided: {}", apiKey);
-                    throw new ApiException(ErrorCode.UNAUTHORIZED, "유효하지않은 인증 KEY 입니다.");
-                }
-
+            // Validate client status (active and not deleted)
+            OpenApiClientEntity apiClient = getAtiveOpenApiByKeyInfo(apiClientKey);
+            if (apiClient == null) {
+                log.warn("API Key found but client is inactive or deleted: {}", apiKey);
+                throw new ApiException(ErrorCode.UNAUTHORIZED, "비활성화되거나 삭제된 클라이언트의 API Key 입니다.");
             }
+
+            // Update latest access time for the API key
+            clientRepository.updateLatestAccessTime(apiClientKey, OffsetDateTime.now());
+
+            // Update the latest login time for the client
+            clientRepository.updateLatestLoginTime(apiClient, OffsetDateTime.now());
+
+            // Create authentication token
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    apiClient,
+                    null,
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + apiClient.getRole()))
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            log.debug("API Key authentication successful for client: {}", apiClient.getClientId());
+
         } catch (ApiException e) {
             throw e;
         } catch (Exception e) {

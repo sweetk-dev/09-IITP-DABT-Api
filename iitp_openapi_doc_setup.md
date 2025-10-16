@@ -3,7 +3,11 @@
 - **버전**: v0.0.1
 - **작성일**: 2025-07-15
 
+
+
 ---
+
+
 
 ## 목차
 
@@ -16,8 +20,11 @@
 7. Nginx 연동 설정
 8. 인증 및 보안 설정 (선택)
 9. 부록 (사전 준비 설치 가이드 및 참고 자료)
+<div style="page-break-after: always;"></div>
+
 
 ---
+
 
 ## 1. 문서 히스토리
 
@@ -25,7 +32,10 @@
 | ----- | ---------- | ------------------- |
 | 0.0.1 | 2025-07-15 | 최초 작성 및 전체 구축 절차 반영 |
 
+<div style="page-break-after: always;"></div>
+
 ---
+
 
 ## 2. 개요
 
@@ -60,7 +70,7 @@ cd ~/openapi-docs/docs
    - 대상 파일 : latest.yaml, openapi-vX.X.X.yaml
 
 ```bash
-sudo cp -p ~/openapi-docs/*.yaml /var/www/html/docs/
+sudo cp -p ~/openapi-docs/docs/*.yaml /var/www/html/docs/
 ```
 
 3. index.html 생성:
@@ -71,7 +81,8 @@ sudo cp -p ~/openapi-docs/*.yaml /var/www/html/docs/
   <head>
     <meta charset="UTF-8" />
     <title>IITP OpenAPI 문서</title>
-    <link rel="stylesheet" href="https://unpkg.com/@stoplight/elements/styles.min.css">
+      <link rel="icon" href="/favicon.ico" sizes="any">
+      <link rel="stylesheet" href="https://unpkg.com/@stoplight/elements/styles.min.css">
     <script type="module">
       import 'https://unpkg.com/@stoplight/elements/web-components.min.js';
 
@@ -111,8 +122,8 @@ Nginx를 통해 `/docs/latest.yaml` 경로로 접근 가능하도록 설정 (Ngi
   - 서버 업로드 dir :  ~/openapi-docs/docs
   
 ```bash
-sudo cp -p ~/openapi-docs/*.yaml /var/www/html/docs/
-sudo systemctl start prism.service
+sudo cp -p ~/openapi-docs/docs/*.yaml /var/www/html/docs/
+sudo systemctl restart prism.service
 sudo systemctl reload nginx
 ```
 
@@ -137,8 +148,8 @@ prism --version
 
 ### 6.2 systemd 서비스 등록
 
-# prim 설치 경로 확인 후 수정 (/usr/local/bin/prism)
-# user, group 은 실제 실행 계정 권환 확인 필요 
+- prim 설치 경로 확인 후 수정 (/usr/local/bin/prism)
+- user, group 은 실제 실행 계정 권환 확인 필요 
 `/etc/systemd/system/prism.service` 파일 생성:
 
 ```ini
@@ -183,7 +194,7 @@ curl "http://localhost:4010/api/v1/poi/search?page=1&size=10"
 
 Nginx 설정 파일: `/etc/nginx/conf.d/docs.conf`
 
-# location /mock 에서 domain 또는 실제 서버 IP 로 변경
+- location /mock 에서 domain 또는 실제 서버 IP 로 변경
 ```nginx
 server {
     listen 80;
