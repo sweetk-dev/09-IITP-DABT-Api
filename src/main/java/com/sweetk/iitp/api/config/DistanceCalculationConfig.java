@@ -5,7 +5,6 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 
 @Component
 @ConfigurationProperties(prefix = "app.distance-calculation")
@@ -51,7 +50,7 @@ public class DistanceCalculationConfig {
     /**
      * 거리 필터링 SQL 생성 (숫자형 인자)
      */
-    public String getDistanceFilterSql(BigDecimal latParam, BigDecimal lngParam, BigDecimal radiusParam) {
+    public String getDistanceFilterSql(Double latParam, Double lngParam, Double radiusParam) {
         switch (method) {
             case POSTGIS_SPHERE:
                 return String.format("AND ST_DWithin(ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)::geography, ST_SetSRID(ST_MakePoint(%s, %s), 4326)::geography, %s)", lngParam, latParam, radiusParam);
