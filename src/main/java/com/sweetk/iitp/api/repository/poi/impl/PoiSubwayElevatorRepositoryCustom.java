@@ -5,7 +5,6 @@ import com.sweetk.iitp.api.dto.internal.PoiPageResult;
 import com.sweetk.iitp.api.dto.poi.PoiSubwayElevator;
 import com.sweetk.iitp.api.dto.poi.PoiSubwayElevatorLocation;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,13 +70,13 @@ public interface PoiSubwayElevatorRepositoryCustom {
      ** 위치 기반 기반 지하철 엘리베이터 조회
      *******************************/
      // 거리 정보 포함 위치 기반 지하철 엘리베이터 검색 (전체 결과)
-    List<PoiSubwayElevatorLocation> findByLocationWithConditions(BigDecimal latitude, BigDecimal longitude,
-                                                              BigDecimal radius,
+    List<PoiSubwayElevatorLocation> findByLocationWithConditions(Double latitude, Double longitude,
+                                                              Double radius,
                                                               String stationName, Integer nodeTypeCode);
 
      // 거리 정보 포함 위치 기반 지하철 엘리베이터 검색 (페이징)
-    PoiPageResult<PoiSubwayElevatorLocation> findByLocationWithConditionsAndPagingCount(BigDecimal latitude, BigDecimal longitude,
-                                                                                       BigDecimal radius,
+    PoiPageResult<PoiSubwayElevatorLocation> findByLocationWithConditionsAndPagingCount(Double latitude, Double longitude,
+                                                                                       Double radius,
                                                                                        String stationName, Integer nodeTypeCode,
                                                                                        int offset, int size);
 } 

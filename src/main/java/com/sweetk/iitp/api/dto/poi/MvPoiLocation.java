@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 
 /**
  * MvPoi 위치 기반 검색 결과 DTO (거리 정보 포함)
@@ -20,8 +19,8 @@ public class MvPoiLocation extends MvPoi {
     
     // ResultSet에서 직접 생성하는 생성자
     public MvPoiLocation(Long poiId, String languageCode, String title, String summary, String basicInfo,
-                        String addressCode, String addressRoad, String addressDetail, BigDecimal latitude, 
-                        BigDecimal longitude, String detailJson, String searchFilterJson, Integer distance) {
+                        String addressCode, String addressRoad, String addressDetail, Double latitude, 
+                        Double longitude, String detailJson, String searchFilterJson, Integer distance) {
         super(poiId, languageCode, title, summary, basicInfo, addressCode, addressRoad, addressDetail, 
               latitude, longitude, detailJson, searchFilterJson);
         this.distance = distance;

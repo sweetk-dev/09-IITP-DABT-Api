@@ -309,12 +309,12 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
      **  거리 정보 포함 위치 기반 검색 공중 화장실 조회
      *******************************/
     @Override
-    public List<PoiPublicToiletLocation> findByLocationWithConditions(BigDecimal latitude, BigDecimal longitude,
-                                                                                 BigDecimal radius, String toiletName,
+    public List<PoiPublicToiletLocation> findByLocationWithConditions(Double latitude, Double longitude,
+                                                                                 Double radius, String toiletName,
                                                                                  PoiPublicToiletType toiletType, String open24hYn) {
         StringBuilder sql = new StringBuilder(TOILET_LOCATION_QUERY);
         sql = buildCategoryConditionsSql(sql, toiletName, null, toiletType, open24hYn);
-        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius * 1000));
         sql.append(TOILET_ORDER_BY_DISTANCE);
 
         log.debug("[PoiPublicToilet] 거리 정보 포함 위치 기반 검색 쿼리 (조건 포함): {}", sql);
@@ -324,8 +324,8 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
 
             // 거리 계산을 위한 파라미터 설정 (longitude, latitude)
-            ps.setBigDecimal(1, longitude);
-            ps.setBigDecimal(2, latitude);
+            ps.setDouble(1, longitude);
+            ps.setDouble(2, latitude);
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -343,13 +343,13 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
     }
 
     @Override
-    public PoiPageResult<PoiPublicToiletLocation> findByLocationWithConditionsAndPagingCount(BigDecimal latitude, BigDecimal longitude,
-                                                                                           BigDecimal radius, String toiletName,
+    public PoiPageResult<PoiPublicToiletLocation> findByLocationWithConditionsAndPagingCount(Double latitude, Double longitude,
+                                                                                           Double radius, String toiletName,
                                                                                            PoiPublicToiletType toiletType, String open24hYn,
                                                                                            int offset, int size) {
         StringBuilder sql = new StringBuilder(TOILET_LOCATION_QUERY_WITH_COUNT);
         sql = buildCategoryConditionsSql(sql, toiletName, null, toiletType, open24hYn);
-        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius.multiply(new BigDecimal(1000))));
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius * 1000));
         sql.append(TOILET_ORDER_BY_DISTANCE);
         sql = RepositoryUtils.addQueryOffset(sql, offset, size);
 
@@ -361,8 +361,8 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
 
             // 거리 계산을 위한 파라미터 설정 (longitude, latitude)
-            ps.setBigDecimal(1, longitude);
-            ps.setBigDecimal(2, latitude);
+            ps.setDouble(1, longitude);
+            ps.setDouble(2, latitude);
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -408,8 +408,8 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
                 rs.getString("open_time"),
                 rs.getString("open_time_detail"),
                 rs.getString("install_dt"),
-                rs.getBigDecimal("latitude") != null ? rs.getBigDecimal("latitude").doubleValue() : null,
-                rs.getBigDecimal("longitude") != null ? rs.getBigDecimal("longitude").doubleValue() : null,
+                rs.getObject("latitude", Double.class),
+                rs.getObject("longitude", Double.class),
                 rs.getString("owner_type"),
                 rs.getString("waste_process_type"),
                 rs.getString("safety_target_yn"),
