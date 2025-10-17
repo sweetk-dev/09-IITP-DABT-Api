@@ -1,4 +1,4 @@
-package com.sweetk.iitp.api.controller.v1.client;
+package com.sweetk.iitp.api.controller.v1.openapi;
 
 
 import com.sweetk.iitp.api.constant.ApiConstants;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Hidden
 @Slf4j
 @RestController
-@RequestMapping(ApiConstants.ApiPath.API_V1_MGMT_CLIENT)
+@RequestMapping(ApiConstants.ApiPath.API_V1_MGMT_OPENAPI)
 @RequiredArgsConstructor
-public class ClientController {
+public class OpenApiController {
 }

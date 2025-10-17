@@ -12,8 +12,6 @@ import java.math.BigDecimal;
 @Builder
 @Schema(description = "장애인 고용의무 현황 통계")
 public class EmpDisObligationStatusDto {
-    @Schema(description = "순번")
-    private Integer seqNo;
     @Schema(description = "기관", example = "중앙행정기관")
     private String orgName;
     @Schema(description = "대상 사업체(개소)", example = "54")
