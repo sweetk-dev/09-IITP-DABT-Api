@@ -24,8 +24,8 @@ fi
 PID=$(pgrep -f "$JAR_FILE")
 if [ -n "$PID" ]; then
     echo "기존 $JAR_FILE 프로세스 종료(PID: $PID)..."
-    kill $PID
-    sleep 5
+    kill -9 $PID
+    sleep 10
 fi
 
 
