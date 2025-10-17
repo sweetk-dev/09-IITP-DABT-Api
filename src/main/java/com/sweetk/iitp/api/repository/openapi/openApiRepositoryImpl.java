@@ -1,8 +1,8 @@
-package com.sweetk.iitp.api.repository.client;
+package com.sweetk.iitp.api.repository.openapi;
 
 import com.sweetk.iitp.api.constant.SysConstants;
-import com.sweetk.iitp.api.entity.client.OpenApiClientEntity;
-import com.sweetk.iitp.api.entity.client.OpenApiClientKeyEntity;
+import com.sweetk.iitp.api.entity.openapi.OpenApiAuthKeyEntity;
+import com.sweetk.iitp.api.entity.openapi.OpenApiUserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,10 +12,10 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class ClientRepositoryImpl implements ClientRepository {
+public class openApiRepositoryImpl implements openApiRepository {
     
-    private final OpenApiClientRepository openApiClientRepository;
-    private final OpenApiClientKeyRepository openApiClientKeyRepository;
+    private final OpenApiUserRepository openApiUserRepository;
+    private final OpenApiAuthKeyRepository openApiAuthKeyRepository;
 
 
 
@@ -24,24 +24,24 @@ public class ClientRepositoryImpl implements ClientRepository {
      *****************************/
     // Combined operations for authentication
     @Override
-    public Optional<OpenApiClientEntity> findClientByApiCliIdIncludingDeleted(Integer apiCliId) {
-        return openApiClientRepository.findByApiCliIdIncludingDeleted(apiCliId);
+    public Optional<OpenApiUserEntity> findClientByUserIdIncludingDeleted(Long userId) {
+        return openApiUserRepository.findByUserIdIncludingDeleted(userId);
     }
 
 
     @Override
     @Transactional
-    public void updateLatestLoginTime(OpenApiClientEntity client, OffsetDateTime loginTime) {
+    public void updateLatestLoginTime(OpenApiUserEntity client, OffsetDateTime loginTime) {
         client.setLatestLoginAt(OffsetDateTime.now());
-        openApiClientRepository.save(client);
+        openApiUserRepository.save(client);
     }
 
 
     @Override
     @Transactional
-    public void updateLatestAccessTime(OpenApiClientKeyEntity key, OffsetDateTime accessTime) {
+    public void updateLatestAccessTime(OpenApiAuthKeyEntity key, OffsetDateTime accessTime) {
         key.setLatestAccAt(accessTime);
-        openApiClientKeyRepository.save(key);
+        openApiAuthKeyRepository.save(key);
     }
 
 
@@ -49,16 +49,16 @@ public class ClientRepositoryImpl implements ClientRepository {
      * API CLIENT
      *****************************/
 
-    // find api client
-    public Optional<OpenApiClientEntity> findClientByApiCliId(Integer apiCliId) {
-        return openApiClientRepository.findByApiCliId(apiCliId);
+    // find api openapi
+    public Optional<OpenApiUserEntity> findClientByUserId(Long userId) {
+        return openApiUserRepository.findByUserId(userId);
     }
 
 
-    // upate api client
-    public void updateClientDeleteStatus(OpenApiClientEntity client, String deletedBy) {
+    // upate api openapi
+    public void updateClientDeleteStatus(OpenApiUserEntity client, String deletedBy) {
         client.softDelete(deletedBy);
-        openApiClientRepository.save(client);
+        openApiUserRepository.save(client);
     }
 
 
@@ -68,8 +68,8 @@ public class ClientRepositoryImpl implements ClientRepository {
      *****************************/
 
     // find api key
-    public Optional<OpenApiClientKeyEntity> findActiveKeyByApiKey(String apiKey) {
-        return openApiClientKeyRepository.findByApiKeyAndActiveYn(apiKey, SysConstants.YN_Y);
+    public Optional<OpenApiAuthKeyEntity> findActiveKeyByApiKey(String apiKey) {
+        return openApiAuthKeyRepository.findByAuthKeyAndActiveYn(apiKey, SysConstants.YN_Y);
     }
 
 
@@ -84,17 +84,17 @@ public class ClientRepositoryImpl implements ClientRepository {
     /* ================== temp
     // Client operations
     @Override
-    public Optional<OpenApiClientEntity> findByClientId(String clientId) {
+    public Optional<OpenApiUserEntity> findByClientId(String clientId) {
         return openApiClientRepository.findByClientId(clientId);
     }
     
     @Override
-    public Optional<OpenApiClientEntity> findByClientIdAndIsDeletedFalse(String clientId) {
+    public Optional<OpenApiUserEntity> findByClientIdAndIsDeletedFalse(String clientId) {
         return openApiClientRepository.findByClientIdAndIsDeletedFalse(clientId);
     }
 
     @Override
-    public Optional<OpenApiClientEntity> findActiveByClientId(String clientId) {
+    public Optional<OpenApiUserEntity> findActiveByClientId(String clientId) {
         return openApiClientRepository.findActiveByClientIdAndStatusAndIsDeletedFalse(clientId, DataStatusType.ACTIVE);
     }
     
@@ -119,7 +119,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     // API Key operations
     @Override
-    public Optional<OpenApiClientKeyEntity> findByApiKey(String apiKey) {
+    public Optional<OpenApiAuthKeyEntity> findByApiKey(String apiKey) {
         return openApiClientKeyRepository.findByApiKey(apiKey);
     }
 
@@ -136,9 +136,9 @@ public class ClientRepositoryImpl implements ClientRepository {
     
     // Combined operations for authentication
     @Override
-    public Optional<OpenApiClientEntity> findClientByApiKey(String apiKey) {
+    public Optional<OpenApiUserEntity> findClientByApiKey(String apiKey) {
         return openApiClientKeyRepository.findByApiKey(apiKey)
-                .map(key -> openApiClientRepository.findById(key.getApiCliId()))
+                .map(key -> openApiClientRepository.findById(Long.valueOf(key.getUserId())))
                 .orElse(Optional.empty());
     }
     
@@ -149,9 +149,9 @@ public class ClientRepositoryImpl implements ClientRepository {
     @Override
     @Transactional
     public void updateLatestKeyCreatedTime(Integer clientId, OffsetDateTime keyCreatedTime) {
-        openApiClientRepository.findById(clientId).ifPresent(client -> {
-            client.setLatestKeyCreatedAt(keyCreatedTime);
-            openApiClientRepository.save(client);
+        openApiClientRepository.findById(clientId).ifPresent(openapi -> {
+            openapi.setLatestKeyCreatedAt(keyCreatedTime);
+            openApiClientRepository.save(openapi);
         });
     }
     
@@ -163,13 +163,13 @@ public class ClientRepositoryImpl implements ClientRepository {
     }
     
     @Override
-    public OpenApiClientKeyEntity saveApiKey(OpenApiClientKeyEntity apiKey) {
+    public OpenApiAuthKeyEntity saveApiKey(OpenApiAuthKeyEntity apiKey) {
         return openApiClientKeyRepository.save(apiKey);
     }
     
     @Override
-    public OpenApiClientEntity saveClient(OpenApiClientEntity client) {
-        return openApiClientRepository.save(client);
+    public OpenApiUserEntity saveClient(OpenApiUserEntity openapi) {
+        return openApiClientRepository.save(openapi);
     }
 
      */

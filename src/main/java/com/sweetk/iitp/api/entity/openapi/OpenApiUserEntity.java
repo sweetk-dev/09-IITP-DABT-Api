@@ -1,4 +1,4 @@
-package com.sweetk.iitp.api.entity.client;
+package com.sweetk.iitp.api.entity.openapi;
 
 import com.sweetk.iitp.api.constant.DataStatusType;
 import com.sweetk.iitp.api.constant.converter.DataStatusTypeConverter;
@@ -13,25 +13,25 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "open_api_client")
+@Table(name = "open_api_user")
 @Getter
 @Setter
 @SQLRestriction("deleted_at IS NULL")
-public class OpenApiClientEntity {
+public class OpenApiUserEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "api_cli_id")
-    private Integer apiCliId;
+    @Column(name = "user_id")
+    private Long userId;
     
-    @Column(name = "client_id", length = 40, nullable = false, unique = true)
-    private String clientId;
+    @Column(name = "login_id", length = 128, nullable = false, unique = true)
+    private String loginId;
     
-    @Column(name = "password", length = 40, nullable = false)
+    @Column(name = "password", length = 60, nullable = false)
     private String password;
     
-    @Column(name = "client_name", length = 90, nullable = false)
-    private String clientName;
+    @Column(name = "user_name", length = 90, nullable = false)
+    private String userName;
 
     @Convert(converter = DataStatusTypeConverter.class)
     @Column(name = "status", length = 1, nullable = false)
@@ -46,8 +46,8 @@ public class OpenApiClientEntity {
     @Column(name = "latest_login_at")
     private OffsetDateTime latestLoginAt;
 
-    @Column(name = "description", length = 600)
-    private String description;
+    @Column(name = "affiliation", length = 200)
+    private String affiliation;
 
     @Column(name = "note", length = 600)
     private String note;
@@ -63,6 +63,12 @@ public class OpenApiClientEntity {
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
 
+    @Column(name = "created_by", length = 40, nullable = false)
+    private String createdBy;
+
+    @Column(name = "updated_by", length = 40)
+    private String updatedBy;
+
     @Column(name = "deleted_by", length = 40)
     private String deletedBy;
 
@@ -75,7 +81,19 @@ public class OpenApiClientEntity {
         if (status == null) {
             status = DataStatusType.ACTIVE;
         }
-        delYn = SysConstants.YN_N;
+        if (delYn == null) {
+            delYn = SysConstants.YN_N;
+        }
+        if (createdBy == null) {
+            createdBy = "SYS-BATCH";
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        if (updatedBy == null && deletedAt == null) {
+            updatedBy = "SYS-BATCH";
+        }
     }
 
     public void softDelete(String deletedBy) {

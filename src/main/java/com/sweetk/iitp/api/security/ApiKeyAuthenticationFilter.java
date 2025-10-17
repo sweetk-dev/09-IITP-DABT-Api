@@ -1,13 +1,11 @@
 package com.sweetk.iitp.api.security;
 
 import com.sweetk.iitp.api.constant.ApiConstants;
-import com.sweetk.iitp.api.constant.DataStatusType;
-import com.sweetk.iitp.api.constant.SysConstants;
-import com.sweetk.iitp.api.entity.client.OpenApiClientEntity;
-import com.sweetk.iitp.api.entity.client.OpenApiClientKeyEntity;
+import com.sweetk.iitp.api.entity.openapi.OpenApiAuthKeyEntity;
+import com.sweetk.iitp.api.entity.openapi.OpenApiUserEntity;
 import com.sweetk.iitp.api.exception.ApiException;
 import com.sweetk.iitp.api.exception.ErrorCode;
-import com.sweetk.iitp.api.repository.client.ClientRepository;
+import com.sweetk.iitp.api.repository.openapi.openApiRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,14 +25,17 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
 
-    private final ClientRepository clientRepository;
+    private final openApiRepository openApiRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String path = request.getServletPath();
+        String queryString = request.getQueryString();
+        String fullPath = queryString != null ? path + "?" + queryString : path;
 
-        log.info("Request path: {}", path);
+        log.info("Request path: {}, Query: {}", path, queryString);
+        log.debug("Full request URL: {}", fullPath);
 
         // permitAll() 경로는 인증 로직을 건너뜀
         if (path.equals("/v3/api-docs") ||
@@ -56,35 +57,35 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
-            // Find active client Key by API key
-            OpenApiClientKeyEntity apiClientKey = clientRepository.findActiveKeyByApiKey(apiKey)
+            // Find and validate API key (active_yn='Y', del_yn='N' by repository)
+            OpenApiAuthKeyEntity apiAuthKey = openApiRepository.findActiveKeyByApiKey(apiKey)
                     .orElseThrow(() -> {
-                        log.warn("API Key not found in database: {}", apiKey);
+                        log.warn("API Key not found or inactive: {}", apiKey);
                         return new ApiException(ErrorCode.UNAUTHORIZED, "유효하지 않은 API Key 입니다.");
                     });
 
-            // Validate client status (active and not deleted)
-            OpenApiClientEntity apiClient = getAtiveOpenApiByKeyInfo(apiClientKey);
-            if (apiClient == null) {
-                log.warn("API Key found but client is inactive or deleted: {}", apiKey);
-                throw new ApiException(ErrorCode.UNAUTHORIZED, "비활성화되거나 삭제된 클라이언트의 API Key 입니다.");
-            }
+            // Validate key validity period (start_dt ~ end_dt)
+            validateKeyPeriod(apiAuthKey);
 
-            // Update latest access time for the API key
-            clientRepository.updateLatestAccessTime(apiClientKey, OffsetDateTime.now());
+            // Update latest access time
+            openApiRepository.updateLatestAccessTime(apiAuthKey, OffsetDateTime.now());
 
-            // Update the latest login time for the client
-            clientRepository.updateLatestLoginTime(apiClient, OffsetDateTime.now());
+            // Load user for authentication context
+            OpenApiUserEntity apiUser = openApiRepository.findClientByUserId(Long.valueOf(apiAuthKey.getUserId()))
+                    .orElseThrow(() -> new ApiException(ErrorCode.UNAUTHORIZED, "사용자 정보를 찾을 수 없습니다."));
+            
+            // Update latest login time
+            openApiRepository.updateLatestLoginTime(apiUser, OffsetDateTime.now());
 
             // Create authentication token
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    apiClient,
+                    apiUser,
                     null,
-                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + apiClient.getRole()))
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + apiUser.getRole()))
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            log.debug("API Key authentication successful for client: {}", apiClient.getClientId());
+            log.debug("API Key authentication successful for user: {}", apiUser.getLoginId());
 
         } catch (ApiException e) {
             throw e;
@@ -97,15 +98,22 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
     }
 
 
-    private OpenApiClientEntity getAtiveOpenApiByKeyInfo(OpenApiClientKeyEntity keyEntity) {
-        if (keyEntity != null) {
-            OpenApiClientEntity apiClientEntity = keyEntity.getOpenApiClient();
-            if(apiClientEntity != null
-                    && apiClientEntity.getStatus().equals(DataStatusType.ACTIVE)
-                    && apiClientEntity.getDelYn().equals(SysConstants.YN_N)) {
-                return apiClientEntity;
-            }
+    /**
+     * API Key 유효 기간 검증 (start_dt ~ end_dt)
+     */
+    private void validateKeyPeriod(OpenApiAuthKeyEntity keyEntity) {
+        java.time.LocalDate today = java.time.LocalDate.now();
+        
+        // 시작일 체크
+        if (keyEntity.getStartDt() != null && today.isBefore(keyEntity.getStartDt())) {
+            log.warn("API Key not yet valid. Start date: {}, Today: {}", keyEntity.getStartDt(), today);
+            throw new ApiException(ErrorCode.UNAUTHORIZED, "아직 사용할 수 없는 API Key 입니다.");
         }
-        return null;
+        
+        // 종료일 체크
+        if (keyEntity.getEndDt() != null && today.isAfter(keyEntity.getEndDt())) {
+            log.warn("API Key expired. End date: {}, Today: {}", keyEntity.getEndDt(), today);
+            throw new ApiException(ErrorCode.UNAUTHORIZED, "만료된 API Key 입니다.");
+        }
     }
 } 
