@@ -16,7 +16,7 @@ public final class ApiConstants {
 
         public static final String API_V1_COMMON = API_V1 + "/comm";
 
-        public static final String API_V1_MGMT_CLIENT = API_V1 + "/mgmt/openapi";
+        public static final String API_V1_MGMT_OPENAPI = API_V1 + "/mgmt/openapi";
 
 
         //For Poi

@@ -10,8 +10,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Builder
 @Schema(description = "장애인고용 부담금감면 연계고용사업장 정보")
 public class EmpDisBurdenWorkplaceDto {
-    @Schema(description = "순번", example = "1")
-    private Integer seqNo;
     @Schema(description = "연도", example = "2024")
     private Integer year;
     @Schema(description = "사업장명", example = "춘강장애인근로센터")

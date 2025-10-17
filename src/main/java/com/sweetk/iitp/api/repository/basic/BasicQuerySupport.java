@@ -48,7 +48,7 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
         String sql = String.format(
                 "SELECT count(*) " +
                         "FROM %s " +
-                        "WHERE %s >= ? AND %s <= ? AND %s = ? " +
+                        "WHERE %s >= ? AND %s <= ? AND %s = ? ",
                         //"WHERE %s >= ? AND %s <= ? AND %s = ? AND deleted_at IS NULL "
                 tableName, PRD_DE_COLUMN, PRD_DE_COLUMN, SRC_LATEST_CHN_DT_COLUMN
         );
