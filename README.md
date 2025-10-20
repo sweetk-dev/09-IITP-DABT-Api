@@ -34,6 +34,7 @@ IITP API 서비스는 장애인 통계 및 POI 정보를 제공하는 RESTful AP
 ## 주요 기능
 - 통계 데이터/POI API, API Key 인증, Rate Limiting, 표준화된 에러/응답, API 버전 관리
 - 위치 기반 검색 및 거리 계산 (PostGIS/PostgreSQL 지원)
+- 기초(base) 통계 데이터 자동 제한 (Limit) 기능
 
 ## 프로젝트 구조
 ### Java 소스
@@ -246,6 +247,49 @@ sudo journalctl -u iitp-api -f    # 실시간 로그 보기
 - **PostGIS Sphere**: 지구 곡률을 고려한 정확한 구면 거리 (미터 단위)
 - **PostGIS Planar**: 단순 유클리드 거리 (빠른 계산)
 - **PostgreSQL Earth**: PostgreSQL 기본 함수 (확장 불필요)
+
+---
+
+## 기초(base) 통계 데이터 제한 (Limit) 기능
+
+통계 API는 대량의 데이터 조회로 인한 성능 문제를 방지하기 위해 응답 데이터 건수 제한 기능을 제공합니다.
+
+### 설정 방법 (application.yml)
+```yaml
+app:
+  stats-data:
+    limit-count: 10000  # 통계 데이터 최대 건수 (0 또는 미설정 시 제한 없음)
+```
+
+### 동작 방식
+
+#### 1. 데이터 제한 적용
+- 조회된 데이터 리스트의 크기가 설정된 `limit-count`를 초과하면 자동으로 제한됩니다
+- limit 크기만큼만 잘라서 클라이언트에 반환합니다
+- **API 실패(에러)를 반환하지 않고**, 정상 응답으로 제한된 데이터를 전달합니다
+
+#### 2. 구현 위치
+- **공통 함수**: `BasicService.limitStatsDataList()`
+  - 모든 Basic 통계 서비스(`BasicAidReadService`, `BasicEduReadService`, `BasicEmpReadService`, `BasicFacilityReadService`, `BasicHealthReadService`, `BasicHousingReadService`, `BasicSocialReadService`)에서 공통으로 사용
+  - 데이터 변환(`makeStatDataItemList()`) 이후, 응답 생성 전에 자동 적용
+
+#### 3. 적용 예시
+```java
+// 데이터 변환
+List<StatDataItem> items = makeStatDataItemList(dataList, cMetaCodes, iMetaCodes);
+
+// limit 적용: limit이 설정되어 있고 크기가 limit보다 크면 limit 만큼만 반환
+items = limitStatsDataList(items);
+
+// 응답 반환
+return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
+```
+
+#### 4. 참고 함수
+- `checkStatsDataLimitOrThrow()`: 데이터 건수 제한 체크 함수 (현재 사용 안 함)
+  - 과거에는 limit을 초과하면 에러를 던졌으나, 현재는 사용하지 않음
+  - 함수는 유지되어 있지만 호출되지 않음
+- `limitStatsDataList()`: 데이터 리스트를 limit 크기로 제한하여 반환
 
 ---
 
