@@ -32,23 +32,46 @@ public class BasicService {
 
         return dataList.stream()
                 .map(item -> {
-                    Map<String, String> metaData = new HashMap<>();
                     StatMetaCodeDB c1Meta = cMetaMap.get(item.getC1());
                     StatMetaCodeDB c2Meta = cMetaMap.get(item.getC2());
                     StatMetaCodeDB c3Meta = cMetaMap.get(item.getC3());
                     StatMetaCodeDB iMeta = iMetaMap.get(item.getItmId());
 
+                    // Null 체크 및 로깅 (c1과 iMeta는 필수, c2와 c3는 선택적)
+                    if (c1Meta == null) {
+                        log.error("c1Meta is null for item.getC1()={}, prdDe={}", item.getC1(), item.getPrdDe());
+                        throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, 
+                            String.format("필수 메타데이터를 찾을 수 없습니다. c1=%s", item.getC1()));
+                    }
+                    // c2가 있는데 메타를 못찾은 경우에만 에러
+                    if (item.getC2() != null && !item.getC2().isEmpty() && c2Meta == null) {
+                        log.error("c2Meta is null for item.getC2()={}, prdDe={}", item.getC2(), item.getPrdDe());
+                        throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, 
+                            String.format("메타데이터를 찾을 수 없습니다. c2=%s", item.getC2()));
+                    }
+                    // c3가 있는데 메타를 못찾은 경우에만 에러
+                    if (item.getC3() != null && !item.getC3().isEmpty() && c3Meta == null) {
+                        log.error("c3Meta is null for item.getC3()={}, prdDe={}", item.getC3(), item.getPrdDe());
+                        throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, 
+                            String.format("메타데이터를 찾을 수 없습니다. c3=%s", item.getC3()));
+                    }
+                    if (iMeta == null) {
+                        log.error("iMeta is null for item.getItmId()={}, prdDe={}", item.getItmId(), item.getPrdDe());
+                        throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, 
+                            String.format("필수 메타데이터를 찾을 수 없습니다. itmId=%s", item.getItmId()));
+                    }
+
                     return StatDataItem.builder()
                             .prdDe(item.getPrdDe())
                             .c1Nm(c1Meta.getItemNm())
-                            .c2Nm(c2Meta.getItemNm())
-                            .c3Nm(c3Meta.getItemNm())
+                            .c2Nm(c2Meta != null ? c2Meta.getItemNm() : null)
+                            .c3Nm(c3Meta != null ? c3Meta.getItemNm() : null)
                             .c1ObjId(c1Meta.getObjId())
                             .c1ObjNm(c1Meta.getObjNm())
-                            .c2ObjId(c2Meta.getObjId())
-                            .c2ObjNm(c2Meta.getObjNm())
-                            .c3ObjId(c3Meta.getObjId())
-                            .c3ObjNm(c3Meta.getObjNm())
+                            .c2ObjId(c2Meta != null ? c2Meta.getObjId() : null)
+                            .c2ObjNm(c2Meta != null ? c2Meta.getObjNm() : null)
+                            .c3ObjId(c3Meta != null ? c3Meta.getObjId() : null)
+                            .c3ObjNm(c3Meta != null ? c3Meta.getObjNm() : null)
                             .itmNm(iMeta.getItemNm())
                             .itmObjId(iMeta.getObjId())
                             .unitNm(item.getUnitNm())
