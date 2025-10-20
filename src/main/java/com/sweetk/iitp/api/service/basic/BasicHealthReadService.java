@@ -51,9 +51,6 @@ public class BasicHealthReadService extends BasicService {
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        Integer dataCnt = healthRepository.getHlthMedicalUsageLatestCount(srcDataInfo, formYear, toYear);
-        checkStatsDataLimitOrThrow(fnc, dataCnt);
-
         List<StatDataItemDB> dataList = healthRepository.findHlthMedicalUsageLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -66,6 +63,8 @@ public class BasicHealthReadService extends BasicService {
 
         // 4. 데이터 변환 및 응답 생성
         List<StatDataItem> items = makeStatDataItemList(dataList, cMetaCodes, iMetaCodes);
+        // limit 적용: limit이 설정되어 있고 크기가 limit보다 크면 limit 만큼만 반환
+        items = limitStatsDataList(items);
         return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
     }
 
@@ -114,9 +113,6 @@ public class BasicHealthReadService extends BasicService {
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        Integer dataCnt = healthRepository.getHlthDiseaseCostSubLatestCount(srcDataInfo, formYear, toYear);
-        checkStatsDataLimitOrThrow(fnc, dataCnt);
-
         List<StatDataItemDB> dataList = healthRepository.findHlthDiseaseCostSubLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -129,6 +125,8 @@ public class BasicHealthReadService extends BasicService {
 
         // 4. 데이터 변환 및 응답 생성
         List<StatDataItem> items = makeStatDataItemList(dataList, cMetaCodes, iMetaCodes);
+        // limit 적용: limit이 설정되어 있고 크기가 limit보다 크면 limit 만큼만 반환
+        items = limitStatsDataList(items);
         return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
     }
 
@@ -177,9 +175,6 @@ public class BasicHealthReadService extends BasicService {
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        Integer dataCnt = healthRepository.getHlthSportExecTypeLatestCount(srcDataInfo, formYear, toYear);
-        checkStatsDataLimitOrThrow(fnc, dataCnt);
-
         List<StatDataItemDB> dataList = healthRepository.findHlthSportExecTypeLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -192,6 +187,8 @@ public class BasicHealthReadService extends BasicService {
 
         // 4. 데이터 변환 및 응답 생성
         List<StatDataItem> items = makeStatDataItemList(dataList, cMetaCodes, iMetaCodes);
+        // limit 적용: limit이 설정되어 있고 크기가 limit보다 크면 limit 만큼만 반환
+        items = limitStatsDataList(items);
         return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
     }
 
@@ -240,9 +237,6 @@ public class BasicHealthReadService extends BasicService {
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        Integer dataCnt = healthRepository.getHlthExrcBestAidLatestCount(srcDataInfo, formYear, toYear);
-        checkStatsDataLimitOrThrow(fnc, dataCnt);
-
         List<StatDataItemDB> dataList = healthRepository.findHlthExrcBestAidLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -255,6 +249,8 @@ public class BasicHealthReadService extends BasicService {
 
         // 4. 데이터 변환 및 응답 생성
         List<StatDataItem> items = makeStatDataItemList(dataList, cMetaCodes, iMetaCodes);
+        // limit 적용: limit이 설정되어 있고 크기가 limit보다 크면 limit 만큼만 반환
+        items = limitStatsDataList(items);
         return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
     }
 

@@ -64,7 +64,7 @@ public class BasicService {
 
         if (from == null || from == 0 ) {
             if( to == null || to == 0 ) {
-                Integer deffrom = endDate - ApiConstants.Param.DEFAULT_STAT_REG_YEAR_PERIOD-1;
+                Integer deffrom = endDate - ApiConstants.Param.DEFAULT_STAT_REG_YEAR_PERIOD;
                 log.debug("[{}] :: from is null, DEF_SET_from = {}", reqFnc, deffrom);
                 return deffrom;
             }
@@ -134,6 +134,26 @@ public class BasicService {
             log.warn("[{}] :: [통계 데이터 건수 제한] {}", reqFnc, msg);
             throw new BusinessException(ErrorCode.EXCEED_STATS_DATA_LIMIT, msg);
         }
+    }
+
+    /**
+     * 통계 데이터 리스트를 limit 크기로 제한 (공통)
+     * @param dataList 원본 데이터 리스트
+     * @param <T> 데이터 타입
+     * @return limit이 설정되어 있고 리스트 크기가 limit보다 크면 limit 크기만큼만 반환, 그렇지 않으면 원본 반환
+     */
+    protected <T> List<T> limitStatsDataList(List<T> dataList) {
+        if (dataList == null || dataList.isEmpty()) {
+            return dataList;
+        }
+        
+        int limit = apiProperties.getStatsData() != null ? apiProperties.getStatsData().getLimitCount() : 0;
+        if (limit > 0 && dataList.size() > limit) {
+            log.debug("데이터 리스트 크기({})가 limit({})를 초과하여 limit 크기로 제한합니다.", dataList.size(), limit);
+            return dataList.stream().limit(limit).collect(Collectors.toList());
+        }
+        
+        return dataList;
     }
 
 } 

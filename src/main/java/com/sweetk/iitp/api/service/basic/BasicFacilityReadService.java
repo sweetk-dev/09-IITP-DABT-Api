@@ -51,9 +51,6 @@ public class BasicFacilityReadService extends BasicService {
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        Integer dataCnt = facilityRepository.getFcltyWelfareUsageLatestCount(srcDataInfo, formYear, toYear);
-        checkStatsDataLimitOrThrow(fnc, dataCnt);
-
         List<StatDataItemDB> dataList = facilityRepository.findFcltyWelfareUsageLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -66,6 +63,8 @@ public class BasicFacilityReadService extends BasicService {
 
         // 4. 데이터 변환 및 응답 생성
         List<StatDataItem> items = makeStatDataItemList(dataList, cMetaCodes, iMetaCodes);
+        // limit 적용: limit이 설정되어 있고 크기가 limit보다 크면 limit 만큼만 반환
+        items = limitStatsDataList(items);
         return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
     }
 

@@ -51,9 +51,6 @@ public class BasicHousingReadService extends BasicService {
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
         // 2. 기본 데이터 조회
-        Integer dataCnt = housingRepository.getRegNatlByNewLatestCount(srcDataInfo, formYear, toYear);
-        checkStatsDataLimitOrThrow(fnc, dataCnt);
-
         List<StatDataItemDB> dataList = housingRepository.findRegNatlByNewLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -66,6 +63,8 @@ public class BasicHousingReadService extends BasicService {
 
         // 4. 데이터 변환 및 응답 생성
         List<StatDataItem> items = makeStatDataItemList(dataList, cMetaCodes, iMetaCodes);
+        // limit 적용: limit이 설정되어 있고 크기가 limit보다 크면 limit 만큼만 반환
+        items = limitStatsDataList(items);
         return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
     }
 
@@ -111,9 +110,6 @@ public class BasicHousingReadService extends BasicService {
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
-        Integer dataCnt = housingRepository.getRegNatlByAgeTypeSevGenLatestCount(srcDataInfo, formYear, toYear);
-        checkStatsDataLimitOrThrow(fnc, dataCnt);
-
         List<StatDataItemDB> dataList = housingRepository.findRegNatlByAgeTypeSevGenLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -124,6 +120,8 @@ public class BasicHousingReadService extends BasicService {
         List<StatMetaCodeDB> iMetaCodes = metadataService.getItemMetaCodes(srcDataInfo.getSrcDataId(), srcLatestChnDate);
 
         List<StatDataItem> items = makeStatDataItemList(dataList, cMetaCodes, iMetaCodes);
+        // limit 적용: limit이 설정되어 있고 크기가 limit보다 크면 limit 만큼만 반환
+        items = limitStatsDataList(items);
         return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
     }
 
@@ -165,9 +163,6 @@ public class BasicHousingReadService extends BasicService {
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
-        Integer dataCnt = housingRepository.getRegSidoByTypeSevGenLatestCount(srcDataInfo, formYear, toYear);
-        checkStatsDataLimitOrThrow(fnc, dataCnt);
-
         List<StatDataItemDB> dataList = housingRepository.findRegSidoByTypeSevGenLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -178,6 +173,8 @@ public class BasicHousingReadService extends BasicService {
         List<StatMetaCodeDB> iMetaCodes = metadataService.getItemMetaCodes(srcDataInfo.getSrcDataId(), srcLatestChnDate);
 
         List<StatDataItem> items = makeStatDataItemList(dataList, cMetaCodes, iMetaCodes);
+        // limit 적용: limit이 설정되어 있고 크기가 limit보다 크면 limit 만큼만 반환
+        items = limitStatsDataList(items);
         return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
     }
 
@@ -219,9 +216,6 @@ public class BasicHousingReadService extends BasicService {
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
-        Integer dataCnt = housingRepository.getLifeSuppNeedLvlLatestCount(srcDataInfo, formYear, toYear);
-        checkStatsDataLimitOrThrow(fnc, dataCnt);
-
         List<StatDataItemDB> dataList = housingRepository.findLifeSuppNeedLvlLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -232,6 +226,8 @@ public class BasicHousingReadService extends BasicService {
         List<StatMetaCodeDB> iMetaCodes = metadataService.getItemMetaCodes(srcDataInfo.getSrcDataId(), srcLatestChnDate);
 
         List<StatDataItem> items = makeStatDataItemList(dataList, cMetaCodes, iMetaCodes);
+        // limit 적용: limit이 설정되어 있고 크기가 limit보다 크면 limit 만큼만 반환
+        items = limitStatsDataList(items);
         return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
     }
 
@@ -273,9 +269,6 @@ public class BasicHousingReadService extends BasicService {
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
-        Integer dataCnt = housingRepository.getLifeMaincarerLatestCount(srcDataInfo, formYear, toYear);
-        checkStatsDataLimitOrThrow(fnc, dataCnt);
-
         List<StatDataItemDB> dataList = housingRepository.findLifeMaincarerLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -286,6 +279,8 @@ public class BasicHousingReadService extends BasicService {
         List<StatMetaCodeDB> iMetaCodes = metadataService.getItemMetaCodes(srcDataInfo.getSrcDataId(), srcLatestChnDate);
 
         List<StatDataItem> items = makeStatDataItemList(dataList, cMetaCodes, iMetaCodes);
+        // limit 적용: limit이 설정되어 있고 크기가 limit보다 크면 limit 만큼만 반환
+        items = limitStatsDataList(items);
         return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
     }
 
@@ -327,9 +322,6 @@ public class BasicHousingReadService extends BasicService {
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
-        Integer dataCnt = housingRepository.getLifePrimcarerLatestCount(srcDataInfo, formYear, toYear);
-        checkStatsDataLimitOrThrow(fnc, dataCnt);
-
         List<StatDataItemDB> dataList = housingRepository.findLifePrimcarerLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -340,6 +332,8 @@ public class BasicHousingReadService extends BasicService {
         List<StatMetaCodeDB> iMetaCodes = metadataService.getItemMetaCodes(srcDataInfo.getSrcDataId(), srcLatestChnDate);
 
         List<StatDataItem> items = makeStatDataItemList(dataList, cMetaCodes, iMetaCodes);
+        // limit 적용: limit이 설정되어 있고 크기가 limit보다 크면 limit 만큼만 반환
+        items = limitStatsDataList(items);
         return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
     }
 
@@ -381,9 +375,6 @@ public class BasicHousingReadService extends BasicService {
 
         Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
 
-        Integer dataCnt = housingRepository.getLifeSuppFieldLatestCount(srcDataInfo, formYear, toYear);
-        checkStatsDataLimitOrThrow(fnc, dataCnt);
-
         List<StatDataItemDB> dataList = housingRepository.findLifeSuppFieldLatest(srcDataInfo, formYear, toYear);
         if (dataList.isEmpty()) {
             return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
@@ -394,6 +385,8 @@ public class BasicHousingReadService extends BasicService {
         List<StatMetaCodeDB> iMetaCodes = metadataService.getItemMetaCodes(srcDataInfo.getSrcDataId(), srcLatestChnDate);
 
         List<StatDataItem> items = makeStatDataItemList(dataList, cMetaCodes, iMetaCodes);
+        // limit 적용: limit이 설정되어 있고 크기가 limit보다 크면 limit 만큼만 반환
+        items = limitStatsDataList(items);
         return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
     }
 
