@@ -23,8 +23,8 @@ java {
 }
 
 ext {
-    jarVersion = '0.0.4'
-    apiDocVersion = 'v0.0.3'
+    jarVersion = '0.0.5'
+    apiDocVersion = 'v0.0.4'
     apiDocversionTag = apiDocVersion
     env = findProperty("env") ?: "local"
     buildTime = new Date().format("yyyyMMddHHmmss")
@@ -132,6 +132,9 @@ openApi {
             "--springdoc.packages-to-scan=com.sweetk.iitp.api.controller",
             "--springdoc.paths-to-match=/api/**",
             "--server.port=${openApiDocPort}"
+        ])
+        systemProperties.set([
+            "jasypt.encryptor.password": System.getProperty("jasypt.encryptor.password", "iitp")
         ])
     }
 }
