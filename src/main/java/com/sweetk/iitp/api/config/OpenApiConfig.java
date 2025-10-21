@@ -29,7 +29,7 @@ public class OpenApiConfig {
                             
                             ## Authentication
                             - 모든 API 요청에는 유효한 API Key가 필요합니다.
-                            - API Key는 'X-API-Key' 헤더에 포함되어야 합니다.
+                            - API Key는 'X-API-KEY' 헤더에 포함되어야 합니다.
                             
                             ## Rate Limiting
                             - API 호출은 분당 100회로 제한됩니다.
@@ -48,7 +48,7 @@ public class OpenApiConfig {
 //                                .url("https://api.iitp.kr")
 //                                .description("Production Server"),
                         new Server()
-                                .url("http://192.168.60.142:4010")
+                                .url("http://192.168.60.142/mock")
                                 .description("Prism Mock 서버")
                 ))
                 .components(new Components()
@@ -56,7 +56,7 @@ public class OpenApiConfig {
                                 new SecurityScheme()
                                         .type(SecurityScheme.Type.APIKEY)
                                         .in(SecurityScheme.In.HEADER)
-                                        .name("X-API-Key")
+                                        .name("X-API-KEY")
                                         .description("API Key for authentication")))
                 .addSecurityItem(new SecurityRequirement().addList("ApiKeyAuth"));
         return openAPI;

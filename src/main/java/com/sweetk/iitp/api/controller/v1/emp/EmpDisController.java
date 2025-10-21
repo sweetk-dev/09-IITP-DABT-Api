@@ -111,7 +111,7 @@ public class EmpDisController {
             summary = "발달장애인훈련센터 이용자현황 조회",
             description = "한국장애인고용공단 발달장애인훈련센터 이용자현황"
     )
-    public ResponseEntity<ApiResDto> getCenterUsage( HttpServletRequest request ) {
+    public ResponseEntity<ApiResDto<List<EmpDisCenterUsageDto>>> getCenterUsage( HttpServletRequest request ) {
         try {
             List<EmpDisCenterUsageDto> dtoList = readService.getCenterUsage();
             return ResponseEntity.ok(ApiResDto.success(dtoList));
@@ -130,7 +130,7 @@ public class EmpDisController {
             summary = "장애인 고용의무 현황 통계 조회",
             description = "한국장애인고용공단 장애인 고용의무 현황 통계 "
     )
-    public ResponseEntity<ApiResDto> getObligationStatus( HttpServletRequest request ) {
+    public ResponseEntity<ApiResDto<List<EmpDisObligationStatusDto>>> getObligationStatus( HttpServletRequest request ) {
         try {
             List<EmpDisObligationStatusDto> dtoList = readService.getObligationStatuses();
             return ResponseEntity.ok(ApiResDto.success(dtoList));
@@ -150,7 +150,7 @@ public class EmpDisController {
             summary = "장애인 의무고용 사업체 장애유형별 고용현황 조회",
             description = "한국장애인고용공단 장애인 의무고용 사업체 장애유형별 고용현황"
     )
-    public ResponseEntity<ApiResDto> getObligationByType( HttpServletRequest request ) {
+    public ResponseEntity<ApiResDto<List<EmpDisObligationByTypeDto>>> getObligationByType( HttpServletRequest request ) {
         try {
             List<EmpDisObligationByTypeDto> dtoList = readService.getObligationByType();
             return ResponseEntity.ok(ApiResDto.success(dtoList));
@@ -169,7 +169,7 @@ public class EmpDisController {
             summary = "산업별 장애인 의무고용 현황 조회",
             description = "한국장애인고용공단 산업별 장애인 의무고용 현황 통계 "
     )
-    public ResponseEntity<ApiResDto> getObligationByIndustry( HttpServletRequest request ) {
+    public ResponseEntity<ApiResDto<List<EmpDisObligationByIndustDto>>> getObligationByIndustry( HttpServletRequest request ) {
         try {
             List<EmpDisObligationByIndustDto> dtoList = readService.getObligationByIndustry();
             return ResponseEntity.ok(ApiResDto.success(dtoList));
@@ -188,7 +188,7 @@ public class EmpDisController {
             summary = "장애인 의무고용 - 사업체 현황 조회",
             description = "고용노동부 장애인 의무고용 - 사업체 현황 통계 "
     )
-    public ResponseEntity<ApiResDto> getObligationFulfillment( HttpServletRequest request ) {
+    public ResponseEntity<ApiResDto<List<EmpDisObligationFulfillmentDto>>> getObligationFulfillment( HttpServletRequest request ) {
         try {
             List<EmpDisObligationFulfillmentDto> dtoList = readService.getObligationFulfillment();
             return ResponseEntity.ok(ApiResDto.success(dtoList));
@@ -207,7 +207,7 @@ public class EmpDisController {
             summary = "장애인 고용컨설팅 이력 조회",
             description = "한국장애인고용공단 장애인 고용컨설팅 이력 정보 "
     )
-    public ResponseEntity<ApiResDto> getConsultingHis( HttpServletRequest request ) {
+    public ResponseEntity<ApiResDto<List<EmpDisConsultingHisDto>>> getConsultingHis( HttpServletRequest request ) {
         try {
             List<EmpDisConsultingHisDto> dtoList = readService.getConsultingHis();
             return ResponseEntity.ok(ApiResDto.success(dtoList));
@@ -226,7 +226,7 @@ public class EmpDisController {
             summary = "지역별 장애인 고용 현황 조회",
             description = "한국장애인고용공단 지역별 장애인 고용 현황 "
     )
-    public ResponseEntity<ApiResDto> getEmpStatusByRegion( HttpServletRequest request ) {
+    public ResponseEntity<ApiResDto<List<EmpDisRegionalStatusDto>>> getEmpStatusByRegion( HttpServletRequest request ) {
         try {
             List<EmpDisRegionalStatusDto> dtoList = readService.getEmpStatusByRegion();
             return ResponseEntity.ok(ApiResDto.success(dtoList));
@@ -245,7 +245,7 @@ public class EmpDisController {
             summary = "장애인 신규고용장려금 지역별 지급 현황 조회",
             description = "한국장애인고용공단 신규고용장려금 지역별 지급 현황 "
     )
-    public ResponseEntity<ApiResDto> getEmpIncentive( HttpServletRequest request ) {
+    public ResponseEntity<ApiResDto<List<EmpDisEmpIncentiveDto>>> getEmpIncentive( HttpServletRequest request ) {
         try {
             List<EmpDisEmpIncentiveDto> dtoList = readService.getEmpIncentive();
             return ResponseEntity.ok(ApiResDto.success(dtoList));
@@ -265,7 +265,7 @@ public class EmpDisController {
             summary = "장애인고용 부담금감면 연계고용사업장 정보 조회",
             description = "한국장애인고용공단 장애인고용 부담금감면 연계고용사업장 정보"
     )
-    public ResponseEntity<ApiResDto> getBurdenRedctWorkplace (HttpServletRequest request){
+    public ResponseEntity<ApiResDto<List<EmpDisBurdenWorkplaceDto>>> getBurdenRedctWorkplace (HttpServletRequest request){
         try {
             List<EmpDisBurdenWorkplaceDto> dtoList = readService.getBurdenRedctWorkplace();
             return ResponseEntity.ok(ApiResDto.success(dtoList));
@@ -284,7 +284,7 @@ public class EmpDisController {
             summary = "장애인 표준사업장 현황 조회",
             description = "한국장애인고용공단 장애인 표준사업장 현황"
     )
-    public ResponseEntity<ApiResDto> getStandardWorkplace (HttpServletRequest request){
+    public ResponseEntity<ApiResDto<List<EmpDisStdWorkplaceDto>>> getStandardWorkplace (HttpServletRequest request){
         try {
             List<EmpDisStdWorkplaceDto> dtoList = readService.getStandardWorkplace();
             return ResponseEntity.ok(ApiResDto.success(dtoList));
@@ -304,7 +304,7 @@ public class EmpDisController {
             summary = "고용개발원 교육정보 조회",
             description = "한국장애인고용공단 고용개발원 교육정보(장애인고용 전문인력 교육과정)"
     )
-    public ResponseEntity<ApiResDto> getStaffTrainingCourse (HttpServletRequest request){
+    public ResponseEntity<ApiResDto<List<EmpDisStaffTrainCrsDto>>> getStaffTrainingCourse (HttpServletRequest request){
         try {
             List<EmpDisStaffTrainCrsDto> dtoList = readService.getStaffTrainCrs();
             return ResponseEntity.ok(ApiResDto.success(dtoList));
@@ -323,7 +323,7 @@ public class EmpDisController {
             summary = "창업넷 일반강좌 정보 조회",
             description = "장애인기업종합지원센터 창업넷 일반강좌 정보"
     )
-    public ResponseEntity<ApiResDto> getStartupLecture (HttpServletRequest request){
+    public ResponseEntity<ApiResDto<List<EmpDisStartupLectureDto>>> getStartupLecture (HttpServletRequest request){
         try {
             List<EmpDisStartupLectureDto> dtoList = readService.getStartupLecture();
             return ResponseEntity.ok(ApiResDto.success(dtoList));
@@ -342,7 +342,7 @@ public class EmpDisController {
             summary = "발달장애인 지원 기관 및 제공서비스 조회",
             description = "한국장애인개발원 발달장애인 지원 기관 및 제공서비스"
     )
-    public ResponseEntity<ApiResDto> getDevDisSupportOrg (HttpServletRequest request){
+    public ResponseEntity<ApiResDto<List<EmpDisDevSupportOrgDto>>> getDevDisSupportOrg (HttpServletRequest request){
         try {
             List<EmpDisDevSupportOrgDto> dtoList = readService.getDevDisSupportOrg();
             return ResponseEntity.ok(ApiResDto.success(dtoList));

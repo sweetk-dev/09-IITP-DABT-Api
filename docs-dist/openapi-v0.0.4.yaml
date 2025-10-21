@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://192.168.60.142:4010",
+      "url": "http://192.168.60.142/mock",
       "description": "Prism Mock 서버"
     }
   ],
@@ -91,7 +91,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoMvPoi"
                 }
@@ -183,7 +183,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoListMvPoi"
                 }
@@ -275,7 +275,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResMvPoi"
                 }
@@ -372,7 +372,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoListMvPoiLocation"
                 }
@@ -491,7 +491,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResMvPoiLocation"
                 }
@@ -525,7 +525,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPoiPublicToilet"
                 }
@@ -559,7 +559,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoListPoiPublicToilet"
                 }
@@ -615,7 +615,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResPoiPublicToilet"
                 }
@@ -719,7 +719,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoListPoiPublicToilet"
                 }
@@ -845,7 +845,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResPoiPublicToilet"
                 }
@@ -958,7 +958,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoListPoiPublicToiletLocation"
                 }
@@ -1093,7 +1093,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResPoiPublicToiletLocation"
                 }
@@ -1115,7 +1115,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoListPoiPublicToilet"
                 }
@@ -1161,7 +1161,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResPoiPublicToilet"
                 }
@@ -1195,7 +1195,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPoiSubwayElevator"
                 }
@@ -1229,7 +1229,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoListPoiSubwayElevator"
                 }
@@ -1273,7 +1273,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoListPoiSubwayElevator"
                 }
@@ -1339,7 +1339,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResPoiSubwayElevator"
                 }
@@ -1395,7 +1395,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResPoiSubwayElevator"
                 }
@@ -1464,7 +1464,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoListPoiSubwayElevator"
                 }
@@ -1555,7 +1555,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResPoiSubwayElevator"
                 }
@@ -1652,7 +1652,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoListPoiSubwayElevatorLocation"
                 }
@@ -1771,7 +1771,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResPoiSubwayElevatorLocation"
                 }
@@ -1793,7 +1793,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoListPoiSubwayElevator"
                 }
@@ -1839,7 +1839,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResPoiSubwayElevator"
                 }
@@ -1901,7 +1901,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoListMvPoi"
                 }
@@ -1963,7 +1963,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResMvPoi"
                 }
@@ -1997,7 +1997,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPoiTourBfFacility"
                 }
@@ -2031,7 +2031,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoListPoiTourBfFacility"
                 }
@@ -2087,7 +2087,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResPoiTourBfFacility"
                 }
@@ -2234,7 +2234,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoListPoiTourBfFacility"
                 }
@@ -2403,7 +2403,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResPoiTourBfFacility"
                 }
@@ -2578,7 +2578,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoListPoiTourBfFacilityLocation"
                 }
@@ -2775,7 +2775,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResPoiTourBfFacilityLocation"
                 }
@@ -2797,7 +2797,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoListPoiTourBfFacility"
                 }
@@ -2843,7 +2843,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResPoiTourBfFacility"
                 }
@@ -2865,9 +2865,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoListEmpDisStdWorkplaceDto"
                 }
               }
             }
@@ -2887,9 +2887,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoListEmpDisBurdenWorkplaceDto"
                 }
               }
             }
@@ -2909,9 +2909,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoListEmpDisObligationStatusDto"
                 }
               }
             }
@@ -2931,9 +2931,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoListEmpDisObligationByIndustDto"
                 }
               }
             }
@@ -2953,9 +2953,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoListEmpDisObligationFulfillmentDto"
                 }
               }
             }
@@ -2975,9 +2975,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoListEmpDisObligationByTypeDto"
                 }
               }
             }
@@ -3065,7 +3065,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResEmpDisJobseekerDto"
                 }
@@ -3170,7 +3170,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoPageResEmpDisJobPostingDto"
                 }
@@ -3192,9 +3192,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoListEmpDisRegionalStatusDto"
                 }
               }
             }
@@ -3214,9 +3214,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoListEmpDisEmpIncentiveDto"
                 }
               }
             }
@@ -3236,9 +3236,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoListEmpDisConsultingHisDto"
                 }
               }
             }
@@ -3258,9 +3258,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoListEmpDisStaffTrainCrsDto"
                 }
               }
             }
@@ -3280,9 +3280,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoListEmpDisStartupLectureDto"
                 }
               }
             }
@@ -3302,9 +3302,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoListEmpDisDevSupportOrgDto"
                 }
               }
             }
@@ -3324,9 +3324,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoListEmpDisCenterUsageDto"
                 }
               }
             }
@@ -3359,9 +3359,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -3405,9 +3405,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -3427,9 +3427,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -3462,9 +3462,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -3508,9 +3508,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -3530,9 +3530,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -3565,9 +3565,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -3611,9 +3611,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -3633,9 +3633,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -3668,9 +3668,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -3714,9 +3714,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -3736,9 +3736,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -3771,9 +3771,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -3817,9 +3817,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -3839,9 +3839,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -3874,9 +3874,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -3920,9 +3920,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -3942,9 +3942,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -3977,9 +3977,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4023,9 +4023,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4045,9 +4045,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -4080,9 +4080,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4126,9 +4126,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4148,9 +4148,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -4183,9 +4183,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4229,9 +4229,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4251,9 +4251,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -4286,9 +4286,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4332,9 +4332,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4354,9 +4354,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -4389,9 +4389,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4435,9 +4435,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4457,9 +4457,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -4492,9 +4492,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4538,9 +4538,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4560,9 +4560,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -4595,9 +4595,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4641,9 +4641,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4663,9 +4663,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -4698,9 +4698,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4744,9 +4744,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4766,9 +4766,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -4801,9 +4801,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4847,9 +4847,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4869,9 +4869,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -4904,9 +4904,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4950,9 +4950,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -4972,9 +4972,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -5007,9 +5007,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -5053,9 +5053,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -5075,9 +5075,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -5110,9 +5110,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -5156,9 +5156,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -5178,9 +5178,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -5213,9 +5213,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -5259,9 +5259,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -5281,9 +5281,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -5316,9 +5316,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -5362,9 +5362,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -5384,9 +5384,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -5419,9 +5419,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -5465,9 +5465,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -5487,9 +5487,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -5522,9 +5522,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -5568,9 +5568,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -5590,9 +5590,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -5625,9 +5625,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -5671,9 +5671,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -5693,9 +5693,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -5728,9 +5728,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -5774,9 +5774,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
                 }
               }
             }
@@ -5796,9 +5796,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResDtoObject"
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
                 }
               }
             }
@@ -9065,7 +9065,7 @@
         },
         "description": "페이징 처리된 응답 데이터"
       },
-      "ApiResDtoObject": {
+      "ApiResDtoListEmpDisStdWorkplaceDto": {
         "type": "object",
         "properties": {
           "success": {
@@ -9074,8 +9074,11 @@
             "example": true
           },
           "data": {
-            "type": "object",
-            "description": "응답 데이터"
+            "type": "array",
+            "description": "응답 데이터",
+            "items": {
+              "$ref": "#/components/schemas/EmpDisStdWorkplaceDto"
+            }
           },
           "status": {
             "type": "string",
@@ -9158,6 +9161,892 @@
           }
         },
         "description": "공통 응답 포맷"
+      },
+      "EmpDisStdWorkplaceDto": {
+        "type": "object",
+        "properties": {
+          "certNo": {
+            "type": "string",
+            "description": "인증번호",
+            "example": "제2013-001호"
+          },
+          "companyName": {
+            "type": "string",
+            "description": "사업체명",
+            "example": "㈜포스코휴먼스"
+          },
+          "branch": {
+            "type": "string",
+            "description": "관할지사",
+            "example": "경북지사"
+          },
+          "ceo": {
+            "type": "string",
+            "description": "대표자",
+            "example": "이성록"
+          },
+          "businessNo": {
+            "type": "string",
+            "description": "사업자등록번호",
+            "example": "506-81-69850"
+          },
+          "address": {
+            "type": "string",
+            "description": "소재지",
+            "example": "경상북도 포항시 남구 동해안로 6213번길 15-1"
+          },
+          "certDate": {
+            "type": "string",
+            "description": "인증일자",
+            "format": "date",
+            "example": "2013-06-19"
+          },
+          "tel": {
+            "type": "string",
+            "description": "전화번호",
+            "example": "054-220-7733"
+          },
+          "businessItem": {
+            "type": "string",
+            "description": "업종 및 주요생산품",
+            "example": "서비스업(사무지원), 세탁업, 차량관리사업"
+          },
+          "type": {
+            "type": "string",
+            "description": "구분",
+            "example": "자회사"
+          }
+        },
+        "description": "장애인 표준사업장 현황"
+      },
+      "ApiResDtoListEmpDisBurdenWorkplaceDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "type": "array",
+            "description": "응답 데이터",
+            "items": {
+              "$ref": "#/components/schemas/EmpDisBurdenWorkplaceDto"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "EmpDisBurdenWorkplaceDto": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer",
+            "description": "연도",
+            "format": "int32",
+            "example": 2024
+          },
+          "companyName": {
+            "type": "string",
+            "description": "사업장명",
+            "example": "춘강장애인근로센터"
+          },
+          "facilityType": {
+            "type": "string",
+            "description": "시설구분",
+            "example": "직업재활시설"
+          },
+          "address": {
+            "type": "string",
+            "description": "사업장소재지",
+            "example": "제주특별자치도 제주시"
+          },
+          "workItem": {
+            "type": "string",
+            "description": "도급품목",
+            "example": "세탁용역"
+          },
+          "workerCount": {
+            "type": "integer",
+            "description": "상시근로자수",
+            "format": "int32",
+            "example": 92
+          },
+          "disabledCount": {
+            "type": "integer",
+            "description": "장애인수",
+            "format": "int32",
+            "example": 57
+          },
+          "severeCount": {
+            "type": "integer",
+            "description": "중증장애인수",
+            "format": "int32",
+            "example": 40
+          }
+        },
+        "description": "장애인고용 부담금감면 연계고용사업장 정보"
+      },
+      "ApiResDtoListEmpDisObligationStatusDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "type": "array",
+            "description": "응답 데이터",
+            "items": {
+              "$ref": "#/components/schemas/EmpDisObligationStatusDto"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "EmpDisObligationStatusDto": {
+        "type": "object",
+        "properties": {
+          "orgName": {
+            "type": "string",
+            "description": "기관",
+            "example": "중앙행정기관"
+          },
+          "workplaceCount": {
+            "type": "integer",
+            "description": "대상 사업체(개소)",
+            "format": "int32",
+            "example": 54
+          },
+          "workerCount": {
+            "type": "integer",
+            "description": "상시 근로자(명)",
+            "format": "int32",
+            "example": 207070
+          },
+          "disabledCount": {
+            "type": "integer",
+            "description": "장애인(명)",
+            "format": "int32",
+            "example": 7338
+          },
+          "empRate": {
+            "type": "number",
+            "description": "고용률",
+            "example": 3.54
+          }
+        },
+        "description": "장애인 고용의무 현황 통계"
+      },
+      "ApiResDtoListEmpDisObligationByIndustDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "type": "array",
+            "description": "응답 데이터",
+            "items": {
+              "$ref": "#/components/schemas/EmpDisObligationByIndustDto"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "EmpDisObligationByIndustDto": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer",
+            "description": "연도",
+            "format": "int32",
+            "example": 2023
+          },
+          "industry": {
+            "type": "string",
+            "description": "산업구분",
+            "example": "A.농업, 임업 및 어업"
+          },
+          "companyCount": {
+            "type": "integer",
+            "description": "사업체수",
+            "format": "int32",
+            "example": 111
+          },
+          "workerCount": {
+            "type": "integer",
+            "description": "적용대상근로자수",
+            "format": "int32",
+            "example": 19183
+          },
+          "obligationCount": {
+            "type": "integer",
+            "description": "의무고용인원",
+            "format": "int32",
+            "example": 535
+          },
+          "empRate": {
+            "type": "number",
+            "description": "장애인 고용률",
+            "example": 2.86
+          }
+        },
+        "description": "산업별 의무고용 현황"
+      },
+      "ApiResDtoListEmpDisObligationFulfillmentDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "type": "array",
+            "description": "응답 데이터",
+            "items": {
+              "$ref": "#/components/schemas/EmpDisObligationFulfillmentDto"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "EmpDisObligationFulfillmentDto": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer",
+            "description": "연도",
+            "format": "int32",
+            "example": 2010
+          },
+          "companyCount": {
+            "type": "integer",
+            "description": "사업체수",
+            "format": "int32",
+            "example": 23249
+          },
+          "fulfilledCount": {
+            "type": "integer",
+            "description": "이행사업체수",
+            "format": "int32",
+            "example": 11898
+          }
+        },
+        "description": "장애인 의무고용 - 사업체 현황"
+      },
+      "ApiResDtoListEmpDisObligationByTypeDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "type": "array",
+            "description": "응답 데이터",
+            "items": {
+              "$ref": "#/components/schemas/EmpDisObligationByTypeDto"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "EmpDisObligationByTypeDto": {
+        "type": "object",
+        "properties": {
+          "orgType": {
+            "type": "string",
+            "description": "사업체유형",
+            "example": "국가 및 지방자치단체"
+          },
+          "category": {
+            "type": "string",
+            "description": "구분",
+            "example": "중앙행정기관"
+          },
+          "total": {
+            "type": "integer",
+            "description": "계",
+            "format": "int32",
+            "example": 1941
+          },
+          "limbSevere": {
+            "type": "integer",
+            "description": "지체 중증",
+            "format": "int32",
+            "example": 126
+          },
+          "limbMild": {
+            "type": "integer",
+            "description": "지체 경증",
+            "format": "int32",
+            "example": 950
+          },
+          "brainSevere": {
+            "type": "integer",
+            "description": "뇌병변 중증",
+            "format": "int32",
+            "example": 30
+          },
+          "brainMild": {
+            "type": "integer",
+            "description": "뇌병변 경증",
+            "format": "int32",
+            "example": 70
+          },
+          "visionSevere": {
+            "type": "integer",
+            "description": "시각 중증",
+            "format": "int32",
+            "example": 16
+          },
+          "visionMild": {
+            "type": "integer",
+            "description": "시각 경증",
+            "format": "int32",
+            "example": 235
+          },
+          "hearingSevere": {
+            "type": "integer",
+            "description": "청각 중증",
+            "format": "int32",
+            "example": 36
+          },
+          "hearingMild": {
+            "type": "integer",
+            "description": "청각 경증",
+            "format": "int32",
+            "example": 146
+          },
+          "speechSevere": {
+            "type": "integer",
+            "description": "언어 중증",
+            "format": "int32",
+            "example": 0
+          },
+          "speechMild": {
+            "type": "integer",
+            "description": "언어 경증",
+            "format": "int32",
+            "example": 21
+          },
+          "intellectual": {
+            "type": "integer",
+            "description": "지적",
+            "format": "int32",
+            "example": 79
+          },
+          "mentalSevere": {
+            "type": "integer",
+            "description": "정신 중증",
+            "format": "int32",
+            "example": 27
+          },
+          "mentalMild": {
+            "type": "integer",
+            "description": "정신 경증",
+            "format": "int32",
+            "example": 0
+          },
+          "autism": {
+            "type": "integer",
+            "description": "자폐성",
+            "format": "int32",
+            "example": 10
+          },
+          "kidneySevere": {
+            "type": "integer",
+            "description": "신장 중증",
+            "format": "int32",
+            "example": 20
+          },
+          "kidneyMild": {
+            "type": "integer",
+            "description": "신장 경증",
+            "format": "int32",
+            "example": 45
+          },
+          "heartSevere": {
+            "type": "integer",
+            "description": "심장 중증",
+            "format": "int32",
+            "example": 6
+          },
+          "heartMild": {
+            "type": "integer",
+            "description": "심장 경증",
+            "format": "int32",
+            "example": 3
+          },
+          "lungSevere": {
+            "type": "integer",
+            "description": "호흡기 중증",
+            "format": "int32",
+            "example": 2
+          },
+          "lungMild": {
+            "type": "integer",
+            "description": "호흡기 경증",
+            "format": "int32",
+            "example": 0
+          },
+          "liverSevere": {
+            "type": "integer",
+            "description": "간 중증",
+            "format": "int32",
+            "example": 0
+          },
+          "liverMild": {
+            "type": "integer",
+            "description": "간 경증",
+            "format": "int32",
+            "example": 21
+          },
+          "faceSevere": {
+            "type": "integer",
+            "description": "안면 중증",
+            "format": "int32",
+            "example": 1
+          },
+          "faceMild": {
+            "type": "integer",
+            "description": "안면 경증",
+            "format": "int32",
+            "example": 6
+          },
+          "stomaSevere": {
+            "type": "integer",
+            "description": "장루요루 중증",
+            "format": "int32",
+            "example": 0
+          },
+          "stomaMild": {
+            "type": "integer",
+            "description": "장루요루 경증",
+            "format": "int32",
+            "example": 3
+          },
+          "epilepsySevere": {
+            "type": "integer",
+            "description": "뇌전증 중증",
+            "format": "int32",
+            "example": 4
+          },
+          "epilepsyMild": {
+            "type": "integer",
+            "description": "뇌전증 경증",
+            "format": "int32",
+            "example": 6
+          },
+          "veteran": {
+            "type": "integer",
+            "description": "국가유공",
+            "format": "int32",
+            "example": 78
+          }
+        },
+        "description": "장애인 의무고용 사업체 장애유형별 고용현황"
       },
       "ApiResDtoPageResEmpDisJobseekerDto": {
         "type": "object",
@@ -9566,13 +10455,1418 @@
           }
         },
         "description": "페이징 처리된 응답 데이터"
+      },
+      "ApiResDtoListEmpDisRegionalStatusDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "type": "array",
+            "description": "응답 데이터",
+            "items": {
+              "$ref": "#/components/schemas/EmpDisRegionalStatusDto"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "EmpDisRegionalStatusDto": {
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "description": "시군구 구분",
+            "example": "서울 종로구"
+          },
+          "companyCount": {
+            "type": "integer",
+            "description": "사업체수",
+            "format": "int32",
+            "example": 411
+          },
+          "workerCount": {
+            "type": "integer",
+            "description": "적용대상 근로자수",
+            "format": "int32",
+            "example": 274704
+          },
+          "obligationCount": {
+            "type": "integer",
+            "description": "의무고용 인원",
+            "format": "int32",
+            "example": 8561
+          },
+          "severe2xCount": {
+            "type": "integer",
+            "description": "중증2배수 적용 장애인 고용인원",
+            "format": "int32",
+            "example": 7670
+          },
+          "severe2xRate": {
+            "type": "number",
+            "description": "중증2배수 적용 장애인 고용률",
+            "example": 2.79
+          }
+        },
+        "description": "지역별 장애인 고용 현황"
+      },
+      "ApiResDtoListEmpDisEmpIncentiveDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "type": "array",
+            "description": "응답 데이터",
+            "items": {
+              "$ref": "#/components/schemas/EmpDisEmpIncentiveDto"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "EmpDisEmpIncentiveDto": {
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "description": "시도구분",
+            "example": "강원특별자치도"
+          },
+          "industry": {
+            "type": "string",
+            "description": "업종",
+            "example": "A.농업, 임업 및 어업"
+          },
+          "companyCount": {
+            "type": "integer",
+            "description": "사업체수",
+            "format": "int32",
+            "example": 1
+          },
+          "amount": {
+            "type": "integer",
+            "description": "지급액",
+            "format": "int64",
+            "example": 3282000
+          },
+          "paidPerson": {
+            "type": "integer",
+            "description": "지급순인원",
+            "format": "int32",
+            "example": 1
+          },
+          "paidYearPerson": {
+            "type": "integer",
+            "description": "지급연인원",
+            "format": "int32",
+            "example": 6
+          }
+        },
+        "description": "신규고용장려금 지역별 지급 현황"
+      },
+      "ApiResDtoListEmpDisConsultingHisDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "type": "array",
+            "description": "응답 데이터",
+            "items": {
+              "$ref": "#/components/schemas/EmpDisConsultingHisDto"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "EmpDisConsultingHisDto": {
+        "type": "object",
+        "properties": {
+          "seqNo": {
+            "type": "integer",
+            "description": "순번",
+            "format": "int32",
+            "example": 12
+          },
+          "diagnosisNo": {
+            "type": "string",
+            "description": "진단번호",
+            "example": "E202411190003"
+          },
+          "receiveDate": {
+            "type": "string",
+            "description": "접수일자",
+            "format": "date",
+            "example": "2024-11-19"
+          },
+          "businessNo": {
+            "type": "string",
+            "description": "사업자등록번호",
+            "example": "647-87-00659"
+          },
+          "companyName": {
+            "type": "string",
+            "description": "사업체명",
+            "example": "휘닉스평창(주)"
+          },
+          "address": {
+            "type": "string",
+            "description": "소재지주소",
+            "example": "강원도 평창군 봉평면 태기로 174"
+          },
+          "businessType": {
+            "type": "string",
+            "description": "사업체유형",
+            "example": "민간기업"
+          },
+          "regionalOffice": {
+            "type": "string",
+            "description": "관할 지역본부 및 지사",
+            "example": "강원지사"
+          },
+          "officeTel": {
+            "type": "string",
+            "description": "관할 지역본부 및 지사 대표번호",
+            "example": "033-737-6612"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "updatedBy": {
+            "type": "string"
+          }
+        },
+        "description": "장애인 고용 컨설팅 정보"
+      },
+      "ApiResDtoListEmpDisStaffTrainCrsDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "type": "array",
+            "description": "응답 데이터",
+            "items": {
+              "$ref": "#/components/schemas/EmpDisStaffTrainCrsDto"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "EmpDisStaffTrainCrsDto": {
+        "type": "object",
+        "properties": {
+          "courseType": {
+            "type": "string",
+            "description": "과정구분",
+            "example": "장애인고용 전문인력 양성"
+          },
+          "courseName": {
+            "type": "string",
+            "description": "과정명",
+            "example": "1차 직무지도원 양성과정"
+          },
+          "courseContent": {
+            "type": "string",
+            "description": "교육내용",
+            "example": "지원고용사업과 직무지도원의 역할, 장애인고용정책 등"
+          },
+          "method": {
+            "type": "string",
+            "description": "교육방법",
+            "example": "비대면 화상교육"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "교육시작일",
+            "format": "date",
+            "example": "2025-03-27"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "교육종료일",
+            "format": "date",
+            "example": "2025-03-28"
+          },
+          "recruitCount": {
+            "type": "integer",
+            "description": "모집인원",
+            "format": "int32",
+            "example": 50
+          },
+          "applyStartDate": {
+            "type": "string",
+            "description": "수강신청 시작일",
+            "format": "date",
+            "example": "2025-03-10"
+          },
+          "applyEndDate": {
+            "type": "string",
+            "description": "수강신청 종료일",
+            "format": "date",
+            "example": "2025-03-14"
+          },
+          "applyMethod": {
+            "type": "string",
+            "description": "수강신청방법",
+            "example": "EDI사이버연수원-\u003e교육신청-\u003e집합혼합교육-\u003e\u00272024년 직무지도원 양성과정\u0027 클릭"
+          },
+          "location": {
+            "type": "string",
+            "description": "교육장소",
+            "example": "자택"
+          },
+          "target": {
+            "type": "string",
+            "description": "교육대상",
+            "example": "직무지도원 활동예정자"
+          }
+        },
+        "description": "고용개발원 교육정보(장애인고용 전문인력 교육과정)"
+      },
+      "ApiResDtoListEmpDisStartupLectureDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "type": "array",
+            "description": "응답 데이터",
+            "items": {
+              "$ref": "#/components/schemas/EmpDisStartupLectureDto"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "EmpDisStartupLectureDto": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer",
+            "description": "교육년도",
+            "format": "int32",
+            "example": 2018
+          },
+          "onlineType": {
+            "type": "string",
+            "description": "온오프라인",
+            "example": "오프라인"
+          },
+          "category": {
+            "type": "string",
+            "description": "교육구분",
+            "example": "특화전문교육"
+          },
+          "title": {
+            "type": "string",
+            "description": "교육제목",
+            "example": "기초교육"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "교육시작일",
+            "format": "date",
+            "example": "2018-12-10"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "교육종료일",
+            "format": "date",
+            "example": "2018-12-11"
+          },
+          "hours": {
+            "type": "integer",
+            "description": "교육시간",
+            "format": "int32",
+            "example": 12
+          },
+          "recruitCount": {
+            "type": "integer",
+            "description": "모집인원",
+            "format": "int32",
+            "example": 21
+          },
+          "applyStartDate": {
+            "type": "string",
+            "description": "신청시작일",
+            "format": "date",
+            "example": "2018-12-10"
+          },
+          "applyEndDate": {
+            "type": "string",
+            "description": "신청종료일",
+            "format": "date",
+            "example": "2018-12-11"
+          },
+          "orgName": {
+            "type": "string",
+            "description": "교육기관",
+            "example": "장애인기업종합지원센터"
+          },
+          "applyCount": {
+            "type": "integer",
+            "description": "신청인원",
+            "format": "int32",
+            "example": 21
+          },
+          "completeCount": {
+            "type": "integer",
+            "description": "수료인원",
+            "format": "int32",
+            "example": 21
+          }
+        },
+        "description": "장애인기업종합지원센터 창업넷 일반강좌 정보"
+      },
+      "ApiResDtoListEmpDisDevSupportOrgDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "type": "array",
+            "description": "응답 데이터",
+            "items": {
+              "$ref": "#/components/schemas/EmpDisDevSupportOrgDto"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "EmpDisDevSupportOrgDto": {
+        "type": "object",
+        "properties": {
+          "seqNo": {
+            "type": "integer",
+            "description": "연번",
+            "format": "int32",
+            "example": 1
+          },
+          "orgName": {
+            "type": "string",
+            "description": "기관명",
+            "example": "해피데이 충주시 청소년 발달장애학생 방과후 활동센터"
+          },
+          "region": {
+            "type": "string",
+            "description": "시군구",
+            "example": "충청북도 충주시"
+          },
+          "dayActivity": {
+            "type": "boolean",
+            "description": "주간활동",
+            "example": false
+          },
+          "afterschool": {
+            "type": "boolean",
+            "description": "청소년방과후활동",
+            "example": true
+          },
+          "indivPlan": {
+            "type": "boolean",
+            "description": "개인별지원계획",
+            "example": false
+          },
+          "parentEdu": {
+            "type": "boolean",
+            "description": "부모교육",
+            "example": false
+          },
+          "familyRest": {
+            "type": "boolean",
+            "description": "가족휴식",
+            "example": false
+          },
+          "parentCounsel": {
+            "type": "boolean",
+            "description": "부모상담",
+            "example": false
+          },
+          "rightsRelief": {
+            "type": "boolean",
+            "description": "권리구제",
+            "example": false
+          },
+          "publicGuardian": {
+            "type": "boolean",
+            "description": "공공후견",
+            "example": false
+          },
+          "childFamilySup": {
+            "type": "boolean",
+            "description": "장애아가족양육지원",
+            "example": false
+          },
+          "emergencyCare": {
+            "type": "boolean",
+            "description": "긴급돌봄",
+            "example": false
+          }
+        },
+        "description": "발달장애인 지원 기관 및 제공 서비스"
+      },
+      "ApiResDtoListEmpDisCenterUsageDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "type": "array",
+            "description": "응답 데이터",
+            "items": {
+              "$ref": "#/components/schemas/EmpDisCenterUsageDto"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "EmpDisCenterUsageDto": {
+        "type": "object",
+        "properties": {
+          "trainOrg": {
+            "type": "string",
+            "description": "훈련기관구분",
+            "example": "부산발달장애인훈련센터"
+          },
+          "userCount": {
+            "type": "integer",
+            "description": "양성과정 이용자수",
+            "format": "int32",
+            "example": 80
+          },
+          "employedCount": {
+            "type": "integer",
+            "description": "양성과정 취업자수",
+            "format": "int32",
+            "example": 66
+          }
+        },
+        "description": "발달장애인훈련센터 이용자현황"
+      },
+      "ApiResDtoStatDataRes": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/StatDataRes"
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "StatDataItem": {
+        "required": [
+          "c1Nm",
+          "c1ObjId",
+          "c1ObjNm",
+          "data",
+          "itmNm",
+          "itmObjId",
+          "prdDe",
+          "unitNm"
+        ],
+        "type": "object",
+        "properties": {
+          "prdDe": {
+            "type": "integer",
+            "description": "통계 년도",
+            "format": "int32",
+            "example": 2021
+          },
+          "c1Nm": {
+            "type": "string",
+            "description": "분류값 1",
+            "example": "전체"
+          },
+          "c2Nm": {
+            "type": "string",
+            "description": "분류값 2",
+            "example": "추정수"
+          },
+          "c3Nm": {
+            "type": "string",
+            "description": "분류값 3"
+          },
+          "c1ObjId": {
+            "type": "string",
+            "description": "분류코드 1 ",
+            "example": "A"
+          },
+          "c1ObjNm": {
+            "type": "string",
+            "description": "분류명 1",
+            "example": "특성별"
+          },
+          "c2ObjId": {
+            "type": "string",
+            "description": "분류코드 2 ",
+            "example": "B"
+          },
+          "c2ObjNm": {
+            "type": "string",
+            "description": "분류명 2",
+            "example": "도와주는사람별"
+          },
+          "c3ObjId": {
+            "type": "string",
+            "description": "분류코드 3 "
+          },
+          "c3ObjNm": {
+            "type": "string",
+            "description": "분류명 3"
+          },
+          "itmNm": {
+            "type": "string",
+            "description": "항목값",
+            "example": "일상생활 도와주는 사람(1순위)"
+          },
+          "itmObjId": {
+            "type": "string",
+            "description": "항목코드",
+            "example": "ITEM"
+          },
+          "unitNm": {
+            "type": "string",
+            "description": "단위명",
+            "example": "명"
+          },
+          "data": {
+            "type": "string",
+            "description": "수치 값",
+            "example": "251277"
+          },
+          "lstChnDe": {
+            "type": "string",
+            "description": "데이터의 최종수정일",
+            "format": "date",
+            "example": "2023-01-02"
+          }
+        },
+        "description": "통계 데이터 상세 Item"
+      },
+      "StatDataRes": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "description": "통계 데이터 리스트",
+            "items": {
+              "$ref": "#/components/schemas/StatDataItem"
+            }
+          }
+        },
+        "description": "통계 데이터"
+      },
+      "ApiResDtoStatInfo": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/StatInfo"
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "StatInfo": {
+        "required": [
+          "collectDate",
+          "latestChnDate",
+          "orgName",
+          "period",
+          "surveyName",
+          "tblName"
+        ],
+        "type": "object",
+        "properties": {
+          "tblName": {
+            "type": "string",
+            "description": "통계표명",
+            "example": "장애인현황"
+          },
+          "period": {
+            "type": "string",
+            "description": "수집 주기",
+            "example": "년,2년"
+          },
+          "collectDate": {
+            "type": "string",
+            "description": "수록기간",
+            "example": "2019~2024"
+          },
+          "orgName": {
+            "type": "string",
+            "description": "작성기관명",
+            "example": "보건복지부"
+          },
+          "surveyName": {
+            "type": "string",
+            "description": "조사명",
+            "example": "장애인현황"
+          },
+          "latestChnDate": {
+            "type": "string",
+            "description": "최종 자료갱신일",
+            "example": " 2025-04-18"
+          }
+        },
+        "description": "통계 정보 "
       }
     },
     "securitySchemes": {
       "ApiKeyAuth": {
         "type": "apiKey",
         "description": "API Key for authentication",
-        "name": "X-API-Key",
+        "name": "X-API-KEY",
         "in": "header"
       }
     }

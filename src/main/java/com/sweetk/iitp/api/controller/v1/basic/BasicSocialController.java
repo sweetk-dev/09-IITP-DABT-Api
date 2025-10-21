@@ -37,7 +37,7 @@ public class BasicSocialController extends BasicBaseController {
             summary = "장애인의 사회 참여 통계 정보 조회",
             description = "장애인의 사회 참여 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getSocialParticFreqInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getSocialParticFreqInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = socialReadService.getSocialParticFreqInfo();
@@ -50,7 +50,7 @@ public class BasicSocialController extends BasicBaseController {
             summary = "장애인의 사회 참여 조회(최신)",
             description = "장애인의 사회 참여 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getSocialParticFreqLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getSocialParticFreqLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -68,7 +68,7 @@ public class BasicSocialController extends BasicBaseController {
             summary = "해당 연도의 장애인의 사회 참여 조회(연도)",
             description = "해당 연도의 장애인의 사회 참여 조회"
     )
-    public ResponseEntity<ApiResDto> getSocialParticFreqYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getSocialParticFreqYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
@@ -88,7 +88,7 @@ public class BasicSocialController extends BasicBaseController {
             summary = "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도 통계 정보 조회",
             description = "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getSocialContactCntfreqInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getSocialContactCntfreqInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = socialReadService.getSocialContactCntfreqInfo();
@@ -101,7 +101,7 @@ public class BasicSocialController extends BasicBaseController {
             summary = "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도 조회(최신)",
             description = "가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getSocialContactCntfreqLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getSocialContactCntfreqLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -119,7 +119,7 @@ public class BasicSocialController extends BasicBaseController {
             summary = "해당 연도의 가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도 조회(연도)",
             description = "해당 연도의 가까이 지내는 친구, 이웃, 지인 수 및 만남 빈도 조회"
     )
-    public ResponseEntity<ApiResDto> getSocialContactCntfreqYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getSocialContactCntfreqYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
