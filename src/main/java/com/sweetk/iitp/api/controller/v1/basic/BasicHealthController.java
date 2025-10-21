@@ -36,7 +36,7 @@ public class BasicHealthController extends BasicBaseController {
             summary = "장애인 의료이용 현황 통계 정보 조회",
             description = "장애인 의료이용 현황 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getHealthMedicalUsageInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getHealthMedicalUsageInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = healthReadService.getHealthMedicalUsageInfo();
@@ -49,7 +49,7 @@ public class BasicHealthController extends BasicBaseController {
             summary = "장애인 의료이용 현황 조회(최신)",
             description = "장애인 의료이용 현황 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getHealthMedicalUsageLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHealthMedicalUsageLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -67,7 +67,7 @@ public class BasicHealthController extends BasicBaseController {
             summary = "해당 연도의 장애인 의료이용 현황 조회(연도)",
             description = "해당 연도의 장애인 의료이용 현황 조회"
     )
-    public ResponseEntity<ApiResDto> getHealthMedicalUsageYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHealthMedicalUsageYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
@@ -86,7 +86,7 @@ public class BasicHealthController extends BasicBaseController {
             summary = "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 통계 정보 조회",
             description = "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getHealthDiseaseCostSubInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getHealthDiseaseCostSubInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = healthReadService.getHealthDiseaseCostSubInfo();
@@ -99,7 +99,7 @@ public class BasicHealthController extends BasicBaseController {
             summary = "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회(최신)",
             description = "장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getHealthDiseaseCostSubLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHealthDiseaseCostSubLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -117,7 +117,7 @@ public class BasicHealthController extends BasicBaseController {
             summary = "해당 연도의 장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회(연도)",
             description = "해당 연도의 장애인 장애유형별 다빈도질환별 진료비현황: 소분류 조회"
     )
-    public ResponseEntity<ApiResDto> getHealthDiseaseCostSubYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHealthDiseaseCostSubYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
@@ -136,7 +136,7 @@ public class BasicHealthController extends BasicBaseController {
             summary = "장애인 생활체육 실행 유형 통계 정보 조회",
             description = "장애인 생활체육 실행 유형 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getHealthSportExecTypeInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getHealthSportExecTypeInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = healthReadService.getHealthSportExecTypeInfo();
@@ -149,7 +149,7 @@ public class BasicHealthController extends BasicBaseController {
             summary = "장애인 생활체육 실행 유형 조회(최신)",
             description = "장애인 생활체육 실행 유형 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getHealthSportExecTypeLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHealthSportExecTypeLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -167,7 +167,7 @@ public class BasicHealthController extends BasicBaseController {
             summary = "해당 연도의 장애인 생활체육 실행 유형 조회(연도)",
             description = "해당 연도의 장애인 생활체육 실행 유형 조회"
     )
-    public ResponseEntity<ApiResDto> getHealthSportExecTypeYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHealthSportExecTypeYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
@@ -186,7 +186,7 @@ public class BasicHealthController extends BasicBaseController {
             summary = "운동 시 가장 도움이 되는 지원 사항 통계 정보 조회",
             description = "운동 시 가장 도움이 되는 지원 사항 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getHealthExrcBestAidInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getHealthExrcBestAidInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = healthReadService.getHealthExrcBestAidInfo();
@@ -199,7 +199,7 @@ public class BasicHealthController extends BasicBaseController {
             summary = "운동 시 가장 도움이 되는 지원 사항 조회(최신)",
             description = "운동 시 가장 도움이 되는 지원 사항. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getHealthExrcBestAidLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHealthExrcBestAidLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -217,7 +217,7 @@ public class BasicHealthController extends BasicBaseController {
             summary = "해당 연도의 운동 시 가장 도움이 되는 지원 사항 조회(연도)",
             description = "해당 연도의 운동 시 가장 도움이 되는 지원 사항 조회"
     )
-    public ResponseEntity<ApiResDto> getHealthExrcBestAidYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHealthExrcBestAidYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,

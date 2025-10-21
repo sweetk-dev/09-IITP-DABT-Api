@@ -42,7 +42,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "신규등록 장애인현황 통계 정보 조회",
             description = "신규등록 장애인현황 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getHousingRegNewInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getHousingRegNewInfo(
             HttpServletRequest request) {
             StatInfo statinfo = housingReadService.getHousingRegNewInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
@@ -54,7 +54,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "신규등록 장애인현황 조회(최신)",
             description = "신규등록 장애인현황 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getHousingRegNewLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHousingRegNewLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -72,7 +72,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "해당 연도의  신규등록 장애인현황 조회(연도)",
             description = "해당 연도의 신규등록 장애인현황 조회"
     )
-    public ResponseEntity<ApiResDto> getHousingRegNewYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHousingRegNewYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
@@ -92,7 +92,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "전국 연령별,장애등급별,성별 등록장애인수 통계 정보 조회",
             description = "전국 연령별,장애등급별,성별 등록장애인수 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getHousingRegAgeSevGenInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getHousingRegAgeSevGenInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = housingReadService.getHousingRegAgeSevGenInfo();
@@ -105,7 +105,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "전국 연령별,장애등급별,성별 등록장애인수 조회(최신)",
             description = "전국 연령별,장애등급별,성별 등록장애인수 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getHousingRegAgeSevGenLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHousingRegAgeSevGenLatest(
             @Parameter(name = "from", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -123,7 +123,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "해당 연도의  전국 연령별,장애등급별,성별 등록장애인수 조회(연도)",
             description = "해당 연도의 전국 연령별,장애등급별,성별 등록장애인수 조회"
     )
-    public ResponseEntity<ApiResDto> getHousingRegAgeSevGenYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHousingRegAgeSevGenYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
@@ -142,7 +142,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "시도별,장애등급별,성별 등록장애인수 통계 정보 조회",
             description = "시도별,장애등급별,성별 등록장애인수 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getHousingRegSidoSevGenInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getHousingRegSidoSevGenInfo(
             HttpServletRequest request) {
 
         StatInfo statinfo = housingReadService.getHousingRegSidoSevGenInfo();
@@ -154,7 +154,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "시도별,장애등급별,성별 등록장애인수 조회(최신)",
             description = "시도별,장애등급별,성별 등록장애인수 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getHousingRegSidoASevGenLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHousingRegSidoASevGenLatest(
             @Parameter(name = "from", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -172,7 +172,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "해당 연도의  시도별,장애등급별,성별 등록장애인수 조회(연도)",
             description = "해당 연도의 시도별,장애등급별,성별 등록장애인수 조회"
     )
-    public ResponseEntity<ApiResDto> getHousingRegSidoSevGenYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHousingRegSidoSevGenYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
@@ -191,7 +191,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "일상생활 필요 지원 정도 통계 정보 조회",
             description = "일상생활 필요 지원 정도 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getHousingLifeSuppNeedLvlInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getHousingLifeSuppNeedLvlInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = housingReadService.getHousingLifeSuppNeedLvlInfo();
@@ -204,7 +204,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "일상생활 필요 지원 정도 조회(최신)",
             description = "일상생활 필요 지원 정도 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getHousingLifeSuppNeedLvlLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHousingLifeSuppNeedLvlLatest(
             @Parameter(name = "from", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -223,7 +223,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "해당 연도의 일상생활 필요 지원 정도 조회(연도)",
             description = "해당 연도의 일상생활 필요 지원 정도 조회"
     )
-    public ResponseEntity<ApiResDto> getHousingLifeSuppNeedLvlYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHousingLifeSuppNeedLvlYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
@@ -243,7 +243,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "주로 지원해주는 사람의 유형 통계 정보 조회",
             description = "주로 지원해주는 사람의 유형 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getHousingLifeMainCarerInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getHousingLifeMainCarerInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = housingReadService.getHousingLifeMaincarerInfo();
@@ -256,7 +256,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "주로 지원해주는 사람의 유형  조회(최신)",
             description = "주로 지원해주는 사람의 유형 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getHousingLifeMainCarerLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHousingLifeMainCarerLatest(
             @Parameter(name = "from", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -275,7 +275,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "해당 연도의 주로 지원해주는 사람의 유형 조회(연도)",
             description = "해당 연도의 주로 지원해주는 사람의 유형 조회"
     )
-    public ResponseEntity<ApiResDto> getHousingLifeMainCarerYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHousingLifeMainCarerYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
@@ -296,7 +296,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "일상생활 도와주는 사람(1순위) 통계 정보 조회",
             description = "일상생활 도와주는 사람(1순위) 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getHousingLifePrimCarerInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getHousingLifePrimCarerInfo(
             HttpServletRequest request) {
 
         try {
@@ -315,7 +315,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "일상생활 도와주는 사람(1순위)  조회(최신)",
             description = "일상생활 도와주는 사람(1순위) 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getHousingLifePrimCarerLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHousingLifePrimCarerLatest(
             @Parameter(name = "from", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -333,7 +333,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "해당 연도의 일상생활 도와주는 사람(1순위) 조회(연도)",
             description = "해당 연도의 일상생활 도와주는 사람(1순위) 조회"
     )
-    public ResponseEntity<ApiResDto> getHousingLifePrimCarerYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHousingLifePrimCarerYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
@@ -354,7 +354,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "도움받는 분야 통계 정보 조회",
             description = "도움받는 분야 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getHousingLifeSuppFieldInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getHousingLifeSuppFieldInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = housingReadService.getHousingLifeSuppFieldInfo();
@@ -367,7 +367,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "도움받는 분야  조회(최신)",
             description = "도움받는 분야 조회. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getHousingLifeSuppFieldLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHousingLifeSuppFieldLatest(
             @Parameter(name = "from", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -386,7 +386,7 @@ public class BasicHousingController extends BasicBaseController {
             summary = "해당 연도의 도움받는 분야 조회(연도)",
             description = "해당 연도의 도움받는 분야 조회"
     )
-    public ResponseEntity<ApiResDto> getHousingLifeSuppFieldYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getHousingLifeSuppFieldYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,

@@ -37,7 +37,7 @@ public class BasicEmpController extends BasicBaseController {
             summary = "장애인 근로자 고용현황 통계 정보 조회",
             description = "장애인 근로자 고용현황 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getEmpNatlInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getEmpNatlInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = empReadService.getEmpNatlInfo();
@@ -50,7 +50,7 @@ public class BasicEmpController extends BasicBaseController {
             summary = "장애인 근로자 고용현황 조회(최신)",
             description = "장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getEmpNatlLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getEmpNatlLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -68,7 +68,7 @@ public class BasicEmpController extends BasicBaseController {
             summary = "해당 연도의 장애인 근로자 고용현황 조회(연도)",
             description = "해당 연도의 장애인 근로자 고용현황 조회"
     )
-    public ResponseEntity<ApiResDto> getEmpNatlYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getEmpNatlYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
@@ -87,7 +87,7 @@ public class BasicEmpController extends BasicBaseController {
             summary = "공공기관 장애인고용 현황 통계 정보 조회",
             description = "공공기관 장애인고용 현황 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getEmpNatlPublicInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getEmpNatlPublicInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = empReadService.getEmpNatlPublicInfo();
@@ -100,7 +100,7 @@ public class BasicEmpController extends BasicBaseController {
             summary = "공공기관 장애인고용 현황 조회(최신)",
             description = "공공기관 장애인고용 현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getEmpNatlPublicLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getEmpNatlPublicLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -119,7 +119,7 @@ public class BasicEmpController extends BasicBaseController {
             summary = "해당연도 공공기관 장애인고용 현황 조회(연도)",
             description = "공공기관 장애인고용 현황 조회"
     )
-    public ResponseEntity<ApiResDto> getEmpNatlPublicYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getEmpNatlPublicYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
@@ -138,7 +138,7 @@ public class BasicEmpController extends BasicBaseController {
             summary = "민간기업 장애인고용 현황 통계 정보 조회",
             description = "민간기업 장애인고용 현황 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getEmpNatlPrivateInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getEmpNatlPrivateInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = empReadService.getEmpNatlPrivateInfo();
@@ -151,7 +151,7 @@ public class BasicEmpController extends BasicBaseController {
             summary = "민간기업 장애인고용 현황 조회(최신)",
             description = "민간기업 장애인고용 현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getEmpNatlPrivateLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getEmpNatlPrivateLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -169,7 +169,7 @@ public class BasicEmpController extends BasicBaseController {
             summary = "해당연도 민간기업 장애인고용 현황 조회(연도)",
             description = "민간기업 장애인고용 현황 조회"
     )
-    public ResponseEntity<ApiResDto> getEmpNatlPrivateYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getEmpNatlPrivateYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
@@ -189,7 +189,7 @@ public class BasicEmpController extends BasicBaseController {
             summary = "정부부문 장애인고용 현황 통계 정보 조회",
             description = "정부부문 장애인고용 현황 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getEmpNatlGovOrgInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getEmpNatlGovOrgInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = empReadService.getEmpNatlGovOrgInfo();
@@ -202,7 +202,7 @@ public class BasicEmpController extends BasicBaseController {
             summary = "정부부문 장애인고용 현황 조회(최신)",
             description = "정부부문 장애인고용 현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getEmpNatlGovOrgLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getEmpNatlGovOrgLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -220,7 +220,7 @@ public class BasicEmpController extends BasicBaseController {
             summary = "해당 연도의 정부부문 장애인고용 현황 조회(연도)",
             description = "정부부문 장애인고용 현황 조회"
     )
-    public ResponseEntity<ApiResDto> getEmpNatlGovOrgYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getEmpNatlGovOrgYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
@@ -239,7 +239,7 @@ public class BasicEmpController extends BasicBaseController {
             summary = "장애유형 및 장애정도별 장애인 근로자 고용현황 통계 정보 조회",
             description = "장애유형 및 장애정도별 장애인 근로자 고용현황 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getEmpNatlDisTypeSevInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getEmpNatlDisTypeSevInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = empReadService.getEmpNatlDisTypeSevInfo();
@@ -252,7 +252,7 @@ public class BasicEmpController extends BasicBaseController {
             summary = "장애유형 및 장애정도별 장애인 근로자 고용현황 조회(최신)",
             description = "장애유형 및 장애정도별 장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getEmpNatlDisTypeSevLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getEmpNatlDisTypeSevLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -270,7 +270,7 @@ public class BasicEmpController extends BasicBaseController {
             summary = "해당연도의 장애유형 및 장애정도별 장애인 근로자 고용현황 조회(연도)",
             description = "장애유형 및 장애정도별 장애인 근로자 고용현황 조회"
     )
-    public ResponseEntity<ApiResDto> getEmpNatlDisTypeSevYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getEmpNatlDisTypeSevYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
@@ -289,7 +289,7 @@ public class BasicEmpController extends BasicBaseController {
             summary = "장애유형 및 산업별 장애인 근로자 고용현황 통계 정보 조회",
             description = "장애유형 및 산업별 장애인 근로자 고용현황 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getEmpNatlDisTypeIndustInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getEmpNatlDisTypeIndustInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = empReadService.getEmpNatlDisTypeIndustInfo();
@@ -302,7 +302,7 @@ public class BasicEmpController extends BasicBaseController {
             summary = "장애유형 및 산업별 장애인 근로자 고용현황 조회(최신)",
             description = "장애유형 및 산업별 장애인 근로자 고용현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getEmpNatlDisTypeIndustLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getEmpNatlDisTypeIndustLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -320,7 +320,7 @@ public class BasicEmpController extends BasicBaseController {
             summary = "해당연도의 장애유형 및 산업별 장애인 근로자 고용현황 조회(연도)",
             description = "장애유형 및 산업별 장애인 근로자 고용현황 조회"
     )
-    public ResponseEntity<ApiResDto> getEmpNatlDisTypeIndustYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getEmpNatlDisTypeIndustYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,

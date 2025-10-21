@@ -35,7 +35,7 @@ public class BasicFacilityController extends BasicBaseController {
             summary = "사회복지시설 이용 현황 통계 정보 조회",
             description = "사회복지시설 이용 현황 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getFcltyWelfareUsageInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getFcltyWelfareUsageInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = facilityReadService.getFcltyWelfareUsageInfo();
@@ -48,7 +48,7 @@ public class BasicFacilityController extends BasicBaseController {
             summary = "사회복지시설 이용 현황 조회(최신)",
             description = "사회복지시설 이용 현황. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getFcltyWelfareUsageLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getFcltyWelfareUsageLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -66,7 +66,7 @@ public class BasicFacilityController extends BasicBaseController {
             summary = "해당 연도의 사회복지시설 이용 현황  조회(연도)",
             description = "해당 연도의 사회복지시설 이용 현황 조회"
     )
-    public ResponseEntity<ApiResDto> getFcltyWelfareUsageYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getFcltyWelfareUsageYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,

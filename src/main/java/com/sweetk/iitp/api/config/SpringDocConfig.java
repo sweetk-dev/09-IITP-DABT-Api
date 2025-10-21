@@ -9,12 +9,15 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.media.Content;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
+import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.HandlerMethod;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -154,5 +157,30 @@ public class SpringDocConfig {
                 .extensions(tagGroups);
 
         return openAPI;
+    }
+
+    /**
+     * 모든 API operation의 content-type을 application/json으로 명시합니다.
+     */
+    @Bean
+    public OperationCustomizer customizeOperationContentType() {
+        return (Operation operation, HandlerMethod handlerMethod) -> {
+            if (operation.getResponses() != null) {
+                operation.getResponses().forEach((statusCode, response) -> {
+                    if (response.getContent() != null) {
+                        // 기존 '*/*' content-type을 찾아서 application/json으로 변경
+                        MediaType wildcardMediaType = response.getContent().get("*/*");
+                        if (wildcardMediaType != null) {
+                            response.getContent().remove("*/*");
+                            response.getContent().addMediaType(
+                                org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
+                                wildcardMediaType
+                            );
+                        }
+                    }
+                });
+            }
+            return operation;
+        };
     }
 }

@@ -36,7 +36,7 @@ public class BasicEduController extends BasicBaseController {
             summary = "장애인 진로 및 직업교육 실시 여부 통계 정보 조회",
             description = "장애인 진로 및 직업교육 실시 여부 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getEduVocaExecInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getEduVocaExecInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = eduReadService.getEduVocaExecInfo();
@@ -49,7 +49,7 @@ public class BasicEduController extends BasicBaseController {
             summary = "장애인 진로 및 직업교육 실시 여부 조회(최신)",
             description = "장애인 진로 및 직업교육 실시 여부. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getEduVocaExecLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getEduVocaExecLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -67,7 +67,7 @@ public class BasicEduController extends BasicBaseController {
             summary = "해당 연도의 장애인 진로 및 직업교육 실시 여부 조회(연도)",
             description = "해당 연도의 장애인 진로 및 직업교육 실시 여부 조회"
     )
-    public ResponseEntity<ApiResDto> getEduVocaExecYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getEduVocaExecYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
@@ -88,7 +88,7 @@ public class BasicEduController extends BasicBaseController {
             summary = "장애인 진로 및 직업교육 운영 방법 통계 정보 조회",
             description = "장애인 진로 및 직업교육 운영 방법 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getEduVocaExecWayInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getEduVocaExecWayInfo(
             HttpServletRequest request) {
             StatInfo statinfo = eduReadService.getEduVocaExecWayInfo();
             return ResponseEntity.ok(ApiResDto.success(statinfo));
@@ -100,7 +100,7 @@ public class BasicEduController extends BasicBaseController {
             summary = "장애인 진로 및 직업교육 운영 방법 조회(연도)",
             description = "장애인 진로 및 직업교육 운영 방법. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getEduVocaExecWayLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getEduVocaExecWayLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -118,7 +118,7 @@ public class BasicEduController extends BasicBaseController {
             summary = "해당 연도의 장애인 진로 및 직업교육 운영 방법 조회(연도)",
             description = "해당 연도의 장애인 진로 및 직업교육 운영 방법 조회"
     )
-    public ResponseEntity<ApiResDto> getEduVocaExecWayYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getEduVocaExecWayYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,

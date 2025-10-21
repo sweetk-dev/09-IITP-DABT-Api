@@ -37,7 +37,7 @@ public class BasicAidController extends BasicBaseController {
             summary = "장애인보조기기 사용여부 통계 정보 조회",
             description = "장애인보조기기 사용여부 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getAidDeviceUsageInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getAidDeviceUsageInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = aidReadService.getAidDeviceUsageInfo();
@@ -50,7 +50,7 @@ public class BasicAidController extends BasicBaseController {
             summary = "장애인보조기기 사용여부 조회(최신)",
             description = "장애인보조기기 사용여부. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getAidDeviceUsageLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getAidDeviceUsageLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -68,7 +68,7 @@ public class BasicAidController extends BasicBaseController {
             summary = "해당 연도의 장애인보조기기 사용여부 조회(연도)",
             description = "해당 연도의 장애인보조기기 사용여부 조회"
     )
-    public ResponseEntity<ApiResDto> getAidDeviceUsageYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getAidDeviceUsageYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
@@ -87,7 +87,7 @@ public class BasicAidController extends BasicBaseController {
             summary = "장애인보조기기 필요여부 통계 정보 조회",
             description = "장애인보조기기 필요여부 통계 정보 조회"
     )
-    public ResponseEntity<ApiResDto> getAidDeviceNeedInfo(
+    public ResponseEntity<ApiResDto<StatInfo>> getAidDeviceNeedInfo(
             HttpServletRequest request) {
 
             StatInfo statinfo = aidReadService.getAidDeviceNeedInfo();
@@ -100,7 +100,7 @@ public class BasicAidController extends BasicBaseController {
             summary = "장애인보조기기 필요여부 조회(최신)",
             description = "장애인보조기기 필요여부. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
     )
-    public ResponseEntity<ApiResDto> getAidDeviceNeedLatest(
+    public ResponseEntity<ApiResDto<StatDataRes>> getAidDeviceNeedLatest(
             @Parameter(name = "from", description = "(옵션) 통계 조회 시작 연도  (최대: 10년 조회)", example = "2019")
             @RequestParam(required = false)
             Integer from,
@@ -118,7 +118,7 @@ public class BasicAidController extends BasicBaseController {
             summary = "해당 연도의 장애인보조기기 필요여부 조회(연도)",
             description = "해당 연도의 장애인보조기기 필요여부 조회"
     )
-    public ResponseEntity<ApiResDto> getAidDeviceNeedYear(
+    public ResponseEntity<ApiResDto<StatDataRes>> getAidDeviceNeedYear(
             @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
             @PathVariable
             Integer statYear,
