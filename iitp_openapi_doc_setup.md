@@ -19,8 +19,7 @@
 5. OpenAPI 문서 배포
 6. Prism Mock 서버 설정
 7. Nginx 연동 설정
-8. 인증 및 보안 설정 (선택)
-9. 부록 (사전 준비 설치 가이드 및 참고 자료)
+8. 부록 (사전 준비 설치 가이드 및 참고 자료)
 <div style="page-break-after: always;"></div>
 
 
@@ -29,10 +28,10 @@
 
 ## 1. 문서 히스토리
 
-| 버전    | 일자         | 변경 내용                                               |
-| ----- | ---------- | --------------------------------------------------- |
-| 0.0.2 | 2025-10-21 | Prism `--dynamic` 옵션 추가, nginx 설정 개선, 트러블슈팅 추가 |
-| 0.0.1 | 2025-07-15 | 최초 작성 및 전체 구축 절차 반영                                |
+| 버전    | 일자         | 변경 내용                                                                               |
+| ----- | ---------- | ----------------------------------------------------------------------------------- |
+| 0.0.2 | 2025-10-21 | nginx proxy_pass 설정 개선, systemd daemon-reload 절차 명시, 트러블슈팅 섹션 추가 (502/404/401 에러) |
+| 0.0.1 | 2025-07-15 | 최초 작성 및 전체 구축 절차 반영                                                                |
 
 <div style="page-break-after: always;"></div>
 
@@ -169,7 +168,7 @@ Description=Prism Mock Server
 After=network.target
 
 [Service]
-ExecStart=/usr/local/bin/prism mock /var/www/html/docs/latest.yaml -p 4010 --dynamic
+ExecStart=/usr/local/bin/prism mock /var/www/html/docs/latest.yaml -p 4010
 Restart=always
 RestartSec=3
 User=sweetk
@@ -185,12 +184,12 @@ WantedBy=multi-user.target
 
 **주요 옵션:**
 - `-p 4010`: 포트 지정
-- `--dynamic`: 스키마 기반 동적 mock 데이터 자동 생성 (권장)
 
-**중요:** 
-- Mock 서버도 실제 API처럼 `X-API-KEY` 헤더를 필수로 요구합니다
-- 개발자들이 인증 헤더의 중요성을 인식하도록 의도적으로 검증합니다
+**중요 사항:**
+- Mock 서버는 OpenAPI 문서의 `security` 설정을 준수합니다
+- `X-API-KEY` 헤더가 필수로 요구됩니다
 - 헤더가 없으면 `401 Unauthorized` 또는 `407` 에러가 발생합니다
+- Mock 응답은 OpenAPI 스펙의 스키마와 example을 기반으로 생성됩니다
 
 설정 적용 및 실행:
 
@@ -315,8 +314,10 @@ curl http://192.168.60.142/mock/api/v1/emp/workplace/standard
 - nginx `proxy_pass` 끝에 `/` 있는지 확인
 - `/mock/` 경로가 제거되어야 Prism이 정상 처리
 
-**복잡한 객체 직렬화 에러:**
-- Prism 서비스에 `--dynamic` 옵션 추가 (권장)
+**부정확한 Mock 데이터:**
+- Prism은 OpenAPI 문서의 스키마와 example을 기반으로 응답 생성
+- 문서에 타입 정보와 example이 부족하면 랜덤 더미 데이터 생성 가능
+- 해결: 최신 OpenAPI 문서를 배포하고 Prism 재시작
 
 **401/407 인증 에러:**
 ```json
@@ -339,11 +340,8 @@ Run 'systemctl daemon-reload' to reload units.
 - 원인: 서비스 파일 수정 후 `daemon-reload` 미실행
 - 해결: `sudo systemctl daemon-reload` 실행 후 재시작
 
-## 8. 인증 및 보안 설정 (선택)
 
-- JWT, API Key 등 설정에 따라 프록시 인증 적용 가능
-
-## 9. 부록 (사전 준비 설치 가이드 및 참고 자료)
+## 8. 부록 (사전 준비 설치 가이드 및 참고 자료)
 ### A. Node.js & NVM 설치
 
 ```bash
