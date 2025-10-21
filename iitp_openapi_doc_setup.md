@@ -1,6 +1,7 @@
 # IITP Open API 문서 제공 서버 세팅 절차
 
-- **버전**: v0.0.1
+- **버전**: v0.0.2
+- **최종 수정일**: 2025-10-21
 - **작성일**: 2025-07-15
 
 
@@ -28,9 +29,10 @@
 
 ## 1. 문서 히스토리
 
-| 버전    | 일자         | 변경 내용               |
-| ----- | ---------- | ------------------- |
-| 0.0.1 | 2025-07-15 | 최초 작성 및 전체 구축 절차 반영 |
+| 버전    | 일자         | 변경 내용                                               |
+| ----- | ---------- | --------------------------------------------------- |
+| 0.0.2 | 2025-10-21 | Prism `--dynamic` 옵션 추가, nginx 설정 개선, 트러블슈팅 추가 |
+| 0.0.1 | 2025-07-15 | 최초 작성 및 전체 구축 절차 반영                                |
 
 <div style="page-break-after: always;"></div>
 
@@ -122,10 +124,19 @@ Nginx를 통해 `/docs/latest.yaml` 경로로 접근 가능하도록 설정 (Ngi
   - 서버 업로드 dir :  ~/openapi-docs/docs
   
 ```bash
+# OpenAPI 문서 파일 복사
 sudo cp -p ~/openapi-docs/docs/*.yaml /var/www/html/docs/
+
+# Prism Mock 서버 재시작 (문서 변경 반영)
 sudo systemctl restart prism.service
+
+# Nginx 리로드 (설정 변경 시만 필요)
 sudo systemctl reload nginx
 ```
+
+**참고:** 
+- OpenAPI 문서만 변경한 경우: Prism 재시작만 필요
+- Prism 서비스 파일 수정 시: `sudo systemctl daemon-reload` 먼저 실행 후 재시작
 
 
 ## 6. Prism Mock 서버 설정
@@ -158,7 +169,7 @@ Description=Prism Mock Server
 After=network.target
 
 [Service]
-ExecStart=/usr/local/bin/prism mock /var/www/html/docs/latest.yaml -p 4010
+ExecStart=/usr/local/bin/prism mock /var/www/html/docs/latest.yaml -p 4010 --dynamic
 Restart=always
 RestartSec=3
 User=sweetk
@@ -172,49 +183,98 @@ Type=simple
 WantedBy=multi-user.target
 ```
 
+**주요 옵션:**
+- `-p 4010`: 포트 지정
+- `--dynamic`: 스키마 기반 동적 mock 데이터 자동 생성 (권장)
+
+**중요:** 
+- Mock 서버도 실제 API처럼 `X-API-KEY` 헤더를 필수로 요구합니다
+- 개발자들이 인증 헤더의 중요성을 인식하도록 의도적으로 검증합니다
+- 헤더가 없으면 `401 Unauthorized` 또는 `407` 에러가 발생합니다
+
 설정 적용 및 실행:
 
 ```bash
-sudo systemctl daemon-reexec
+# systemd 데몬 리로드 (서비스 파일 변경 시 필수!)
 sudo systemctl daemon-reload
-sudo systemctl enable --now prism.service
+
+# 서비스 등록 및 자동 시작 활성화
+sudo systemctl enable prism.service
+
+# 서비스 시작
 sudo systemctl start prism.service
+
+# 상태 확인
 sudo systemctl status prism.service
 ```
+
+**중요:** 서비스 파일(`/etc/systemd/system/prism.service`)을 수정한 후에는 **반드시 `daemon-reload`를 먼저 실행**해야 변경사항이 적용됩니다.
 
 정상 실행 확인:
 
 ```bash
+# X-API-KEY 헤더 포함 (필수!)
+curl -H "X-API-KEY: test" "http://localhost:4010/api/v1/poi/search?page=1&size=10"
+
+# 헤더 없이 호출하면 401/407 에러 발생 (의도된 동작)
 curl "http://localhost:4010/api/v1/poi/search?page=1&size=10"
 ```
 
-→ 결과가 `401 Unauthorized` 라면, spec에서 `security` 설정 제거로 bypass 가능
+**참고:** Mock 서버는 헤더가 존재하는지만 확인하며, 실제 값은 검증하지 않습니다.
 
 ## 7. Nginx 연동 설정
 
 Nginx 설정 파일: `/etc/nginx/conf.d/docs.conf`
 
-- location /mock 에서 domain 또는 실제 서버 IP 로 변경
+### 7.1 기본 설정 (80 포트)
+
 ```nginx
 server {
-    listen 80;
+    listen 80 default_server;
+    listen [::]:80 default_server;
     server_name _;
 
     root /var/www/html;
+    index index.html;
 
+    # 정적 문서 제공
     location /docs/ {
         index index.html;
         try_files $uri $uri/ =404;
     }
 
+    # Mock API - /mock/ 경로로 접근
     location /mock/ {
-        proxy_pass http://localhost:4010;
+        proxy_pass http://localhost:4010/;  # 끝에 / 필수! (경로 제거)
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection keep-alive;
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
+}
+```
+
+**중요:** `proxy_pass http://localhost:4010/` 끝에 `/`가 있어야 `/mock/` 경로가 제거됩니다.
+
+### 7.2 추가 포트 설정 (선택사항)
+
+외부에서 별도 포트(예: 24010)로 직접 접근하려면 같은 server 블록에 추가:
+
+```nginx
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    listen 24010;           # Mock 전용 포트 추가
+    listen [::]:24010;      # IPv6
+    server_name _;
+
+    root /var/www/html;
+
+    # ... 기존 location 설정 ...
 }
 ```
 
@@ -225,10 +285,59 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-접속 예시:
+### 7.3 접속 예시
 
-- 문서: `http://your-ip/docs/?spec=/docs/latest.yaml`
-- Mock: `http://your-ip/mock/api/v1/poi/search?page=1&size=10`
+**OpenAPI 문서 보기:**
+```
+http://192.168.60.142/docs/?spec=/docs/latest.yaml
+```
+
+**Mock API 호출:**
+```bash
+# 80 포트 + /mock/ 경로 (X-API-KEY 헤더 필수!)
+curl -H "X-API-KEY: test" http://192.168.60.142/mock/api/v1/emp/workplace/standard
+
+# 24010 포트 직접 접근 (추가 포트 설정 시)
+curl -H "X-API-KEY: test" http://192.168.60.142:24010/api/v1/emp/workplace/standard
+
+# 헤더 없이 호출 시 인증 에러 발생 (의도된 동작)
+curl http://192.168.60.142/mock/api/v1/emp/workplace/standard
+# → 401 Unauthorized 또는 407 에러
+```
+
+### 7.4 트러블슈팅
+
+**502 Bad Gateway 에러:**
+- Prism이 `localhost:4010`에서 정상 동작 중인지 확인
+- `sudo systemctl status prism.service` 로 상태 확인
+
+**404 Not Found 에러 (Route not matched):**
+- nginx `proxy_pass` 끝에 `/` 있는지 확인
+- `/mock/` 경로가 제거되어야 Prism이 정상 처리
+
+**복잡한 객체 직렬화 에러:**
+- Prism 서비스에 `--dynamic` 옵션 추가 (권장)
+
+**401/407 인증 에러:**
+```json
+{
+  "status": "401 UNAUTHORIZED" 또는 "407 PROXY_AUTHENTICATION_REQUIRED",
+  "success": false,
+  "error": { ... }
+}
+```
+- **의도된 동작:** Mock 서버도 인증 헤더를 필수로 요구합니다
+- **해결:** 요청 시 `-H "X-API-KEY: test"` 헤더 추가
+- **목적:** 개발자들이 API 인증의 중요성을 Mock 단계부터 인식하도록 함
+- **참고:** Prism은 헤더 존재 여부만 확인하며, 실제 값은 검증하지 않습니다
+
+**systemd 경고 (changed on disk):**
+```
+Warning: The unit file, source configuration file or drop-ins of prism.service changed on disk.
+Run 'systemctl daemon-reload' to reload units.
+```
+- 원인: 서비스 파일 수정 후 `daemon-reload` 미실행
+- 해결: `sudo systemctl daemon-reload` 실행 후 재시작
 
 ## 8. 인증 및 보안 설정 (선택)
 
