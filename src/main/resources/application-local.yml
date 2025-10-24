@@ -2,15 +2,15 @@
 # 로컬 환경에서 사용되는 특정 설정을 포함합니다.
 
 spring:
-#  # Jasypt 암호화 설정 (로컬 환경용)
-#  jasypt:
-#    encryptor:
-#      password: iitp
+  #  # Jasypt 암호화 설정 (로컬 환경용)
+  #  jasypt:
+  #    encryptor:
+  #      password: iitp
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/iitp
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://192.168.60.146:5432/iitp_dev
+    username: iitp_dev
+    password: ENC(1kZt5toeoCpGCSozUyzRHGr8uA3gyu4aaNvj/8SR+rXhrj41MocJzzyWkjwXozv2)
     hikari:
       pool-name: IITPHikariPool
       maximum-pool-size: 10
