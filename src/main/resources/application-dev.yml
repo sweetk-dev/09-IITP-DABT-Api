@@ -6,9 +6,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/iitp
-    username: postgres
-    password: ENC(encrypted-postgres)
+    url: jdbc:postgresql://<DB_HOST>:5432/iitp_dev
+    username: iitp_dev
+    password: ENC(<encrypted-with-jasypt>)
     hikari:
       pool-name: IITPHikariPool
       maximum-pool-size: 10

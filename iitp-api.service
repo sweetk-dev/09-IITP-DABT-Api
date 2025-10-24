@@ -1,0 +1,16 @@
+[Unit]
+Description=IITP API Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/path/to/your/api/directory
+Environment=INVOKED_BY_SYSTEMD=1
+ExecStart=/path/to/your/api/directory/api_run.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
