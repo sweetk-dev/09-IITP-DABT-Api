@@ -191,9 +191,10 @@ sudo nano /etc/systemd/system/iitp-api.service
 ```
 
 #### 4.2. 서비스 파일 내용 수정
-`WorkingDirectory` 부분을 실제 API 디렉토리 경로로 변경:
+`WorkingDirectory`와 `ExecStart` 부분을 실제 API 디렉토리 경로로 변경:
 ```ini
 WorkingDirectory=/path/to/your/api/directory  # 실제 경로로 수정
+ExecStart=/path/to/your/api/directory/api_run.sh  # 실제 경로로 수정
 ```
 
 #### 4.3. 서비스 활성화 및 시작
@@ -218,10 +219,15 @@ sudo journalctl -u iitp-api -f    # 실시간 로그 보기
 ```
 
 #### 4.5. 기존 api_run.sh와의 관계
-- systemd 서비스와 `api_run.sh`는 독립적으로 작동합니다
-- 둘 다 같은 JAR 파일을 실행하므로 동시 실행 시 포트 충돌이 발생할 수 있습니다
-- 한 번에 하나만 실행하세요
-- systemd는 리부팅 후 자동으로 시작되며, `api_run.sh`는 수동 실행용입니다
+- **systemd 서비스는 `api_run.sh` 스크립트를 호출합니다**
+- `api_run.sh`에서 환경변수와 JAR 실행 로직을 중앙 관리합니다
+- 장점:
+  - 환경변수나 JAR 옵션 변경 시 `api_run.sh`만 수정하면 됨
+  - systemd와 수동 실행이 동일한 로직을 사용하여 일관성 보장
+  - 유지보수성 향상
+- 주의사항:
+  - systemd와 수동 실행은 동시에 실행할 수 없습니다 (포트 충돌)
+  - systemd는 리부팅 후 자동으로 시작되며, `api_run.sh`는 수동 실행용입니다
 
 ---
 
