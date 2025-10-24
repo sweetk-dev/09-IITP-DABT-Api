@@ -29,8 +29,14 @@ if [ -n "$PID" ]; then
 fi
 
 
-# 백그라운드 실행
-echo "$JAR_FILE 실행 (profile: $SPRING_PROFILES_ACTIVE)..."
-nohup java -jar "$JAR_FILE" 2>&1 &
-
-echo "서버가 백그라운드에서 실행되었습니다. (로그: $LOG_FILE)" 
+# 실행 (systemd에서는 foreground, 수동 실행에서는 background)
+if [ -n "$INVOKED_BY_SYSTEMD" ]; then
+    # systemd에서 호출된 경우: foreground 실행
+    echo "$JAR_FILE 실행 (profile: $SPRING_PROFILES_ACTIVE)..."
+    exec java -jar "$JAR_FILE"
+else
+    # 수동 실행인 경우: background 실행
+    echo "$JAR_FILE 실행 (profile: $SPRING_PROFILES_ACTIVE)..."
+    nohup java -jar "$JAR_FILE" 2>&1 &
+    echo "서버가 백그라운드에서 실행되었습니다. (로그: $LOG_FILE)"
+fi 
