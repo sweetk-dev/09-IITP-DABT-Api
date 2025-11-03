@@ -24,18 +24,4 @@ public interface OpenApiUserRepository extends JpaRepository<OpenApiUserEntity, 
     @Query("SELECT e FROM OpenApiUserEntity e")
     List<OpenApiUserEntity> findAllIncludingDeleted();
 
-
-
-    /* ======================================
-
-    Optional<OpenApiUserEntity> findByApiCliIdAndStatus(Integer apiCliId, DataStatusType status);
-    
-    Optional<OpenApiUserEntity> findByClientId(String clientId);
-    
-
-    boolean existsByClientId(String clientId);
-    
-    boolean existsByClientIdAndStatus(String clientId, DataStatusType status);
-    */
-
 } 

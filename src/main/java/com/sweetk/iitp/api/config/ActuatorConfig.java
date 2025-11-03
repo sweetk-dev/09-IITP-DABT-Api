@@ -46,4 +46,4 @@ public class ActuatorConfig {
             }));
         return registry;
     }
-} 
+}

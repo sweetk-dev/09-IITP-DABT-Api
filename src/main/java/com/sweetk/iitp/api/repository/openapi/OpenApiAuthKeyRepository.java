@@ -22,16 +22,4 @@ public interface OpenApiAuthKeyRepository extends JpaRepository<OpenApiAuthKeyEn
     @Query("SELECT e FROM OpenApiAuthKeyEntity e")
     List<OpenApiAuthKeyEntity> findAllIncludingDeleted();
 
-
-    /* ====
-    Optional<OpenApiAuthKeyEntity> findByApiKey(String apiKey);
-
-    List<OpenApiAuthKeyEntity> findByApiCliId(Integer apiCliId);
-    
-    List<OpenApiAuthKeyEntity> findByApiCliIdAndStatus(Integer apiCliId, DataStatusType status);
-
-    boolean existsByApiKey(String apiKey);
-
-     */
-
 } 
