@@ -37,39 +37,4 @@ public interface openApiRepository {
     //find api key
     Optional<OpenApiAuthKeyEntity> findActiveKeyByApiKey(String apiKey);
 
-
-    //update api key
-
-
-    /*  =========================== temp
-    // Client operations
-    Optional<OpenApiUserEntity> findByClientId(String clientId);
-    Optional<OpenApiUserEntity> findByClientIdAndIsDeletedFalse(String clientId);
-    Optional<OpenApiUserEntity> findActiveByClientId(String clientId);
-    boolean existsByClientId(String clientId);
-    boolean existsByClientIdAndIsDeletedFalse(String clientId);
-    boolean existsAciveByClientId(String clientId);
-
-
-    // API Key operations
-    Optional<OpenApiAuthKeyEntity> findByApiKey(String apiKey);
-    Optional<OpenApiAuthKeyEntity> findActiveByApiKeyAndIsDeletedFalse(String apiKey);
-    Optional<OpenApiAuthKeyEntity> findByApiKeyAndActiveTrueAndIsDeletedFalse(String apiKey);
-    List<OpenApiAuthKeyEntity> findByApiCliIdAndIsActiveTrueAndIsDeletedFalse(Integer apiCliId);
-    boolean existsByApiKey(String apiKey);
-    boolean existsByApiKeyAndIsActiveTrueAndIsDeletedFalse(String apiKey);
-    
-    // Combined operations for authentication
-    Optional<OpenApiUserEntity> findClientByApiKey(String apiKey);
-    Optional<OpenApiUserEntity> findActiveClientByApiKey(String apiKey);
-    
-    // Update operations
-    void updateLatestKeyCreatedTime(Integer clientId, OffsetDateTime keyCreatedTime);
-    
-    // Key management
-    void deactivateAllKeysByClientId(Integer apiCliId);
-    OpenApiAuthKeyEntity saveApiKey(OpenApiAuthKeyEntity apiKey);
-    OpenApiUserEntity saveClient(OpenApiUserEntity openapi);
-
-     */
 } 
