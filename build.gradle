@@ -81,7 +81,7 @@ dependencies {
     // Rate Limiting
     implementation 'com.bucket4j:bucket4j-core:8.7.0'
     
-    // Monitoring
+    // Monitoring (Micrometer - @ConditionalTimed 사용을 위해 필요)
     implementation 'io.micrometer:micrometer-core'
     implementation 'io.micrometer:micrometer-registry-prometheus'
     

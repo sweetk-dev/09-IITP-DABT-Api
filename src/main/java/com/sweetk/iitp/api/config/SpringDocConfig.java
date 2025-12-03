@@ -43,9 +43,9 @@ import java.util.stream.Collectors;
 @Configuration
 @OpenAPIDefinition(
         info = @Info(
-                title = "IITP Open API Documentation",
+                title = "DABT Open API Documentation",
                 version = "${springdoc.version}",
-                description = "IITP Open API 문서입니다."
+                description = "DABT Open API 문서입니다."
         )
 )
 public class SpringDocConfig {
