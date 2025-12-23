@@ -281,7 +281,7 @@ public class EmpDisController {
     //#####################################
     @GetMapping("/workplace/standard")
     @Operation(
-            summary = "장애인 표준사업장 현황 조회",
+            summary = "장애인 표준사업장 현황 조회!",
             description = "한국장애인고용공단 장애인 표준사업장 현황"
     )
     public ResponseEntity<ApiResDto<List<EmpDisStdWorkplaceDto>>> getStandardWorkplace (HttpServletRequest request){

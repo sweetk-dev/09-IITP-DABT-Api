@@ -23,8 +23,8 @@ java {
 }
 
 ext {
-    jarVersion = '0.0.5'
-    apiDocVersion = 'v0.0.4'
+    jarVersion = '0.0.6'
+    apiDocVersion = 'v0.0.6'
     apiDocversionTag = apiDocVersion
     env = findProperty("env") ?: "local"
     buildTime = new Date().format("yyyyMMddHHmmss")
@@ -169,9 +169,10 @@ tasks.register("copyDocsToResources") {
     doLast {
         println("OpenAPI document copy completed.")
         // x-tagGroups 자동 추가 스크립트 실행
-        exec {
-            commandLine "python", "scripts/add-x-tagGroups.py"
-        }
+        // 표준 구조에서는 X-TAGGROUP 가능 하나 해당 솔루션의 문서에는 지원 안됨 ( 추후 업데이트) 그룹형태로 서비스 분리
+        //        exec {
+        //             commandLine "python", "scripts/add-x-tagGroups.py"
+        //        }
     }
     outputs.upToDateWhen { false }
 }
