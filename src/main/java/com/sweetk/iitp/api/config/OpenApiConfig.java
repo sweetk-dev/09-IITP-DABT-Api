@@ -40,7 +40,8 @@ public class OpenApiConfig {
                                 .name("스위트케이")
                                 .url("https://github.com/sweetk-dev"))
                         .license(new License()
-                                .name("Proprietary")))
+                                .name("MIT License")
+                                .url("https://github.com/sweetk-dev/09-IITP-DABT-Api/blob/main/LICENSE")))
                 .servers(List.of(
 //                        new Server()
 //                                .url("https://api.iitp.kr")
