@@ -1,4 +1,6 @@
 # 09-IITP-DABT-Api
+
+![version](https://img.shields.io/badge/version-v1.0.1-blue)
 9.모델 연동 API 모듈
 
 ## 프로젝트 개요
@@ -73,33 +75,35 @@ src/main/resources/
 3. **DB/환경설정**: PostgreSQL 설치 및 환경별 yml 파일 확인
 
 ### 거리 계산 설정
-프로젝트는 위치 기반 검색을 위한 거리 계산 방식을 설정으로 선택할 수 있습니다.
+위치 기반 검색(관광지·공중화장실·지하철 엘리베이터·무장애 관광시설)의 거리 계산 방식을 설정으로 고를 수 있습니다. 결과 단위는 미터입니다.
 
 #### 설정 옵션 (application.yml)
 ```yaml
 app:
   distance-calculation:
-    # 거리 계산 방식
-    method: POSTGIS_SPHERE  # POSTGIS_SPHERE, POSTGIS_PLANAR, POSTGRESQL_EARTH
+    method: HAVERSINE  # HAVERSINE(기본), POSTGIS_SPHERE, POSTGIS_PLANAR, POSTGRESQL_EARTH
 ```
 
 #### 거리 계산 방식 비교
 
-| 방식 | 함수 | 정확도 | 성능 | 요구사항 |
-|------|------|--------|------|----------|
-| **POSTGIS_SPHERE** | `ST_Distance_Sphere` | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | PostGIS 확장 |
-| **POSTGIS_PLANAR** | `ST_Distance` | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | PostGIS 확장 |
-| **POSTGRESQL_EARTH** | `earth_distance` | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | PostgreSQL 기본 |
+| 방식 | 계산 | 요구사항 | 비고 |
+|------|------|----------|------|
+| **HAVERSINE** (기본) | 순수 SQL 하버사인 공식 | 없음 | 지구 반지름 6,371,008.8 m — `ST_DistanceSphere` 와 같은 값 |
+| **POSTGIS_SPHERE** | `ST_DistanceSphere`, 반경은 geography `ST_DWithin` | PostGIS 확장 | 공간 인덱스 활용 가능 |
+| **POSTGIS_PLANAR** | `ST_Distance` | PostGIS 확장 | 결과 단위가 도(degree)라 미터 반경과 맞지 않음 — 호환용 |
+| **POSTGRESQL_EARTH** | `earth_distance` | `cube`, `earthdistance` 확장 | |
 
 #### 권장 설정
-- **개발 환경**: `POSTGRESQL_EARTH` (PostGIS 설치 없이 사용 가능)
-- **운영 환경**: `POSTGIS_SPHERE` (가장 정확한 거리 계산)
+- 기본값 `HAVERSINE` 은 DB 확장 없이 동작하므로 별도 설정이 필요 없습니다.
+- PostGIS 가 설치된 DB 에서 대량 데이터를 반경 검색할 때만 `POSTGIS_SPHERE` 를 고려합니다.
 
-#### PostGIS 확장 설치 (운영 환경)
+#### 확장 설치 (해당 방식을 쓸 때만)
 ```sql
--- PostgreSQL에서 PostGIS 확장 설치
+-- POSTGIS_SPHERE / POSTGIS_PLANAR
 CREATE EXTENSION postgis;
-CREATE EXTENSION postgis_topology;
+-- POSTGRESQL_EARTH
+CREATE EXTENSION cube;
+CREATE EXTENSION earthdistance;
 ```
 
 ---
