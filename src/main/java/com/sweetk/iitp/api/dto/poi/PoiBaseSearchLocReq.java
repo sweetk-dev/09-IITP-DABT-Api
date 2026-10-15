@@ -28,7 +28,8 @@ public class PoiBaseSearchLocReq {
     private Double longitude;
 
     @NotNull
-    @Schema(description = "검색 반경(미터)", example = "1000")
+    @Schema(description = "검색 반경(미터, 최대 100000). 예: 1000 = 1km", example = "1000")
     @Min(value = 0, message = "검색 반경은 0보다 커야 합니다")
+    @Max(value = 100000, message = "검색 반경은 최대 100000m(100km)입니다")
     private Double radius;
 } 

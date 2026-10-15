@@ -135,7 +135,7 @@ public class DistanceCalculationConfig {
      *
      * @param latParam    질의 위도
      * @param lngParam    질의 경도
-     * @param radiusParam 반경(미터). 저장소에서 km × 1000 으로 넘긴다.
+     * @param radiusParam 반경(미터). 요청 값(미터)을 그대로 넘긴다.
      * @return {@code AND <거리식> <= 반경} 형태의 SQL 조각
      */
     public String getDistanceFilterSql(Double latParam, Double lngParam, Double radiusParam) {

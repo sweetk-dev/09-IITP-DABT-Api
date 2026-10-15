@@ -129,7 +129,8 @@ public class SpringDocConfig {
                     "이동형 - 관광 POI API V1",
                     "이동형 - 편의시설 - 공중 화장실 POI API V1",
                     "이동형 - 편의시설 - 지하철 엘리베이터 POI API V1",
-                    "이동형 - 편의시설 - 무장애 관광지 시설 POI API V1"
+                    "이동형 - 편의시설 - 무장애 관광지 시설 POI API V1",
+                    "이동형 - 문화·체육 - 장애인 문화·체육 시설 POI API V1"
                 )
             ),
             Map.of(

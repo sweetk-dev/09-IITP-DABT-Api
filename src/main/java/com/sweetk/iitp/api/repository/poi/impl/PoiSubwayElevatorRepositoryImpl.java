@@ -389,7 +389,7 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
                                                                       String stationName, Integer nodeTypeCode) {
         StringBuilder sql = new StringBuilder(ELEVATOR_LOCATION_QUERY);
         sql = buildCategoryConditionsSql(sql, stationName, null, nodeTypeCode);
-        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius * 1000));
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius));
         sql.append(ELEVATOR_ORDER_BY_DISTANCE);
 
         log.debug("[PoiSubwayElevator] 거리 정보 포함 위치 기반 검색 쿼리: {}", sql);
@@ -425,7 +425,7 @@ public class PoiSubwayElevatorRepositoryImpl implements PoiSubwayElevatorReposit
                                                                                              int offset, int size) {
         StringBuilder sql = new StringBuilder(ELEVATOR_LOCATION_QUERY_WITH_COUNT);
         sql = buildCategoryConditionsSql(sql, stationName, null, nodeTypeCode);
-        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius * 1000));
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius));
         sql.append(ELEVATOR_ORDER_BY_DISTANCE);
         sql = RepositoryUtils.addQueryOffset(sql, offset, size);
 
