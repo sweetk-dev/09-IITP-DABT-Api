@@ -19,6 +19,7 @@ public class EmpDisJobseekerMapper {
                 .disabilityType(entity.getDisabilityType())
                 .severity(entity.getSeverity())
                 .orgType(entity.getOrgType())
+                .srcBaseDt(entity.getSrcBaseDt())
                 .build();
     }
 

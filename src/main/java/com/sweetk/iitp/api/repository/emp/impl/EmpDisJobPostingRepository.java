@@ -8,9 +8,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+
 
 interface EmpDisJobPostingCustomRepository {
-    Page<EmpDisJobPostingEntity> findJobPostBySearchKey(EmpSearchReqJobPost searchReq, Pageable pageable);
+    /**
+     * 검색 키 + 판(edition) 조건으로 구인 정보 조회 (최신 구인신청순, 페이징)
+     * @param searchReq 검색 키. null 이면 검색 조건 없이 전체
+     * @param baseDt    원천 판 기준일. null 이면 최신 판 (EmpEditionFilter 참고)
+     */
+    Page<EmpDisJobPostingEntity> findJobPostBySearchKey(EmpSearchReqJobPost searchReq, LocalDate baseDt, Pageable pageable);
 
 }
 
@@ -19,11 +26,8 @@ interface EmpDisJobPostingCustomRepository {
 @Repository
 public interface EmpDisJobPostingRepository extends JpaRepository<EmpDisJobPostingEntity, Integer>, EmpDisJobPostingCustomRepository {
 
-    /**
-     * 전체 조회 (순번순)
-     */
-    @Query("SELECT e FROM EmpDisJobPostingEntity e ORDER BY e.applyDate DESC, e.seqNo DESC")
-    Page<EmpDisJobPostingEntity> findAllOrderBySeqNo(Pageable pageable);
+    // 전체 조회(검색 키 없음)도 판(edition) 조건이 필요해 findJobPostBySearchKey(null, baseDt, pageable) 로 합쳤다.
+    // (기존 findAllOrderBySeqNo 와 정렬 기준은 같다: 구인신청일 DESC, 연번 DESC)
 
 
 

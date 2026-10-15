@@ -19,6 +19,7 @@ public class EmpDisStdWorkplaceMapper {
             .tel(entity.getTel())
             .businessItem(entity.getBusinessItem())
             .type(entity.getType())
+            .srcBaseDt(entity.getSrcBaseDt())
             .build();
     }
     public static List<EmpDisStdWorkplaceDto> toDtoList(List<EmpDisStdWorkplaceEntity> entities) {

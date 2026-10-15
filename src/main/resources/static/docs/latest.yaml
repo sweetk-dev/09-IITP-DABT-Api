@@ -3,7 +3,7 @@
   "info": {
     "title": "DABT Open API Documentation",
     "description": "DABT Open API 문서입니다.",
-    "version": "v0.0.8"
+    "version": "v0.0.9"
   },
   "servers": [
     {
@@ -5025,8 +5025,20 @@
           "장애인 고용 관련 데이터 API V1"
         ],
         "summary": "장애인 표준사업장 현황 조회!",
-        "description": "한국장애인고용공단 장애인 표준사업장 현황",
+        "description": "한국장애인고용공단 장애인 표준사업장 현황 (원천 파일의 판별 보관: 기본은 최신 판, baseDt 로 과거 판 선택)",
         "operationId": "getStandardWorkplace",
+        "parameters": [
+          {
+            "name": "baseDt",
+            "in": "query",
+            "description": "원천 판 기준일 (YYYY-MM-DD, 예: 2025-12-31). 원천 파일의 과거 판을 함께 보관하므로, 이 값을 주면 그 기준일 판의 데이터만 조회합니다. 생략하면 가장 최근 판을 조회합니다. 응답 항목 srcBaseDt 로 각 데이터의 판 기준일을 확인할 수 있습니다. 형식이 틀리거나 없는 날짜면 400, 해당 기준일 판이 없으면 빈 결과를 돌려줍니다.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2025-12-31"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -5047,7 +5059,7 @@
           "장애인 고용 관련 데이터 API V1"
         ],
         "summary": "장애인고용 부담금감면 연계고용사업장 정보 조회",
-        "description": "한국장애인고용공단 장애인고용 부담금감면 연계고용사업장 정보",
+        "description": "한국장애인고용공단 장애인고용 부담금감면 연계고용사업장 정보 (연도별 데이터, 최신 연도부터 정렬)",
         "operationId": "getBurdenRedctWorkplace",
         "responses": {
           "200": {
@@ -5069,8 +5081,20 @@
           "장애인 고용 관련 데이터 API V1"
         ],
         "summary": "장애인 고용의무 현황 통계 조회",
-        "description": "한국장애인고용공단 장애인 고용의무 현황 통계 ",
+        "description": "한국장애인고용공단 장애인 고용의무 현황 통계 (원천 파일의 판별 보관: 기본은 최신 판, baseDt 로 과거 판 선택)",
         "operationId": "getObligationStatus",
+        "parameters": [
+          {
+            "name": "baseDt",
+            "in": "query",
+            "description": "원천 판 기준일 (YYYY-MM-DD, 예: 2025-12-31). 원천 파일의 과거 판을 함께 보관하므로, 이 값을 주면 그 기준일 판의 데이터만 조회합니다. 생략하면 가장 최근 판을 조회합니다. 응답 항목 srcBaseDt 로 각 데이터의 판 기준일을 확인할 수 있습니다. 형식이 틀리거나 없는 날짜면 400, 해당 기준일 판이 없으면 빈 결과를 돌려줍니다.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2025-12-31"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -5091,7 +5115,7 @@
           "장애인 고용 관련 데이터 API V1"
         ],
         "summary": "산업별 장애인 의무고용 현황 조회",
-        "description": "한국장애인고용공단 산업별 장애인 의무고용 현황 통계 ",
+        "description": "한국장애인고용공단 산업별 장애인 의무고용 현황 통계 (연도별 데이터, 최신 연도부터 정렬)",
         "operationId": "getObligationByIndustry",
         "responses": {
           "200": {
@@ -5113,7 +5137,7 @@
           "장애인 고용 관련 데이터 API V1"
         ],
         "summary": "장애인 의무고용 - 사업체 현황 조회",
-        "description": "고용노동부 장애인 의무고용 - 사업체 현황 통계 ",
+        "description": "고용노동부 장애인 의무고용 - 사업체 현황 통계 (연도별 데이터, 최신 연도부터 정렬)",
         "operationId": "getObligationFulfillment",
         "responses": {
           "200": {
@@ -5157,7 +5181,7 @@
           "장애인 고용 관련 데이터 API V1"
         ],
         "summary": "장애인 구직자 검색 조회 (paging)",
-        "description": "한국장애인고용공단 장애인 구직자 검색 ",
+        "description": "한국장애인고용공단 장애인 구직자 검색 (원천 파일의 판별 보관: 기본은 최신 판, baseDt 로 과거 판 선택)",
         "operationId": "searchJobSeeker",
         "parameters": [
           {
@@ -5225,6 +5249,16 @@
               "example": "보령시"
             },
             "example": "보령시"
+          },
+          {
+            "name": "baseDt",
+            "in": "query",
+            "description": "원천 판 기준일 (YYYY-MM-DD, 예: 2025-12-31). 원천 파일의 과거 판을 함께 보관하므로, 이 값을 주면 그 기준일 판의 데이터만 조회합니다. 생략하면 가장 최근 판을 조회합니다. 응답 항목 srcBaseDt 로 각 데이터의 판 기준일을 확인할 수 있습니다. 형식이 틀리거나 없는 날짜면 400, 해당 기준일 판이 없으면 빈 결과를 돌려줍니다.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2025-12-31"
           }
         ],
         "responses": {
@@ -5247,7 +5281,7 @@
           "장애인 고용 관련 데이터 API V1"
         ],
         "summary": "장애인 구인 정보 검색 조회 (paging)",
-        "description": "한국장애인고용공단 장애인 구인 정보 검색",
+        "description": "한국장애인고용공단 장애인 구인 정보 검색 (원천 파일의 판별 보관: 기본은 최신 판, baseDt 로 과거 판 선택)",
         "operationId": "searchJobPosting",
         "parameters": [
           {
@@ -5330,6 +5364,16 @@
               "example": "대성산업"
             },
             "example": "대성산업"
+          },
+          {
+            "name": "baseDt",
+            "in": "query",
+            "description": "원천 판 기준일 (YYYY-MM-DD, 예: 2025-12-31). 원천 파일의 과거 판을 함께 보관하므로, 이 값을 주면 그 기준일 판의 데이터만 조회합니다. 생략하면 가장 최근 판을 조회합니다. 응답 항목 srcBaseDt 로 각 데이터의 판 기준일을 확인할 수 있습니다. 형식이 틀리거나 없는 날짜면 400, 해당 기준일 판이 없으면 빈 결과를 돌려줍니다.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2025-12-31"
           }
         ],
         "responses": {
@@ -5352,7 +5396,7 @@
           "장애인 고용 관련 데이터 API V1"
         ],
         "summary": "지역별 장애인 고용 현황 조회",
-        "description": "한국장애인고용공단 지역별 장애인 고용 현황 ",
+        "description": "한국장애인고용공단 지역별 장애인 고용 현황 (연도별 데이터, 최신 연도부터 정렬)",
         "operationId": "getEmpStatusByRegion",
         "responses": {
           "200": {
@@ -5374,8 +5418,20 @@
           "장애인 고용 관련 데이터 API V1"
         ],
         "summary": "장애인 신규고용장려금 지역별 지급 현황 조회",
-        "description": "한국장애인고용공단 신규고용장려금 지역별 지급 현황 ",
+        "description": "한국장애인고용공단 신규고용장려금 지역별 지급 현황 (원천 파일의 판별 보관: 기본은 최신 판, baseDt 로 과거 판 선택)",
         "operationId": "getEmpIncentive",
+        "parameters": [
+          {
+            "name": "baseDt",
+            "in": "query",
+            "description": "원천 판 기준일 (YYYY-MM-DD, 예: 2025-12-31). 원천 파일의 과거 판을 함께 보관하므로, 이 값을 주면 그 기준일 판의 데이터만 조회합니다. 생략하면 가장 최근 판을 조회합니다. 응답 항목 srcBaseDt 로 각 데이터의 판 기준일을 확인할 수 있습니다. 형식이 틀리거나 없는 날짜면 400, 해당 기준일 판이 없으면 빈 결과를 돌려줍니다.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2025-12-31"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -5396,8 +5452,20 @@
           "장애인 고용 관련 데이터 API V1"
         ],
         "summary": "장애인 고용컨설팅 이력 조회",
-        "description": "한국장애인고용공단 장애인 고용컨설팅 이력 정보 ",
+        "description": "한국장애인고용공단 장애인 고용컨설팅 이력 정보 (원천 파일의 판별 보관: 기본은 최신 판, baseDt 로 과거 판 선택)",
         "operationId": "getConsultingHis",
+        "parameters": [
+          {
+            "name": "baseDt",
+            "in": "query",
+            "description": "원천 판 기준일 (YYYY-MM-DD, 예: 2025-12-31). 원천 파일의 과거 판을 함께 보관하므로, 이 값을 주면 그 기준일 판의 데이터만 조회합니다. 생략하면 가장 최근 판을 조회합니다. 응답 항목 srcBaseDt 로 각 데이터의 판 기준일을 확인할 수 있습니다. 형식이 틀리거나 없는 날짜면 400, 해당 기준일 판이 없으면 빈 결과를 돌려줍니다.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2025-12-31"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -5418,8 +5486,20 @@
           "장애인 고용 관련 데이터 API V1"
         ],
         "summary": "고용개발원 교육정보 조회",
-        "description": "한국장애인고용공단 고용개발원 교육정보(장애인고용 전문인력 교육과정)",
+        "description": "한국장애인고용공단 고용개발원 교육정보(장애인고용 전문인력 교육과정) (원천 파일의 판별 보관: 기본은 최신 판, baseDt 로 과거 판 선택)",
         "operationId": "getStaffTrainingCourse",
+        "parameters": [
+          {
+            "name": "baseDt",
+            "in": "query",
+            "description": "원천 판 기준일 (YYYY-MM-DD, 예: 2025-12-31). 원천 파일의 과거 판을 함께 보관하므로, 이 값을 주면 그 기준일 판의 데이터만 조회합니다. 생략하면 가장 최근 판을 조회합니다. 응답 항목 srcBaseDt 로 각 데이터의 판 기준일을 확인할 수 있습니다. 형식이 틀리거나 없는 날짜면 400, 해당 기준일 판이 없으면 빈 결과를 돌려줍니다.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2025-12-31"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -5440,7 +5520,7 @@
           "장애인 고용 관련 데이터 API V1"
         ],
         "summary": "창업넷 일반강좌 정보 조회",
-        "description": "장애인기업종합지원센터 창업넷 일반강좌 정보",
+        "description": "장애인기업종합지원센터 창업넷 일반강좌 정보 (연도별 데이터, 최신 연도부터 정렬)",
         "operationId": "getStartupLecture",
         "responses": {
           "200": {
@@ -5462,8 +5542,20 @@
           "장애인 고용 관련 데이터 API V1"
         ],
         "summary": "발달장애인 지원 기관 및 제공서비스 조회",
-        "description": "한국장애인개발원 발달장애인 지원 기관 및 제공서비스",
+        "description": "한국장애인개발원 발달장애인 지원 기관 및 제공서비스 (원천 파일의 판별 보관: 기본은 최신 판, baseDt 로 과거 판 선택)",
         "operationId": "getDevDisSupportOrg",
+        "parameters": [
+          {
+            "name": "baseDt",
+            "in": "query",
+            "description": "원천 판 기준일 (YYYY-MM-DD, 예: 2025-12-31). 원천 파일의 과거 판을 함께 보관하므로, 이 값을 주면 그 기준일 판의 데이터만 조회합니다. 생략하면 가장 최근 판을 조회합니다. 응답 항목 srcBaseDt 로 각 데이터의 판 기준일을 확인할 수 있습니다. 형식이 틀리거나 없는 날짜면 400, 해당 기준일 판이 없으면 빈 결과를 돌려줍니다.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2025-12-31"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -5484,8 +5576,20 @@
           "장애인 고용 관련 데이터 API V1"
         ],
         "summary": "발달장애인훈련센터 이용자현황 조회",
-        "description": "한국장애인고용공단 발달장애인훈련센터 이용자현황",
+        "description": "한국장애인고용공단 발달장애인훈련센터 이용자현황 (원천 파일의 판별 보관: 기본은 최신 판, baseDt 로 과거 판 선택)",
         "operationId": "getCenterUsage",
+        "parameters": [
+          {
+            "name": "baseDt",
+            "in": "query",
+            "description": "원천 판 기준일 (YYYY-MM-DD, 예: 2025-12-31). 원천 파일의 과거 판을 함께 보관하므로, 이 값을 주면 그 기준일 판의 데이터만 조회합니다. 생략하면 가장 최근 판을 조회합니다. 응답 항목 srcBaseDt 로 각 데이터의 판 기준일을 확인할 수 있습니다. 형식이 틀리거나 없는 날짜면 400, 해당 기준일 판이 없으면 빈 결과를 돌려줍니다.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2025-12-31"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -14767,6 +14871,12 @@
             "type": "string",
             "description": "구분",
             "example": "자회사"
+          },
+          "srcBaseDt": {
+            "type": "string",
+            "description": "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null",
+            "format": "date",
+            "example": "2025-12-31"
           }
         },
         "description": "장애인 표준사업장 현황"
@@ -14914,6 +15024,12 @@
             "description": "중증장애인수",
             "format": "int32",
             "example": 40
+          },
+          "srcBaseDt": {
+            "type": "string",
+            "description": "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null",
+            "format": "date",
+            "example": "2025-12-31"
           }
         },
         "description": "장애인고용 부담금감면 연계고용사업장 정보"
@@ -15045,6 +15161,12 @@
             "type": "number",
             "description": "고용률",
             "example": 3.54
+          },
+          "srcBaseDt": {
+            "type": "string",
+            "description": "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null",
+            "format": "date",
+            "example": "2025-12-31"
           }
         },
         "description": "장애인 고용의무 현황 통계"
@@ -15182,6 +15304,12 @@
             "type": "number",
             "description": "장애인 고용률",
             "example": 2.86
+          },
+          "srcBaseDt": {
+            "type": "string",
+            "description": "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null",
+            "format": "date",
+            "example": "2025-12-31"
           }
         },
         "description": "산업별 의무고용 현황"
@@ -15303,6 +15431,12 @@
             "description": "이행사업체수",
             "format": "int32",
             "example": 11898
+          },
+          "srcBaseDt": {
+            "type": "string",
+            "description": "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null",
+            "format": "date",
+            "example": "2025-12-31"
           }
         },
         "description": "장애인 의무고용 - 사업체 현황"
@@ -15749,6 +15883,12 @@
             "type": "string",
             "description": "기관유형",
             "example": "공공기관"
+          },
+          "srcBaseDt": {
+            "type": "string",
+            "description": "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null",
+            "format": "date",
+            "example": "2025-12-31"
           }
         },
         "description": "장애인 구직자 현황 DTO"
@@ -15973,6 +16113,12 @@
             "type": "string",
             "description": "전화번호",
             "example": "02-1234-5678"
+          },
+          "srcBaseDt": {
+            "type": "string",
+            "description": "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null",
+            "format": "date",
+            "example": "2025-12-31"
           }
         },
         "description": "장애인 구인 정보 DTO"
@@ -16108,6 +16254,12 @@
       "EmpDisRegionalStatusDto": {
         "type": "object",
         "properties": {
+          "year": {
+            "type": "integer",
+            "description": "연도 (YYYY)",
+            "format": "int32",
+            "example": 2025
+          },
           "region": {
             "type": "string",
             "description": "시군구 구분",
@@ -16141,6 +16293,12 @@
             "type": "number",
             "description": "중증2배수 적용 장애인 고용률",
             "example": 2.79
+          },
+          "srcBaseDt": {
+            "type": "string",
+            "description": "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null",
+            "format": "date",
+            "example": "2025-12-31"
           }
         },
         "description": "지역별 장애인 고용 현황"
@@ -16278,6 +16436,12 @@
             "description": "지급연인원",
             "format": "int32",
             "example": 6
+          },
+          "srcBaseDt": {
+            "type": "string",
+            "description": "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null",
+            "format": "date",
+            "example": "2025-12-31"
           }
         },
         "description": "신규고용장려금 지역별 지급 현황"
@@ -16442,6 +16606,12 @@
           },
           "updatedBy": {
             "type": "string"
+          },
+          "srcBaseDt": {
+            "type": "string",
+            "description": "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null",
+            "format": "date",
+            "example": "2025-12-31"
           }
         },
         "description": "장애인 고용 컨설팅 정보"
@@ -16610,6 +16780,12 @@
             "type": "string",
             "description": "교육대상",
             "example": "직무지도원 활동예정자"
+          },
+          "srcBaseDt": {
+            "type": "string",
+            "description": "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null",
+            "format": "date",
+            "example": "2025-12-31"
           }
         },
         "description": "고용개발원 교육정보(장애인고용 전문인력 교육과정)"
@@ -16787,6 +16963,12 @@
             "description": "수료인원",
             "format": "int32",
             "example": 21
+          },
+          "srcBaseDt": {
+            "type": "string",
+            "description": "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null",
+            "format": "date",
+            "example": "2025-12-31"
           }
         },
         "description": "장애인기업종합지원센터 창업넷 일반강좌 정보"
@@ -16956,6 +17138,17 @@
             "type": "boolean",
             "description": "긴급돌봄",
             "example": false
+          },
+          "severeIntegratedCare": {
+            "type": "boolean",
+            "description": "최중증 통합돌봄 (이 항목이 없던 과거 판의 데이터는 null)",
+            "example": false
+          },
+          "srcBaseDt": {
+            "type": "string",
+            "description": "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null",
+            "format": "date",
+            "example": "2025-12-31"
           }
         },
         "description": "발달장애인 지원 기관 및 제공 서비스"
@@ -17076,6 +17269,12 @@
             "description": "양성과정 취업자수",
             "format": "int32",
             "example": 66
+          },
+          "srcBaseDt": {
+            "type": "string",
+            "description": "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null",
+            "format": "date",
+            "example": "2025-12-31"
           }
         },
         "description": "발달장애인훈련센터 이용자현황"

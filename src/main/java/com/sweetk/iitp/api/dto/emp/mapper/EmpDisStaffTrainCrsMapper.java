@@ -21,6 +21,7 @@ public class EmpDisStaffTrainCrsMapper {
             .applyMethod(entity.getApplyMethod())
             .location(entity.getLocation())
             .target(entity.getTarget())
+            .srcBaseDt(entity.getSrcBaseDt())
             .build();
     }
     public static List<EmpDisStaffTrainCrsDto> toDtoList(List<EmpDisStaffTrainCrsEntity> entities) {

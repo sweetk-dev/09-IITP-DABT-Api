@@ -2,6 +2,7 @@ package com.sweetk.iitp.api.dto.emp;
 
 import lombok.*;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -16,4 +17,6 @@ public class EmpDisObligationFulfillmentDto {
     private Integer companyCount;
     @Schema(description = "이행사업체수", example = "11898")
     private Integer fulfilledCount;
+    @Schema(description = "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null", example = "2025-12-31")
+    private LocalDate srcBaseDt;
 } 

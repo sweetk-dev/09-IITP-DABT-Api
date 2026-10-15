@@ -22,6 +22,7 @@ public class EmpDisConsultingHisMapper {
             .updatedAt(entity.getUpdatedAt())
             .createdBy(entity.getCreatedBy())
             .updatedBy(entity.getUpdatedBy())
+            .srcBaseDt(entity.getSrcBaseDt())
             .build();
     }
     public static List<EmpDisConsultingHisDto> toDtoList(List<EmpDisConsultingHisEntity> entities) {

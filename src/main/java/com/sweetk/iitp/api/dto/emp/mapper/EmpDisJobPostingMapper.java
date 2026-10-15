@@ -27,6 +27,7 @@ public class EmpDisJobPostingMapper {
             .office(entity.getOffice())
             .regDate(entity.getRegDate())
             .tel(entity.getTel())
+            .srcBaseDt(entity.getSrcBaseDt())
             .build();
     }
     public static List<EmpDisJobPostingDto> toDtoList(List<EmpDisJobPostingEntity> entities) {

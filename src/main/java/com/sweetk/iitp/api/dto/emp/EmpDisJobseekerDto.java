@@ -32,4 +32,6 @@ public class EmpDisJobseekerDto {
     private String severity;
     @Schema(description = "기관유형", example = "공공기관")
     private String orgType;
+    @Schema(description = "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null", example = "2025-12-31")
+    private LocalDate srcBaseDt;
 } 

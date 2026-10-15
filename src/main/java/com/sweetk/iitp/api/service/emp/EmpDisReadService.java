@@ -12,8 +12,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * 장애인 고용 데이터 조회 서비스.
+ * <p>baseDt(원천 판 기준일)는 연도 컬럼이 없는 9개 표 조회에만 전달한다. null 이면 최신 판.</p>
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -23,14 +28,14 @@ public class EmpDisReadService {
     //#####################################
     //## 01. 장애인 구직자 현황
     //#####################################
-    public PageRes<EmpDisJobseekerDto> getAllJobSeekers(PageReq page) {
-        Page<EmpDisJobseekerEntity> entityPage = repository.findAllJobSeekers(page.toPageable());
+    public PageRes<EmpDisJobseekerDto> getAllJobSeekers(PageReq page, LocalDate baseDt) {
+        Page<EmpDisJobseekerEntity> entityPage = repository.findAllJobSeekers(baseDt, page.toPageable());
         List<EmpDisJobseekerDto> dtoList = EmpDisJobseekerMapper.toDtoList(entityPage.getContent());
         return new PageRes<>(dtoList, page.toPageable(), entityPage.getTotalElements());
     }
 
-    public PageRes<EmpDisJobseekerDto> getJobSeekersBySearchKeys(EmpSearchReqJobSeeker searchReq, PageReq page) {
-        Page<EmpDisJobseekerEntity> entityPage = repository.findJobSeekersBySearchKey(searchReq, page.toPageable());
+    public PageRes<EmpDisJobseekerDto> getJobSeekersBySearchKeys(EmpSearchReqJobSeeker searchReq, PageReq page, LocalDate baseDt) {
+        Page<EmpDisJobseekerEntity> entityPage = repository.findJobSeekersBySearchKey(searchReq, baseDt, page.toPageable());
         List<EmpDisJobseekerDto> dtoList = EmpDisJobseekerMapper.toDtoList(entityPage.getContent());
         return new PageRes<>(dtoList, page.toPageable(), entityPage.getTotalElements());
     }
@@ -39,38 +44,38 @@ public class EmpDisReadService {
     //#####################################
     //## 02. 발달장애인훈련센터 이용자현황
     //#####################################
-    public List<EmpDisCenterUsageDto> getCenterUsage() {
-        return EmpDisCenterUsageMapper.toDtoList(repository.finAllCenterUsages());
+    public List<EmpDisCenterUsageDto> getCenterUsage(LocalDate baseDt) {
+        return EmpDisCenterUsageMapper.toDtoList(repository.finAllCenterUsages(baseDt));
     }
 
 
     //#####################################
     //## 03. 장애인 고용의무 현황 통계
     //#####################################
-    public List<EmpDisObligationStatusDto> getObligationStatuses() {
-        return EmpDisObligationStatusMapper.toDtoList(repository.findAllObligationStatuses());
+    public List<EmpDisObligationStatusDto> getObligationStatuses(LocalDate baseDt) {
+        return EmpDisObligationStatusMapper.toDtoList(repository.findAllObligationStatuses(baseDt));
     }
 
 
     //#####################################
     //## 04. 장애인 고용컨설팅
     //#####################################
-    public List<EmpDisConsultingHisDto> getConsultingHis() {
-        return EmpDisConsultingHisMapper.toDtoList(repository.findAllConsultingHis());
+    public List<EmpDisConsultingHisDto> getConsultingHis(LocalDate baseDt) {
+        return EmpDisConsultingHisMapper.toDtoList(repository.findAllConsultingHis(baseDt));
     }
 
 
     //#####################################
     //## 05. 장애인 구인 정보
     //#####################################
-    public PageRes<EmpDisJobPostingDto> getAllJobPosting(PageReq page) {
-        Page<EmpDisJobPostingEntity> entityPage = repository.findAllJobPosting(page.toPageable());
+    public PageRes<EmpDisJobPostingDto> getAllJobPosting(PageReq page, LocalDate baseDt) {
+        Page<EmpDisJobPostingEntity> entityPage = repository.findAllJobPosting(baseDt, page.toPageable());
         List<EmpDisJobPostingDto> dtoList = EmpDisJobPostingMapper.toDtoList(entityPage.getContent());
         return new PageRes<>(dtoList, page.toPageable(), entityPage.getTotalElements());
     }
 
-    public PageRes<EmpDisJobPostingDto> getJobPostBySearchKeys(EmpSearchReqJobPost searchReq, PageReq page) {
-        Page<EmpDisJobPostingEntity> entityPage = repository.findJobPostBySearchKey(searchReq, page.toPageable());
+    public PageRes<EmpDisJobPostingDto> getJobPostBySearchKeys(EmpSearchReqJobPost searchReq, PageReq page, LocalDate baseDt) {
+        Page<EmpDisJobPostingEntity> entityPage = repository.findJobPostBySearchKey(searchReq, baseDt, page.toPageable());
         List<EmpDisJobPostingDto> dtoList = EmpDisJobPostingMapper.toDtoList(entityPage.getContent());
         return new PageRes<>(dtoList, page.toPageable(), entityPage.getTotalElements());
     }
@@ -95,16 +100,16 @@ public class EmpDisReadService {
     //#####################################
     //## 08. 고용개발원 교육정보(장애인고용 전문인력 교육과정)
     //#####################################
-    public List<EmpDisStaffTrainCrsDto> getStaffTrainCrs() {
-        return EmpDisStaffTrainCrsMapper.toDtoList(repository.findAllStaffTrainCrs());
+    public List<EmpDisStaffTrainCrsDto> getStaffTrainCrs(LocalDate baseDt) {
+        return EmpDisStaffTrainCrsMapper.toDtoList(repository.findAllStaffTrainCrs(baseDt));
     }
 
 
     //#####################################
     //## 09. 한국장애인개발원 발달장애인 지원 기관 및 제공서비스
     //#####################################
-    public List<EmpDisDevSupportOrgDto> getDevDisSupportOrg() {
-        return EmpDisDevSupportOrgMapper.toDtoList(repository.findAllDevSupportOrg());
+    public List<EmpDisDevSupportOrgDto> getDevDisSupportOrg(LocalDate baseDt) {
+        return EmpDisDevSupportOrgMapper.toDtoList(repository.findAllDevSupportOrg(baseDt));
     }
 
 
@@ -119,8 +124,8 @@ public class EmpDisReadService {
     //#####################################
     //## 11. 장애인 표준사업장 현황
     //#####################################
-    public List<EmpDisStdWorkplaceDto> getStandardWorkplace() {
-        return EmpDisStdWorkplaceMapper.toDtoList(repository.findAllStdWorkplace());
+    public List<EmpDisStdWorkplaceDto> getStandardWorkplace(LocalDate baseDt) {
+        return EmpDisStdWorkplaceMapper.toDtoList(repository.findAllStdWorkplace(baseDt));
     }
 
 
@@ -135,8 +140,8 @@ public class EmpDisReadService {
     //#####################################
     //## 13. 신규고용장려금 지역별 지급 현황
     //#####################################
-    public List<EmpDisEmpIncentiveDto> getEmpIncentive() {
-        return EmpDisEmpIncentiveMapper.toDtoList(repository.findAllEmpIncentive());
+    public List<EmpDisEmpIncentiveDto> getEmpIncentive(LocalDate baseDt) {
+        return EmpDisEmpIncentiveMapper.toDtoList(repository.findAllEmpIncentive(baseDt));
     }
 
 

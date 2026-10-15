@@ -8,22 +8,26 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+
 //01. 장애인 구직자 현황
 
 
 interface EmpDisJobseekerCustomRepository {
-    Page<EmpDisJobseekerEntity> findJobSeekersBySearchKey(EmpSearchReqJobSeeker searchReq, Pageable pageable);
+    /**
+     * 검색 키 + 판(edition) 조건으로 구직자 현황 조회 (최신 등록순, 페이징)
+     * @param searchReq 검색 키. null 이면 검색 조건 없이 전체
+     * @param baseDt    원천 판 기준일. null 이면 최신 판 (EmpEditionFilter 참고)
+     */
+    Page<EmpDisJobseekerEntity> findJobSeekersBySearchKey(EmpSearchReqJobSeeker searchReq, LocalDate baseDt, Pageable pageable);
 }
 
 @Repository
 public interface EmpDisJobseekerRepository extends JpaRepository<EmpDisJobseekerEntity, Integer>, EmpDisJobseekerCustomRepository {
 
 
-    /**
-     * 전체 구직자 현황 조회 (최신순, 페이징)
-     */
-    @Query("SELECT e FROM EmpDisJobseekerEntity e ORDER BY e.regDate DESC, e.seqNo DESC")
-    Page<EmpDisJobseekerEntity> findAllOrderByRegDateDesc(Pageable pageable);
+    // 전체 조회(검색 키 없음)도 판(edition) 조건이 필요해 findJobSeekersBySearchKey(null, baseDt, pageable) 로 합쳤다.
+    // (기존 findAllOrderByRegDateDesc 와 정렬 기준은 같다: 등록일 DESC, 연번 DESC)
 
 
 //    /**
