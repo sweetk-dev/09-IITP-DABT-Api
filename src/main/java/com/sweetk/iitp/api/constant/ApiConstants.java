@@ -29,6 +29,7 @@ public final class ApiConstants {
         public static final String API_V1_POI_CULTURE_SPORTS = API_V1_POI + "/culture-sports";
         public static final String API_V1_POI_BUILDING_ACCESSIBILITY = API_V1_POI + "/building-accessibility";
         public static final String API_V1_POI_EMERGENCY_SUPPORT = API_V1_POI + "/emergency-support";
+        public static final String API_V1_POI_WELFARE_FACILITY = API_V1_POI + "/welfare-facility";
 
         //For Transit
         public static final String API_V1_TRANSIT = API_V1 + "/transit";

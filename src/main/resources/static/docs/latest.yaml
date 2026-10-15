@@ -3,7 +3,7 @@
   "info": {
     "title": "DABT Open API Documentation",
     "description": "DABT Open API 문서입니다.",
-    "version": "v0.0.9"
+    "version": "v0.0.10"
   },
   "servers": [
     {
@@ -84,6 +84,10 @@
     {
       "name": "기초-고용 현황 API V1",
       "description": "기초-고용 현황 OpenApi V1"
+    },
+    {
+      "name": "이동형 - 복지시설 - 장애인복지시설 POI API V1",
+      "description": "경기도 장애인복지시설 — 장애유형별 거주시설·단기거주시설·보호작업장(정원·현원·종사자), 중증장애인자립생활지원센터, 장애인 관련 시설(가족지원·인권·발달장애인지원·권익옹호). 원천: 경기데이터드림(제공 경기도장애인복지종합지원센터), 연 1회 갱신. 원천이 기준일을 주지 않아 확인일(checked_dt)을 함께 준다."
     }
   ],
   "paths": {
@@ -1089,6 +1093,254 @@
         }
       }
     },
+    "/api/v1/poi/welfare-facility/{facilityId}": {
+      "get": {
+        "tags": [
+          "이동형 - 복지시설 - 장애인복지시설 POI API V1"
+        ],
+        "summary": "장애인복지시설 상세 조회",
+        "description": "시설 ID로 상세 정보를 조회합니다.",
+        "operationId": "getById",
+        "parameters": [
+          {
+            "name": "facilityId",
+            "in": "path",
+            "description": "시설 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoPoiWelfareFacility"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/poi/welfare-facility/search/paging": {
+      "get": {
+        "tags": [
+          "이동형 - 복지시설 - 장애인복지시설 POI API V1"
+        ],
+        "summary": "장애인복지시설 검색 (페이징)",
+        "description": "시설 종류·시군명·세부 구분·시설명으로 검색합니다. 조건이 없으면 전체를 반환합니다. 페이징(page 0부터, size 2~1000).",
+        "operationId": "search",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "페이지 번호, 0 이상.",
+            "required": true,
+            "schema": {
+              "minimum": 0,
+              "type": "string",
+              "description": "페이지 번호, 0 이상."
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "페이지 사이즈 , 20 이상.",
+            "required": true,
+            "schema": {
+              "minimum": 2,
+              "type": "string",
+              "description": "페이지 사이즈 , 20 이상."
+            }
+          },
+          {
+            "name": "facilityType",
+            "in": "query",
+            "description": "시설 종류 [residence:장애유형별 거주시설, short_residence:단기거주시설, protect_workshop:보호작업장, il_center:중증장애인자립생활지원센터, support_center:장애인 관련 시설]",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "시설 종류 [residence:장애유형별 거주시설, short_residence:단기거주시설, protect_workshop:보호작업장, il_center:중증장애인자립생활지원센터, support_center:장애인 관련 시설]",
+              "example": "residence",
+              "enum": [
+                "residence",
+                "short_residence",
+                "protect_workshop",
+                "il_center",
+                "support_center"
+              ]
+            },
+            "example": "residence"
+          },
+          {
+            "name": "sigunName",
+            "in": "query",
+            "description": "시군명 (부분 일치, 최소 2글자)",
+            "required": false,
+            "schema": {
+              "maxLength": 2147483647,
+              "minLength": 2,
+              "type": "string",
+              "description": "시군명 (부분 일치, 최소 2글자)",
+              "example": "안양"
+            },
+            "example": "안양"
+          },
+          {
+            "name": "subType",
+            "in": "query",
+            "description": "세부 구분 (부분 일치, 최소 2글자) — 거주시설 장애유형, 관련 시설 기관 구분",
+            "required": false,
+            "schema": {
+              "maxLength": 2147483647,
+              "minLength": 2,
+              "type": "string",
+              "description": "세부 구분 (부분 일치, 최소 2글자) — 거주시설 장애유형, 관련 시설 기관 구분",
+              "example": "지적"
+            },
+            "example": "지적"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "시설명 (부분 일치, 최소 2글자)",
+            "required": false,
+            "schema": {
+              "maxLength": 2147483647,
+              "minLength": 2,
+              "type": "string",
+              "description": "시설명 (부분 일치, 최소 2글자)",
+              "example": "자립생활"
+            },
+            "example": "자립생활"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoPageResPoiWelfareFacility"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/poi/welfare-facility/search/location/paging": {
+      "get": {
+        "tags": [
+          "이동형 - 복지시설 - 장애인복지시설 POI API V1"
+        ],
+        "summary": "장애인복지시설 위치 기반 검색 (페이징)",
+        "description": "위치 기준 반경(미터) 안의 시설을 가까운 순으로 반환합니다. 시설 종류로 좁힐 수 있습니다. 페이징(page 0부터, size 2~1000).",
+        "operationId": "searchByLocation",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "페이지 번호, 0 이상.",
+            "required": true,
+            "schema": {
+              "minimum": 0,
+              "type": "string",
+              "description": "페이지 번호, 0 이상."
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "페이지 사이즈 , 20 이상.",
+            "required": true,
+            "schema": {
+              "minimum": 2,
+              "type": "string",
+              "description": "페이지 사이즈 , 20 이상."
+            }
+          },
+          {
+            "name": "facilityType",
+            "in": "query",
+            "description": "시설 종류 [residence:장애유형별 거주시설, short_residence:단기거주시설, protect_workshop:보호작업장, il_center:중증장애인자립생활지원센터, support_center:장애인 관련 시설]",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "시설 종류 [residence:장애유형별 거주시설, short_residence:단기거주시설, protect_workshop:보호작업장, il_center:중증장애인자립생활지원센터, support_center:장애인 관련 시설]",
+              "example": "il_center",
+              "enum": [
+                "residence",
+                "short_residence",
+                "protect_workshop",
+                "il_center",
+                "support_center"
+              ]
+            },
+            "example": "il_center"
+          },
+          {
+            "name": "latitude",
+            "in": "query",
+            "description": "위도",
+            "required": true,
+            "schema": {
+              "maximum": 90,
+              "minimum": -90,
+              "type": "string",
+              "description": "위도",
+              "example": 37.5665
+            },
+            "example": 37.5665
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "description": "경도",
+            "required": true,
+            "schema": {
+              "maximum": 180,
+              "minimum": -180,
+              "type": "string",
+              "description": "경도",
+              "example": 126.978
+            },
+            "example": 126.978
+          },
+          {
+            "name": "radius",
+            "in": "query",
+            "description": "검색 반경(미터, 최대 100000). 예: 1000 = 1km",
+            "required": true,
+            "schema": {
+              "maximum": 100000,
+              "minimum": 0,
+              "type": "string",
+              "description": "검색 반경(미터, 최대 100000). 예: 1000 = 1km",
+              "example": 1000
+            },
+            "example": 1000
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoPageResPoiWelfareFacility"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/poi/search": {
       "get": {
         "tags": [
@@ -1280,7 +1532,7 @@
         ],
         "summary": "이동형 POI 위치기반 검색 조회(all)",
         "description": "이동형 POI 위치기반 검색 조회(all):",
-        "operationId": "searchByLocation",
+        "operationId": "searchByLocation_1",
         "parameters": [
           {
             "name": "category",
@@ -1852,7 +2104,7 @@
         ],
         "summary": "공중 화장실 위치 기반 검색 (전체 결과)",
         "description": "위치 기준 반경 내 공중 화장실을 검색합니다. 전체 결과를 반환합니다.",
-        "operationId": "searchByLocation_1",
+        "operationId": "searchByLocation_2",
         "parameters": [
           {
             "name": "toiletName",
@@ -2170,7 +2422,7 @@
         ],
         "summary": "지원 거점 상세 조회",
         "description": "거점 ID로 상세 정보를 조회합니다.",
-        "operationId": "getById",
+        "operationId": "getById_1",
         "parameters": [
           {
             "name": "supportId",
@@ -2204,7 +2456,7 @@
         ],
         "summary": "지원 거점 검색 (페이징)",
         "description": "거점 종류·시도 코드·시군구명·거점명으로 검색합니다. 조건이 없으면 전체를 반환합니다. 페이징(page 0부터, size 2~1000).",
-        "operationId": "search",
+        "operationId": "search_1",
         "parameters": [
           {
             "name": "page",
@@ -2308,7 +2560,7 @@
         ],
         "summary": "지원 거점 위치 기반 검색 (페이징)",
         "description": "위치 기준 반경(미터) 안의 거점을 가까운 순으로 반환합니다. 거점 종류로 좁힐 수 있습니다. 페이징(page 0부터, size 2~1000).",
-        "operationId": "searchByLocation_2",
+        "operationId": "searchByLocation_3",
         "parameters": [
           {
             "name": "page",
@@ -2807,7 +3059,7 @@
         ],
         "summary": "지하철 엘리베이터 위치 기반 검색 (전체 결과)",
         "description": "위치 기준 반경 내 지하철 엘리베이터를 검색합니다. 전체 결과를 반환합니다.",
-        "operationId": "searchByLocation_3",
+        "operationId": "searchByLocation_4",
         "parameters": [
           {
             "name": "stationName",
@@ -3093,7 +3345,7 @@
         ],
         "summary": "문화·체육 시설 상세 조회",
         "description": "시설 ID로 상세 정보를 조회합니다.",
-        "operationId": "getById_1",
+        "operationId": "getById_2",
         "parameters": [
           {
             "name": "facilityId",
@@ -3217,7 +3469,7 @@
         ],
         "summary": "문화·체육 시설 카테고리 검색 (전체 결과)",
         "description": "시설 종류, 이름, 시군명, 시도 코드로 검색합니다. 조건이 하나 이상 있어야 합니다.",
-        "operationId": "search_1",
+        "operationId": "search_2",
         "parameters": [
           {
             "name": "facilityType",
@@ -3405,7 +3657,7 @@
         ],
         "summary": "문화·체육 시설 위치 기반 검색 (전체 결과)",
         "description": "위치 기준 반경(미터) 안의 시설을 가까운 순으로 반환합니다. 시설 종류·이름으로 좁힐 수 있습니다.",
-        "operationId": "searchByLocation_4",
+        "operationId": "searchByLocation_5",
         "parameters": [
           {
             "name": "facilityType",
@@ -3815,7 +4067,7 @@
         ],
         "summary": "건물 장애인편의시설 상세 조회",
         "description": "시설 ID로 상세 정보를 조회합니다.",
-        "operationId": "getById_2",
+        "operationId": "getById_3",
         "parameters": [
           {
             "name": "faclId",
@@ -3849,7 +4101,7 @@
         ],
         "summary": "건물 장애인편의시설 검색 (페이징)",
         "description": "시설명·유형·주소·편의시설 설치 여부로 검색합니다. 조건이 없으면 전체를 시설명 순으로 반환합니다. 페이징(page 0부터, size 2~1000).",
-        "operationId": "search_2",
+        "operationId": "search_3",
         "parameters": [
           {
             "name": "page",
@@ -3997,7 +4249,7 @@
         ],
         "summary": "건물 장애인편의시설 위치 기반 검색 (페이징)",
         "description": "위치 기준 반경(미터) 안의 시설을 가까운 순으로 반환합니다. 페이징(page 0부터, size 2~1000).",
-        "operationId": "searchByLocation_5",
+        "operationId": "searchByLocation_6",
         "parameters": [
           {
             "name": "page",
@@ -4584,7 +4836,7 @@
         ],
         "summary": "무장애 관광지 시설 위치 기반 검색 (전체 결과)",
         "description": "위치 기준 반경 내 무장애 관광지 시설을 검색합니다.",
-        "operationId": "searchByLocation_6",
+        "operationId": "searchByLocation_7",
         "parameters": [
           {
             "name": "fcltName",
@@ -5913,6 +6165,109 @@
         }
       }
     },
+    "/api/v1/basic/housing/reg/sggSevGen/{statYear}": {
+      "get": {
+        "tags": [
+          "기초-주거 자립 현황 API V1"
+        ],
+        "summary": "해당 연도의  시군구별,장애정도별,성별 등록장애인수 조회(연도)",
+        "description": "해당 연도의 시군구별,장애정도별,성별 등록장애인수 조회",
+        "operationId": "getHousingRegSggSevGenYear",
+        "parameters": [
+          {
+            "name": "statYear",
+            "in": "path",
+            "description": "통계 연도",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2024
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/basic/housing/reg/sggSevGen/latest": {
+      "get": {
+        "tags": [
+          "기초-주거 자립 현황 API V1"
+        ],
+        "summary": "시군구별,장애정도별,성별 등록장애인수 조회(최신)",
+        "description": "시군구(일반구)별,장애정도별,성별 등록장애인수 조회(KOSIS 「장애인현황」 DT_11761_N009). 안양시는 만안구·동안구로 나뉘고 시 합계 행이 없다. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년",
+        "operationId": "getHousingRegSggSevGenLatest",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "(옵션) 통계 시작 연도 (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2019
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2022
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoStatDataRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/basic/housing/reg/sggSevGen/info": {
+      "get": {
+        "tags": [
+          "기초-주거 자립 현황 API V1"
+        ],
+        "summary": "시군구별,장애정도별,성별 등록장애인수 통계 정보 조회",
+        "description": "시군구별,장애정도별,성별 등록장애인수 통계 정보 조회",
+        "operationId": "getHousingRegSggSevGenInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoStatInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/basic/housing/reg/new/{statYear}": {
       "get": {
         "tags": [
@@ -6009,6 +6364,186 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResDtoStatInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/basic/housing/reg/local/summary": {
+      "get": {
+        "tags": [
+          "기초-주거 자립 현황 API V1"
+        ],
+        "summary": "시군 단위 등록장애인 요약 (두 원천 병기)",
+        "description": "경기 읍면동 집계(시군 최신 판 합산)와 KOSIS 시군구별 등록장애인수(최신 연도)를 원천·기준 시점과 함께 나란히 줍니다. 구가 있는 시(예: 안양시 = 만안구 + 동안구)는 구별 값과 합계를 함께 줍니다. 경기도 시군만 대상입니다.",
+        "operationId": "summary",
+        "parameters": [
+          {
+            "name": "sigunName",
+            "in": "query",
+            "description": "시군명 (예: 안양시, 광주시)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "안양시"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoLocalDisRegSummary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/basic/housing/reg/ggEmd/latest": {
+      "get": {
+        "tags": [
+          "기초-주거 자립 현황 API V1"
+        ],
+        "summary": "경기도 읍면동별·장애유형별·장애정도별 등록장애인수 조회 (페이징)",
+        "description": "원천: 경기데이터드림 「경기도 내 등록장애인 집계현황」. 시군마다 원천 기준일(base_dt)이 다르며, 기본은 시군마다 최신 판입니다. baseDt 로 지난 판을 고를 수 있습니다(판 목록은 /reg/ggEmd/editions). 합계 행(소계·전체)은 들어 있지 않으므로 합산해서 씁니다. 페이징(page 0부터, size 2~1000).",
+        "operationId": "searchEmd",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "페이지 번호, 0 이상.",
+            "required": true,
+            "schema": {
+              "minimum": 0,
+              "type": "string",
+              "description": "페이지 번호, 0 이상."
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "페이지 사이즈 , 20 이상.",
+            "required": true,
+            "schema": {
+              "minimum": 2,
+              "type": "string",
+              "description": "페이지 사이즈 , 20 이상."
+            }
+          },
+          {
+            "name": "sigunName",
+            "in": "query",
+            "description": "시군명 (정확히 일치)",
+            "required": false,
+            "schema": {
+              "maxLength": 2147483647,
+              "minLength": 2,
+              "type": "string",
+              "description": "시군명 (정확히 일치)",
+              "example": "안양시"
+            },
+            "example": "안양시"
+          },
+          {
+            "name": "guName",
+            "in": "query",
+            "description": "일반구명 (정확히 일치)",
+            "required": false,
+            "schema": {
+              "maxLength": 2147483647,
+              "minLength": 2,
+              "type": "string",
+              "description": "일반구명 (정확히 일치)",
+              "example": "만안구"
+            },
+            "example": "만안구"
+          },
+          {
+            "name": "emdName",
+            "in": "query",
+            "description": "읍면동명 (부분 일치, 최소 2글자)",
+            "required": false,
+            "schema": {
+              "maxLength": 2147483647,
+              "minLength": 2,
+              "type": "string",
+              "description": "읍면동명 (부분 일치, 최소 2글자)",
+              "example": "안양1"
+            },
+            "example": "안양1"
+          },
+          {
+            "name": "disType",
+            "in": "query",
+            "description": "장애유형 (정확히 일치) — 지체, 뇌병변, 시각, 청각, 언어, 지적, 자폐성, 정신, 신장, 심장, 호흡기, 간, 안면, 장루·요루, 뇌전증",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "장애유형 (정확히 일치) — 지체, 뇌병변, 시각, 청각, 언어, 지적, 자폐성, 정신, 신장, 심장, 호흡기, 간, 안면, 장루·요루, 뇌전증",
+              "example": "지체"
+            },
+            "example": "지체"
+          },
+          {
+            "name": "baseDt",
+            "in": "query",
+            "description": "원천 기준일(판). 비우면 시군마다 최신 판",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "원천 기준일(판). 비우면 시군마다 최신 판",
+              "example": "2025-08-07"
+            },
+            "example": "2025-08-07"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoPageResGgDisRegEmd"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/basic/housing/reg/ggEmd/editions": {
+      "get": {
+        "tags": [
+          "기초-주거 자립 현황 API V1"
+        ],
+        "summary": "경기도 읍면동 등록장애인 판(원천 기준일) 목록",
+        "description": "시군별로 쌓아 둔 판의 기준일·행 수·합계와 최신 판 여부를 줍니다.",
+        "operationId": "editions",
+        "parameters": [
+          {
+            "name": "sigunName",
+            "in": "query",
+            "description": "시군명 (정확히 일치, 비우면 전체)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "안양시"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResDtoListGgDisRegEdition"
                 }
               }
             }
@@ -10282,6 +10817,359 @@
           }
         },
         "description": "응답 데이터"
+      },
+      "ApiResDtoPoiWelfareFacility": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/PoiWelfareFacility"
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "PoiWelfareFacility": {
+        "type": "object",
+        "properties": {
+          "facility_id": {
+            "type": "integer",
+            "description": "시설 고유 식별자",
+            "format": "int32",
+            "example": 1
+          },
+          "facility_type": {
+            "type": "string",
+            "description": "시설 종류 코드 [residence:장애유형별 거주시설, short_residence:단기거주시설, protect_workshop:보호작업장, il_center:중증장애인자립생활지원센터, support_center:장애인 관련 시설]",
+            "example": "residence"
+          },
+          "facility_type_name": {
+            "type": "string",
+            "description": "시설 종류명",
+            "example": "장애유형별 거주시설"
+          },
+          "sub_type": {
+            "type": "string",
+            "description": "세부 구분 (거주시설: 장애유형, 관련 시설: 기관 구분)",
+            "example": "지적장애인시설"
+          },
+          "sido_code": {
+            "type": "string",
+            "description": "시도 코드 (7자리)",
+            "example": "9410000"
+          },
+          "sigun_cd": {
+            "type": "string",
+            "description": "시군 코드",
+            "example": "41170"
+          },
+          "sigun_name": {
+            "type": "string",
+            "description": "시군명",
+            "example": "안양시"
+          },
+          "name": {
+            "type": "string",
+            "description": "시설명",
+            "example": "밀알장애인자립생활센터"
+          },
+          "addr_road": {
+            "type": "string",
+            "description": "도로명 주소",
+            "example": "경기도 안양시 동안구 평촌대로 358"
+          },
+          "addr_jibun": {
+            "type": "string",
+            "description": "지번 주소",
+            "example": "경기도 안양시 동안구 비산동 1033번지"
+          },
+          "zip_code": {
+            "type": "string",
+            "description": "우편번호",
+            "example": "13941"
+          },
+          "latitude": {
+            "type": "number",
+            "description": "위도 (WGS84)",
+            "format": "double",
+            "example": 37.402715
+          },
+          "longitude": {
+            "type": "number",
+            "description": "경도 (WGS84)",
+            "format": "double",
+            "example": 126.9500835
+          },
+          "tel": {
+            "type": "string",
+            "description": "전화번호",
+            "example": "031-000-0000"
+          },
+          "homepage": {
+            "type": "string",
+            "description": "홈페이지",
+            "example": "http://www.example.org/"
+          },
+          "capacity_cnt": {
+            "type": "integer",
+            "description": "정원 (거주·단기거주: 입소 정원, 보호작업장: 근로장애인 정원)",
+            "format": "int32",
+            "example": 53
+          },
+          "current_cnt": {
+            "type": "integer",
+            "description": "현원 (거주·단기거주: 입소 현원, 보호작업장: 근로장애인 현원)",
+            "format": "int32",
+            "example": 49
+          },
+          "staff_capacity_cnt": {
+            "type": "integer",
+            "description": "종사자 정원",
+            "format": "int32",
+            "example": 49
+          },
+          "staff_current_cnt": {
+            "type": "integer",
+            "description": "종사자 현원",
+            "format": "int32",
+            "example": 44
+          },
+          "install_report_dt": {
+            "type": "string",
+            "description": "설치 신고일",
+            "format": "date",
+            "example": "2001-11-23"
+          },
+          "corp_name": {
+            "type": "string",
+            "description": "운영 법인명",
+            "example": "무지개동산"
+          },
+          "source_name": {
+            "type": "string",
+            "description": "원천 데이터",
+            "example": "경기도 장애인복지시설 현황(경기데이터드림)"
+          },
+          "checked_dt": {
+            "type": "string",
+            "description": "원천과 대조해 확인한 날 (원천이 기준일을 따로 주지 않는다)",
+            "format": "date",
+            "example": "2026-10-15"
+          },
+          "distance": {
+            "type": "integer",
+            "description": "요청 위치로부터 거리(미터). 위치 기반 검색에서만 제공",
+            "format": "int32",
+            "example": 420
+          }
+        },
+        "description": "장애인복지시설 (경기도 — 거주시설·단기거주시설·보호작업장·자립생활지원센터·관련 기관)"
+      },
+      "ApiResDtoPageResPoiWelfareFacility": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageResPoiWelfareFacility"
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "PageResPoiWelfareFacility": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "description": "현재 페이지의 데이터 목록",
+            "items": {
+              "$ref": "#/components/schemas/PoiWelfareFacility"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "description": "현재 페이지 번호",
+            "format": "int32",
+            "example": 1
+          },
+          "size": {
+            "type": "integer",
+            "description": "페이지당 항목 수",
+            "format": "int32",
+            "example": 10
+          },
+          "total": {
+            "type": "integer",
+            "description": "전체 항목 수",
+            "format": "int64",
+            "example": 100
+          }
+        },
+        "description": "페이징 처리된 응답 데이터"
       },
       "ApiResDtoListMvPoi": {
         "type": "object",
@@ -17611,6 +18499,584 @@
           }
         },
         "description": "통계 정보 "
+      },
+      "ApiResDtoLocalDisRegSummary": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/LocalDisRegSummary"
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "LocalDisRegSummary": {
+        "type": "object",
+        "properties": {
+          "sigun_name": {
+            "type": "string",
+            "description": "시군명",
+            "example": "안양시"
+          },
+          "gg_emd": {
+            "$ref": "#/components/schemas/Source"
+          },
+          "kosis": {
+            "$ref": "#/components/schemas/Source"
+          },
+          "notes": {
+            "type": "array",
+            "description": "안내 — 원천·기준 시점이 다르면 값이 다를 수 있다. 구가 있는 시는 구 값을 더한 값이다",
+            "items": {
+              "type": "string",
+              "description": "안내 — 원천·기준 시점이 다르면 값이 다를 수 있다. 구가 있는 시는 구 값을 더한 값이다"
+            }
+          }
+        },
+        "description": "시군 단위 등록장애인 요약 — 두 원천(경기 읍면동 집계, KOSIS 시군구별)을 기준 시점과 함께 나란히 준다"
+      },
+      "Part": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "구명 또는 장애유형",
+            "example": "만안구"
+          },
+          "total_cnt": {
+            "type": "integer",
+            "description": "등록장애인 수",
+            "format": "int64",
+            "example": 11206
+          },
+          "sev_cnt": {
+            "type": "integer",
+            "description": "심한 장애",
+            "format": "int64",
+            "example": 3701
+          },
+          "nsev_cnt": {
+            "type": "integer",
+            "description": "심하지 않은 장애",
+            "format": "int64",
+            "example": 7505
+          },
+          "male_cnt": {
+            "type": "integer",
+            "description": "남",
+            "format": "int64",
+            "example": 6500
+          },
+          "female_cnt": {
+            "type": "integer",
+            "description": "여",
+            "format": "int64",
+            "example": 4706
+          },
+          "emd_count": {
+            "type": "integer",
+            "description": "읍면동 수 (경기 읍면동 집계 구별 값만)",
+            "format": "int32",
+            "example": 14
+          }
+        },
+        "description": "구 또는 장애유형 1개의 값"
+      },
+      "Source": {
+        "type": "object",
+        "properties": {
+          "source_name": {
+            "type": "string",
+            "description": "원천",
+            "example": "경기도 내 등록장애인 집계현황(읍면동별·유형별·정도별, 경기데이터드림)"
+          },
+          "base_dt": {
+            "type": "string",
+            "description": "원천 기준일 (경기 읍면동 집계)",
+            "format": "date",
+            "example": "2025-08-07"
+          },
+          "year": {
+            "type": "integer",
+            "description": "통계 연도 (KOSIS, 연말 기준)",
+            "format": "int32",
+            "example": 2025
+          },
+          "total_cnt": {
+            "type": "integer",
+            "description": "등록장애인 수",
+            "format": "int64",
+            "example": 21744
+          },
+          "sev_cnt": {
+            "type": "integer",
+            "description": "심한 장애",
+            "format": "int64",
+            "example": 7388
+          },
+          "nsev_cnt": {
+            "type": "integer",
+            "description": "심하지 않은 장애",
+            "format": "int64",
+            "example": 14356
+          },
+          "male_cnt": {
+            "type": "integer",
+            "description": "남",
+            "format": "int64",
+            "example": 12800
+          },
+          "female_cnt": {
+            "type": "integer",
+            "description": "여",
+            "format": "int64",
+            "example": 8944
+          },
+          "by_gu": {
+            "type": "array",
+            "description": "구별 값 (구가 없는 시군은 빈 목록)",
+            "items": {
+              "$ref": "#/components/schemas/Part"
+            }
+          },
+          "by_type": {
+            "type": "array",
+            "description": "장애유형별 값 (경기 읍면동 집계만)",
+            "items": {
+              "$ref": "#/components/schemas/Part"
+            }
+          }
+        },
+        "description": "원천 1개의 합산 결과"
+      },
+      "ApiResDtoPageResGgDisRegEmd": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageResGgDisRegEmd"
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "GgDisRegEmd": {
+        "type": "object",
+        "properties": {
+          "base_dt": {
+            "type": "string",
+            "description": "원천 기준일 — 시군마다 다르다",
+            "format": "date",
+            "example": "2025-08-07"
+          },
+          "sigun_name": {
+            "type": "string",
+            "description": "시군명",
+            "example": "안양시"
+          },
+          "gu_name": {
+            "type": "string",
+            "description": "일반구명 (구가 없는 시군은 null)",
+            "example": "만안구"
+          },
+          "emd_name": {
+            "type": "string",
+            "description": "읍면동명 (원천 표기 그대로)",
+            "example": "안양1동"
+          },
+          "dis_type": {
+            "type": "string",
+            "description": "장애유형",
+            "example": "지체"
+          },
+          "tot_cnt": {
+            "type": "integer",
+            "description": "등록장애인 수",
+            "format": "int32",
+            "example": 250
+          },
+          "male_cnt": {
+            "type": "integer",
+            "description": "남",
+            "format": "int32",
+            "example": 140
+          },
+          "female_cnt": {
+            "type": "integer",
+            "description": "여",
+            "format": "int32",
+            "example": 110
+          },
+          "sev_cnt": {
+            "type": "integer",
+            "description": "심한 장애",
+            "format": "int32",
+            "example": 60
+          },
+          "sev_male_cnt": {
+            "type": "integer",
+            "description": "심한 장애 — 남",
+            "format": "int32",
+            "example": 35
+          },
+          "sev_female_cnt": {
+            "type": "integer",
+            "description": "심한 장애 — 여",
+            "format": "int32",
+            "example": 25
+          },
+          "nsev_cnt": {
+            "type": "integer",
+            "description": "심하지 않은 장애",
+            "format": "int32",
+            "example": 190
+          },
+          "nsev_male_cnt": {
+            "type": "integer",
+            "description": "심하지 않은 장애 — 남",
+            "format": "int32",
+            "example": 105
+          },
+          "nsev_female_cnt": {
+            "type": "integer",
+            "description": "심하지 않은 장애 — 여",
+            "format": "int32",
+            "example": 85
+          },
+          "source_name": {
+            "type": "string",
+            "description": "원천 데이터",
+            "example": "경기도 내 등록장애인 집계현황(읍면동별·유형별·정도별, 경기데이터드림)"
+          }
+        },
+        "description": "경기도 읍면동별·장애유형별·장애정도별 등록장애인 수 (1행 = 시군·구·읍면동·장애유형)"
+      },
+      "PageResGgDisRegEmd": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "description": "현재 페이지의 데이터 목록",
+            "items": {
+              "$ref": "#/components/schemas/GgDisRegEmd"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "description": "현재 페이지 번호",
+            "format": "int32",
+            "example": 1
+          },
+          "size": {
+            "type": "integer",
+            "description": "페이지당 항목 수",
+            "format": "int32",
+            "example": 10
+          },
+          "total": {
+            "type": "integer",
+            "description": "전체 항목 수",
+            "format": "int64",
+            "example": 100
+          }
+        },
+        "description": "페이징 처리된 응답 데이터"
+      },
+      "ApiResDtoListGgDisRegEdition": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "data": {
+            "type": "array",
+            "description": "응답 데이터",
+            "items": {
+              "$ref": "#/components/schemas/GgDisRegEdition"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "응답 코드",
+            "example": "200",
+            "enum": [
+              "100 CONTINUE",
+              "101 SWITCHING_PROTOCOLS",
+              "102 PROCESSING",
+              "103 EARLY_HINTS",
+              "103 CHECKPOINT",
+              "200 OK",
+              "201 CREATED",
+              "202 ACCEPTED",
+              "203 NON_AUTHORITATIVE_INFORMATION",
+              "204 NO_CONTENT",
+              "205 RESET_CONTENT",
+              "206 PARTIAL_CONTENT",
+              "207 MULTI_STATUS",
+              "208 ALREADY_REPORTED",
+              "226 IM_USED",
+              "300 MULTIPLE_CHOICES",
+              "301 MOVED_PERMANENTLY",
+              "302 FOUND",
+              "302 MOVED_TEMPORARILY",
+              "303 SEE_OTHER",
+              "304 NOT_MODIFIED",
+              "305 USE_PROXY",
+              "307 TEMPORARY_REDIRECT",
+              "308 PERMANENT_REDIRECT",
+              "400 BAD_REQUEST",
+              "401 UNAUTHORIZED",
+              "402 PAYMENT_REQUIRED",
+              "403 FORBIDDEN",
+              "404 NOT_FOUND",
+              "405 METHOD_NOT_ALLOWED",
+              "406 NOT_ACCEPTABLE",
+              "407 PROXY_AUTHENTICATION_REQUIRED",
+              "408 REQUEST_TIMEOUT",
+              "409 CONFLICT",
+              "410 GONE",
+              "411 LENGTH_REQUIRED",
+              "412 PRECONDITION_FAILED",
+              "413 PAYLOAD_TOO_LARGE",
+              "413 REQUEST_ENTITY_TOO_LARGE",
+              "414 URI_TOO_LONG",
+              "414 REQUEST_URI_TOO_LONG",
+              "415 UNSUPPORTED_MEDIA_TYPE",
+              "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+              "417 EXPECTATION_FAILED",
+              "418 I_AM_A_TEAPOT",
+              "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+              "420 METHOD_FAILURE",
+              "421 DESTINATION_LOCKED",
+              "422 UNPROCESSABLE_ENTITY",
+              "423 LOCKED",
+              "424 FAILED_DEPENDENCY",
+              "425 TOO_EARLY",
+              "426 UPGRADE_REQUIRED",
+              "428 PRECONDITION_REQUIRED",
+              "429 TOO_MANY_REQUESTS",
+              "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+              "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+              "500 INTERNAL_SERVER_ERROR",
+              "501 NOT_IMPLEMENTED",
+              "502 BAD_GATEWAY",
+              "503 SERVICE_UNAVAILABLE",
+              "504 GATEWAY_TIMEOUT",
+              "505 HTTP_VERSION_NOT_SUPPORTED",
+              "506 VARIANT_ALSO_NEGOTIATES",
+              "507 INSUFFICIENT_STORAGE",
+              "508 LOOP_DETECTED",
+              "509 BANDWIDTH_LIMIT_EXCEEDED",
+              "510 NOT_EXTENDED",
+              "511 NETWORK_AUTHENTICATION_REQUIRED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrInfoDto"
+          }
+        },
+        "description": "공통 응답 포맷"
+      },
+      "GgDisRegEdition": {
+        "type": "object",
+        "properties": {
+          "sigun_name": {
+            "type": "string",
+            "description": "시군명",
+            "example": "안양시"
+          },
+          "base_dt": {
+            "type": "string",
+            "description": "원천 기준일",
+            "format": "date",
+            "example": "2025-08-07"
+          },
+          "row_count": {
+            "type": "integer",
+            "description": "그 판의 행 수",
+            "format": "int32",
+            "example": 459
+          },
+          "total_cnt": {
+            "type": "integer",
+            "description": "등록장애인 수 합계",
+            "format": "int64",
+            "example": 21744
+          },
+          "latest": {
+            "type": "boolean",
+            "description": "그 시군의 최신 판 여부",
+            "example": true
+          }
+        },
+        "description": "읍면동 등록장애인 시군별 판(원천 기준일)"
       }
     },
     "securitySchemes": {

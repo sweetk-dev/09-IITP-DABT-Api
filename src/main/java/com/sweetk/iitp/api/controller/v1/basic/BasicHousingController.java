@@ -184,6 +184,55 @@ public class BasicHousingController extends BasicBaseController {
 
 
     /*******************************
+     * 시군구별,장애정도별,성별 등록장애인수
+     *******************************/
+    @GetMapping("/reg/sggSevGen/info")
+    @Operation(
+            summary = "시군구별,장애정도별,성별 등록장애인수 통계 정보 조회",
+            description = "시군구별,장애정도별,성별 등록장애인수 통계 정보 조회"
+    )
+    public ResponseEntity<ApiResDto<StatInfo>> getHousingRegSggSevGenInfo(
+            HttpServletRequest request) {
+
+        StatInfo statinfo = housingReadService.getHousingRegSggSevGenInfo();
+        return ResponseEntity.ok(ApiResDto.success(statinfo));
+    }
+
+    @GetMapping("/reg/sggSevGen/latest")
+    @Operation(
+            summary = "시군구별,장애정도별,성별 등록장애인수 조회(최신)",
+            description = "시군구(일반구)별,장애정도별,성별 등록장애인수 조회(KOSIS 「장애인현황」 DT_11761_N009). 안양시는 만안구·동안구로 나뉘고 시 합계 행이 없다. (최대 10년) 예) from(옵션)~to(옵션), default는 최종 3개년"
+    )
+    public ResponseEntity<ApiResDto<StatDataRes>> getHousingRegSggSevGenLatest(
+            @Parameter(name = "from", description = "(옵션) 통계 시작 연도 (최대: 10년 조회)", example = "2019")
+            @RequestParam(required = false)
+            Integer from,
+            @Parameter(name = "to", description = "(옵션) 통계 조회 끝 연도  (최대: 10년 조회)", example = "2022")
+            @RequestParam(required = false)
+            Integer to,
+            HttpServletRequest request) {
+
+            StatDataRes statDataRes = housingReadService.getHousingRegSggSevGenLatest(from, to);
+            return ResponseEntity.ok(ApiResDto.success(statDataRes));
+    }
+
+    @GetMapping("/reg/sggSevGen/{statYear}")
+    @Operation(
+            summary = "해당 연도의  시군구별,장애정도별,성별 등록장애인수 조회(연도)",
+            description = "해당 연도의 시군구별,장애정도별,성별 등록장애인수 조회"
+    )
+    public ResponseEntity<ApiResDto<StatDataRes>> getHousingRegSggSevGenYear(
+            @Parameter(name = "statYear", description = "통계 연도", required = true, example = "2024")
+            @PathVariable
+            Integer statYear,
+            HttpServletRequest request) {
+
+            StatDataRes statDataRes = housingReadService.getHousingRegSggSevGenYear(statYear);
+            return ResponseEntity.ok(ApiResDto.success(statDataRes));
+    }
+
+
+    /*******************************
      * 일상생활 필요 지원 정도
      *******************************/
     @GetMapping("/life/SuppNeedLvl/info")

@@ -1,6 +1,6 @@
 # 09-IITP-DABT-Api
 
-![version](https://img.shields.io/badge/version-v1.3.0-blue)
+![version](https://img.shields.io/badge/version-v1.4.0-blue)
 
 9.모델 연동 API 모듈
 
@@ -246,6 +246,11 @@ sudo journalctl -u iitp-api -f    # 실시간 로그 보기
 - **연도 컬럼이 있는 5종** (지역별 고용 현황 `/emp/region`, 산업별 의무고용 `/obligation/industry`, 의무고용 사업체 현황 `/obligation/fulfillment`, 부담금감면 연계고용사업장 `/workplace/burden-redct`, 창업넷 강좌 `/edu/lecture/startup`): 연도마다 한 판이라 판 선택 없이 **최신 연도부터** 돌려주며, 응답에 `year` 와 `srcBaseDt` 를 함께 준다.
 - 장애유형별 고용현황 `/obligation/dis-type` 은 판 기준일이 없다.
 
+### 지역(시군·구·읍면동) 단위 등록장애인 (`/api/v1/basic/housing/reg/...`)
+- **시군구별**: `/reg/sggSevGen/info`·`/latest`·`/{statYear}` — KOSIS 「장애인현황」 시군구별,장애정도별,성별 등록장애인수(DT_11761_N009). 구가 있는 시는 구 단위만 있고 시 합계 행이 없다(예: 안양시 = 만안구 + 동안구)
+- **경기 읍면동별**: `/reg/ggEmd/latest` (페이징) — 경기데이터드림 「경기도 내 등록장애인 집계현황」 읍면동·장애유형·장애정도·성별. 시군마다 원천 기준일(`base_dt`)이 달라 판을 쌓아 두며, 기본은 시군마다 최신 판이다. `baseDt` 로 지난 판, `/reg/ggEmd/editions` 로 판 목록을 본다. 합계 행은 들어 있지 않다
+- **시군 요약**: `/reg/local/summary?sigunName=안양시` — 위 두 원천을 원천명·기준 시점(경기 집계 기준일, KOSIS 연도)과 함께 나란히 주고, 구별 값·장애유형별 값(경기 집계)을 함께 준다. 경기도 시군 대상
+
 ### 위치 기반 검색 API
 프로젝트는 다음과 같은 위치 기반 검색 API를 제공합니다:
 
@@ -261,6 +266,7 @@ sudo journalctl -u iitp-api -f    # 실시간 로그 보기
 - **장애인 문화·체육 시설**: `/api/v1/poi/culture-sports/search` — 점자도서관·책나래서비스 제공도서관·장애인체육시설·장애인체육회 (`facilityType` 로 구분, 현재 경기도 자료, 원천: 경기데이터드림)
 - **건물 장애인편의시설**: `/api/v1/poi/building-accessibility/search/paging` — 승강기·장애인 화장실·전용 주차구역·주출입구 경사로 설치 여부 (현재 안양시, 원천: 한국사회보장정보원)
 - **긴급대응 지원 거점**: `/api/v1/poi/emergency-support/search/paging` — 전동보장구 급속충전기(전국)·보조기기 수리·지원 센터(경기)·교통약자 이동지원센터 (`supportType` 으로 구분)
+- **장애인복지시설**: `/api/v1/poi/welfare-facility/search/paging`, `/search/location/paging`, `/{facilityId}` — 장애유형별 거주시설·단기거주시설·보호작업장(정원·현원·종사자)·중증장애인자립생활지원센터·장애인 관련 시설 (`facilityType` 으로 구분, 현재 경기도 자료, 원천: 경기데이터드림, 응답의 `checked_dt` 는 원천과 대조한 날)
 
 #### 교통 API
 - **경기 버스**: `/api/v1/transit/bus/routes/search/paging`, `/routes/{routeId}/stations`, `/stations/search/location/paging`, `/stations/{stationId}/routes` — 노선·정류소·경유 순서·저상버스 운행 여부 (현재 안양시를 지나는 노선, 원천: 경기도 버스노선·정류소 조회)

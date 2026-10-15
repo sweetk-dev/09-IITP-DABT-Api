@@ -197,6 +197,59 @@ public class BasicHousingReadService extends BasicService {
     }
 
     /*******************************
+     * 시군구별,장애정도별,성별 등록장애인수
+     *******************************/
+    public StatInfo getHousingRegSggSevGenInfo() {
+        // 1. 데이터 소스 정보 조회
+        StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegSggBySevGen();
+        return StatsDataConverter.toStatInfoResponse(srcDataInfo);
+    }
+
+
+    @ConditionalTimed(value = "basic.housing.reg.sggSevGen.latest", description = "시군구별,장애정도별,성별 등록장애인수 최신 데이터 조회")
+    public StatDataRes getHousingRegSggSevGenLatest(Integer from, Integer to) {
+        String fnc = "HousingRegSggSevGenLatest";
+
+        StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegSggBySevGen();
+        Integer formYear = getReqFromYear(fnc, from, to,
+            srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
+
+        Integer toYear = getReqToYear((Integer)to, (Integer)srcDataInfo.toIntCollectEndDt());
+
+        List<StatDataItemDB> dataList = housingRepository.findRegSggBySevGenLatest(srcDataInfo, formYear, toYear);
+        if (dataList.isEmpty()) {
+            return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
+        }
+
+        LocalDate srcLatestChnDate = LocalDate.parse(srcDataInfo.getStatLatestChnDt());
+        List<StatMetaCodeDB> cMetaCodes = metadataService.getCatMetaCodes(srcDataInfo.getSrcDataId(), srcLatestChnDate);
+        List<StatMetaCodeDB> iMetaCodes = metadataService.getItemMetaCodes(srcDataInfo.getSrcDataId(), srcLatestChnDate);
+
+        List<StatDataItem> items = makeStatDataItemList(dataList, cMetaCodes, iMetaCodes);
+        // limit 적용: limit이 설정되어 있고 크기가 limit보다 크면 limit 만큼만 반환
+        items = limitStatsDataList(items);
+        return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
+    }
+
+    public StatDataRes getHousingRegSggSevGenYear(Integer targetYear) {
+        StatsSrcDataInfoEntity srcDataInfo = dataSourceService.getHousingRegSggBySevGen();
+        checkReqStatYear("HousingRegSggSevGenYear", targetYear, 
+            srcDataInfo.toIntCollectStartDt(), srcDataInfo.toIntCollectEndDt());
+
+        List<StatDataItemDB> dataList = housingRepository.findRegSggBySevGenByYear(srcDataInfo, targetYear);
+        if (dataList.isEmpty()) {
+            return StatsDataConverter.toResponseFromItems(srcDataInfo, Collections.emptyList());
+        }
+
+        LocalDate srcLatestChnDate = LocalDate.parse(srcDataInfo.getStatLatestChnDt());
+        List<StatMetaCodeDB> cMetaCodes = metadataService.getCatMetaCodes(srcDataInfo.getSrcDataId(), srcLatestChnDate);
+        List<StatMetaCodeDB> iMetaCodes = metadataService.getItemMetaCodes(srcDataInfo.getSrcDataId(), srcLatestChnDate);
+
+        List<StatDataItem> items = makeStatDataItemList(dataList, cMetaCodes, iMetaCodes);
+        return StatsDataConverter.toResponseFromItems(srcDataInfo, items);
+    }
+
+    /*******************************
      * 일상생활 필요 지원 정도
      *******************************/
     public StatInfo getHousingLifeSuppNeedLvlInfo() {
