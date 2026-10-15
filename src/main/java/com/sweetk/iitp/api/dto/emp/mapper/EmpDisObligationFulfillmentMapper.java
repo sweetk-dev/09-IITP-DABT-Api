@@ -12,6 +12,7 @@ public class EmpDisObligationFulfillmentMapper {
             .year(entity.getYear())
             .companyCount(entity.getCompanyCount())
             .fulfilledCount(entity.getFulfilledCount())
+            .srcBaseDt(entity.getSrcBaseDt())
             .build();
     }
     public static List<EmpDisObligationFulfillmentDto> toDtoList(List<EmpDisObligationFulfillmentEntity> entities) {

@@ -1,6 +1,6 @@
 # 09-IITP-DABT-Api
 
-![version](https://img.shields.io/badge/version-v1.2.1-blue)
+![version](https://img.shields.io/badge/version-v1.3.0-blue)
 
 9.모델 연동 API 모듈
 
@@ -239,6 +239,12 @@ sudo journalctl -u iitp-api -f    # 실시간 로그 보기
 ## API 문서
 - OpenAPI: `/v3/api-docs`, `/docs/latest.yaml`
 - Stoplight Studio 등에서 yaml 파일 활용 가능
+
+### 장애인 고용 API (`/api/v1/emp/...`) — 원천 판(edition) 선택
+고용 데이터는 원천 파일의 과거 판을 지우지 않고 함께 보관하며, 각 행에 원천 판 기준일(`srcBaseDt`, YYYY-MM-DD)을 기록한다.
+- **연도 컬럼이 없는 9종** (구직자 `/job/seeker`, 구인 `/job/posting`, 훈련센터 이용 `/center/usage`, 고용의무 현황 `/obligation/status`, 고용컨설팅 `/emp/consul-his`, 신규고용장려금 `/emp/incentive`, 표준사업장 `/workplace/standard`, 전문인력 교육과정 `/edu/training/staff`, 발달장애인 지원기관 `/dev/support-org`): 기본은 **가장 최근 판**만 돌려준다. `baseDt=YYYY-MM-DD` 를 주면 그 기준일 판만 조회한다(형식 오류 400, 없는 판은 빈 결과). 페이징 API 의 총 건수도 같은 판 기준이다.
+- **연도 컬럼이 있는 5종** (지역별 고용 현황 `/emp/region`, 산업별 의무고용 `/obligation/industry`, 의무고용 사업체 현황 `/obligation/fulfillment`, 부담금감면 연계고용사업장 `/workplace/burden-redct`, 창업넷 강좌 `/edu/lecture/startup`): 연도마다 한 판이라 판 선택 없이 **최신 연도부터** 돌려주며, 응답에 `year` 와 `srcBaseDt` 를 함께 준다.
+- 장애유형별 고용현황 `/obligation/dis-type` 은 판 기준일이 없다.
 
 ### 위치 기반 검색 API
 프로젝트는 다음과 같은 위치 기반 검색 API를 제공합니다:

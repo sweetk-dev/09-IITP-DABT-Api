@@ -15,6 +15,7 @@ public class EmpDisEmpIncentiveMapper {
             .amount(entity.getAmount())
             .paidPerson(entity.getPaidPerson())
             .paidYearPerson(entity.getPaidYearPerson())
+            .srcBaseDt(entity.getSrcBaseDt())
             .build();
     }
     public static List<EmpDisEmpIncentiveDto> toDtoList(List<EmpDisEmpIncentiveEntity> entities) {

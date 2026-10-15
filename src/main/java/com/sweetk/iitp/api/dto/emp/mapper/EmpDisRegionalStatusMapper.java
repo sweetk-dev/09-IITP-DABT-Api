@@ -9,12 +9,14 @@ public class EmpDisRegionalStatusMapper {
     public static EmpDisRegionalStatusDto toDto(EmpDisRegionalStatusEntity entity) {
         if (entity == null) return null;
         return EmpDisRegionalStatusDto.builder()
+            .year(entity.getYear())
             .region(entity.getRegion())
             .companyCount(entity.getCompanyCount())
             .workerCount(entity.getWorkerCount())
             .obligationCount(entity.getObligationCount())
             .severe2xCount(entity.getSevere2xCount())
             .severe2xRate(entity.getSevere2xRate())
+            .srcBaseDt(entity.getSrcBaseDt())
             .build();
     }
     public static List<EmpDisRegionalStatusDto> toDtoList(List<EmpDisRegionalStatusEntity> entities) {
