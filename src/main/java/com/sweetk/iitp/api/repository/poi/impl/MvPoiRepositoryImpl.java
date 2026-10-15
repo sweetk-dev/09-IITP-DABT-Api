@@ -277,7 +277,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
         StringBuilder sql = new StringBuilder(SQL_MV_LOCATION_QUERY);
         sql = getQueryFindByLocCategory(sql, category, name);
-        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius * 1000));
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius));
         sql.append(SQL_ORDER_BY_DISTANCE);
 
         log.debug("[MvPoi] 거리 정보 포함 위치 기반 검색 실행 쿼리: {}", sql);
@@ -310,7 +310,7 @@ public class MvPoiRepositoryImpl implements MvPoiRepositoryCustom {
 
         StringBuilder sql = new StringBuilder(SQL_MV_LOCATION_QUERY_WITH_COUNT);
         sql = getQueryFindByLocCategory(sql, category, name);
-        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius * 1000));
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius));
         sql.append(SQL_ORDER_BY_DISTANCE);
         sql = RepositoryUtils.addQueryOffset(sql, offset, size);
 

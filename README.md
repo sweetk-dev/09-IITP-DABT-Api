@@ -1,6 +1,6 @@
 # 09-IITP-DABT-Api
 
-![version](https://img.shields.io/badge/version-v1.0.1-blue)
+![version](https://img.shields.io/badge/version-v1.1.0-blue)
 
 9.모델 연동 API 모듈
 
@@ -249,9 +249,12 @@ sudo journalctl -u iitp-api -f    # 실시간 로그 보기
 - **상세 조회**: `/api/v1/poi/{poiId}` - 개별 POI 상세 정보
 
 #### 특화 POI API
-- **지하철 엘리베이터**: `/api/v1/poi/subway-elevator/search`
-- **무장애 관광지**: `/api/v1/poi/tour-bf-facility/search`
+- **지하철 엘리베이터**: `/api/v1/poi/elevator/subway/search`
+- **무장애 관광지**: `/api/v1/poi/barrier-free/tour/search`
 - **공중화장실**: `/api/v1/poi/public-toilet/search`
+- **장애인 문화·체육 시설**: `/api/v1/poi/culture-sports/search` — 점자도서관·책나래서비스 제공도서관·장애인체육시설·장애인체육회 (`facilityType` 로 구분, 현재 경기도 자료, 원천: 경기데이터드림)
+
+위치 검색(`.../search/location`)의 `radius` 는 **미터** 단위다(예: `radius=1000` → 1km, 최대 100000). 결과는 가까운 순이며 `distance`(미터)를 함께 준다.
 
 #### 거리 계산 방식
 위치 검색 API는 설정에 따라 다음 방식으로 거리를 계산합니다:
