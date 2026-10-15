@@ -29,6 +29,10 @@ public class DataSourceService {
         return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_REG_SIDO_BY_TYPE_SEV_GEN);
     }
 
+    public StatsSrcDataInfoEntity getHousingRegSggBySevGen() {
+        return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_REG_SGG_BY_SEV_GEN);
+    }
+
     public StatsSrcDataInfoEntity getHousingLifeSuppNeedLvl() {
         return srcDataInfoRepos.findActiveByIntgTblId(SysConstants.Stats.TBL_LIFE_SUPP_NEED_LVL);
     }
