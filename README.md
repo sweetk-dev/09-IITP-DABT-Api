@@ -1,6 +1,6 @@
 # 09-IITP-DABT-Api
 
-![version](https://img.shields.io/badge/version-v1.1.0-blue)
+![version](https://img.shields.io/badge/version-v1.2.0-blue)
 
 9.모델 연동 API 모듈
 
@@ -253,6 +253,14 @@ sudo journalctl -u iitp-api -f    # 실시간 로그 보기
 - **무장애 관광지**: `/api/v1/poi/barrier-free/tour/search`
 - **공중화장실**: `/api/v1/poi/public-toilet/search`
 - **장애인 문화·체육 시설**: `/api/v1/poi/culture-sports/search` — 점자도서관·책나래서비스 제공도서관·장애인체육시설·장애인체육회 (`facilityType` 로 구분, 현재 경기도 자료, 원천: 경기데이터드림)
+- **건물 장애인편의시설**: `/api/v1/poi/building-accessibility/search/paging` — 승강기·장애인 화장실·전용 주차구역·주출입구 경사로 설치 여부 (현재 안양시, 원천: 한국사회보장정보원)
+- **긴급대응 지원 거점**: `/api/v1/poi/emergency-support/search/paging` — 전동보장구 급속충전기(전국)·보조기기 수리·지원 센터(경기)·교통약자 이동지원센터 (`supportType` 으로 구분)
+
+#### 교통 API
+- **경기 버스**: `/api/v1/transit/bus/routes/search/paging`, `/routes/{routeId}/stations`, `/stations/search/location/paging`, `/stations/{stationId}/routes` — 노선·정류소·경유 순서·저상버스 운행 여부 (현재 안양시를 지나는 노선, 원천: 경기도 버스노선·정류소 조회)
+- **철도 역사 편의설비**: `/api/v1/transit/rail/stations/search/paging`, `/elevators`·`/platforms`·`/toilets`·`/wheelchair-lifts` `/search/paging` — 역별 교통약자 편의 현황과 설비별 상세 (원천: 한국철도공사·국가철도공단)
+
+신규 목록 조회는 페이징만 제공하며 `size` 는 1000 이하다.
 
 위치 검색(`.../search/location`)의 `radius` 는 **미터** 단위다(예: `radius=1000` → 1km, 최대 100000). 결과는 가까운 순이며 `distance`(미터)를 함께 준다.
 

@@ -23,8 +23,8 @@ java {
 }
 
 ext {
-    jarVersion = '0.0.7'
-    apiDocVersion = 'v0.0.7'
+    jarVersion = '0.0.8'
+    apiDocVersion = 'v0.0.8'
     apiDocversionTag = apiDocVersion
     env = findProperty("env") ?: "local"
     buildTime = new Date().format("yyyyMMddHHmmss")
