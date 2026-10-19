@@ -69,7 +69,8 @@ public class openApiRepositoryImpl implements openApiRepository {
 
     // find api key
     public Optional<OpenApiAuthKeyEntity> findActiveKeyByApiKey(String apiKey) {
-        return openApiAuthKeyRepository.findByAuthKeyAndActiveYn(apiKey, SysConstants.YN_Y);
+        // active_yn='Y' 이고 del_yn='N' 인 키만 인증에 사용한다 (삭제된 키 차단)
+        return openApiAuthKeyRepository.findByAuthKeyAndActiveYnAndDelYn(apiKey, SysConstants.YN_Y, SysConstants.YN_N);
     }
 
 } 

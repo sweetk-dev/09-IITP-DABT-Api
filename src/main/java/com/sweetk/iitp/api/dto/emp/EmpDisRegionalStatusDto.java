@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 /**
  * 지역별 장애인 고용 현황 DTO
@@ -17,6 +18,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmpDisRegionalStatusDto {
+    @Schema(description = "연도 (YYYY)", example = "2025")
+    private Integer year;
     @Schema(description = "시군구 구분", example = "서울 종로구")
     private String region;
     @Schema(description = "사업체수", example = "411")
@@ -29,4 +32,6 @@ public class EmpDisRegionalStatusDto {
     private Integer severe2xCount;
     @Schema(description = "중증2배수 적용 장애인 고용률", example = "2.79")
     private BigDecimal severe2xRate;
+    @Schema(description = "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null", example = "2025-12-31")
+    private LocalDate srcBaseDt;
 } 

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -38,4 +39,8 @@ public class EmpDisDevSupportOrgDto {
     private Boolean childFamilySup;
     @Schema(description = "긴급돌봄", example = "false")
     private Boolean emergencyCare;
+    @Schema(description = "최중증 통합돌봄 (이 항목이 없던 과거 판의 데이터는 null)", example = "false")
+    private Boolean severeIntegratedCare;
+    @Schema(description = "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null", example = "2025-12-31")
+    private LocalDate srcBaseDt;
 } 

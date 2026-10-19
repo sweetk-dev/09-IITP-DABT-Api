@@ -12,6 +12,7 @@ public class EmpDisCenterUsageMapper {
             .trainOrg(entity.getTrainOrg())
             .userCount(entity.getUserCount())
             .employedCount(entity.getEmployedCount())
+            .srcBaseDt(entity.getSrcBaseDt())
             .build();
     }
     public static List<EmpDisCenterUsageDto> toDtoList(List<EmpDisCenterUsageEntity> entities) {

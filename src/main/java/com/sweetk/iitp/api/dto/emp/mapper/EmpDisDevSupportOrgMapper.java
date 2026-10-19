@@ -22,6 +22,8 @@ public class EmpDisDevSupportOrgMapper {
             .publicGuardian(entity.getPublicGuardian())
             .childFamilySup(entity.getChildFamilySup())
             .emergencyCare(entity.getEmergencyCare())
+            .severeIntegratedCare(entity.getSevereIntegratedCare())
+            .srcBaseDt(entity.getSrcBaseDt())
             .build();
     }
     public static List<EmpDisDevSupportOrgDto> toDtoList(List<EmpDisDevSupportOrgEntity> entities) {

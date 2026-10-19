@@ -19,6 +19,7 @@ public class HousingRepositoryImpl implements HousingRepository {
     private final StatsDisRegNatlByAgeTypeSevGenRepository regNatlByAgeTypeSevGenRepos;
     private final StatsDisRegNatlByNewRepository regNatlByNewRepos;
     private final StatsDisRegSidoByTypeSevGenRepository regSidoByAgeTypeSevGenRepos;
+    private final StatsDisRegSggBySevGenRepository regSggBySevGenRepos;
 
 
 
@@ -69,6 +70,23 @@ public class HousingRepositoryImpl implements HousingRepository {
     @Override
     public List<StatDataItemDB> findRegSidoByTypeSevGenByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
         return regSidoByAgeTypeSevGenRepos.findDataByYear(srcDataInfo, targetYear);
+    }
+
+
+    //RegSggBySevGen
+    @Override
+    public Integer getRegSggBySevGenLatestCount (StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return regSggBySevGenRepos.getDataLatestCount(srcDataInfo, fromYear, toYear);
+    }
+
+    @Override
+    public List<StatDataItemDB> findRegSggBySevGenLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear) {
+        return regSggBySevGenRepos.findDataLatest(srcDataInfo, fromYear, toYear);
+    }
+
+    @Override
+    public List<StatDataItemDB> findRegSggBySevGenByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear) {
+        return regSggBySevGenRepos.findDataByYear(srcDataInfo, targetYear);
     }
 
 

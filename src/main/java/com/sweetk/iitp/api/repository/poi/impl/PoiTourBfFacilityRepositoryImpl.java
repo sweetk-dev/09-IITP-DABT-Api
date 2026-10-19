@@ -334,7 +334,7 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
         StringBuilder sql = new StringBuilder(FACILITY_LOCATION_QUERY);
         sql = buildCategoryConditionsSql(sql, fcltName, null, toiletYn, elevatorYn, parkingYn,
                 wheelchairRentYn, tactileMapYn, audioGuideYn);
-        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius * 1000));
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius));
         sql.append(FACILITY_ORDER_BY_DISTANCE);
 
         log.debug("[PoiTourBfFacility] 거리 정보 포함 위치 기반 검색 쿼리: {}", sql);
@@ -374,7 +374,7 @@ public class PoiTourBfFacilityRepositoryImpl implements PoiTourBfFacilityReposit
         StringBuilder sql = new StringBuilder(FACILITY_LOCATION_QUERY_WITH_COUNT);
         sql = buildCategoryConditionsSql(sql, fcltName, null, toiletYn, elevatorYn, parkingYn,
                 wheelchairRentYn, tactileMapYn, audioGuideYn);
-        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius * 1000));
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius));
         sql.append(FACILITY_ORDER_BY_DISTANCE);
         
         // 페이징 추가

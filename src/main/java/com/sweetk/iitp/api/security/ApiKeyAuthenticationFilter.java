@@ -1,6 +1,8 @@
 package com.sweetk.iitp.api.security;
 
 import com.sweetk.iitp.api.constant.ApiConstants;
+import com.sweetk.iitp.api.constant.DataStatusType;
+import com.sweetk.iitp.api.constant.SysConstants;
 import com.sweetk.iitp.api.entity.openapi.OpenApiAuthKeyEntity;
 import com.sweetk.iitp.api.entity.openapi.OpenApiUserEntity;
 import com.sweetk.iitp.api.exception.ApiException;
@@ -60,19 +62,27 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
             // Find and validate API key (active_yn='Y', del_yn='N' by repository)
             OpenApiAuthKeyEntity apiAuthKey = openApiRepository.findActiveKeyByApiKey(apiKey)
                     .orElseThrow(() -> {
-                        log.warn("API Key not found or inactive: {}", apiKey);
+                        log.warn("API Key not found, inactive or deleted: {}", maskKey(apiKey));
                         return new ApiException(ErrorCode.UNAUTHORIZED, "유효하지 않은 API Key 입니다.");
                     });
 
             // Validate key validity period (start_dt ~ end_dt)
             validateKeyPeriod(apiAuthKey);
 
-            // Update latest access time
-            openApiRepository.updateLatestAccessTime(apiAuthKey, OffsetDateTime.now());
-
             // Load user for authentication context
+            // (deleted_at 이 채워진 회원은 엔티티의 @SQLRestriction 으로 조회되지 않아 여기서 거부된다)
             OpenApiUserEntity apiUser = openApiRepository.findClientByUserId(Long.valueOf(apiAuthKey.getUserId()))
                     .orElseThrow(() -> new ApiException(ErrorCode.UNAUTHORIZED, "사용자 정보를 찾을 수 없습니다."));
+
+            // 키 주인 회원이 활성(A) 상태가 아니면 거부한다.
+            // 05 Admin 에서 회원을 이용 중지(I)·삭제(D) 해도 키는 그대로 남기 때문에 여기서 함께 막는다.
+            if (apiUser.getStatus() != DataStatusType.ACTIVE || SysConstants.YN_Y.equals(apiUser.getDelYn())) {
+                log.warn("API Key owner is not active. userId={}, key={}", apiAuthKey.getUserId(), maskKey(apiKey));
+                throw new ApiException(ErrorCode.UNAUTHORIZED, "이용이 중지된 계정의 API Key 입니다.");
+            }
+
+            // Update latest access time — 모든 검사를 통과한 요청만 기록한다
+            openApiRepository.updateLatestAccessTime(apiAuthKey, OffsetDateTime.now());
             
             // Update latest login time
             openApiRepository.updateLatestLoginTime(apiUser, OffsetDateTime.now());
@@ -90,13 +100,21 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
         } catch (ApiException e) {
             throw e;
         } catch (Exception e) {
-            log.error("Error during API key authentication for key: {}", apiKey, e);
+            log.error("Error during API key authentication for key: {}", maskKey(apiKey), e);
             throw new ApiException(ErrorCode.UNAUTHORIZED, "API Key 인증 처리중 오류가 발생했습니다.");
         }
 
         filterChain.doFilter(request, response);
     }
 
+
+    /**
+     * 로그용 API Key 마스킹 — 앞 4자만 남긴다. 키 전체 값이 로그 파일에 남지 않게 한다.
+     */
+    private static String maskKey(String key) {
+        if (key == null || key.length() <= 4) return "****";
+        return key.substring(0, 4) + "****";
+    }
 
     /**
      * API Key 유효 기간 검증 (start_dt ~ end_dt)

@@ -35,4 +35,6 @@ public class EmpDisConsultingHisDto {
     private OffsetDateTime updatedAt;
     private String createdBy;
     private String updatedBy;
+    @Schema(description = "원천 판 기준일 (YYYY-MM-DD). 원천 파일이 기준으로 삼는 날짜이며, 아직 기록되지 않은 데이터는 null", example = "2025-12-31")
+    private LocalDate srcBaseDt;
 } 

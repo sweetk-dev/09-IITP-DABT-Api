@@ -4,11 +4,15 @@ import com.sweetk.iitp.api.dto.emp.EmpSearchReqJobPost;
 import com.sweetk.iitp.api.dto.emp.EmpSearchReqJobSeeker;
 import com.sweetk.iitp.api.entity.emp.*;
 import com.sweetk.iitp.api.repository.emp.impl.*;
+import com.sweetk.iitp.api.repository.emp.support.EmpEditionFilter;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -30,70 +34,82 @@ public class EmpDisRepositoryImpl implements EmpDisRespository {
     private final EmpDisObligationByIndustRepository obligationByIndustRepository;
     private final EmpDisObligationFulfillmentRepository fulfillmentRepository;
 
+    /**
+     * 판(edition) 조건 조회용 엔티티 매니저.
+     * 연도 컬럼이 없는 9개 표는 JpaRepository.findAll() 대신 EmpEditionFilter 로 판 하나만 골라 읽는다.
+     */
+    @PersistenceContext
+    private EntityManager em;
+
 
 
     //01. 장애인 구직자 현황 EmpDisJobseekerRepository
-    public Page<EmpDisJobseekerEntity> findAllJobSeekers(Pageable pageable) {
-        return jobseekerRepository.findAllOrderByRegDateDesc(pageable);
+    // 검색 키 없이 전체: 검색 조건 null 로 같은 쿼리를 탄다 (판 조건·정렬·건수 계산을 한 곳에서 관리)
+    public Page<EmpDisJobseekerEntity> findAllJobSeekers(LocalDate baseDt, Pageable pageable) {
+        return jobseekerRepository.findJobSeekersBySearchKey(null, baseDt, pageable);
     }
 
-    public Page<EmpDisJobseekerEntity> findJobSeekersBySearchKey(EmpSearchReqJobSeeker searchReq, Pageable pageable) {
-        return jobseekerRepository.findJobSeekersBySearchKey(searchReq, pageable);
+    public Page<EmpDisJobseekerEntity> findJobSeekersBySearchKey(EmpSearchReqJobSeeker searchReq, LocalDate baseDt, Pageable pageable) {
+        return jobseekerRepository.findJobSeekersBySearchKey(searchReq, baseDt, pageable);
     }
 
     //02. 발달장애인훈련센터 이용자현황 EmpDisCenterUsageRepository
-    public List<EmpDisCenterUsageEntity> finAllCenterUsages() {
-        return centerUsageRepository.findAll();
+    public List<EmpDisCenterUsageEntity> finAllCenterUsages(LocalDate baseDt) {
+        return EmpEditionFilter.findList(em, EmpDisCenterUsageEntity.class, baseDt);
     }
 
     //03. 장애인 고용의무 현황 통계 EmpDisObligationStatusRepository
-    public List<EmpDisObligationStatusEntity> findAllObligationStatuses() {
-        return obligationStatusRepository.findAll();
+    public List<EmpDisObligationStatusEntity> findAllObligationStatuses(LocalDate baseDt) {
+        return EmpEditionFilter.findList(em, EmpDisObligationStatusEntity.class, baseDt);
     }
 
     //04. 장애인 고용컨설팅 EmpDisConsultingHisRepository
-    public List<EmpDisConsultingHisEntity> findAllConsultingHis() {
-        return consultingHisRepository.findAll();
+    public List<EmpDisConsultingHisEntity> findAllConsultingHis(LocalDate baseDt) {
+        return EmpEditionFilter.findList(em, EmpDisConsultingHisEntity.class, baseDt);
     }
 
     //05. 장애인 구인 정보 EmpDisJobPostingRepository
-    public Page<EmpDisJobPostingEntity> findAllJobPosting(Pageable pageable) {
-        return jobPostingRepository.findAllOrderBySeqNo(pageable);
+    // 검색 키 없이 전체: 검색 조건 null 로 같은 쿼리를 탄다 (판 조건·정렬·건수 계산을 한 곳에서 관리)
+    public Page<EmpDisJobPostingEntity> findAllJobPosting(LocalDate baseDt, Pageable pageable) {
+        return jobPostingRepository.findJobPostBySearchKey(null, baseDt, pageable);
     }
 
-    public Page<EmpDisJobPostingEntity> findJobPostBySearchKey(EmpSearchReqJobPost searchReq, Pageable pageable) {
-        return jobPostingRepository.findJobPostBySearchKey(searchReq, pageable);
+    public Page<EmpDisJobPostingEntity> findJobPostBySearchKey(EmpSearchReqJobPost searchReq, LocalDate baseDt, Pageable pageable) {
+        return jobPostingRepository.findJobPostBySearchKey(searchReq, baseDt, pageable);
     }
 
     //06. 장애인고용 부담금감면 연계고용사업장 정보 EmpDisBurdenWorkplaceRepository
+    // 연도 표: 판 조건 없이 최신 연도 먼저
     public List<EmpDisBurdenWorkplaceEntity> findAllBurdenWorkplaces() {
-        return burdenWorkplaceRepository.findAll();
+        return burdenWorkplaceRepository.findAllByOrderByYearDescIdAsc();
     }
 
     //7. 지역별 장애인 고용 현황  EmpDisRegionalStatusRepository
+    // 연도 표: 판 조건 없이 최신 연도 먼저
     public List<EmpDisRegionalStatusEntity> findAllRegionalStatuses() {
-        return regionalStatusRepository.findAll();
+        return regionalStatusRepository.findAllByOrderByYearDescIdAsc();
     }
 
     //08. 고용개발원 교육정보(장애인고용 전문인력 교육과정) EmpDisStaffTrainCrsRepository
-    public List<EmpDisStaffTrainCrsEntity> findAllStaffTrainCrs() {
-        return staffTrainCrsRepository.findAll();
+    public List<EmpDisStaffTrainCrsEntity> findAllStaffTrainCrs(LocalDate baseDt) {
+        return EmpEditionFilter.findList(em, EmpDisStaffTrainCrsEntity.class, baseDt);
     }
 
     //09. 한국장애인개발원 발달장애인 지원 기관 및 제공서비스 EmpDisDevSupportOrgRepository
-    public List<EmpDisDevSupportOrgEntity> findAllDevSupportOrg() {
-        return devSupportOrgRepository.findAll();
+    public List<EmpDisDevSupportOrgEntity> findAllDevSupportOrg(LocalDate baseDt) {
+        return EmpEditionFilter.findList(em, EmpDisDevSupportOrgEntity.class, baseDt);
     }
 
     //10. 장애인기업종합지원센터 창업넷 일반강좌 정보
+    // 연도 표: 판 조건 없이 최신 연도 먼저
     public List<EmpDisStartupLectureEntity> findAllStartupLecture() {
-        return startupLectureRepository.findAll();
+        return startupLectureRepository.findAllByOrderByYearDescIdAsc();
     }
 
 
     //11. 장애인 표준사업장 현황 EmpDisStdWorkplaceRepository
-    public List<EmpDisStdWorkplaceEntity> findAllStdWorkplace() {
-        return stdWorkplaceRepository.findAll();
+    public List<EmpDisStdWorkplaceEntity> findAllStdWorkplace(LocalDate baseDt) {
+        return EmpEditionFilter.findList(em, EmpDisStdWorkplaceEntity.class, baseDt);
     }
 
     //12. 장애인 의무고용 사업체 장애유형별 고용현황 EmpDisObligationByTypeRepository
@@ -102,18 +118,20 @@ public class EmpDisRepositoryImpl implements EmpDisRespository {
     }
 
     //13. 신규고용장려금 지역별 지급 현황
-    public List<EmpDisEmpIncentiveEntity> findAllEmpIncentive() {
-        return  empIncentiveRepository.findAll();
+    public List<EmpDisEmpIncentiveEntity> findAllEmpIncentive(LocalDate baseDt) {
+        return EmpEditionFilter.findList(em, EmpDisEmpIncentiveEntity.class, baseDt);
     }
 
     //14. 산업별 의무고용 현황 EmpDisObligationByIndustRepository
+    // 연도 표: 판 조건 없이 최신 연도 먼저
     public List<EmpDisObligationByIndustEntity> findAllObligationByIndustry() {
-        return obligationByIndustRepository.findAll();
+        return obligationByIndustRepository.findAllByOrderByYearDescIdAsc();
     }
 
     //15. 장애인 의무고용 현황 EmpDisObligationFulfillmentRepository
+    // 연도 표: 판 조건 없이 최신 연도 먼저
     public List<EmpDisObligationFulfillmentEntity> findAllObligationFulfillment() {
-        return fulfillmentRepository.findAll();
+        return fulfillmentRepository.findAllByOrderByYearDescIdAsc();
     }
 
 

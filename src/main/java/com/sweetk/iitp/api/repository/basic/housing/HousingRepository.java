@@ -23,6 +23,11 @@ public interface HousingRepository {
     List<StatDataItemDB> findRegSidoByTypeSevGenLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear);
     List<StatDataItemDB> findRegSidoByTypeSevGenByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear);
 
+    // 시군구별,장애정도별,성별 등록장애인수 (KOSIS DT_11761_N009)
+    Integer getRegSggBySevGenLatestCount (StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear);
+    List<StatDataItemDB> findRegSggBySevGenLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear);
+    List<StatDataItemDB> findRegSggBySevGenByYear(StatsSrcDataInfoEntity srcDataInfo, Integer targetYear);
+
     // 일상생활 필요 지원 정도
     Integer getLifeSuppNeedLvlLatestCount (StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear);
     List<StatDataItemDB> findLifeSuppNeedLvlLatest(StatsSrcDataInfoEntity srcDataInfo, Integer fromYear, Integer toYear);

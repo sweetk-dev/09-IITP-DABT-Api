@@ -14,6 +14,7 @@ public class EmpDisObligationStatusMapper {
             .workerCount(entity.getWorkerCount())
             .disabledCount(entity.getDisabledCount())
             .empRate(entity.getEmpRate())
+            .srcBaseDt(entity.getSrcBaseDt())
             .build();
     }
     public static List<EmpDisObligationStatusDto> toDtoList(List<EmpDisObligationStatusEntity> entities) {

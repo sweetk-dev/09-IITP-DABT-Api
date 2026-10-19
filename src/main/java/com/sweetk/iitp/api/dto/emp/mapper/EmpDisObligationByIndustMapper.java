@@ -15,6 +15,7 @@ public class EmpDisObligationByIndustMapper {
             .workerCount(entity.getWorkerCount())
             .obligationCount(entity.getObligationCount())
             .empRate(entity.getEmpRate())
+            .srcBaseDt(entity.getSrcBaseDt())
             .build();
     }
     public static List<EmpDisObligationByIndustDto> toDtoList(List<EmpDisObligationByIndustEntity> entities) {

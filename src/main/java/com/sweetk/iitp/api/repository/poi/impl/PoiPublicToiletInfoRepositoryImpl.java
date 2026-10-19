@@ -314,7 +314,7 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
                                                                                  PoiPublicToiletType toiletType, String open24hYn) {
         StringBuilder sql = new StringBuilder(TOILET_LOCATION_QUERY);
         sql = buildCategoryConditionsSql(sql, toiletName, null, toiletType, open24hYn);
-        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius * 1000));
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius));
         sql.append(TOILET_ORDER_BY_DISTANCE);
 
         log.debug("[PoiPublicToilet] 거리 정보 포함 위치 기반 검색 쿼리 (조건 포함): {}", sql);
@@ -349,7 +349,7 @@ public class PoiPublicToiletInfoRepositoryImpl implements PoiPublicToiletInfoRep
                                                                                            int offset, int size) {
         StringBuilder sql = new StringBuilder(TOILET_LOCATION_QUERY_WITH_COUNT);
         sql = buildCategoryConditionsSql(sql, toiletName, null, toiletType, open24hYn);
-        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius * 1000));
+        sql.append(distanceConfig.getDistanceFilterSql(latitude, longitude, radius));
         sql.append(TOILET_ORDER_BY_DISTANCE);
         sql = RepositoryUtils.addQueryOffset(sql, offset, size);
 

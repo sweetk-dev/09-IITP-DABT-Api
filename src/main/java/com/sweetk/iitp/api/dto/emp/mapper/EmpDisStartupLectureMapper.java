@@ -23,6 +23,7 @@ public class EmpDisStartupLectureMapper {
             .orgName(entity.getOrgName())
             .applyCount(entity.getApplyCount())
             .completeCount(entity.getCompleteCount())
+            .srcBaseDt(entity.getSrcBaseDt())
             .build();
     }
     public static List<EmpDisStartupLectureDto> toDtoList(List<EmpDisStartupLectureEntity> entities) {
