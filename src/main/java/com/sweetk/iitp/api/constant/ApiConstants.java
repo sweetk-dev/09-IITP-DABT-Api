@@ -49,6 +49,7 @@ public final class ApiConstants {
         public static final String API_V1_BASIC_EMP  = API_V1_BASIC + "/emp";
         public static final String API_V1_BASIC_SOCIAL = API_V1_BASIC + "/social";
         public static final String API_V1_BASIC_FACILITY = API_V1_BASIC + "/facility";
+        public static final String API_V1_BASIC_EMOTION = API_V1_BASIC + "/emotion";
 
 
         //For Employment
