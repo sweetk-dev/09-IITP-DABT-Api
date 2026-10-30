@@ -1,6 +1,6 @@
 # 09-IITP-DABT-Api
 
-![version](https://img.shields.io/badge/version-v1.4.0-blue)
+![version](https://img.shields.io/badge/version-v1.5.0-blue)
 
 9.모델 연동 API 모듈
 
@@ -250,6 +250,11 @@ sudo journalctl -u iitp-api -f    # 실시간 로그 보기
 - **시군구별**: `/reg/sggSevGen/info`·`/latest`·`/{statYear}` — KOSIS 「장애인현황」 시군구별,장애정도별,성별 등록장애인수(DT_11761_N009). 구가 있는 시는 구 단위만 있고 시 합계 행이 없다(예: 안양시 = 만안구 + 동안구)
 - **경기 읍면동별**: `/reg/ggEmd/latest` (페이징) — 경기데이터드림 「경기도 내 등록장애인 집계현황」 읍면동·장애유형·장애정도·성별. 시군마다 원천 기준일(`base_dt`)이 달라 판을 쌓아 두며, 기본은 시군마다 최신 판이다. `baseDt` 로 지난 판, `/reg/ggEmd/editions` 로 판 목록을 본다. 합계 행은 들어 있지 않다
 - **시군 요약**: `/reg/local/summary?sigunName=안양시` — 위 두 원천을 원천명·기준 시점(경기 집계 기준일, KOSIS 연도)과 함께 나란히 주고, 구별 값·장애유형별 값(경기 집계)을 함께 준다. 경기도 시군 대상
+
+### 정서 자립 현황 (`/api/v1/basic/emotion/{statKey}/...`)
+- `/{statKey}/info`·`/latest`·`/{statYear}` — 다른 기초 통계와 같은 응답 형식·기간 규칙(기본 최종 3개년, 최대 10년)
+- 통계키 20종 — KOSIS 장애인삶패널조사(한국장애인개발원) 14종: `depression` 우울수준, `selfEsteem` 자아존중감, `suicideIdeation` 자살 생각·이유·충동 행동 시도 경험, `stress` 스트레스 인지 정도, `resilience` 회복탄력성, `happiness` 주관적 행복감, `lifeSatisfaction` 현재 삶의 만족도, `disabilityAcceptance` 장애수용, `disabilityExperience` 장애와 관련한 경험, `decisionMaker` 의사결정 주체, `emotionalSupport` 정서적 도움 및 지지, `socialSupport` 사회적 지지, `counselPartner` 어려움 상담 상대, `discrimination` 차별 경험 및 대처방법 / 장애인고용패널조사·발달장애인 일과 삶 실태조사(한국장애인고용공단) 6종: `empSelfEsteem`, `empDiscrimination`, `empDiscrimRespect`, `empSocialSupport`, `empLifeSatisfaction`, `devDiscrimination`
+- 없는 통계키는 400
 
 ### 위치 기반 검색 API
 프로젝트는 다음과 같은 위치 기반 검색 API를 제공합니다:

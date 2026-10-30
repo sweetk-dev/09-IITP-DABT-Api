@@ -120,7 +120,8 @@ public class SpringDocConfig {
                     "기초-사회망 현황 API V1",
                     "기초-편의 시설 제공 현황 API V1",
                     "기초-진로 교육 현황 API V1",
-                    "기초-고용 현황 API V1"
+                    "기초-고용 현황 API V1",
+                    "기초-정서 자립 현황 API V1"
                 )
             ),
             Map.of(
