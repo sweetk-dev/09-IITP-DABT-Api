@@ -13,10 +13,10 @@ class EmotionStatTypeTest {
     private static final Pattern SAFE_TABLE = Pattern.compile("^stats_dis_emo_[a-z_]{1,40}$");
 
     @Test
-    void twentyStatsWithUniqueKeysAndSafeTableNames() {
-        assertEquals(20, EmotionStatType.values().length);
-        assertEquals(20, new HashSet<>(Arrays.stream(EmotionStatType.values()).map(EmotionStatType::getCode).toList()).size());
-        assertEquals(20, new HashSet<>(Arrays.stream(EmotionStatType.values()).map(EmotionStatType::getIntgTblId).toList()).size());
+    void allStatsWithUniqueKeysAndSafeTableNames() {
+        assertEquals(24, EmotionStatType.values().length);
+        assertEquals(24, new HashSet<>(Arrays.stream(EmotionStatType.values()).map(EmotionStatType::getCode).toList()).size());
+        assertEquals(24, new HashSet<>(Arrays.stream(EmotionStatType.values()).map(EmotionStatType::getIntgTblId).toList()).size());
         for (EmotionStatType t : EmotionStatType.values()) {
             assertTrue(SAFE_TABLE.matcher(t.getIntgTblId()).matches(), t.getIntgTblId());
         }

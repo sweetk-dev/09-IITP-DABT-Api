@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.*;
 /**
  * 기초-정서 자립 현황 API Controller
  * <p>
- * KOSIS 장애인삶패널조사·장애인고용패널조사 등의 정서 영역 통계 20종을 통계키({statKey})로 조회한다.
+ * KOSIS 장애인삶패널조사·장애인고용패널조사 등의 정서 영역 통계 20종과
+ * 2023년 장애인실태조사 보고서 장애유형별 표 4종을 통계키({statKey})로 조회한다.
  */
 @Slf4j
 @RestController
@@ -35,7 +36,9 @@ public class BasicEmotionController extends BasicBaseController {
             + "discrimination(차별 경험 및 대처방법) — 장애인삶패널조사 / "
             + "empSelfEsteem(자아존중 및 장애수용), empDiscrimination(장애로 인한 차별 경험 정도 및 사회경제적 지위), "
             + "empDiscrimRespect(일상생활 차별 경험 및 존중받는 수준), empSocialSupport(사회활동 참여·교류·사회적 지지체계), "
-            + "empLifeSatisfaction(일상생활 만족도) — 장애인고용패널조사 / devDiscrimination(평소 장애로 인한 차별 경험 정도) — 발달장애인 일과 삶 실태조사";
+            + "empLifeSatisfaction(일상생활 만족도) — 장애인고용패널조사 / devDiscrimination(평소 장애로 인한 차별 경험 정도) — 발달장애인 일과 삶 실태조사 / "
+            + "rptMentalHealth(정신건강 지표), rptLifeSatisfaction(생활 영역별 만족도·행복감), rptSupport(장애로 인한 어려움·도움받을 사람), "
+            + "rptDiscrimination(차별 인식·장애인차별금지법 인지) — 2023년 장애인실태조사 보고서 장애유형별 표";
 
     private final BasicEmotionReadService emotionReadService;
 
