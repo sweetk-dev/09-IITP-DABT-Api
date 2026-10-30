@@ -11,7 +11,8 @@ import java.util.stream.Collectors;
  * <p>
  * 통계키(code) → KOSIS 통합 테이블(stats_dis_emo_*). 테이블 이름은 이 목록에서만 가져와 SQL 에 넣는다
  * (요청 값이 그대로 SQL 에 들어가지 않게 한다). 장애인삶패널조사(KOSIS 438) 14종,
- * 장애인고용패널조사·발달장애인 일과 삶 실태조사(KOSIS 383) 6종.
+ * 장애인고용패널조사·발달장애인 일과 삶 실태조사(KOSIS 383) 6종,
+ * 2023년 장애인실태조사 보고서 장애유형별 표 4종(KOSIS 미제공 — 보고서 표를 옮겨 넣은 통계).
  */
 public enum EmotionStatType {
     DEPRESSION("depression", "stats_dis_emo_depression", "DT_438001_AC004", "우울수준"),
@@ -33,11 +34,16 @@ public enum EmotionStatType {
     EMP_DISCRIM_RESPECT("empDiscrimRespect", "stats_dis_emo_emp_discrim_respect", "DT_383003_C03085", "일상생활에서 장애로 인한 차별 경험 및 존중 받는 수준"),
     EMP_SOCIAL_SUPPORT("empSocialSupport", "stats_dis_emo_emp_social_support", "DT_383003_C030831", "사회활동 참여 수준, 주변 사람 교류 정도, 사회적 지지체계"),
     EMP_LIFE_SATISFACTION("empLifeSatisfaction", "stats_dis_emo_emp_life_satis", "DT_383003_C03084", "일상생활 만족도"),
-    DEV_DISCRIMINATION("devDiscrimination", "stats_dis_emo_dev_discrim", "DT_383005_G0012", "평소 장애로 인한 차별 경험 정도");
+    DEV_DISCRIMINATION("devDiscrimination", "stats_dis_emo_dev_discrim", "DT_383005_G0012", "평소 장애로 인한 차별 경험 정도"),
+    // 2023년 장애인실태조사 보고서(보건복지부·한국보건사회연구원) 장애유형별 표 — KOSIS 미제공, 수기 입력
+    RPT_MENTAL_HEALTH("rptMentalHealth", "stats_dis_emo_rpt_mental", "RPT2023_MENTAL", "장애유형별 정신건강 지표(스트레스·우울감·자살 생각·자살 시도·전문가 상담)"),
+    RPT_LIFE_SATISFACTION("rptLifeSatisfaction", "stats_dis_emo_rpt_life_satis", "RPT2023_SATIS", "장애유형별 생활 영역별 만족도·행복감"),
+    RPT_SUPPORT("rptSupport", "stats_dis_emo_rpt_support", "RPT2023_SUPPORT", "장애유형별 장애로 인한 어려움·도움받을 사람"),
+    RPT_DISCRIMINATION("rptDiscrimination", "stats_dis_emo_rpt_discrim", "RPT2023_DISCRIM", "장애유형별 차별 인식·장애인차별금지법 인지");
 
     private final String code;
     private final String intgTblId;
-    private final String kosisTblId;
+    private final String kosisTblId;   // KOSIS 통계표 ID, 보고서 입력분은 내부 ID(RPT2023_*)
     private final String displayName;
 
     EmotionStatType(String code, String intgTblId, String kosisTblId, String displayName) {

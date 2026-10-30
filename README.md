@@ -1,6 +1,6 @@
 # 09-IITP-DABT-Api
 
-![version](https://img.shields.io/badge/version-v1.5.0-blue)
+![version](https://img.shields.io/badge/version-v1.6.0-blue)
 
 9.모델 연동 API 모듈
 
@@ -253,7 +253,8 @@ sudo journalctl -u iitp-api -f    # 실시간 로그 보기
 
 ### 정서 자립 현황 (`/api/v1/basic/emotion/{statKey}/...`)
 - `/{statKey}/info`·`/latest`·`/{statYear}` — 다른 기초 통계와 같은 응답 형식·기간 규칙(기본 최종 3개년, 최대 10년)
-- 통계키 20종 — KOSIS 장애인삶패널조사(한국장애인개발원) 14종: `depression` 우울수준, `selfEsteem` 자아존중감, `suicideIdeation` 자살 생각·이유·충동 행동 시도 경험, `stress` 스트레스 인지 정도, `resilience` 회복탄력성, `happiness` 주관적 행복감, `lifeSatisfaction` 현재 삶의 만족도, `disabilityAcceptance` 장애수용, `disabilityExperience` 장애와 관련한 경험, `decisionMaker` 의사결정 주체, `emotionalSupport` 정서적 도움 및 지지, `socialSupport` 사회적 지지, `counselPartner` 어려움 상담 상대, `discrimination` 차별 경험 및 대처방법 / 장애인고용패널조사·발달장애인 일과 삶 실태조사(한국장애인고용공단) 6종: `empSelfEsteem`, `empDiscrimination`, `empDiscrimRespect`, `empSocialSupport`, `empLifeSatisfaction`, `devDiscrimination`
+- 통계키 24종 — KOSIS 장애인삶패널조사(한국장애인개발원) 14종: `depression` 우울수준, `selfEsteem` 자아존중감, `suicideIdeation` 자살 생각·이유·충동 행동 시도 경험, `stress` 스트레스 인지 정도, `resilience` 회복탄력성, `happiness` 주관적 행복감, `lifeSatisfaction` 현재 삶의 만족도, `disabilityAcceptance` 장애수용, `disabilityExperience` 장애와 관련한 경험, `decisionMaker` 의사결정 주체, `emotionalSupport` 정서적 도움 및 지지, `socialSupport` 사회적 지지, `counselPartner` 어려움 상담 상대, `discrimination` 차별 경험 및 대처방법 / 장애인고용패널조사·발달장애인 일과 삶 실태조사(한국장애인고용공단) 6종: `empSelfEsteem`, `empDiscrimination`, `empDiscrimRespect`, `empSocialSupport`, `empLifeSatisfaction`, `devDiscrimination`
+- 2023년 장애인실태조사 보고서 장애유형별 표 4종(KOSIS 미제공, 보고서 표를 옮겨 넣은 통계, 2023년 한 시점): `rptMentalHealth` 정신건강 지표(스트레스·우울감·자살 생각·자살 시도·전문가 상담), `rptLifeSatisfaction` 생활 영역별 만족도·행복감, `rptSupport` 장애로 인한 어려움·도움받을 사람, `rptDiscrimination` 차별 인식·장애인차별금지법 인지
 - 없는 통계키는 400
 
 ### 위치 기반 검색 API
