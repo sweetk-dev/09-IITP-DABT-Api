@@ -54,8 +54,16 @@ public abstract class BaseStatsEntity implements StatsCommon {
     @Column(name = "unit_nm", length = 20)
     private String unitNm;
 
-    @Column(name = "dt", precision = 15, scale = 3, nullable = false)
+    /**
+     * 수치 값. 원천 수치가 숫자가 아닌 칸(예: KOSIS '-')은 NULL 이고, 그 원래 표기는 dtSymbol 에 있다.
+     * DB CHECK(ck_<테이블>_dt_value)가 dt 와 dt_symbol 중 정확히 하나만 값이 있음을 보장한다(01 v1.19.0).
+     */
+    @Column(name = "dt", precision = 15, scale = 3)
     private BigDecimal dt;
+
+    /** 원천 수치가 숫자가 아닐 때 그 원래 표기(예: '-'). 숫자 행은 NULL. */
+    @Column(name = "dt_symbol", length = 10)
+    private String dtSymbol;
 
     @Column(name = "lst_chn_de")
     private LocalDate lstChnDe;
@@ -102,6 +110,7 @@ public abstract class BaseStatsEntity implements StatsCommon {
     @Override public String getItmId() { return itmId; }
     @Override public String getUnitNm() { return unitNm; }
     @Override public BigDecimal getDt() { return dt; }
+    public String getDtSymbol() { return dtSymbol; }
     @Override public LocalDate getLstChnDe() { return lstChnDe; }
     @Override public LocalDate getSrcLatestChnDt() { return srcLatestChnDt; }
     @Override public OffsetDateTime getCreatedAt() { return createdAt; }

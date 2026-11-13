@@ -25,8 +25,10 @@ public class EmotionStatsRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
+    // 수치 칸: 원천 수치가 숫자가 아닌 칸은 dt 가 NULL 이고 원래 표기가 dt_symbol 에 있다(01 v1.19.0) — 그 표기를 싣는다.
+    // 정서 통계 표는 모두 숫자형 dt 라 dt_symbol 칸이 있다. 숫자 행은 종전과 같은 문자열(예: "12.500").
     private static final String SELECT_COLUMNS =
-            "SELECT prd_de, c1, c2, c3, itm_id, unit_nm, dt, lst_chn_de, src_data_id FROM %s ";
+            "SELECT prd_de, c1, c2, c3, itm_id, unit_nm, COALESCE(CAST(dt AS text), dt_symbol) AS dt, lst_chn_de, src_data_id FROM %s ";
 
     /** 조회기간(fromYear~toYear)의 최신 자료갱신분 */
     public List<StatDataItemDB> findLatest(EmotionStatType type, StatsSrcDataInfoEntity srcDataInfo,
