@@ -1,5 +1,7 @@
 package com.sweetk.iitp.api.repository.basic;
 
+import com.sweetk.iitp.api.entity.basic.BaseStatsEntity;
+
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sweetk.iitp.api.dto.internal.StatDataItemDB;
@@ -84,7 +86,7 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
         LocalDate statLatestChnDt = LocalDate.parse(srcDataInfo.getStatLatestChnDt());
 
         String sql = String.format(
-                "SELECT prd_de, c1, c2, c3, itm_id, unit_nm, dt, lst_chn_de, src_data_id " +
+                "SELECT prd_de, c1, c2, c3, itm_id, unit_nm, " + dtColumn(stats.getType()) + ", lst_chn_de, src_data_id " +
                         "FROM %s " +
                         "WHERE %s >= ? AND %s <= ? AND %s = ? " +
                         //"WHERE %s >= ? AND %s <= ? AND %s = ? AND deleted_at IS NULL " +
@@ -130,7 +132,7 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
         LocalDate statLatestChnDt = LocalDate.parse(srcDataInfo.getStatLatestChnDt());
 
         String sql = String.format(
-                "SELECT prd_de, c1, c2, c3, itm_id, unit_nm, dt, lst_chn_de, src_data_id " +
+                "SELECT prd_de, c1, c2, c3, itm_id, unit_nm, " + dtColumn(stats.getType()) + ", lst_chn_de, src_data_id " +
                         "FROM %s " +
                         "WHERE %s = ? AND %s = ? " +
                         //"WHERE %s = ? AND %s = ? AND deleted_at IS NULL " +
@@ -156,6 +158,19 @@ public abstract class BasicQuerySupport<T extends StatsCommon> {
                         ((Number) row[8]).intValue()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 조회할 수치 칸 식.
+     * 숫자형 dt 표(BaseStatsEntity)는 원천 수치가 숫자가 아닌 칸의 dt 가 NULL 이고 원래 표기가 dt_symbol 에 있다
+     * (01 v1.19.0). 그 칸은 원래 표기(예: '-')를 수치 값으로 싣는다. 숫자 행은 종전과 같은 문자열이다
+     * (numeric 의 text 표현 = BigDecimal.toString, 예: "616.000").
+     * 문자형 dt 표(BaseStatsDtStringEntity, 다빈도 상병 순위 등)에는 dt_symbol 칸이 없으므로 dt 그대로 읽는다.
+     */
+    static String dtColumn(Class<?> entityClass) {   // 패키지 범위 — 단위 테스트에서 확인
+        return BaseStatsEntity.class.isAssignableFrom(entityClass)
+                ? "COALESCE(CAST(dt AS text), dt_symbol) AS dt"
+                : "dt";
     }
 
     private String getTableName(Class<?> entityClass) {

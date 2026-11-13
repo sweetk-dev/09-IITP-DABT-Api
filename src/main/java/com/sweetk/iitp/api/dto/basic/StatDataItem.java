@@ -64,8 +64,10 @@ public class StatDataItem {
     @NonNull
     private String unitNm;
 
-    @Schema(description = "수치 값", requiredMode = Schema.RequiredMode.REQUIRED,  example = "251277")
-    @NonNull
+    // 원천 수치가 숫자가 아닌 칸은 원래 표기(예: "-")를 그대로 싣는다(0 으로 바꾸지 않는다).
+    // null 금지(@NonNull)는 두지 않는다 — 수치·표기가 모두 비는 행은 DB 제약상 생기지 않지만,
+    // 생기더라도 한 행 때문에 응답 전체가 500 이 되지 않게 한다.
+    @Schema(description = "수치 값. 원천 수치가 숫자가 아닌 칸은 원래 표기(예: \"-\")", requiredMode = Schema.RequiredMode.REQUIRED,  example = "251277")
     private String data;
 
     @Schema(description = "데이터의 최종수정일", example = "2023-01-02")
@@ -81,7 +83,7 @@ public class StatDataItem {
                 .c3Nm(entity.getC3())
                 .itmNm(entity.getItmId())
                 .unitNm(entity.getUnitNm())
-                .data(entity.getDt() != null ? entity.getDt().toPlainString() : null)
+                .data(entity.getDt() != null ? entity.getDt().toPlainString() : entity.getDtSymbol())
                 .lstChnDe(entity.getLstChnDe())
                 .build();
     }
